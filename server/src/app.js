@@ -4,6 +4,7 @@ const dotenv = require("dotenv")
 const cors = require("cors")
 const status = require("http-status-codes")
 const helmet = require("helmet")
+const jwt = require("jsonwebtoken")
 
 dotenv.config()
 
