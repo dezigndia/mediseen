@@ -2,8 +2,8 @@ const express = require("express")
 const morgan = require("morgan")
 const dotenv = require("dotenv")
 const cors = require("cors")
-const status = require("http-status-codes")
 const helmet = require("helmet")
+var session = require("express-session")
 
 dotenv.config()
 
@@ -11,6 +11,8 @@ const mongooseConnect = require("./utils/mongooseConnect")
 const errorController = require("./controllers/errorController")
 
 const exampleRoute = require("./routes/exampleRoute")
+
+const twilioRoute = require("./routes/twilioRoute")
 
 const app = express()
 const corsOptions = {
@@ -27,11 +29,22 @@ const corsOptions = {
 }
 
 mongooseConnect(process.env.MONGO_URI, process.env.MODE)
+app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true, limit: "50md" }))
 app.use(cors(corsOptions))
 app.use(helmet())
 
+app.use(
+	session({
+		secret: "dezig",
+		resave: false,
+		saveUninitialized: true,
+		cookie: { secure: true },
+	})
+)
+
 app.use("/api", exampleRoute)
+app.use("/api/twilio", twilioRoute)
 app.use(errorController)
 module.exports = app
