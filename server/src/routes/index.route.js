@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const authRouter = require('./twilioRoute');
+const authRouter = require('./auth.route');
 const testRouter = require('./exampleRoute');
 
 router.use('/test', testRouter);

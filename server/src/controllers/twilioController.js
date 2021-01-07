@@ -6,6 +6,12 @@ const User = require("../models/UserModel")
 const AuthService = require('../services/auth/auth.service');
 const authService = new AuthService();
 class TwilioController {
+	/**
+	 * @author sanjay
+	 * @description controller method responsible for login
+	 * @param {object} req
+	 * @param {object} res
+	 */
 	async login(req, res) {
 		try {
 			const data = await authService.login(req.body);
