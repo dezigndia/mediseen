@@ -9,12 +9,10 @@ dotenv.config()
 
 const mongooseConnect = require("./utils/mongooseConnect")
 const errorController = require("./controllers/errorController")
+const indexRoute = require("./routes/index.route");
 
-const exampleRoute = require("./routes/exampleRoute")
+const app = express();
 
-const twilioRoute = require("./routes/twilioRoute")
-
-const app = express()
 const corsOptions = {
 	allowedHeaders: [
 		"Origin",
@@ -44,7 +42,7 @@ app.use(
 	})
 )
 
-app.use("/api", exampleRoute)
-app.use("/api/twilio", twilioRoute)
+app.use("/api", indexRoute)
+
 app.use(errorController)
 module.exports = app

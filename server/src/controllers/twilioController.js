@@ -3,28 +3,24 @@ const statusCodes = require("http-status-codes")
 const jwt = require("jsonwebtoken")
 const User = require("../models/UserModel")
 
-const client = require("twilio")(process.env.TWILIO_ID, process.env.TWILIO_AUTH)
-
+const AuthService = require('../services/auth/auth.service');
+const authService = new AuthService();
 class TwilioController {
-	login = expressAsyncHandler(async (req, res) => {
-		const { phoneNumber } = req.body
-		const data = await client.verify
-			.services(process.env.TWILIO_SERVICE)
-			.verifications.create({
-				to: `+91${phoneNumber}`,
-				channel: "sms",
-			})
-
-		if (data.status === "pending") {
-			res
+	async login(req, res) {
+		try {
+			const data = await authService.login(req.body);
+			if(data) {
+				return res
 				.status(statusCodes.OK)
-				.send({ status: "success", payload: data.status })
-		} else {
-			res
-				.status(statusCodes.BAD_REQUEST)
-				.send({ status: "fail", payload: data })
+				.send({ status: true, data: data, message: 'login done successfully' })
+			} else {
+				return res.status(statusCodes.OK)
+				.send({ status: false, data: data, message: 'failed' })
+			}
+		} catch (error) {
+			return res.status(statusCodes.BAD_REQUEST).send({status: false, error: error})
 		}
-	})
+	}
 
 	verify = expressAsyncHandler(async (req, res) => {
 		const { code, phoneNumber, name } = req.body
