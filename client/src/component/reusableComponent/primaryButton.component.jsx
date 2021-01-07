@@ -3,23 +3,24 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 
 
 const useStyles = makeStyles(theme => ({
-    seconaryIconButton: {
+    primaryButton: {
         background: 'linear-gradient(90deg, rgba(43,190,200,1), rgba(29,233,182,1))',
-        borderRadius: '20px'
+        color: 'white'
     },
     buttonIcon: {
         transform: 'scale(2)'
     }
 }));
 
-const SecondaryIconButton = ({ label, children }) => {
+const PrimaryButton = ({ label, children, onClick }) => {
     const classes = useStyles();
     return (
         <Button
             variant='contained'
-            color='primary'
             startIcon={children}
-            className={classes.seconaryIconButton}
+            className={classes.primaryButton}
+            fullWidth
+            onClick={onClick}
         >
             <Typography variant='body1' component='h1'>
                 {label}
@@ -28,5 +29,5 @@ const SecondaryIconButton = ({ label, children }) => {
     );
 }
 
-export default SecondaryIconButton;
+export default PrimaryButton;
 
