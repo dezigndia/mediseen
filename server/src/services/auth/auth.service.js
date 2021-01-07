@@ -33,7 +33,7 @@ class AuthService {
 					.services(process.env.TWILIO_SERVICE)
 					.verificationChecks.create({
 						to: `+91${requestData.phoneNumber}`,
-						code: requestData.phoneNumber,
+						code: requestData.code,
 					})
 				if (data.status === "approved") {
 					return resolve(true)

@@ -20,8 +20,7 @@ class TwilioController {
 			if (data) {
 				return res.status(statusCodes.OK).send({
 					status: true,
-					data: data,
-					message: "Login done successfully.",
+					payload: "OTP has been sent.",
 				})
 			} else {
 				return res
