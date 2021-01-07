@@ -23,7 +23,7 @@ class DoctorService {
 			doctor[`${key}`] = value
 		}
 
-		return await Doctor.findByIdAndUpdate(id, user)
+		return await Doctor.findByIdAndUpdate(id, doctor)
 	})
 
 	async deleteDoctor(id) {
