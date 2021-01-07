@@ -1,46 +1,61 @@
-const errorController = require('./errorController');
-const bcrypt = require('bcrypt');
-const expressAsyncHandler = require('express-async-handler');
-const Admin = require('../models/AdminModel');
-const jwt = require("jsonwebtoken")
+const expressAsyncHandler = require("express-async-handler")
+const statusCodes = require("http-status-codes")
 
+const UserService = require("../services/users/user.service")
+const userService = new UserService()
+
+const AppError = require("../utils/errorHandler")
 
 class UserController {
-    login = expressAsyncHandler(async(req, res) =>{
-        const email=req.body.email;
+	getAllUsers = expressAsyncHandler(async (req, res) => {
+		const { limit, skip } = req.query
 
-        Admin.findOne({email:email})
-        .exec()
-        .then(admin =>{
-            if(admin){
+		const data = await userService.getUser(null, null, limit, skip)
 
-                if(admin.password!=req.body.password){
-                    res.status(404).json({
-                        message:"Auth failed"
-                    });
-                }
-                var token=jwt.sign({
-                    email:admin[0].email,
-                    password:admin[0].password
-                },
-                process.env.JWT_SECRET,
-                {
-                    expiresIn:"60"
-                }
-                );
-                res.status(200).json({
-                    message:"User Found",
-                    token: token
-                })
-            }
-            else{
-                res.status(404).json({
-                    message:"Auth Failed"
-                });
-            }
-            
-    })
-})
+		if (data) {
+			res.status(200).json({ status: true, payload: data })
+		} else {
+			throw new AppError(statusCodes.NOT_FOUND, "User List not found.")
+		}
+	})
+
+	getUserByID = expressAsyncHandler(async (req, res) => {
+		const { userId } = req.params
+
+		const data = await userService.getUser("_id", userId)
+
+		if (data) {
+			res.status(statusCodes.OK).json({ status: true, payload: data })
+		} else {
+			throw new AppError(statusCodes.NOT_FOUND, "User not found.")
+		}
+	})
+
+	updateUser = expressAsyncHandler(async (req, res) => {
+		const { name, userId } = req.body
+
+		const data = await userService.updateUser(userId, { name })
+
+		if (data) {
+			res.status(statusCodes.OK).json({ status: true, payload: data })
+		} else {
+			throw new AppError(statusCodes.NOT_FOUND, "User not found.")
+		}
+	})
+
+	deleteUser = expressAsyncHandler(async (req, res) => {
+		const { userId } = req.body
+
+		const data = await userService.deleteUser(userId)
+
+		if (data) {
+			res
+				.status(statusCodes.OK)
+				.json({ status: true, payload: "User Deleted." })
+		} else {
+			throw new AppError(statusCodes.NOT_FOUND, "Something went wrong.")
+		}
+	})
 }
 
 module.exports = UserController
