@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
-const AddressSchema = require("./Schemas/addressSchema")
-const ContactSchema = require("./Schemas/contactSchema")
+const clinicSchema = require("./Schemas/clinicSchema")
+const paymentSchema = require("./Schemas/paymentSchema")
 
 const doctorSchema = new mongoose.Schema(
 	{
@@ -9,8 +9,6 @@ const doctorSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		contact: [ContactSchema],
-		address: [AddressSchema],
 		image: String,
 		isActive: {
 			type: Boolean,
@@ -24,15 +22,9 @@ const doctorSchema = new mongoose.Schema(
 			type: String,
 			default: null,
 		},
-		workingHours: {
-			type: String,
-			default: null,
-		},
-		fee: {
-			type: Number,
-			default: null,
-		},
+		clinic: [clinicSchema],
 		education: [{ type: String }],
+		payment: paymentSchema,
 	},
 	{ timestamps: true }
 )
