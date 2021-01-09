@@ -2,8 +2,10 @@ const Doctor = require("../../models/DoctorModel")
 const expressAsyncHandler = require("express-async-handler")
 
 class DoctorService {
-	createDoctor = expressAsyncHandler(async (doctor) => {
-		return Doctor.create(doctor)
+	createDoctor = expressAsyncHandler(async (body) => {
+		const { name, specialist, clinic, education, payment } = body
+
+		return Doctor.create({ name, specialist, clinic, education, payment })
 	})
 
 	getDoctor = expressAsyncHandler(async (type, value, limit, skip) => {
