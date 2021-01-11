@@ -5,7 +5,7 @@ const HospitalController = require("../controllers/hospitalController");
 const hc = new HospitalController();
 
 
-router.post("/", hc.createHospital)
+router.post("/",AdminValidator.hospitalValidations, hc.createHospital)
 router.get("/", hc.getHospitals)
 router.get("/:hosId", hc.getHospitalByID)
 router.put("/:hosId", hc.updateHospital)

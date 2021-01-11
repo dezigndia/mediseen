@@ -9,6 +9,7 @@ class HospitalController {
 		const data = await hospService.createHospital(req.body)
 
 		if (data) {
+			
 			return res
 				.status(StatusCodes.CREATED)
 				.json({ status: true, payload: data })
@@ -44,9 +45,9 @@ class HospitalController {
 	updateHospital = expressAsyncHandler(async (req, res) => {
 		const { hosId } = req.params
 
-		const { name } = req.body
+		const { name, address, contact, image, total_employees, isActive, isVerified } = req.body
 
-		const data = await hospService.updateHospital(hosId, { name })
+		const data = await hospService.updateHospital(hosId, {name, address, contact, image, total_employees, isActive, isVerified})
 
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
