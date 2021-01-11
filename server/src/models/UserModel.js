@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
 		},
 		phone: String,
 		status: String,
+		loggedIn: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	{ timestamps: true }
 )

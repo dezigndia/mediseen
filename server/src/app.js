@@ -2,18 +2,17 @@ const express = require("express")
 const morgan = require("morgan")
 const dotenv = require("dotenv")
 const cors = require("cors")
-const status = require("http-status-codes")
 const helmet = require("helmet")
-const jwt = require("jsonwebtoken")
+var session = require("express-session")
 
 dotenv.config()
 
 const mongooseConnect = require("./utils/mongooseConnect")
 const errorController = require("./controllers/errorController")
+const indexRoute = require("./routes/index.route");
 
-const exampleRoute = require("./routes/exampleRoute")
+const app = express();
 
-const app = express()
 const corsOptions = {
 	allowedHeaders: [
 		"Origin",
@@ -28,11 +27,22 @@ const corsOptions = {
 }
 
 mongooseConnect(process.env.MONGO_URI, process.env.MODE)
+app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true, limit: "50md" }))
 app.use(cors(corsOptions))
 app.use(helmet())
 
-app.use("/api", exampleRoute)
+app.use(
+	session({
+		secret: "dezig",
+		resave: false,
+		saveUninitialized: true,
+		cookie: { secure: true },
+	})
+)
+
+app.use("/api", indexRoute)
+
 app.use(errorController)
 module.exports = app

@@ -1,5 +1,4 @@
 const errorController = require('./errorController');
-const bcrypt = require('bcrypt');
 const expressAsyncHandler = require('express-async-handler');
 const Admin = require('../models/AdminModel');
 const jwt = require("jsonwebtoken")
