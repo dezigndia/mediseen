@@ -31,6 +31,7 @@ app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true, limit: "50md" }))
 app.use(cors(corsOptions))
+// app.use(cors())
 app.use(helmet())
 
 app.use(

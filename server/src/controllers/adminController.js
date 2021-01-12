@@ -6,29 +6,32 @@ class AdminController {
 	login = expressAsyncHandler(async (req, res) => {
 		const { email } = req.body
 
-		Admin.findOne({ email }).then((admin) => {
+		Admin.find({ email }).then((admin) => {
+			console.log(admin)
 			if (admin) {
 				if (admin.password != req.body.password) {
-					res.status(404).json({
+					res.status(401).json({
+						status: false,
 						message: "Auth failed",
 					})
 				}
 				var token = jwt.sign(
 					{
-						email: admin[0].email,
-						password: admin[0].password,
+						email: admin.email,
 					},
 					process.env.JWT_SECRET,
 					{
-						expiresIn: "60",
+						expiresIn: "1d",
 					}
 				)
 				res.status(200).json({
+					status: true,
 					message: "User Found",
 					token: token,
 				})
 			} else {
 				res.status(404).json({
+					status: false,
 					message: "Auth Failed",
 				})
 			}

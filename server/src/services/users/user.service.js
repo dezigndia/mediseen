@@ -13,12 +13,16 @@ class UserService {
 	})
 
 	getUser = expressAsyncHandler(async (type, value, limit, skip) => {
-		if (!type) {
+		if (!type && value === "") {
 			return await User.find().limit(parseInt(limit)).skip(parseInt(skip))
-		} else {
+		} else if (type && value) {
 			let payload = {}
 			payload[`${type}`] = value
 			return await User.findOne(payload)
+		} else if (!type && value) {
+			return await User.find({
+				name: { $regex: value, $options: "i" },
+			})
 		}
 	})
 
