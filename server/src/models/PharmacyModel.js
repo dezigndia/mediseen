@@ -19,10 +19,11 @@ const pharmacySchema = new mongoose.Schema(
             type: addressSchema,
             required: true,
         },
-        email: {
-            type: String,
-        },
+        // email: {
+        //     type: String,
+        // },
         title: {
+            //TODO enum?
             type: String,
         },
         firstName: {
@@ -57,10 +58,13 @@ const pharmacySchema = new mongoose.Schema(
         },
         loggedIn: {
             type: Boolean,
-            default: true,
+            // default: true,
         },
-        workingHours: [workSchema],
-        ratings: {
+        workingHours: {
+            type: [workSchema],
+            default: [],
+        },
+        rating: {
             type: Number,
             min: 0,
             max: 5,
@@ -68,12 +72,15 @@ const pharmacySchema = new mongoose.Schema(
         },
         staffsDetails: {
             type: [staffSchema],
+            default: [],
         },
         paymentDetails: {
             type: paymentSchema,
+            default: [],
         },
         products: {
             type: [productSchema],
+            default: [],
         },
         deliveryDetails: {
             type: deliverySchema,

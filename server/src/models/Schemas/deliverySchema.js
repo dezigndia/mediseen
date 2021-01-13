@@ -7,16 +7,16 @@ const deliverySchema = new mongoose.Schema({
         required: true,
     },
     deliveryCharges: {
-        type: String,
+        type: Number,
     },
     minimumAmount: {
-        type: String,
+        type: Number,
     },
     codAvailable: {
         type: Boolean,
     },
     deliveryDistance: {
-        type: String,
+        type: Number, //in kms
     },
 })
 

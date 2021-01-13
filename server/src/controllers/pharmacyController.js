@@ -1,5 +1,6 @@
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
+const AppError = require("../utils/errorHandler")
 
 const PharmacyService = require("../services/pharmacy/pharmacy.service")
 const pharmacyService = new PharmacyService()
@@ -23,19 +24,19 @@ class PharmacyController {
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "Doctor List not found.")
+            throw new AppError(statusCodes.NOT_FOUND, "Pharmacy List not found.")
         }
     })
 
     getPharmacyByID = expressAsyncHandler(async (req, res) => {
         const { pharmacyId } = req.params
-
+        console.log(pharmacyId)
         const data = await pharmacyService.getPharmacy("_id", pharmacyId)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(StatusCodes.NOT_FOUND, "Doctor List not found.")
+            throw new AppError(StatusCodes.NOT_FOUND, "Pharmacy not found with given id.")
         }
     })
 }
