@@ -18,7 +18,6 @@ const deliverySchema = new mongoose.Schema({
     deliveryDistance: {
         type: String,
     },
-    _id: true,
 })
 
 module.exports = deliverySchema

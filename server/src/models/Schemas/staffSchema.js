@@ -14,7 +14,6 @@ const staffSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    _id: true,
 })
 
 module.exports = staffSchema

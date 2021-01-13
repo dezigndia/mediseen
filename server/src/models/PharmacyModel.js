@@ -1,7 +1,10 @@
 const mongoose = require("mongoose")
+const addressSchema = require("./Schemas/addressSchema")
 const deliverySchema = require("./Schemas/deliverySchema")
 const paymentSchema = require("./Schemas/paymentSchema")
-const productsSchema = require("./Schemas/productsSchema")
+const productSchema = require("./Schemas/productSchema")
+const staffSchema = require("./Schemas/staffSchema")
+const workSchema = require("./Schemas/workTimings")
 
 const pharmacySchema = new mongoose.Schema(
     {
@@ -13,7 +16,7 @@ const pharmacySchema = new mongoose.Schema(
             required: true,
         },
         address: {
-            type: AddressSchema,
+            type: addressSchema,
             required: true,
         },
         email: {
@@ -70,7 +73,7 @@ const pharmacySchema = new mongoose.Schema(
             type: paymentSchema,
         },
         products: {
-            type: [productsSchema],
+            type: [productSchema],
         },
         deliveryDetails: {
             type: deliverySchema,
@@ -79,6 +82,6 @@ const pharmacySchema = new mongoose.Schema(
     { timestamps: true }
 )
 
-const Pharmacy = mongoose.model("Pharmacy", pharmacySchema)
+const Pharmarcy = mongoose.model("Pharmarcy", pharmacySchema)
 
-module.exports = Pharmacy
+module.exports = Pharmarcy
