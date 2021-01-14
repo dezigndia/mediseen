@@ -6,6 +6,7 @@ const hospitalRouter = require('./hospital.route');
 const pathologyRouter = require('./pathology.route');
 const userRouter = require("./user.route")
 const doctorRouter = require("./doctor.route")
+const pharmacyRouter = require("./pharmacy.route")
 
 router.use('/test', testRouter);
 router.use('/auth', authRouter);
@@ -13,5 +14,6 @@ router.use('/hospital',hospitalRouter);
 router.use('/pathology',pathologyRouter);
 router.use("/user", userRouter)
 router.use("/doctor", doctorRouter)
+router.use("/pharmacy", pharmacyRouter)
 
 module.exports = router;
