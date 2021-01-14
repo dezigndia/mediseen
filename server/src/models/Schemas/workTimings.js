@@ -17,4 +17,6 @@ const workSchema = new mongoose.Schema({
 	Sunday: daySchema,
 })
 
+
 module.exports = workSchema
+

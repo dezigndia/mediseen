@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
 		},
 		phone: String,
 		status: String,
+		photo: String,
 		loggedIn: {
 			type: Boolean,
 			default: true,
