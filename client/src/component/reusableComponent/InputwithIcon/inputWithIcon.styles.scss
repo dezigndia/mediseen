@@ -1,0 +1,34 @@
+@import '../../../../assets/globalStyles.scss';
+
+$iconSize:convert(150, percent, px);
+
+.inputContainer {
+    margin:0 auto;
+    width: var(--width);
+    height: Min(100%, var(--height));
+    background: white;
+    box-shadow: 0 0 15px #ccc;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: var(--padding);
+    overflow: hidden;
+
+    &>input {
+        padding: 10px;
+        border: none;
+        flex-grow: 1;
+        color: darken(#ccc, 20%);
+        font-size:1.1em;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .inputIcon {
+        color: $lightBlue;
+        height: $iconSize;
+        width: $iconSize;
+    }
+}
