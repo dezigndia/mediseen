@@ -1,5 +1,5 @@
 const Joi = require("@hapi/joi");
-const statusCodes = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 
 const AdminValidator = {
   validateUser: (req, res, next) => {
@@ -11,7 +11,7 @@ const AdminValidator = {
       abortEarly: false,
     });
     if (value.error) {
-      return res.status(statusCodes.NOT_ACCEPTABLE).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         status: false,
         error: value.error.message,
       });

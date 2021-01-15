@@ -1,11 +1,17 @@
-const router = require("express").Router();
+const router = require("express").Router()
 
-const AdminValidator = require("../validators");
+const AdminValidator = require("../validators")
 
-const AdminController = require("../controllers/adminController");
-const ac = new AdminController();
+const AdminController = require("../controllers/adminController")
+const AuthController = require("../controllers/authController")
+const { authenticate } = require("../utils/authenticate")
+const ac = new AdminController()
+const auth = new AuthController()
 
-router.post("/admin-login", AdminValidator.validateUser, ac.login);
-router.post("/admin-register", ac.register);
+router.post("/admin-login", AdminValidator.validateUser, ac.login)
+router.post("/admin-register", ac.register)
 
-module.exports = router;
+router.post("/user-verify-otp", auth.verifyOtp) //TODO need to add validation
+router.get("/user-get-otp", auth.sendOTP) //TODO need to add validation
+
+module.exports = router
