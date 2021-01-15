@@ -10,7 +10,6 @@ const staffSchema = new mongoose.Schema({
         required: true,
     },
     role: {
-        // need to make it enum
         type: String,
         required: true,
     },

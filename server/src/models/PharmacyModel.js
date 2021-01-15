@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const addressSchema = require("./Schemas/addressSchema")
+const commonSchema = require("./Schemas/commonSchema")
 const deliverySchema = require("./Schemas/deliverySchema")
 const paymentSchema = require("./Schemas/paymentSchema")
 const productSchema = require("./Schemas/productSchema")
@@ -8,57 +8,10 @@ const workSchema = require("./Schemas/workTimings")
 
 const pharmacySchema = new mongoose.Schema(
     {
-        phone: {
-            type: String,
-        },
-        name: {
-            type: String,
-            required: true,
-        },
-        address: {
-            type: addressSchema,
-            required: true,
-        },
-        // email: {
-        //     type: String,
-        // },
-        title: {
-            //TODO enum?
-            type: String,
-        },
-        firstName: {
-            type: String,
-            required: true,
-        },
-        middleName: {
-            type: String,
-        },
-        lastName: {
-            type: String,
-            required: true,
-        },
-        password: {
-            type: String,
-            required: true,
-        },
-        specialization: {
-            type: String,
-            required: true,
-        },
-        degree: {
-            type: String,
-            required: true,
-        },
-        // need to confirm if required
-        about: {
-            type: String,
-        },
-        status: {
-            type: String,
-        },
-        loggedIn: {
-            type: Boolean,
-            // default: true,
+        ...commonSchema,
+        type: {
+            type: "string",
+            default: "pharmacy",
         },
         workingHours: {
             type: [workSchema],
@@ -85,10 +38,24 @@ const pharmacySchema = new mongoose.Schema(
         deliveryDetails: {
             type: deliverySchema,
         },
+        //REVIEW need to confirm if required
+        // about: {
+        //     type: String,
+        // },
+        // status: {
+        //     type: String,
+        // },
+        // loggedIn: {
+        //     type: Boolean,
+        //     // default: true,
+        // },
     },
     { timestamps: true }
 )
 
-const Pharmarcy = mongoose.model("Pharmarcy", pharmacySchema)
+pharmacySchema.pre("save", function () {
+    this.type = "pharmacy"
+})
+const Pharmarcy = mongoose.model("Pharmarcy", pharmacySchema, "business")
 
 module.exports = Pharmarcy

@@ -1,33 +1,70 @@
 const mongoose = require("mongoose")
 
-const AddressSchema = require("./Schemas/addressSchema")
-const ContactSchema = require("./Schemas/contactSchema")
+const commonSchema = require("./Schemas/commonSchema")
+const paymentSchema = require("./Schemas/paymentSchema")
+const staffSchema = require("./Schemas/staffSchema")
+const workSchema = require("./Schemas/workTimings")
 
+const doctorSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    degree: {
+        type: String,
+    },
+
+    mobileNumber: {
+        type: String,
+    },
+    fee: {
+        type: Number,
+    },
+    timePerSlot: {
+        type: String,
+    },
+    feeCollect: {
+        type: String,
+    },
+    teleConsulting: {
+        type: Boolean,
+    },
+    workingHours: {
+        type: workSchema,
+    },
+})
 
 const hospitalSchema = new mongoose.Schema(
-	{
-		name: {
-			type: String,
-			required: true,
-		},
-        address: [AddressSchema],
-        contact: [ContactSchema],
-        image: String,
-        total_employees: {
-			type: String,
-		},
-		isActive: {
-			type: Boolean,
-			default: true,
+    {
+        ...commonSchema,
+        type: {
+            type: "string",
+            default: "hospital",
         },
-        isVerified: {
-			type: Boolean,
-			default: true,
-		}
-	},
-	{ timestamps: true }
+        doctors: {
+            type: [doctorSchema],
+            default: [],
+        },
+        payment: {
+            type: paymentSchema,
+        },
+        staffs: {
+            type: [staffSchema],
+            default: [],
+        },
+        image: {
+            type: String,
+        },
+        isActive: {
+            type: Boolean,
+            default: true,
+        },
+    },
+    { timestamps: true }
 )
-
-const Hospital = mongoose.model("Hospital", hospitalSchema)
+hospitalSchema.pre("save", function () {
+    this.type = "hospital"
+})
+const Hospital = mongoose.model("Hospital", hospitalSchema, "business")
 
 module.exports = Hospital

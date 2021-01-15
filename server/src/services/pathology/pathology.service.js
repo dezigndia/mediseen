@@ -1,4 +1,4 @@
-const Pathology = require("../../models/pathologyModel")
+const Pathology = require("../../models/PathologyModel")
 const expressAsyncHandler = require("express-async-handler")
 
 class PathologyService {

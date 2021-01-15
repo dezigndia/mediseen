@@ -2,8 +2,8 @@ const mongoose = require("mongoose")
 
 const deliverySchema = new mongoose.Schema({
     type: {
-        //need to make it enum
         type: String,
+        enum: ["pickup", "delivery"],
         required: true,
     },
     deliveryCharges: {
