@@ -3,8 +3,9 @@ const expressAsyncHandler = require("express-async-handler")
 
 class HospitalService {
 	createHospital = expressAsyncHandler(async (body) => {
-		const {name, address, contact, image, total_employees, isActive, isVerified} = body
-		return Hospital.create({name, address, contact, image, total_employees, isActive, isVerified})
+		// const {name, address, contact, image, total_employees, isActive, isVerified} = body
+		return Hospital.create(body)
+
 	})
 
 	getHospital = expressAsyncHandler(async (type, value, limit, skip) => {

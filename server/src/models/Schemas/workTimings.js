@@ -12,7 +12,7 @@ const workSchema = new mongoose.Schema({
     Tuesday: daySchema,
     Wednesday: daySchema,
     Thursday: daySchema,
-    Fridday: daySchema,
+    Friday: daySchema,
     Saturday: daySchema,
     Sunday: daySchema,
 })
