@@ -11,7 +11,9 @@ const doctorSchema = new mongoose.Schema(
             type: "string",
             default: "doctor",
         },
-        image: String,
+        image: {
+            type: String,
+        },
         clinic: {
             type: [clinicSchema],
             default: [],

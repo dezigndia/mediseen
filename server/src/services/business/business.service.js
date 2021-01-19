@@ -1,7 +1,4 @@
 const Doctor = require("../../models/DoctorModel")
-const Hospital = require("../../models/HospitalModel")
-const Pathology = require("../../models/PathologyModel")
-const Pharmacy = require("../../models/PharmacyModel")
 const expressAsyncHandler = require("express-async-handler")
 
 class BusinessService {

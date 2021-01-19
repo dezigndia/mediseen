@@ -16,7 +16,7 @@ const clinicSchema = new mongoose.Schema({
         type: Number,
     },
     timePerSlot: {
-        type: String,
+        type: String, // in minutes
     },
     feeCollect: {
         type: String,
