@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const AdminValidator = require("../validators")
+const AdminValidator = require("../validator/validators")
 
 const PathologyController = require("../controllers/pathologyController");
 const pc = new PathologyController();
