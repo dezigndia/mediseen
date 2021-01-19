@@ -1,4 +1,4 @@
-const app = require("./app")
+const app = require("./src/app")
 const config = require("config")
 
 const PORT = config.has("app.port") ? config.get("app.port") : 5000

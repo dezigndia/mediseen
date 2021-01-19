@@ -4,7 +4,7 @@
     "description": "rest api",
     "scripts": {
         "start:dev": "set NODE_ENV=dev&& nodemon",
-        "start:prod": "set NODE_ENV=production&& node src/index.js"
+        "start:prod": "set NODE_ENV=production&& node index.js"
     },
     "nodemonConfig": {
         "watch": [
@@ -14,7 +14,7 @@
         "ignore": [
             "src/public, src/views"
         ],
-        "exec": "node src/index.js"
+        "exec": "node index.js"
     },
     "_moduleAliases": {
         "@controllers": "src/controllers",
