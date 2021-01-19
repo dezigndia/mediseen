@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken")
 class AuthService {
     verifyOtp = expressAsyncHandler(async (phoneNumber, otp) => {
         // TODO remove hardcoded otp
-        if (otp == "1000") {
+        if (otp == "100000") {
             const user = await User.findOne({ phone: phoneNumber })
 
             if (!user) {
@@ -18,7 +18,7 @@ class AuthService {
         }
     })
     sendOTP = expressAsyncHandler(async mobileNumber => {
-        return { otp: 1000 }
+        return { otp: 100000 }
     })
     getUser = expressAsyncHandler(async token => {
         return await jwt.verify(token, process.env.JWT_SECRET)
