@@ -43,6 +43,16 @@ class HospitalController {
 		}
 	})
 
+	getAvailableDocList = expressAsyncHandler(async(req,res)=>{
+		const { hosId } = req.params
+		const data= await hospService.getAvailDocList(hosId);
+		if(data){
+			return res.status(StatusCodes.OK).json({status:true, payload:data})
+		}else{
+			throw new AppError(StatusCodes.NOT_FOUND, "No Available Doctor.")
+		}
+	})
+
 	updateHospital = expressAsyncHandler(async (req, res) => {
 		const { hosId } = req.params
 
