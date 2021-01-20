@@ -2,7 +2,6 @@ const mongoose = require("mongoose")
 const commonSchema = require("./Schemas/commonSchema")
 const deliverySchema = require("./Schemas/deliverySchema")
 const paymentSchema = require("./Schemas/paymentSchema")
-const productSchema = require("./Schemas/productSchema")
 const staffSchema = require("./Schemas/staffSchema")
 const workSchema = require("./Schemas/workTimings")
 
@@ -31,10 +30,11 @@ const pharmacySchema = new mongoose.Schema(
             type: paymentSchema,
             default: [],
         },
-        products: {
-            type: [productSchema],
-            default: [],
-        },
+        // Products Model Separated
+        // products: {
+        //     type: [productSchema],
+        //     default: [],
+        // },
         deliveryDetails: {
             type: deliverySchema,
         },

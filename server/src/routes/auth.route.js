@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const AdminValidator = require("../validators")
+const AdminValidator = require("../validator/validators")
 
 const AdminController = require("../controllers/adminController")
 const AuthController = require("../controllers/authController")

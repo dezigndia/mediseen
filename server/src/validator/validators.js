@@ -32,7 +32,7 @@ const AdminValidator = {
       abortEarly: false,
     });
     if (value.error) {
-      return res.status(statusCodes.NOT_ACCEPTABLE).json({
+      return res.status(StatusCodes.NOT_ACCEPTABLE).json({
         status: false,
         error: value.error.message,
       });

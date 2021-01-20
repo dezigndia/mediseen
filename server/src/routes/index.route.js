@@ -8,6 +8,8 @@ const userRouter = require("./user.route")
 const doctorRouter = require("./doctor.route")
 const pharmacyRouter = require("./pharmacy.route")
 const businessRouter = require("./business.route")
+const productRouter = require("./product.route")
+
 
 router.use("/test", testRouter)
 router.use("/auth", authRouter)
@@ -17,5 +19,7 @@ router.use("/user", userRouter)
 router.use("/doctor", doctorRouter)
 router.use("/pharmacy", pharmacyRouter)
 router.use("/business", businessRouter)
+router.use("/product", productRouter)
+
 
 module.exports = router

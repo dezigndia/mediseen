@@ -3,8 +3,7 @@ const expressAsyncHandler = require("express-async-handler")
 
 class PathologyService {
 	createPathology = expressAsyncHandler(async (body) => {
-		const {name, address, contact, image, workTimings, payment, testName, testPrice} = body
-		return Pathology.create({name, address, contact, image, workTimings, payment, testName, testPrice})
+		return await Pathology.create(body);
 	})
 
 	getPathology = expressAsyncHandler(async (type, value, limit, skip) => {

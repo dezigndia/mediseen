@@ -3,8 +3,7 @@ const expressAsyncHandler = require("express-async-handler")
 
 class HospitalService {
 	createHospital = expressAsyncHandler(async (body) => {
-		const {name, address, contact, image, total_employees, isActive, isVerified} = body
-		return Hospital.create({name, address, contact, image, total_employees, isActive, isVerified})
+		return await Hospital.create(body)
 	})
 
 	getHospital = expressAsyncHandler(async (type, value, limit, skip) => {
@@ -15,6 +14,26 @@ class HospitalService {
 			payload[`${type}`] = value
 			return await Hospital.findOne(payload)
 		}
+	})
+
+	getAvailDocList = expressAsyncHandler(async(id)=>{
+		const dayList =["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+		const now = new Date();
+		const day = now.getDay();
+		const today = dayList[day];
+		const tomorrow = dayList[day+1];
+		const response =  {availableToday:[ ], availableTomorrow: [ ]} ;
+		const hospital = await this.getHospital("_id", id);
+		const doctors = hospital.doctors;
+		doctors.forEach(function(doctor) {
+			if(doctor.workingHours[today]){
+				response.availableToday.push(doctor)
+			}
+			if(doctor.workingHours[tomorrow]){
+				response.availableTomorrow.push(doctor)
+			}
+		});
+		return response;
 	})
 
 	updateHospital = expressAsyncHandler(async (id, payload) => {

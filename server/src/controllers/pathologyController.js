@@ -1,5 +1,6 @@
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
+const AppError = require("../utils/errorHandler")
 
 const PathologyService = require("../services/pathology/pathology.service")
 const pathService = new PathologyService()
@@ -26,7 +27,7 @@ class PathologyController {
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
 		} else {
-			throw new AppError(statusCodes.NOT_FOUND, "Hospital List not found.")
+			throw new AppError(StatusCodes.NOT_FOUND, "Pathology List not found.")
 		}
 	})
 
@@ -38,7 +39,7 @@ class PathologyController {
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
 		} else {
-			throw new AppError(statusCodes.NOT_FOUND, "Hospital List not found.")
+			throw new AppError(StatusCodes.NOT_FOUND, "Pathology List not found.")
 		}
 	})
 
@@ -52,7 +53,7 @@ class PathologyController {
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
 		} else {
-			throw new AppError(statusCodes.NOT_FOUND, "Hospital not found.")
+			throw new AppError(StatusCodes.NOT_FOUND, "Pathology not found.")
 		}
 	})
 
@@ -64,7 +65,7 @@ class PathologyController {
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
 		} else {
-			throw new AppError(statusCodes.NOT_FOUND, "Hospital not found.")
+			throw new AppError(StatusCodes.NOT_FOUND, "Pathology not found.")
 		}
 	})
 }
