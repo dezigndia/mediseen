@@ -10,6 +10,10 @@
     "jwt": {
         "secret": "talhaAnjum"
     },
+    "msg91": {
+        "authkey": "168622Aae0763T5ff83434P1",
+        "templateid": "60081a502239b002e027d969"
+    },
     "app": {
         "port": 5001
     }
