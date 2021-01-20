@@ -1,47 +1,52 @@
 const Doctor = require("../../models/DoctorModel")
 const expressAsyncHandler = require("express-async-handler")
+const {getRegex, splitStringRegex} = require('../../utils/getRegex')
 
 class BusinessService {
     getAllBusiness = expressAsyncHandler(async (limit, skip, category, specialist, area, search) => {
         let filter = {}
+        let searchfirstName,searchmiddleName, searchlastName;
         const responseData=[];
         if (area) {
-            filter.area = area
+            filter.area = getRegex(area)
         }
         if (specialist) {
-            filter.specialist = specialist
+            filter.specialist = getRegex(specialist)
         }
         if (category) {
-            filter.type = category
+            filter.type = getRegex(category)
         }
         let res = await Doctor.find(filter).limit(parseInt(limit)).skip(parseInt(skip))
-        console.log(res);
-        if(search){
-            let firstName,middleName, lastName;
-            function escapeRegex(text) {
-                return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-              };
-            const op = search.split(/(\s+)/).filter( function(e) { return e.trim().length > 0; } )
-            firstName= op[0];
+        if(search && res.length>0){
+            const op = splitStringRegex(search);
+            searchfirstName= op[0];
             if(op.length>2){
-                middleName = op[1];
-                lastName=op[2];
+                searchmiddleName = op[1];
+                searchlastName=op[2];
             }else if(op.length>1){
-                lastName= op[1];
+                searchlastName= op[1];
             }
-
-            //   const regex = new RegExp(escapeRegex(search), 'gi');
-            //   const regexFirstName= new RegExp(escapeRegex(firstName),'gi');
-            //   const regexLastName = new RegExp(escapeRegex(lastName),'gi');
-              res.forEach(function(business){
-                  if(business.buisnessName===search || business.firstName===firstName || business.lastName===lastName){
+            res.forEach(function(business){
+                const {businessName, firstName,middleName, lastName}= business;
+                  if((getRegex(search).test(businessName)) || (getRegex(searchfirstName).test(firstName) || getRegex(searchlastName).test(lastName))
+                   || (getRegex(searchlastName).test(firstName) || getRegex(searchfirstName).test(lastName) || getRegex(searchfirstName).test(middleName)
+                   || getRegex(searchmiddleName).test(middleName) || getRegex(searchmiddleName).test(lastName) )
+                  ){
                         responseData.push(business);
                   }
+            })
+            return responseData;
+        }else if(search && res.length===0){
+            return Doctor.find({$or:
+                [
+                    {"businessName" :  getRegex(search)},
+                    { "firstName"   :  getregex(searchfirstName) },
+                    { "middleName"  :  getRegex(searchmiddleName)},
+                    { "lastName"    :  getregex(searchlastname)},
+                ]
               })
-              return responseData;
-        }else{
-            return res;
         }
+        return res;
     })
 }
 module.exports = BusinessService
