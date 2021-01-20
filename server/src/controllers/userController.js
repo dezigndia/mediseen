@@ -14,7 +14,6 @@ class UserController {
 
     getAllUsers = expressAsyncHandler(async (req, res) => {
         const { limit, skip, term } = req.query
-
         const data = await userService.getUser(null, term, limit, skip)
 
         if (data) {
@@ -30,9 +29,9 @@ class UserController {
         const data = await userService.getUser("_id", userId)
 
         if (data) {
-            res.status(statusCodes.OK).json({ status: true, payload: data })
+            res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "User not found.")
+            throw new AppError(StatusCodes.NOT_FOUND, "User not found.")
         }
     })
 
@@ -42,9 +41,9 @@ class UserController {
         const data = await userService.updateUser(userId, { name })
 
         if (data) {
-            res.status(statusCodes.OK).json({ status: true, payload: data })
+            res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "User not found.")
+            throw new AppError(StatusCodes.NOT_FOUND, "User not found.")
         }
     })
 
@@ -54,9 +53,9 @@ class UserController {
         const data = await userService.deleteUser(userId)
 
         if (data) {
-            res.status(statusCodes.OK).json({ status: true, payload: "User Deleted." })
+            res.status(StatusCodes.OK).json({ status: true, payload: "User Deleted." })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "Something went wrong.")
+            throw new AppError(StatusCodes.NOT_FOUND, "Something went wrong.")
         }
     })
 }

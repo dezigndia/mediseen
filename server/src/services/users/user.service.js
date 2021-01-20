@@ -13,8 +13,9 @@ class UserService {
   });
 
   getUser = expressAsyncHandler(async (type, value, limit, skip) => {
-    if (!type && value === "") {
-      return await User.find().limit(parseInt(limit)).skip(parseInt(skip));
+    if (!type && !value) {
+      const users =await User.find().limit(parseInt(limit)).skip(parseInt(skip));
+      return users;
     } else if (type && value) {
       let payload = {};
       payload[`${type}`] = value;

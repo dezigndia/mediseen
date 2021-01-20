@@ -2,7 +2,7 @@ const commonSchema = {
     phone: {
         type: String,
     },
-    buisnessName: {
+    businessName: {
         type: String,
         required: true,
     },

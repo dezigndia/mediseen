@@ -7,9 +7,9 @@ const businessService = new BusinessService()
 
 class BusinessController {
     getBusinessList = expressAsyncHandler(async (req, res) => {
-        const { limit, skip, category, specialist, area } = req.query
+        const { limit, skip, category, specialist, area, search } = req.query
 
-        const data = await businessService.getAllBusiness(limit, skip, category, specialist, area)
+        const data = await businessService.getAllBusiness(limit, skip, category, specialist, area, search)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
