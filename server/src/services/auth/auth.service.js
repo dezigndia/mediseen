@@ -15,7 +15,7 @@ class AuthService {
                 method: "POST",
             }
         )
-        if (data.type == "error") throw new AppError(StatusCodes.BAD_REQUEST, data.message)
+        if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
         const user = await User.findOne({ phone: phoneNumber })
 
         if (!user) {
@@ -33,7 +33,6 @@ class AuthService {
                 method: "GET",
             }
         )
-
         return { data: data }
     })
     getUser = expressAsyncHandler(async token => {
