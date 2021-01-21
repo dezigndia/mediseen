@@ -38,7 +38,8 @@ class HospitalService {
 		return response;
 	})
 
-	updateHospital = expressAsyncHandler(async (id, payload) => {
+	
+    updateHospital = expressAsyncHandler(async (id, payload) => {
 		let hospital = await this.getHospital("_id", id)
 
 		for (const [key, value] of Object.entries(payload)) {
