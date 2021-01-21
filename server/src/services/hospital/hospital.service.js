@@ -24,9 +24,7 @@ class HospitalService {
 		const tomorrow = dayList[day+1];
 		const response =  {availableToday:[ ], availableTomorrow: [ ]} ;
 		const hospital = await this.getHospital("_id", id);
-		console.log(hospital)
 		const doctors = hospital.doctors;
-		console.log(doctors);
 		doctors.forEach(function(doctor) {
 			if(doctor.workingHours[today]){
 				response.availableToday.push(doctor)
