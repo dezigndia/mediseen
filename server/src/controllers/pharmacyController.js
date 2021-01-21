@@ -2,6 +2,9 @@ const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
 const AppError = require("../utils/errorHandler")
 
+const BusinessService = require("../services/business/business.service")
+const businessService = new BusinessService()
+
 const PharmacyService = require("../services/pharmacy/pharmacy.service")
 const pharmacyService = new PharmacyService()
 
@@ -31,7 +34,7 @@ class PharmacyController {
     getPharmacyByID = expressAsyncHandler(async (req, res) => {
         const { pharmacyId } = req.params
         console.log(pharmacyId)
-        const data = await pharmacyService.getPharmacy("_id", pharmacyId)
+        const data = await businessService.getBusinessById(pharmacyId);
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
