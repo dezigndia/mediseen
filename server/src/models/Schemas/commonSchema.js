@@ -52,6 +52,9 @@ const commonSchema = {
     document: {
         type: String,
     },
+    closeBy:{
+        type: String
+    },
     // image: {
     //     type: String, //optional, only for Hospital etc
     // },

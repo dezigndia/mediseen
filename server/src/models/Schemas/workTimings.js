@@ -2,8 +2,14 @@ const mongoose = require("mongoose")
 
 const daySchema = new mongoose.Schema({
     _id: false,
-    from: {type: Number},
-    to: { type: Number},
+    morning:{
+        from: {type: String},
+        to: { type: String},
+    },
+    evening:{
+        from: {type: String},
+        to: { type: String},
+    }
 })
 
 const workSchema = new mongoose.Schema({

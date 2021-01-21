@@ -17,6 +17,11 @@ class BusinessController {
             throw new AppError(statusCodes.NOT_FOUND, "Businesss List not found.")
         }
     })
+
+    getBusinessCategory = expressAsyncHandler(async(req,res)=>{
+        const categories= ["Pharmacy", "Pathology","Hospital", "Doctor",]
+        res.status(StatusCodes.OK).json(categories)
+    })
 }
 
 module.exports = BusinessController

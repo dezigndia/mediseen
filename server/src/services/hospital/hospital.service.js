@@ -1,8 +1,6 @@
 const Hospital = require("../../models/HospitalModel")
 const expressAsyncHandler = require("express-async-handler")
 
-const {getRegex} = require('../../utils/getRegex')
-
 class HospitalService {
 	createHospital = expressAsyncHandler(async (body) => {
 		return await Hospital.create(body)
@@ -13,7 +11,7 @@ class HospitalService {
 			return await Hospital.find().limit(parseInt(limit)).skip(parseInt(skip))
 		} else {
 			let payload = {}
-			payload[`${type}`] = getRegex(value)
+			payload[`${type}`] = value
 			return await Hospital.findOne(payload)
 		}
 	})
@@ -38,7 +36,8 @@ class HospitalService {
 		return response;
 	})
 
-	updateHospital = expressAsyncHandler(async (id, payload) => {
+	
+    updateHospital = expressAsyncHandler(async (id, payload) => {
 		let hospital = await this.getHospital("_id", id)
 
 		for (const [key, value] of Object.entries(payload)) {

@@ -62,6 +62,7 @@ const hospitalSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
 hospitalSchema.pre("save", function () {
     this.type = "hospital"
 })
