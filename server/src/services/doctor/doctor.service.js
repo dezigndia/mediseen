@@ -1,6 +1,8 @@
 const Doctor = require("../../models/DoctorModel")
 const expressAsyncHandler = require("express-async-handler")
 
+const {getRegex} = require('../../utils/getRegex')
+
 class DoctorService {
     createDoctor = expressAsyncHandler(async body => {
         return Doctor.create(body)
@@ -11,7 +13,7 @@ class DoctorService {
             return await Doctor.find().limit(parseInt(limit)).skip(parseInt(skip))
         } else {
             let payload = {}
-            payload[`${type}`] = value
+            payload[`${type}`] = getRegex(value)
             return await Doctor.findOne(payload)
         }
     })
