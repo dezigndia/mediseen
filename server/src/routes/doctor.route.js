@@ -9,5 +9,7 @@ router.post("/", dc.createDoctor)
 router.get("/:docId", dc.getDoctorByID)
 router.put("/:docId", dc.updateDoctor)
 router.delete("/:docId", dc.deleteDoctor)
+router.get("/:docId/availableHos",dc.getAvailableHosList)
+
 
 module.exports = router
