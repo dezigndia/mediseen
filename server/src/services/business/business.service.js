@@ -3,10 +3,13 @@ const expressAsyncHandler = require("express-async-handler")
 const {getRegex, splitStringRegex} = require('../../utils/getRegex')
 
 class BusinessService {
+
+    getBusinessById = expressAsyncHandler(async(id)=>{
+        return await Doctor.findById(id);
+    })
+
     getAllBusiness = expressAsyncHandler(async (limit, skip, category, specialist, area, search) => {
         let filter = {}
-        let searchfirstName,searchmiddleName, searchlastName;
-        const responseData=[];
         if (area) {
             filter.area = getRegex(area)
         }
@@ -16,37 +19,19 @@ class BusinessService {
         if (category) {
             filter.type = getRegex(category)
         }
-        let res = await Doctor.find(filter).limit(parseInt(limit)).skip(parseInt(skip))
-        if(search && res.length>0){
+        if(search){
             const op = splitStringRegex(search);
-            searchfirstName= op[0];
-            if(op.length>2){
-                searchmiddleName = op[1];
-                searchlastName=op[2];
-            }else if(op.length>1){
-                searchlastName= op[1];
-            }
-            res.forEach(function(business){
-                const {businessName, firstName,middleName, lastName}= business;
-                  if((getRegex(search).test(businessName)) || (getRegex(searchfirstName).test(firstName) || getRegex(searchlastName).test(lastName))
-                   || (getRegex(searchlastName).test(firstName) || getRegex(searchfirstName).test(lastName) || getRegex(searchfirstName).test(middleName)
-                   || getRegex(searchmiddleName).test(middleName) || getRegex(searchmiddleName).test(lastName) )
-                  ){
-                        responseData.push(business);
-                  }
-            })
-            return responseData;
-        }else if(search && res.length===0){
+            const   searchfirstName= op[0];
             return Doctor.find({$or:
                 [
                     {"businessName" :  getRegex(search)},
-                    { "firstName"   :  getregex(searchfirstName) },
-                    { "middleName"  :  getRegex(searchmiddleName)},
-                    { "lastName"    :  getregex(searchlastname)},
-                ]
+                    { "firstName"   :  getRegex(searchfirstName) },
+                ],
+                $and:[filter]
               })
+        }else{
+            return await Doctor.find(filter).limit(parseInt(limit)).skip(parseInt(skip))
         }
-        return res;
     })
 }
 module.exports = BusinessService

@@ -1,6 +1,8 @@
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
 
+const BusinessService = require("../services/business/business.service")
+const businessService = new BusinessService()
 const DoctorService = require("../services/doctor/doctor.service")
 const docService = new DoctorService()
 
@@ -19,8 +21,9 @@ class DoctorController {
 
 	getDoctors = expressAsyncHandler(async (req, res) => {
 		const { limit, skip } = req.query
-
-		const data = await docService.getDoctor(null, null, limit, skip)
+		const category = "doctor";
+		// const data = await docService.getDoctor(null, null, limit, skip)
+		const data = await businessService.getAllBusiness(limit,skip,category)
 
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
@@ -32,12 +35,12 @@ class DoctorController {
 	getDoctorByID = expressAsyncHandler(async (req, res) => {
 		const { docId } = req.params
 
-		const data = await docService.getDoctor("_id", docId)
+		const data = await businessService.getBusinessById(docId);
 
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
 		} else {
-			throw new AppError(StatusCodes.NOT_FOUND, "Doctor List not found.")
+			throw new AppError(StatusCodes.NOT_FOUND, "Doctor Not found.")
 		}
 	})
 

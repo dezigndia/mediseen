@@ -1,6 +1,8 @@
 const Hospital = require("../../models/HospitalModel")
 const expressAsyncHandler = require("express-async-handler")
 
+const {getRegex} = require('../../utils/getRegex')
+
 class HospitalService {
 	createHospital = expressAsyncHandler(async (body) => {
 		return await Hospital.create(body)
@@ -11,7 +13,7 @@ class HospitalService {
 			return await Hospital.find().limit(parseInt(limit)).skip(parseInt(skip))
 		} else {
 			let payload = {}
-			payload[`${type}`] = value
+			payload[`${type}`] = getRegex(value)
 			return await Hospital.findOne(payload)
 		}
 	})
