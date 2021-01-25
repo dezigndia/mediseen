@@ -49,9 +49,9 @@ class PathologyController {
 	updatePathology = expressAsyncHandler(async (req, res) => {
 		const { pathId } = req.params
 
-		const { name, address, contact, image, workTimings, payment, testName, testPrice } = req.body
+		const body = req.body
 
-		const data = await pathService.updatePathology(pathId, {name, address, contact, image, workTimings, payment, testName, testPrice })
+		const data = await pathService.updatePathology(pathId, body)
 
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
