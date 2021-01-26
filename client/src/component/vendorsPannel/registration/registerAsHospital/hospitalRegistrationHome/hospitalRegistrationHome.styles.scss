@@ -1,0 +1,21 @@
+@import '../../registration.sharableStyles.scss';
+
+$headerFontSize:1.2em;
+
+.hospitalRegistrationHome {
+    background: white;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: $padding;
+
+    .businessInformation {
+        &>h4 {
+            font-size: $headerFontSize;
+        }
+
+    }
+}

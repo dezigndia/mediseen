@@ -1,0 +1,52 @@
+.otpInputContainer {
+    text-align: left;
+    position: relative;
+
+    &.enabled {
+        opacity: 1;
+        transition: opacity .5s ease-in-out;
+    }
+
+    .otpError {
+        color: red;
+        font-size: .7em;
+        position: absolute;
+        left: 0;
+        top: 70%;
+        opacity: .7;
+
+    }
+
+    &.disabled {
+        opacity: .4;
+        pointer-events: none;
+    }
+
+    .rightAlignedText {
+        text-align: right;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-flow: row nowrap;
+    }
+
+    .otpInput {
+        text-align: center;
+        display: flex;
+        flex-flow: row nowrap;
+
+        &>input {
+            font-size: 1.1em;
+            width: 15%;
+            margin: 1.5% 0;
+            margin-left: 1.5%;
+            padding: 3% 5%;
+            border: 1px solid #ccc;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
