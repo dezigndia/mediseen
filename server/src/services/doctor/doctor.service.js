@@ -16,6 +16,26 @@ class DoctorService {
         }
     })
 
+    getAvailHosList = expressAsyncHandler(async(id)=>{
+		const dayList =["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+		const now = new Date();
+		const day = now.getDay();
+		const today = dayList[day];
+		const tomorrow = dayList[day+1];
+		const response =  {availableToday:[ ], availableTomorrow: [ ]} ;
+		const doctor = await this.getDoctor("_id", id);
+		const clinic = doctor.clinic;
+		clinic.forEach(function(clinic) {
+			if(clinic.workingHours[today]){
+				response.availableToday.push(clinic)
+			}
+			if(clinic.workingHours[tomorrow]){
+				response.availableTomorrow.push(clinic)
+			}
+		});
+		return response;
+	})
+
     updateDoctor = expressAsyncHandler(async (id, payload) => {
         let doctor = await this.getDoctor("_id", id)
 

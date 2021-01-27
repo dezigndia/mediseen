@@ -7,6 +7,7 @@ const dc = new DoctorController()
 router.get("/", dc.getDoctors)
 router.post("/", dc.createDoctor)
 router.get("/:docId", dc.getDoctorByID)
+router.get("/:docId/availableHos",dc.getAvailableHosList)
 router.put("/:docId", dc.updateDoctor)
 router.delete("/:docId", dc.deleteDoctor)
 

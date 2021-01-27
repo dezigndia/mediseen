@@ -17,6 +17,7 @@ class BusinessController {
             throw new AppError(statusCodes.NOT_FOUND, "Businesss List not found.")
         }
     })
+
 }
 
 module.exports = BusinessController
