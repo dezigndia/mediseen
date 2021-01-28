@@ -2,6 +2,9 @@ const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
 const AppError = require("../utils/errorHandler")
 
+const BusinessService = require("../services/business/business.service")
+const businessService = new BusinessService()
+
 const PathologyService = require("../services/pathology/pathology.service")
 const pathService = new PathologyService()
 
@@ -34,7 +37,7 @@ class PathologyController {
 	getPathologyByID = expressAsyncHandler(async (req, res) => {
 		const { pathId } = req.params
 
-		const data = await pathService.getPathology("_id", pathId)
+		const data = await businessService.getBusinessById(pathId);
 
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
@@ -46,9 +49,9 @@ class PathologyController {
 	updatePathology = expressAsyncHandler(async (req, res) => {
 		const { pathId } = req.params
 
-		const { name, address, contact, image, workTimings, payment, testName, testPrice } = req.body
+		const body = req.body
 
-		const data = await pathService.updatePathology(pathId, {name, address, contact, image, workTimings, payment, testName, testPrice })
+		const data = await pathService.updatePathology(pathId, body)
 
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })

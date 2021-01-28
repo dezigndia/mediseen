@@ -11,4 +11,6 @@ router.get("/:docId/availableHos",dc.getAvailableHosList)
 router.put("/:docId", dc.updateDoctor)
 router.delete("/:docId", dc.deleteDoctor)
 
+
+
 module.exports = router

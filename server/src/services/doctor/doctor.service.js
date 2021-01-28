@@ -1,6 +1,7 @@
 const Doctor = require("../../models/DoctorModel")
 const expressAsyncHandler = require("express-async-handler")
 
+
 class DoctorService {
     createDoctor = expressAsyncHandler(async body => {
         return Doctor.create(body)
@@ -22,15 +23,15 @@ class DoctorService {
 		const day = now.getDay();
 		const today = dayList[day];
 		const tomorrow = dayList[day+1];
-		const response =  {availableToday:[ ], availableTomorrow: [ ]} ;
+		const response =  {availableInToday:[ ], availableInTomorrow: [ ]} ;
 		const doctor = await this.getDoctor("_id", id);
 		const clinic = doctor.clinic;
 		clinic.forEach(function(clinic) {
 			if(clinic.workingHours[today]){
-				response.availableToday.push(clinic)
+				response.availableInToday.push(clinic)
 			}
 			if(clinic.workingHours[tomorrow]){
-				response.availableTomorrow.push(clinic)
+				response.availableInTomorrow.push(clinic)
 			}
 		});
 		return response;

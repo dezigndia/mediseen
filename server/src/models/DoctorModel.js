@@ -26,6 +26,15 @@ const doctorSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
+doctorSchema.methods.toJSON = function () {
+    const doctor = this
+    const doctorObject = doctor.toObject()
+
+    delete doctorObject.password
+    return doctorObject
+}
+
 doctorSchema.pre("save", function () {
     this.type = "doctor"
 })

@@ -2,7 +2,7 @@ const commonSchema = {
     phone: {
         type: String,
     },
-    buisnessName: {
+    businessName: {
         type: String,
         required: true,
     },
@@ -51,6 +51,9 @@ const commonSchema = {
     },
     document: {
         type: String,
+    },
+    closeBy:{
+        type: String
     },
     // image: {
     //     type: String, //optional, only for Hospital etc
