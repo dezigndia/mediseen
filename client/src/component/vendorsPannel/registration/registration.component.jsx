@@ -16,7 +16,6 @@ import RegisterAsPathology from './registerAsPathology/rtegisterAsPathology.comp
 //importing Routes
 import {
     REGISTER_AS,
-    GET_OTP,
     ADD_BUSINESS_INFO,
     REGISTER_AS_DOCTOR,
     REGISTER_AS_HOSPITAL,
@@ -43,7 +42,7 @@ const Registration = ({ match }) => {
                     </>
                     : <Switch>
                         <Route exact path={`${match.url}/`} component={WelcomeOtpScreen} />
-                        <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} component={BusinessInfoForm} />
+                        <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} render={({ history, match }) => <BusinessInfoForm {...{ setIsRegistered, history, match }} />} />
                     </Switch>
             }
         </div>

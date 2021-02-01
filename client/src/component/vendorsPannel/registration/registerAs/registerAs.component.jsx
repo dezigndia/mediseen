@@ -2,18 +2,24 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import './registerAs.styles.scss';
 
-const data = ['Doctor', 'Hospital', 'Pharmacy', 'Pathology'];
+//importing routes
+import {
+    REGISTER_AS_DOCTOR,
+    REGISTER_AS_HOSPITAL,
+    REGISTER_AS_PATHOLOGY,
+    REGISTER_AS_PHARMACY
+} from '../routes';
 
-const Button = withRouter(({ label, history, match }) => {
-    return (
-        <div className="registerAsButton">
-            <div className="circle"></div>
-            <div className="buttonLabel" onClick={(e) => history.push(`${match.url}/registerAs${label}`)}>{label}</div>
-        </div>
-    );
-});
 
-const RegisterAs = () => {
+const RegisterAs = ({ history, match }) => {
+    const GotoPage = (page) => {
+        let link = match.url.split('/');
+        link.pop();
+        link.push(page);
+        link = link.join('/');
+        console.log(link);
+        history.push(link);
+    }
     return (
         <div className="registerAs">
             <div className="registration">
@@ -21,9 +27,22 @@ const RegisterAs = () => {
                     Register As
                 </div>
                 <div className="registerAsButtons">
-                    {
-                        data.map((item, index) => <Button key={index} label={item} />)
-                    }
+                    <div className="registerAsButton" onClick={(e) => GotoPage(REGISTER_AS_DOCTOR)}>
+                        <div className="circle"></div>
+                        <div className="buttonLabel" >Doctor</div>
+                    </div>
+                    <div className="registerAsButton" onClick={(e) => GotoPage(REGISTER_AS_HOSPITAL)}>
+                        <div className="circle"></div>
+                        <div className="buttonLabel" >Hospital</div>
+                    </div>
+                    <div className="registerAsButton" onClick={(e) => GotoPage(REGISTER_AS_PHARMACY)}>
+                        <div className="circle"></div>
+                        <div className="buttonLabel" >Pharmacy</div>
+                    </div>
+                    <div className="registerAsButton" onClick={(e) => GotoPage(REGISTER_AS_PATHOLOGY)}>
+                        <div className="circle"></div>
+                        <div className="buttonLabel" >Pathology</div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import './businessInfoForm.styles.scss';
 
 //importing reusable components
@@ -7,12 +8,27 @@ import Icon from '../../../reusableComponent/icon/icon.component';
 //importing icon
 import { ImAttachment } from 'react-icons/im';
 
+//importing routes
+import { REGISTER_AS } from '../routes';
+
+//importing services
+import {
+    REGISTER_AS_DOCTOR_LINK,
+    REGISTER_AS_HOSPITAL_LINK,
+    REGISTER_AS_PATHOLOGY_LINK,
+    REGISTER_AS_PHARMACY_LINK
+} from '../../../../services/services';
+
+const HOSPITAL = 'hospital';
+const PHARMACY = 'pharmacy';
+const DOCTOR = 'doctor';
+const PATHOLOGY = 'pathology';
 
 class BusinessInfoForm extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
-            businessType: null,
+            businessType: PHARMACY,
             businessName: '',
             address: '',
             area: '',
@@ -33,8 +49,53 @@ class BusinessInfoForm extends React.Component {
 
     changeHandler = (e) => {
         this.setState({ [e.target.id]: e.target.value }, () => {
-            console.log(this.state)
         });
+    }
+
+    clickUploadDocuments = (e) => {
+        this.uploadDocumentRef.current.click()
+    }
+
+    setDocuments = (e) => {
+        this.setState({ documents: e.target.files[0] });
+    }
+
+    setBusinessTypes = (e) => {
+        this.setState({ businessType: e.target.innerHTML });
+    }
+
+    submitHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        let postRequestLink = null;
+
+        //selecting link
+        if (this.state.businessType === HOSPITAL) {
+            postRequestLink = REGISTER_AS_HOSPITAL_LINK;
+        } else if (this.state.businessType === PATHOLOGY) {
+            postRequestLink = REGISTER_AS_PATHOLOGY_LINK;
+        } else if (this.state.businessType === PHARMACY) {
+            postRequestLink = REGISTER_AS_PHARMACY_LINK;
+        } else if (this.state.businessType === DOCTOR) {
+            postRequestLink = REGISTER_AS_DOCTOR_LINK;
+        }
+
+        axios
+            .post(postRequestLink, this.state)
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        /*this.props.setIsRegistered(true); //passed from registration component
+        let link = this.props.match.url.split('/');
+        link.pop();
+        link.push(REGISTER_AS);
+        link = link.join('/');
+        this.props.history.push(link);*/
     }
 
     render() {
@@ -45,10 +106,30 @@ class BusinessInfoForm extends React.Component {
                 </div>
                 <form className="businessInfoForm">
                     <div className="businessType">
-                        <p>Pharmacy</p>
-                        <p>Hospital</p>
-                        <p>Doctor</p>
-                        <p>Lab</p>
+                        <p
+                            className={`${this.state.businessType === PHARMACY ? 'active' : null}`}
+                            onClick={this.setBusinessTypes}
+                        >
+                            {PHARMACY}
+                        </p>
+                        <p
+                            className={`${this.state.businessType === HOSPITAL ? 'active' : null}`}
+                            onClick={this.setBusinessTypes}
+                        >
+                            {HOSPITAL}
+                        </p>
+                        <p
+                            className={`${this.state.businessType === DOCTOR ? 'active' : null}`}
+                            onClick={this.setBusinessTypes}
+                        >
+                            {DOCTOR}
+                        </p>
+                        <p
+                            className={`${this.state.businessType === PATHOLOGY ? 'active' : null}`}
+                            onClick={this.setBusinessTypes}
+                        >
+                            {PATHOLOGY}
+                        </p>
                     </div>
                     <div className="inputInfo">
                         <div className='businessInfo businessName businessInputContainer'>
@@ -113,16 +194,20 @@ class BusinessInfoForm extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className='businessInputContainer'>
+                        <div className='businessInputContainer firstNameInputContainer'>
                             <div className='businessInfo businessTitle'>
                                 <label htmlFor="title">Title</label>
-                                <input
+                                {/*<input
                                     type='text'
                                     id='title'
                                     value={this.state.title}
                                     onChange={this.changeHandler}
                                     placeholder='title'
-                                />
+                                />*/}
+                                <select>
+                                    <option>Mr.</option>
+                                    <option>Mrs.</option>
+                                </select>
                             </div>
                             <div className='businessInfo businessFirstName'>
                                 <label htmlFor="firstName">First Name</label>
@@ -187,19 +272,20 @@ class BusinessInfoForm extends React.Component {
                         </div>
                     </div>
                     <div className="uploadDocuments">
-                        <label htmlFor="upload documents">
+                        <label htmlFor="upload documents" onClick={this.clickUploadDocuments}>
                             <Icon iconColor='#ccc'>
                                 <ImAttachment />
                             </Icon>
                             Upload Documents
                         </label>
-                        <input type='file' />
+                        <p>Doctor/Hospital Registration, Pharmacy FDA Registration, Pathology/Lab Registration</p>
+                        <input type='file' ref={this.uploadDocumentRef} onChange={this.setDocuments} />
                     </div>
-                    <div className="buttons">
+                    <div className="buttons" onClick={this.submitHandler}>
                         <button className='greenButton'>SUBMIT</button>
                     </div>
                 </form>
-            </div>
+            </div >
         );
     }
 }

@@ -8,7 +8,6 @@
     overflow-x: auto;
     background: white;
     padding: $padding;
-    border: 1px solid red;
 
     & button {
         @include greenButton();
@@ -22,6 +21,11 @@
             justify-content: space-between;
             color: $brown;
             font-weight: bold;
+
+            &>p.active {
+                outline: 2px solid $brown;
+                padding: 1%;
+            }
         }
 
         .inputInfo {
@@ -29,10 +33,39 @@
             & label {
                 text-align: left;
                 display: block;
+                font-weight: bold;
+                margin-left: 4%;
             }
 
             & input {
                 @include input();
+            }
+
+            & select {
+                @include input();
+                font-size: .9em;
+                font-weight: bold;
+
+                &>option {
+                    @include input();
+                    font-size: .9em;
+                    font-weight: bold;
+                }
+            }
+
+            .firstNameInputContainer {
+                display: flex;
+                flex-flow: row wrap;
+                align-items: center;
+                justify-content: space-between;
+
+                .businessTitle {
+                    width: 22%;
+                }
+
+                .businessFirstName {
+                    width: 75%;
+                }
             }
         }
 
@@ -60,6 +93,11 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
+        }
+
+        &>p {
+            font-size: .7em;
+            color: darken(#ccc, 20%);
         }
 
         &>input {
