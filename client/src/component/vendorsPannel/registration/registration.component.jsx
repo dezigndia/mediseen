@@ -11,17 +11,28 @@ import RegisterAsHospital from './registerAsHospital/registerAsHospital.componen
 import RegisterAsPharmacy from './registerAsPharmacy/registerAsPharmacy.component';
 import RegisterAsPathology from './registerAsPathology/rtegisterAsPathology.component';
 
+//importing Routes
+import {
+    REGISTER_AS,
+    GET_OTP,
+    ADD_BUSINESS_INFO,
+    REGISTER_AS_DOCTOR,
+    REGISTER_AS_HOSPITAL,
+    REGISTER_AS_PATHOLOGY,
+    REGISTER_AS_PHARMACY
+} from './routes';
+
 const Registration = ({ match }) => {
     return (
         <div className="registrationContainer">
             <Header />
             <Switch>
-                <Route exact path={`${match.url}/`} component={RegisterAs} />
-                <Route path={`${match.url}/registerAsDoctor`} component={RegisterAsDoctor} />
-                <Route path={`${match.url}/registerAsHospital`} component={RegisterAsHospital} />
-                <Route path={`${match.url}/registerAsPharmacy`} component={RegisterAsPharmacy} />
-                <Route path={`${match.url}/registerAsPathology`} component={RegisterAsPathology} />
-                <Redirect to='/404' />
+                <Route exact path={`${match.url}/${REGISTER_AS}`} component={RegisterAs} />
+                <Route path={`${match.url}/${REGISTER_AS_DOCTOR}`} component={RegisterAsDoctor} />
+                <Route path={`${match.url}/${REGISTER_AS_HOSPITAL}`} component={RegisterAsHospital} />
+                <Route path={`${match.url}/${REGISTER_AS_PHARMACY}`} component={RegisterAsPharmacy} />
+                <Route path={`${match.url}/${REGISTER_AS_PATHOLOGY}`} component={RegisterAsPathology} />
+                
             </Switch>
             <Footer />
         </div>
