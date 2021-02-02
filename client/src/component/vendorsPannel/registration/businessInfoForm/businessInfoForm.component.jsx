@@ -35,16 +35,25 @@ class BusinessInfoForm extends React.Component {
             pincode: '',
             street: '',
             city: '',
-            title: '',
+            state: '',
+            title: 'Mr.',
             firstName: '',
             middleName: '',
             lastName: '',
             password: '',
             degree: '',
-            speciality: '',
-            documents: null
+            specialist: '',
+            documents: null,
+            country: null
         }
         this.uploadDocumentRef = React.createRef();
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        // will only run if country is not set 
+        return prevState.country
+            ? {}
+            : { country: nextProps.countryCode.name }
     }
 
     changeHandler = (e) => {
@@ -73,29 +82,36 @@ class BusinessInfoForm extends React.Component {
         //selecting link
         if (this.state.businessType === HOSPITAL) {
             postRequestLink = REGISTER_AS_HOSPITAL_LINK;
-        } else if (this.state.businessType === PATHOLOGY) {
-            postRequestLink = REGISTER_AS_PATHOLOGY_LINK;
-        } else if (this.state.businessType === PHARMACY) {
-            postRequestLink = REGISTER_AS_PHARMACY_LINK;
-        } else if (this.state.businessType === DOCTOR) {
-            postRequestLink = REGISTER_AS_DOCTOR_LINK;
         }
+        else
+            if (this.state.businessType === PATHOLOGY) {
+                postRequestLink = REGISTER_AS_PATHOLOGY_LINK;
+            }
+            else
+                if (this.state.businessType === PHARMACY) {
+                    postRequestLink = REGISTER_AS_PHARMACY_LINK;
+                }
+                else
+                    if (this.state.businessType === DOCTOR) {
+                        postRequestLink = REGISTER_AS_DOCTOR_LINK;
+                    }
 
         axios
             .post(postRequestLink, this.state)
             .then(res => {
-                console.log(res.data);
+                this.props.setIsRegistered(true); //passed from registration component
+                let link = this.props.match.url.split('/');
+                link.pop();
+                link.push(REGISTER_AS);
+                link = link.join('/');
+                this.props.history.push(link);
             })
             .catch(err => {
                 console.log(err);
+                alert('something wnet wrong');
             })
 
-        /*this.props.setIsRegistered(true); //passed from registration component
-        let link = this.props.match.url.split('/');
-        link.pop();
-        link.push(REGISTER_AS);
-        link = link.join('/');
-        this.props.history.push(link);*/
+
     }
 
     render() {
@@ -194,6 +210,16 @@ class BusinessInfoForm extends React.Component {
                                 />
                             </div>
                         </div>
+                        <div className="businessInfo businessInputContainer businessInfoState">
+                            <label htmlFor="State">State</label>
+                            <input
+                                type='text'
+                                id='state'
+                                value={this.state.state}
+                                onChange={this.changeHandler}
+                                placeholder='state'
+                            />
+                        </div>
                         <div className='businessInputContainer firstNameInputContainer'>
                             <div className='businessInfo businessTitle'>
                                 <label htmlFor="title">Title</label>
@@ -264,7 +290,7 @@ class BusinessInfoForm extends React.Component {
                             <label htmlFor="Speciality">Speciality</label>
                             <input
                                 type='text'
-                                id='speciality'
+                                id='specialist'
                                 value={this.state.speciality}
                                 onChange={this.changeHandler}
                                 placeholder='speciality'
