@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import './businessInfoForm.styles.scss';
 
@@ -19,6 +20,9 @@ import {
     REGISTER_AS_PHARMACY_LINK
 } from '../../../../services/services';
 
+//importing action
+import { setCurrentVendor } from '../../../../actions/action';
+
 const HOSPITAL = 'hospital';
 const PHARMACY = 'pharmacy';
 const DOCTOR = 'doctor';
@@ -26,7 +30,7 @@ const PATHOLOGY = 'pathology';
 
 class BusinessInfoForm extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             businessType: PHARMACY,
             businessName: '',
@@ -57,8 +61,7 @@ class BusinessInfoForm extends React.Component {
     }
 
     changeHandler = (e) => {
-        this.setState({ [e.target.id]: e.target.value }, () => {
-        });
+        this.setState({ [e.target.id]: e.target.value });
     }
 
     clickUploadDocuments = (e) => {
@@ -99,7 +102,10 @@ class BusinessInfoForm extends React.Component {
         axios
             .post(postRequestLink, this.state)
             .then(res => {
-                this.props.setIsRegistered(true); //passed from registration component
+                this.props.setCurrentVendor({ isRegistered: true, ...res.data.payload })
+                console.log(res.data.payload);
+            })
+            .then(() => {
                 let link = this.props.match.url.split('/');
                 link.pop();
                 link.push(REGISTER_AS);
@@ -316,4 +322,8 @@ class BusinessInfoForm extends React.Component {
     }
 }
 
-export default BusinessInfoForm;
+const mapDispatchToProps = dispatch => ({
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(null, mapDispatchToProps)(BusinessInfoForm);

@@ -23,29 +23,25 @@ import {
     REGISTER_AS_PHARMACY
 } from './routes';
 
-const Registration = ({ match }) => {
-    const [isRegistered, setIsRegistered] = useState(false);
+const Registration = ({ history, match}) => {
     const [countryCode, setCountryCode] = useState({ code: '+91', shortHand: 'IND', name: 'India' });
 
     return (
         <div className="registrationContainer">
             {
-                isRegistered
-                    ? <>
-                        <Header />
-                        <Switch>
-                            <Route path={`${match.url}/${REGISTER_AS}`} component={RegisterAs} />
-                            <Route path={`${match.url}/${REGISTER_AS_DOCTOR}`} component={RegisterAsDoctor} />
-                            <Route path={`${match.url}/${REGISTER_AS_HOSPITAL}`} component={RegisterAsHospital} />
-                            <Route path={`${match.url}/${REGISTER_AS_PHARMACY}`} component={RegisterAsPharmacy} />
-                            <Route path={`${match.url}/${REGISTER_AS_PATHOLOGY}`} component={RegisterAsPathology} />
-                        </Switch>
-                        <Footer />
-                    </>
-                    : <Switch>
+                <>
+                    <Header />
+                    <Switch>
                         <Route exact path={`${match.url}/`} render={({ history, match }) => <WelcomeOtpScreen {...{ history, match, countryCode, setCountryCode }} />} />
-                        <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} render={({ history, match }) => <BusinessInfoForm {...{ setIsRegistered, history, match, countryCode }} />} />
+                        <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} render={({ history, match }) => <BusinessInfoForm {...{ history, match, countryCode }} />} />
+                        <Route path={`${match.url}/${REGISTER_AS}`} component={RegisterAs} />
+                        <Route path={`${match.url}/${REGISTER_AS_DOCTOR}`} component={RegisterAsDoctor} />
+                        <Route path={`${match.url}/${REGISTER_AS_HOSPITAL}`} component={RegisterAsHospital} />
+                        <Route path={`${match.url}/${REGISTER_AS_PHARMACY}`} component={RegisterAsPharmacy} />
+                        <Route path={`${match.url}/${REGISTER_AS_PATHOLOGY}`} component={RegisterAsPathology} />
                     </Switch>
+                    <Footer />
+                </>
             }
         </div>
     );

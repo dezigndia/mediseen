@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
 import './welcomeOtpScreen.styles.scss';
 
 //importing custom components
@@ -6,12 +8,59 @@ import OtpInput from './otpInput/otpInput.component';
 import PhoneNoInput from './phoneNoInput/phoneNoInput.component';
 
 //importing routes
-import { ADD_BUSINESS_INFO } from '../routes';
+import { ADD_BUSINESS_INFO, REGISTER_AS } from '../routes';
 
-const WelcomeOtpScreen = ({ history, match }) => {
+//importing services
+import { GET_OTP, VERIFY_OTP } from '../../../../services/services';
+
+//importing actions
+import { setCurrentVendor } from '../../../../actions/action';
+
+const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [phoneNo, setPhoneNo] = useState(['', '', '', '', '', '', '', '', '', '']);
     const [countryCode, setCountryCode] = useState({ code: '+91', country: 'IND' });
+
+    const getOtp = () => {
+        axios
+            .post(GET_OTP, { mobileNumber: phoneNo.join('') })
+            .then(res => {
+                if (res.data.payload.isRegistered) {
+                    setCurrentVendor(res.data.payload);
+                }
+            })
+            .catch(err => {
+                alert('something went wrong');
+            })
+    }
+
+    const verifyOtp = () => {
+        /*axios
+            .get(VERIFY_OTP)
+            .then()
+            .catch();*/
+        if (currentVendor.isRegistered) {
+            history.push(`${match.url}/${REGISTER_AS}`);
+        }
+        else {
+            history.push(`${match.url}/${ADD_BUSINESS_INFO}`);
+        }
+    }
+
+    useEffect(() => {
+        //action when phone no is input
+        let check = () => {
+            for (let i = 0; i < phoneNo.length; i++) {
+                if (phoneNo[i] === '') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if (check()) {
+            getOtp();
+        }
+    }, [phoneNo])
 
     useEffect(() => {
         //action when otp is input
@@ -24,7 +73,8 @@ const WelcomeOtpScreen = ({ history, match }) => {
             return true;
         }
         if (check()) {
-            history.push(`${match.url}/${ADD_BUSINESS_INFO}`);
+            //history.push(`${match.url}/${ADD_BUSINESS_INFO}`);
+            verifyOtp();
         }
     }, [otp]);
 
@@ -59,4 +109,12 @@ const WelcomeOtpScreen = ({ history, match }) => {
     );
 }
 
-export default WelcomeOtpScreen;
+const mapStateToProps = state => ({
+    currentVendor: state.currentVendor
+});
+
+const mapDispatchToProps = dispatch => ({
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WelcomeOtpScreen);
