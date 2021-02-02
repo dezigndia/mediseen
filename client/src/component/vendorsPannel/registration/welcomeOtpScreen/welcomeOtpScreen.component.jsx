@@ -8,7 +8,13 @@ import OtpInput from './otpInput/otpInput.component';
 import PhoneNoInput from './phoneNoInput/phoneNoInput.component';
 
 //importing routes
-import { ADD_BUSINESS_INFO, REGISTER_AS } from '../routes';
+import {
+    ADD_BUSINESS_INFO,
+    REGISTER_AS_DOCTOR,
+    REGISTER_AS_HOSPITAL,
+    REGISTER_AS_PHARMACY,
+    REGISTER_AS_PATHOLOGY
+} from '../routes';
 
 //importing services
 import { GET_OTP, VERIFY_OTP } from '../../../../services/services';
@@ -39,11 +45,33 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor }) =
             .get(VERIFY_OTP)
             .then()
             .catch();*/
+
+        let link = match.url.split('/');
+        link.pop();
         if (currentVendor.isRegistered) {
-            history.push(`${match.url}/${REGISTER_AS}`);
+            //deciding page to go on if user is verified
+            let page = null;
+            if (currentVendor.businessType === 'doctor') {
+                page = REGISTER_AS_DOCTOR;
+            }
+            else if (currentVendor.businessType === 'hospital') {
+                page = REGISTER_AS_HOSPITAL;
+            }
+            else if (currentVendor.businessType === 'pharmacy') {
+                page = REGISTER_AS_PHARMACY;
+            }
+            else if (currentVendor.businessType === 'pathology') {
+                page = REGISTER_AS_PATHOLOGY;
+            }
+
+            link.push(page);
+            link = link.join('/');
+            history.push(link);
         }
         else {
-            history.push(`${match.url}/${ADD_BUSINESS_INFO}`);
+            link.push(ADD_BUSINESS_INFO);
+            link = link.join('/');
+            history.push(link);
         }
     }
 

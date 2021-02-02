@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './registerAs.styles.scss';
 
 //importing routes
@@ -6,18 +7,41 @@ import {
     REGISTER_AS_DOCTOR,
     REGISTER_AS_HOSPITAL,
     REGISTER_AS_PATHOLOGY,
-    REGISTER_AS_PHARMACY
+    REGISTER_AS_PHARMACY,
+    GET_OTP
 } from '../routes';
 
+//importing actions
+import { setCurrentVendor } from '../../../../actions/action';
 
-const RegisterAs = ({ history, match }) => {
+const RegisterAs = ({ history, match, setCurrentVendor }) => {
     const GotoPage = (page) => {
-        let link = match.url.split('/');
-        link.pop();
-        link.push(page);
-        link = link.join('/');
-        console.log(link);
-        history.push(link);
+        //setting business type
+        let businessType = null;
+        if (page === REGISTER_AS_DOCTOR) {
+            businessType = 'doctor';
+        }
+        else if (page === REGISTER_AS_HOSPITAL) {
+            businessType = 'hospital';
+        }
+        else if (page === REGISTER_AS_PATHOLOGY) {
+            businessType = 'pathology';
+        }
+        else if (page === REGISTER_AS_PHARMACY) {
+            businessType = 'pharmacy';
+        }
+
+        if (businessType) {
+            setCurrentVendor({ businessType });
+        }
+
+        //going to other page
+        //let link = match.url.split('/');
+        //link.pop();
+        //link.push(GET_OTP);
+        //link = link.join('/');
+        //console.log(link);
+        history.push(`${match.url}/${GET_OTP}`);
     }
     return (
         <div className="registerAs">
@@ -48,4 +72,8 @@ const RegisterAs = ({ history, match }) => {
     );
 }
 
-export default RegisterAs;
+const mapDispatchToProps = dispatch => ({
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(null, mapDispatchToProps)(RegisterAs);

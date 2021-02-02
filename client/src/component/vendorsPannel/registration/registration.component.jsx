@@ -15,26 +15,26 @@ import RegisterAsPathology from './registerAsPathology/rtegisterAsPathology.comp
 
 //importing Routes
 import {
-    REGISTER_AS,
     ADD_BUSINESS_INFO,
     REGISTER_AS_DOCTOR,
     REGISTER_AS_HOSPITAL,
     REGISTER_AS_PATHOLOGY,
-    REGISTER_AS_PHARMACY
+    REGISTER_AS_PHARMACY,
+    GET_OTP
 } from './routes';
 
-const Registration = ({ history, match}) => {
+const Registration = ({ match }) => {
     const [countryCode, setCountryCode] = useState({ code: '+91', shortHand: 'IND', name: 'India' });
-
+    console.log(`${match.url}/${GET_OTP}`);
     return (
         <div className="registrationContainer">
             {
                 <>
                     <Header />
                     <Switch>
-                        <Route exact path={`${match.url}/`} render={({ history, match }) => <WelcomeOtpScreen {...{ history, match, countryCode, setCountryCode }} />} />
+                        <Route exact path={`${match.url}/`} component={RegisterAs} />
+                        <Route path={`${match.url}/${GET_OTP}`} render={({ history, match }) => <WelcomeOtpScreen {...{ history, match, countryCode, setCountryCode }} />} />
                         <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} render={({ history, match }) => <BusinessInfoForm {...{ history, match, countryCode }} />} />
-                        <Route path={`${match.url}/${REGISTER_AS}`} component={RegisterAs} />
                         <Route path={`${match.url}/${REGISTER_AS_DOCTOR}`} component={RegisterAsDoctor} />
                         <Route path={`${match.url}/${REGISTER_AS_HOSPITAL}`} component={RegisterAsHospital} />
                         <Route path={`${match.url}/${REGISTER_AS_PHARMACY}`} component={RegisterAsPharmacy} />

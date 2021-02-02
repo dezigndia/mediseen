@@ -10,7 +10,12 @@ import Icon from '../../../reusableComponent/icon/icon.component';
 import { ImAttachment } from 'react-icons/im';
 
 //importing routes
-import { REGISTER_AS } from '../routes';
+import {
+    REGISTER_AS_DOCTOR,
+    REGISTER_AS_HOSPITAL,
+    REGISTER_AS_PHARMACY,
+    REGISTER_AS_PATHOLOGY
+} from '../routes';
 
 //importing services
 import {
@@ -32,7 +37,7 @@ class BusinessInfoForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            businessType: PHARMACY,
+            type: '',
             businessName: '',
             address: '',
             area: '',
@@ -57,7 +62,7 @@ class BusinessInfoForm extends React.Component {
         // will only run if country is not set 
         return prevState.country
             ? {}
-            : { country: nextProps.countryCode.name }
+            : { country: nextProps.countryCode.name, type: nextProps.currentVendor.businessType }
     }
 
     changeHandler = (e) => {
@@ -81,34 +86,35 @@ class BusinessInfoForm extends React.Component {
         e.stopPropagation();
 
         let postRequestLink = null;
+        let gotoPageLink = null;
 
         //selecting link
-        if (this.state.businessType === HOSPITAL) {
+        if (this.state.type === HOSPITAL) {
             postRequestLink = REGISTER_AS_HOSPITAL_LINK;
+            gotoPageLink = REGISTER_AS_HOSPITAL;
         }
-        else
-            if (this.state.businessType === PATHOLOGY) {
-                postRequestLink = REGISTER_AS_PATHOLOGY_LINK;
-            }
-            else
-                if (this.state.businessType === PHARMACY) {
-                    postRequestLink = REGISTER_AS_PHARMACY_LINK;
-                }
-                else
-                    if (this.state.businessType === DOCTOR) {
-                        postRequestLink = REGISTER_AS_DOCTOR_LINK;
-                    }
+        else if (this.state.type === PATHOLOGY) {
+            postRequestLink = REGISTER_AS_PATHOLOGY_LINK;
+            gotoPageLink = REGISTER_AS_PATHOLOGY;
+        }
+        else if (this.state.type === PHARMACY) {
+            postRequestLink = REGISTER_AS_PHARMACY_LINK;
+            gotoPageLink = REGISTER_AS_PHARMACY;
+        }
+        else if (this.state.type === DOCTOR) {
+            postRequestLink = REGISTER_AS_DOCTOR_LINK;
+            gotoPageLink = REGISTER_AS_DOCTOR;
+        }
 
         axios
             .post(postRequestLink, this.state)
             .then(res => {
-                this.props.setCurrentVendor({ isRegistered: true, ...res.data.payload })
-                console.log(res.data.payload);
+                this.props.setCurrentVendor({ isRegistered: true, ...res.data.payload });
             })
             .then(() => {
                 let link = this.props.match.url.split('/');
                 link.pop();
-                link.push(REGISTER_AS);
+                link.push(gotoPageLink);
                 link = link.join('/');
                 this.props.history.push(link);
             })
@@ -132,25 +138,7 @@ class BusinessInfoForm extends React.Component {
                             className={`${this.state.businessType === PHARMACY ? 'active' : null}`}
                             onClick={this.setBusinessTypes}
                         >
-                            {PHARMACY}
-                        </p>
-                        <p
-                            className={`${this.state.businessType === HOSPITAL ? 'active' : null}`}
-                            onClick={this.setBusinessTypes}
-                        >
-                            {HOSPITAL}
-                        </p>
-                        <p
-                            className={`${this.state.businessType === DOCTOR ? 'active' : null}`}
-                            onClick={this.setBusinessTypes}
-                        >
-                            {DOCTOR}
-                        </p>
-                        <p
-                            className={`${this.state.businessType === PATHOLOGY ? 'active' : null}`}
-                            onClick={this.setBusinessTypes}
-                        >
-                            {PATHOLOGY}
+                            {this.props.currentVendor.businessType}
                         </p>
                     </div>
                     <div className="inputInfo">
@@ -322,8 +310,12 @@ class BusinessInfoForm extends React.Component {
     }
 }
 
+const mapStateToProps = state => ({
+    currentVendor: state.currentVendor
+});
+
 const mapDispatchToProps = dispatch => ({
     setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 });
 
-export default connect(null, mapDispatchToProps)(BusinessInfoForm);
+export default connect(mapStateToProps, mapDispatchToProps)(BusinessInfoForm);
