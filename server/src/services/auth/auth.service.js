@@ -25,6 +25,7 @@ class AuthService {
         return token
     })
     sendOTP = expressAsyncHandler(async mobileNumber => {
+        const user = await User.findOne({ phone: mobileNumber })
         const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
         const templateid = config.has("msg91.templateid") ? config.get("msg91.templateid") : null
         const { data } = await axios(
@@ -33,7 +34,7 @@ class AuthService {
                 method: "GET",
             }
         )
-        return { data: data }
+        return { data: data, isRegistered: user ? true : false }
     })
     getUser = expressAsyncHandler(async token => {
         return await jwt.verify(token, process.env.JWT_SECRET)
