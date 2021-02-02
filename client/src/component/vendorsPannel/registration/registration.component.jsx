@@ -25,6 +25,8 @@ import {
 
 const Registration = ({ match }) => {
     const [isRegistered, setIsRegistered] = useState(false);
+    const [countryCode, setCountryCode] = useState({ code: '+91', shortHand: 'IND', name: 'India' });
+
     return (
         <div className="registrationContainer">
             {
@@ -41,8 +43,8 @@ const Registration = ({ match }) => {
                         <Footer />
                     </>
                     : <Switch>
-                        <Route exact path={`${match.url}/`} component={WelcomeOtpScreen} />
-                        <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} render={({ history, match }) => <BusinessInfoForm {...{ setIsRegistered, history, match }} />} />
+                        <Route exact path={`${match.url}/`} render={({ history, match }) => <WelcomeOtpScreen {...{ history, match, countryCode, setCountryCode }} />} />
+                        <Route path={`${match.url}/${ADD_BUSINESS_INFO}`} render={({ history, match }) => <BusinessInfoForm {...{ setIsRegistered, history, match, countryCode }} />} />
                     </Switch>
             }
         </div>
