@@ -60,6 +60,7 @@ class HospitalController {
 
 	updateHospital = expressAsyncHandler(async (req, res) => {
 		const { hosId } = req.params
+		const { body } = req.body;
 
 		
 		const data = await hospService.updateHospital(hosId, body)
