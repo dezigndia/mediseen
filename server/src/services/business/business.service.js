@@ -33,5 +33,7 @@ class BusinessService {
             return await Doctor.find(filter).limit(parseInt(limit)).skip(parseInt(skip))
         }
     })
+
+    
 }
 module.exports = BusinessService

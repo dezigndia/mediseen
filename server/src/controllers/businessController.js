@@ -22,6 +22,7 @@ class BusinessController {
         const categories= ["Pharmacy", "Pathology","Hospital", "Doctor",]
         res.status(StatusCodes.OK).json(categories)
     })
+
 }
 
 module.exports = BusinessController
