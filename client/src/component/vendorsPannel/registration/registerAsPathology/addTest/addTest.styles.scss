@@ -118,7 +118,7 @@ $formHeight:70%;
     }
 
     .addProductsAndTestInputContainer {
-        height: $formHeight;
+        min-height: $formHeight;
         display: flex;
         flex-flow: column nowrap;
         align-items: stretch;

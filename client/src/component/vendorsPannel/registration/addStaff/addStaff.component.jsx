@@ -18,6 +18,9 @@ import { UPDATE_REGISTERED_USER } from '../../../../services/services';
 //importing reusable components
 import Icon from '../../../reusableComponent/icon/icon.component';
 
+//importing actions
+import { setCurrentVendor } from '../../../../actions/action';
+
 const AddedStaffList = ({ name, phoneNo, designation, onClick, auth_token }) => {
     return (
         <tr>
@@ -73,6 +76,7 @@ const AddStaff = (props) => {
                 }
             })
             .then(res => {
+                props.setCurrentVendor({ staffs: [...props.currentVendor.staffs, ...data.staffs] });
                 let nextUrl = props.match.url.split('/');
                 nextUrl.pop();
                 nextUrl.shift();
@@ -184,7 +188,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setStaff: ({ name, phoneNo, designation }) => dispatch(setStaff({ name, phoneNo, designation })),
-    removeStaff: (index) => dispatch(removeStaff(index))
+    removeStaff: (index) => dispatch(removeStaff(index)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AddStaff));

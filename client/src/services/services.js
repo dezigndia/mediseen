@@ -27,7 +27,3 @@ export const getAvailablityList = (id) => {
 export const REGISTER_LINK = `${server}api/business`;
 export const UPDATE_REGISTERED_USER = `${server}api/business/update`;
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`;
-export const REGISTER_AS_DOCTOR_LINK = `${server}api/doctor`;
-export const REGISTER_AS_HOSPITAL_LINK = `${server}api/hospital`;
-export const REGISTER_AS_PHARMACY_LINK = `${server}api/pharmacy`;
-export const REGISTER_AS_PATHOLOGY_LINK = `${server}api/pathology`;

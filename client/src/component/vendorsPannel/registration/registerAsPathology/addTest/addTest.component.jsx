@@ -18,6 +18,9 @@ import { lightBlue } from '../../../../../assets/globalJSS';
 //importing services
 import { UPDATE_REGISTERED_USER } from '../../../../../services/services';
 
+//importing actions
+import { setCurrentVendor } from '../../../../../actions/action';
+
 const AddTests = (props) => {
 
     const [category, setCategory] = useState([]);
@@ -28,9 +31,7 @@ const AddTests = (props) => {
         category: 'Choose Category',
         mrp: '',
         sellingPrice: '',
-        productDetails: '',
-        company: '',
-        barCode: '',
+        testDetails: '',
         quantity: '0',
         type: 'tablet',
         fastingRequired: false
@@ -38,7 +39,11 @@ const AddTests = (props) => {
     const [data, dispatch] = useReducer((state, action) => {
         switch (action.type) {
             case 'addImage':
-                return { ...state, image: [...state.image, action.payload] };
+                let imageArray = [];
+                Object.keys(action.payload).forEach(item => {
+                    imageArray.push(action.payload[item]);
+                });
+                return { ...state, image: imageArray };
             case 'setName':
                 return { ...state, name: action.payload };
             case 'setCategory':
@@ -51,12 +56,8 @@ const AddTests = (props) => {
                 return { ...state, mrp: action.payload };
             case 'setSellingPrice':
                 return { ...state, sellingPrice: action.payload };
-            case 'setProductDetails':
-                return { ...state, productDetails: action.payload };
-            case 'setCompany':
-                return { ...state, company: action.payload };
-            case 'setBarCode':
-                return { ...state, barCode: action.payload };
+            case 'setTestDetails':
+                return { ...state, testDetails: action.payload };
             case 'setFastingRequired':
                 return { ...state, fastingRequired: action.payload }
             default:
@@ -65,24 +66,40 @@ const AddTests = (props) => {
     }, initialState);
 
     const addButtonhandler = (e) => {
-        const Data = {
-            images: data.image,
-            name: data.name,
-            mrp: data.mrp,
-            sp: data.sellingPrice,
-            details: data.productDetails,
-            qty: data.quantity,
-            fastingRequired: data.fastingRequired,
-            category: data.category,
-            type: data.type
+        var Data = {
+            tests: {
+                images: data.image,
+                name: data.name,
+                mrp: data.mrp,
+                sp: data.sellingPrice,
+                details: data.testDetails,
+                qty: data.quantity,
+                fastingRequired: data.fastingRequired,
+                category: data.category,
+                type: data.type
+            }
         }
+        let formData = new FormData();
+        Object.keys(Data.tests).forEach(item => {
+            if (item === 'images') {
+                Data.tests[item].forEach(image => {
+                    formData.append('images', image);
+                })
+            }
+            else {
+                formData.append(item, Data.tests[item]);
+            }
+        });
+
         axios
-            .put(UPDATE_REGISTERED_USER, Data, {
+            .put(UPDATE_REGISTERED_USER, formData, {
                 headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             })
             .then(res => {
+                props.setCurrentVendor(Data);
                 props.history.goBack();
             })
             .catch(err => {
@@ -145,7 +162,7 @@ const AddTests = (props) => {
                 <div className="testName addProductsAndTestInput">
                     <input
                         type='text'
-                        placeholder='Product Name'
+                        placeholder='Test Name'
                         value={data.name}
                         onChange={(e) => dispatch({ type: 'setName', payload: e.target.value })}
                     />
@@ -187,7 +204,7 @@ const AddTests = (props) => {
                     </div>
                 </div>
                 <div className="tests flexInputContainer">
-                    <div className="ten addProductsAndTestInput">
+                    <div className="quantity addProductsAndTestInput">
                         <input
                             type='text'
                             placeholder='quantity'
@@ -211,17 +228,9 @@ const AddTests = (props) => {
                 <div className="testDetail addProductsAndTestInput">
                     <input
                         type='text'
-                        placeholder='Product Details'
+                        placeholder='test Details'
                         value={data.productDetails}
-                        onChange={(e) => dispatch({ type: 'setProductDetails', payload: e.target.value })}
-                    />
-                </div>
-                <div className="Company addProductsAndTestInput">
-                    <input
-                        type='text'
-                        placeholder='Company'
-                        value={data.company}
-                        onChange={(e) => dispatch({ type: 'setCompany', payload: e.target.value })}
+                        onChange={(e) => dispatch({ type: 'setTestDetails', payload: e.target.value })}
                     />
                 </div>
                 <div className="fastingRequired addProductsAndTestInput">
@@ -236,12 +245,6 @@ const AddTests = (props) => {
                         />
                     </div>
                 </div>
-                <div className="Barcode addProductsAndTestInput">
-                    <input
-                        type='text'
-                        placeholder='Bar Code'
-                    />
-                </div>
                 <div className="greenButton">
                     <button onClick={addButtonhandler}>Add Test</button>
                 </div>
@@ -250,9 +253,13 @@ const AddTests = (props) => {
     );
 }
 
-const mapStatetoprops = state => ({
+const mapStateToProps = state => ({
     currentVendor: state.currentVendor,
     auth_token: state.token
 });
 
-export default connect(mapStatetoprops)(AddTests);
+const mapDispatchToProps = dispatch => ({
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddTests);

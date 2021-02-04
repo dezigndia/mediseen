@@ -9,7 +9,8 @@ import {
     setPaymentOption,
     setUpiID,
     setBankIFSC,
-    setBankAccountNumber
+    setBankAccountNumber,
+    setCurrentVendor
 } from '../../../../actions/action';
 
 //reusable component
@@ -50,6 +51,7 @@ const PaymentSetting = (props) => {
                 }
             })
             .then(res => {
+                props.setCurrentVendor(data);
                 let nextUrl = props.match.url.split('/');
                 nextUrl.pop();
                 nextUrl.shift();
@@ -195,7 +197,8 @@ const mapDispatchToProps = dispatch => ({
     setOnlinePayment: (option) => dispatch(setOnlinePayment(option)),
     setUpiID: (upi) => dispatch(setUpiID(upi)),
     setBankIFSC: (ifsc) => dispatch(setBankIFSC(ifsc)),
-    setBankAccountNumber: (accountNo) => dispatch(setBankAccountNumber(accountNo))
+    setBankAccountNumber: (accountNo) => dispatch(setBankAccountNumber(accountNo)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 });
 
 export default connect(mapStatetoProps, mapDispatchToProps)(PaymentSetting);

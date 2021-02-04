@@ -19,6 +19,9 @@ import { lightBlue } from '../../../../../assets/globalJSS';
 //importing services
 import { UPDATE_REGISTERED_USER } from '../../../../../services/services';
 
+//importing actions
+import { setCurrentVendor } from '../../../../../actions/action';
+
 const AddProducts = (props) => {
 
     const [category, setCategory] = useState([]);
@@ -81,17 +84,19 @@ const AddProducts = (props) => {
 
     const addTestSubmit = (e) => {
         var Data = {
-            ownerId: props.currentVendor._id,
-            name: data.name,
-            category: 'pharmacy',
-            role: data.category,
-            mrp: data.mrp,
-            sellingPrice: data.sellingPrice,
-            qty: data.quantity,
-            qtyType: data.type,
-            details: data.productDetails,
-            company: data.company,
-            barcode: data.barcode
+            products: {
+                ownerId: props.currentVendor._id,
+                name: data.name,
+                category: 'pharmacy',
+                role: data.category,
+                mrp: data.mrp,
+                sellingPrice: data.sellingPrice,
+                qty: data.quantity,
+                qtyType: data.type,
+                details: data.productDetails,
+                company: data.company,
+                barcode: data.barcode
+            }
         }
         axios
             .put(UPDATE_REGISTERED_USER, Data, {
@@ -100,6 +105,8 @@ const AddProducts = (props) => {
                 }
             })
             .then(res => {
+                props.setCurrentVendor(Data);
+                props.history.goBack();
                 console.log(res);
             })
             .catch(err => {
@@ -146,7 +153,7 @@ const AddProducts = (props) => {
                 <div className="testName addProductsAndTestInput">
                     <input
                         type='text'
-                        placeHolder='product name'
+                        placeholder='product name'
                         value={data.name}
                         onChange={(e) => dispatch({ type: 'setName', payload: e.target.value })}
                     />
@@ -256,4 +263,8 @@ const mapStateToProps = state => ({
     auth_token: state.token
 });
 
-export default connect(mapStateToProps)(AddProducts);
+const mapDispatchToprops = dispatch => ({
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToprops)(AddProducts);

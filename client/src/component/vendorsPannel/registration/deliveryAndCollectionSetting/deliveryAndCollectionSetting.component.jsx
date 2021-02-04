@@ -12,7 +12,8 @@ import {
     setDeliveryAndCollectionCodAvailable,
     setDeliveryAndCollectionDistance,
     setDeliveryAndCollectionHardcopyDeliveryCharges,
-    setDeliveryAndCollectionMininumAmmount
+    setDeliveryAndCollectionMininumAmmount,
+    setCurrentVendor
 } from '../../../../actions/action';
 
 //importing reusable components
@@ -33,21 +34,25 @@ const DeliveryAndCollectionSetting = (props) => {
 
         if (props.currentVendor.businessType === 'pharmacy') {
             data = {
-                type: props.availableAt.customerAddress ? 'delivery' : 'pickup',
-                deliveryCharges: props.chargesPerOrder,
-                minimumAmmount: props.minimumAmmount,
-                codAvailable: props.codAvailable,
-                deliveryDistance: props.distance
+                deliveryDetails: {
+                    type: props.availableAt.customerAddress ? 'delivery' : 'pickup',
+                    deliveryCharges: props.chargesPerOrder,
+                    minimumAmmount: props.minimumAmmount,
+                    codAvailable: props.codAvailable,
+                    deliveryDistance: props.distance
+                }
             }
         }
         else if (props.currentVendor.businessType === 'pathology') {
             data = {
-                availablity: props.availableAt.customerAddress ? 'customer' : 'center',
-                collectionChargesPerVisit: props.chargesPerOrder,
-                minCollectionAmmount: props.minimumAmmount,
-                hardCopyReportDeliveryCharges: props.hardcopyDeliveryCharges,
-                codAvailable: props.codAvailable,
-                collectionDistance: props.distance
+                collections: {
+                    availablity: props.availableAt.customerAddress ? 'customer' : 'center',
+                    collectionChargesPerVisit: props.chargesPerOrder,
+                    minCollectionAmmount: props.minimumAmmount,
+                    hardCopyReportDeliveryCharges: props.hardcopyDeliveryCharges,
+                    codAvailable: props.codAvailable,
+                    collectionDistance: props.distance
+                }
             }
         }
 
@@ -58,6 +63,7 @@ const DeliveryAndCollectionSetting = (props) => {
                 }
             })
             .then(res => {
+                props.setCurrentVendor(data);
                 let nextUrl = props.match.url.split('/');
                 //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
                 nextUrl.pop();//removing last two element
@@ -228,7 +234,8 @@ const mapDispatchToProps = dispatch => ({
     setDeliveryAndCollectionCodAvailable: (option) => dispatch(setDeliveryAndCollectionCodAvailable(option)),
     setDeliveryAndCollectionDistance: (distance) => dispatch(setDeliveryAndCollectionDistance(distance)),
     setDeliveryAndCollectionHardcopyDeliveryCharges: (hardcopyDeliveryCharges) => dispatch(setDeliveryAndCollectionHardcopyDeliveryCharges(hardcopyDeliveryCharges)),
-    setDeliveryAndCollectionMininumAmmount: (minAmmount) => dispatch(setDeliveryAndCollectionMininumAmmount(minAmmount))
+    setDeliveryAndCollectionMininumAmmount: (minAmmount) => dispatch(setDeliveryAndCollectionMininumAmmount(minAmmount)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DeliveryAndCollectionSetting));

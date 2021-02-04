@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './pathologyRegistrationHome.styles.scss';
 
 //importing icons
@@ -7,6 +8,7 @@ import { BsFillPeopleFill } from 'react-icons/bs';
 import { BiWallet } from 'react-icons/bi';
 import { IoLogoWhatsapp } from 'react-icons/io';
 import { GoPlus } from 'react-icons/go';
+import { MdCheckCircle } from 'react-icons/md';
 
 //importing reusable components
 import RegistrationFormButton from '../../../../reusableComponent/registrationFormButton/registrationFormButton.component';
@@ -14,7 +16,7 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 //importing routes
 import { ADD_TIMINGS, COLLECTION_SETTING, ADD_TESTS } from '../../routes';
 
-const PathologyRegistrationHome = ({ history, match }) => {
+const PathologyRegistrationHome = ({ history, match, currentVendor }) => {
     return (
         <div className="pathologyRegistrationHome">
             <div>
@@ -22,22 +24,46 @@ const PathologyRegistrationHome = ({ history, match }) => {
                 <RegistrationFormButton
                     icon1={<AiOutlineClockCircle />}
                     label={[<p>Add Timing And Staff</p>]}
-                    icon2={<GoPlus />}
-                    translucent
+                    icon2={
+                        currentVendor.staffs && currentVendor.workingHours
+                            ? <MdCheckCircle />
+                            : < GoPlus />
+                    }
+                    translucent={
+                        currentVendor.staffs && currentVendor.workingHours
+                            ? false
+                            : true
+                    }
                     onClick={(e) => history.push(`${match.url}/${ADD_TIMINGS}/`)}
                 />
                 <RegistrationFormButton
                     icon1={<BsFillPeopleFill />}
                     label={[<p>Collection & Payment Setting</p>]}
-                    icon2={<GoPlus />}
-                    translucent
+                    icon2={
+                        currentVendor.collections && currentVendor.payment
+                            ? <MdCheckCircle />
+                            : < GoPlus />
+                    }
+                    translucent={
+                        currentVendor.collections && currentVendor.payment
+                            ? false
+                            : true
+                    }
                     onClick={(e) => history.push(`${match.url}/${COLLECTION_SETTING}/`)}
                 />
                 <RegistrationFormButton
                     icon1={<BiWallet />}
                     label={[<p>Add Or Import Test</p>]}
-                    icon2={<GoPlus />}
-                    translucent
+                    icon2={
+                        currentVendor.tests
+                            ? <MdCheckCircle />
+                            : <GoPlus />
+                    }
+                    translucen={
+                        currentVendor.tests
+                            ? false
+                            : true
+                    }
                     onClick={(e) => history.push(`${match.url}/${ADD_TESTS}/`)}
                 />
             </div>
@@ -51,4 +77,8 @@ const PathologyRegistrationHome = ({ history, match }) => {
     );
 }
 
-export default PathologyRegistrationHome;
+const mapStateToProps = state => ({
+    currentVendor: state.currentVendor
+});
+
+export default connect(mapStateToProps)(PathologyRegistrationHome);

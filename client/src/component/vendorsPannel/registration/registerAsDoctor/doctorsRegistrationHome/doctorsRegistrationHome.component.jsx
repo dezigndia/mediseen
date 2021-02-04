@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './doctorsRegistrationHome.styles.scss';
 
 //routes names
@@ -10,12 +11,13 @@ import { FaCapsules } from 'react-icons/fa';
 import { BiWallet } from 'react-icons/bi';
 import { IoLogoWhatsapp } from 'react-icons/io';
 import { GoPlus } from 'react-icons/go';
+import { MdCheckCircle } from 'react-icons/md';
 
 //reusable component
 import RegistrationFormButton from '../../../../reusableComponent/registrationFormButton/registrationFormButton.component';
 
 
-const DoctorsRegistrationHome = ({ history, match }) => {
+const DoctorsRegistrationHome = ({ history, match, currentVendor }) => {
     return (
         <div className="doctorsRegistrationHome">
             <div className="businessInformation">
@@ -23,16 +25,16 @@ const DoctorsRegistrationHome = ({ history, match }) => {
                 <RegistrationFormButton
                     icon1={<FaCapsules />}
                     label={[<p>Add Hospital & Timing</p>]}
-                    icon2={<GoPlus />}
+                    icon2={currentVendor.clinic.length ? <MdCheckCircle /> : <GoPlus />}
                     onClick={(e) => history.push(`${match.url}/${ADD_HOSPITALS}`)}
-                    translucent
+                    translucent={currentVendor.clinic.length ? false : true}
                 />
                 <RegistrationFormButton
                     icon1={<BiWallet />}
                     label={[<p>Payment Setting</p>]}
-                    icon2={<GoPlus />}
+                    icon2={currentVendor.payment.type ? <MdCheckCircle /> : <GoPlus />}
                     onClick={(e) => history.push(`${match.url}/${PAYMENT_SETTING}`)}
-                    translucent
+                    translucent={currentVendor.payment.type ? false : true}
                 />
             </div>
             <RegistrationFormButton
@@ -51,4 +53,8 @@ const DoctorsRegistrationHome = ({ history, match }) => {
     );
 }
 
-export default DoctorsRegistrationHome;
+const mapStateToProps = state => ({
+    currentVendor: state.currentVendor
+});
+
+export default connect(mapStateToProps)(DoctorsRegistrationHome);

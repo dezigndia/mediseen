@@ -10,13 +10,13 @@ $inputBorder:1px solid #ccc;
     padding: $padding;
     height: 100%;
     width: 100%;
+    overflow-y: scroll;
+    overflow-x: auto;
 
     .greenButton {
         &>button {
             @include greenButton();
         }
-
-        margin:35px 0;
     }
 
     & .selectInputContainer {

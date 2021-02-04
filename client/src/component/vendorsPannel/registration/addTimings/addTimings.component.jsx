@@ -13,13 +13,16 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 import Icon from '../../../reusableComponent/icon/icon.component';
 
 //importing actions
-import { setStaffTiming, setStoreOpen } from '../../../../actions/action';
+import { setCurrentVendor, setStaffTiming, setStoreOpen } from '../../../../actions/action';
 
 //importing routes
 import { ADD_STAFF } from '../routes';
 
 //importing services
 import { UPDATE_REGISTERED_USER } from '../../../../services/services';
+
+//importing actions
+import { setcurrentVendor } from '../../../../actions/action';
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -48,6 +51,7 @@ const AddTimings = (props) => {
                 }
             })
             .then(res => {
+                props.setCurrentVendor(data);
                 let nextUrl = props.match.url.split('/');
                 //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
                 nextUrl.pop();//removing last two element
@@ -140,7 +144,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setStaffTiming: ({ day, timings }) => dispatch(setStaffTiming({ day, timings })),
-    setStoreOpen: (option) => dispatch(setStoreOpen(option))
+    setStoreOpen: (option) => dispatch(setStoreOpen(option)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTimings);
