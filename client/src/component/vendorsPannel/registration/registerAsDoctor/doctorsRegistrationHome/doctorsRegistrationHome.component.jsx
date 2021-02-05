@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import './doctorsRegistrationHome.styles.scss';
 
@@ -18,6 +18,17 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 
 
 const DoctorsRegistrationHome = ({ history, match, currentVendor }) => {
+    useEffect(() => {
+        // form /vendor/registration/registerADoctor
+        //to /vendor/profile
+        let link = match.url.split('/');
+        link.pop();
+        link.pop();
+        link.push('profile');
+        link = link.join('/');
+        console.log(link);
+        history.push(link);
+    }, [match.url]);
     return (
         <div className="doctorsRegistrationHome">
             <div className="businessInformation">

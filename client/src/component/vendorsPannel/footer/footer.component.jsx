@@ -14,7 +14,7 @@ const Footer = ({ location }) => {
     const [isHidden, setIsHidden] = useState(false);
 
     useEffect(() => {
-        if (location.pathname === '/vendor/registration') {
+        if (location.pathname === '/vendor/registration' || location.pathname === '/vendor' || location.pathname==='/vendor/registration/getOtp') {
             setIsHidden(true);
         }
         else if (isHidden) {

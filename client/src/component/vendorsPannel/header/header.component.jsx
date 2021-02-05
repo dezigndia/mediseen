@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './header.styles.scss';
 
@@ -10,9 +11,10 @@ import Icon from '../../reusableComponent/icon/icon.component';
 
 const Header = ({ location }) => {
     const [isHidden, setIsHidden] = useState(false);
-    
+    const businessName = useSelector(state => state.currentVendor.businessName);
+
     useEffect(() => {
-        if (location.pathname === '/vendor/registration') {
+        if (location.pathname === '/vendor/registration' || location.pathname === '/vendor' || location.pathname === '/vendor/registration/getOtp') {
             setIsHidden(true);
         }
         else if (isHidden) {
@@ -29,7 +31,7 @@ const Header = ({ location }) => {
                 <p>Add sign board</p>
             </div>
             <div className="vendorsName">
-                Dr.Reddy
+                {businessName}
             </div>
             <div className="vendorsNotification">
                 <Icon size='30px' iconColor='white'><IoMdNotificationsOutline /></Icon>
