@@ -24,7 +24,7 @@ const Home = () => {
                     <p>To Manage Appointment And Clinic</p>
                 </div>
                 <div className="appUrl">
-                    <p>www.googleplay.com / Doctin...</p>
+                    <p>www.googleplay.com / Doctin233/DR....</p>
                 </div>
             </div>
             <div className="vendorInfo">

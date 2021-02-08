@@ -202,14 +202,19 @@ $maxCardWidth:100%; //50px;
 
     &.large {
         pointer-events: none;
-        height:calc(#{$cardHeight} + 30px);
+        margin-top: 0;
+        padding: 1% 2% !important;
+        height:calc(#{$cardHeight} + 50px);
+        width: Min(100%, $maxCardWidth);
         grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: repeat(3, 1fr) .4fr 1fr;
-        grid-template-areas: "avatar   avatar   address  address  address  stars"
-            "avatar   avatar   address  address  address  distance"
-            "type     type     type     type     type     closeBy"
-            "null     null     null     null     null     null"
-            "website  website  website  website  website  share";
+        grid-template-rows: .8fr repeat(3, 1.2fr) .4fr 1fr;
+        grid-template-areas:
+            "nullB     nullB     nullB    nullB     isVarified isVarified"
+            "avatar    avatar    address  address   address    stars"
+            "avatar    avatar    address  address   address    distance"
+            "type      type      type     type      type       closeBy"
+            "nullA     nullA     nullA    nullA     nullA      nullA"
+            "website   website   website  website   website    share";
 
         .previewPersonalWebsite {
             display: flex;

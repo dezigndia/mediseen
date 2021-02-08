@@ -19,7 +19,7 @@ import { setCurrentVendor, setStaffTiming, setStoreOpen } from '../../../../acti
 import { ADD_STAFF } from '../routes';
 
 //importing services
-import { UPDATE_REGISTERED_USER } from '../../../../services/services';
+import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN } from '../../../../services/services';
 
 //importing actions
 import { setcurrentVendor } from '../../../../actions/action';
@@ -51,14 +51,26 @@ const AddTimings = (props) => {
                 }
             })
             .then(res => {
-                props.setCurrentVendor(data);
-                let nextUrl = props.match.url.split('/');
-                //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
-                nextUrl.pop();//removing last two element
-                nextUrl.pop();
-                nextUrl.shift();//removing first element
-                nextUrl.push(ADD_STAFF);
-                props.history.push('/' + nextUrl.join('/'));
+                axios
+                    .get(GET_USER_DEETAIL_BY_TOKEN, {
+                        headers: {
+                            'Authorization': `Bearer ${props.auth_token.accessToken}`
+                        }
+                    })
+                    .then(response => {
+                        props.setCurrentVendor(response.data.payload);
+                        let nextUrl = props.match.url.split('/');
+                        //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
+                        nextUrl.pop();//removing last two element
+                        nextUrl.pop();
+                        nextUrl.shift();//removing first element
+                        nextUrl.push(ADD_STAFF);
+                        props.history.push('/' + nextUrl.join('/'));
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        alert('something went wrong');
+                    })
             })
             .catch(err => {
                 console.log(err);

@@ -28,3 +28,7 @@ export const REGISTER_LINK = `${server}api/business`;
 export const UPDATE_REGISTERED_USER = `${server}api/business/update`;
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`;
 
+//adding products and tests
+export const ADD_TEST_AND_PRODUCTS=`${server}api/product/create`;
+export const GET_TEST_AND_PRODUCTS=`${server}api/product/find/business`;
+

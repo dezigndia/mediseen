@@ -16,10 +16,10 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { UPDATE_REGISTERED_USER } from '../../../../../services/services';
+import { ADD_TEST_AND_PRODUCTS} from '../../../../../services/services';
 
 //importing actions
-import { setCurrentVendor } from '../../../../../actions/action';
+import { setCurrentVendor,setProductsAndTestList } from '../../../../../actions/action';
 
 const AddTests = (props) => {
 
@@ -67,39 +67,36 @@ const AddTests = (props) => {
 
     const addButtonhandler = (e) => {
         var Data = {
-            tests: {
-                images: data.image,
-                name: data.name,
-                mrp: data.mrp,
-                sp: data.sellingPrice,
-                details: data.testDetails,
-                qty: data.quantity,
-                fastingRequired: data.fastingRequired,
-                category: data.category,
-                type: data.type
-            }
+            image: 'amk',
+            name: data.name,
+            mrp: data.mrp,
+            sellingPrice: data.sellingPrice,
+            details: data.testDetails,
+            qty: data.quantity,
+            fastingRequired: data.fastingRequired,
+            category: data.category,
+            qtyType: data.type
         }
-        let formData = new FormData();
-        Object.keys(Data.tests).forEach(item => {
-            if (item === 'images') {
-                Data.tests[item].forEach(image => {
-                    formData.append('images', image);
+        /*let formData = new FormData();
+        Object.keys(Data).forEach(item => {
+            if (item === 'image') {
+                Data[item].forEach(image => {
+                    formData.append('image', image);
                 })
             }
             else {
-                formData.append(item, Data.tests[item]);
+                formData.append(item, Data[item]);
             }
-        });
+        });*/
 
         axios
-            .put(UPDATE_REGISTERED_USER, formData, {
+            .post(ADD_TEST_AND_PRODUCTS, Data, {
                 headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
-                    'Content-Type': 'multipart/form-data'
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,  
                 }
             })
             .then(res => {
-                props.setCurrentVendor(Data);
+                props.setProductsAndTestList(res.data.payload);
                 props.history.goBack();
             })
             .catch(err => {
@@ -259,7 +256,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload)),
+    setProductsAndTestList:(payload)=>dispatch(setProductsAndTestList(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTests);

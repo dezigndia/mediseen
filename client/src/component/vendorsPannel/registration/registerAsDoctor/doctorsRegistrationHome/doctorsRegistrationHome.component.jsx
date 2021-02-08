@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './doctorsRegistrationHome.styles.scss';
 
@@ -18,49 +19,79 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 
 
 const DoctorsRegistrationHome = ({ history, match, currentVendor }) => {
+
+    const isClinicAdded = currentVendor.clinic && currentVendor.clinic.length;
+    const isPaymentSettingDone = currentVendor.payment && currentVendor.payment.type;
+
     useEffect(() => {
-        // form /vendor/registration/registerADoctor
-        //to /vendor/profile
-        let link = match.url.split('/');
-        link.pop();
-        link.pop();
-        link.push('profile');
-        link = link.join('/');
-        console.log(link);
-        history.push(link);
+        if (isClinicAdded && isPaymentSettingDone) {
+            // form /vendor/registration/registerADoctor
+            //to /vendor/profile
+            let link = match.url.split('/');
+            link.pop();
+            link.pop();
+            link.push('profile');
+            link = link.join('/');
+            console.log(link);
+            history.push(link);
+        }
     }, [match.url]);
+
     return (
-        <div className="doctorsRegistrationHome">
-            <div className="businessInformation">
-                <h4>Information about your business</h4>
+        <>
+            <div className="doctorsRegistrationHome">
+                <div className="businessInformation">
+                    <h4>Information about your business</h4>
+                    <RegistrationFormButton
+                        icon1={<FaCapsules />}
+                        label={[<p>Add Hospital & Timing</p>]}
+                        icon2={
+                            currentVendor.clinic && currentVendor.clinic.length
+                                ? <MdCheckCircle />
+                                : <GoPlus />
+                        }
+                        onClick={(e) => history.push(`${match.url}/${ADD_HOSPITALS}`)}
+                        translucent={
+                            currentVendor.clinic && currentVendor.clinic.length
+                                ? false
+                                : true
+                        }
+                    />
+                    <RegistrationFormButton
+                        icon1={<BiWallet />}
+                        label={[<p>Payment Setting</p>]}
+                        icon2={
+                            currentVendor.payment && currentVendor.payment.type
+                                ? <MdCheckCircle />
+                                : <GoPlus />
+                        }
+                        onClick={(e) => history.push(`${match.url}/${PAYMENT_SETTING}`)}
+                        translucent={
+                            currentVendor.payment && currentVendor.payment.type
+                                ? false
+                                : true
+                        }
+                    />
+                </div>
                 <RegistrationFormButton
-                    icon1={<FaCapsules />}
-                    label={[<p>Add Hospital & Timing</p>]}
-                    icon2={currentVendor.clinic.length ? <MdCheckCircle /> : <GoPlus />}
-                    onClick={(e) => history.push(`${match.url}/${ADD_HOSPITALS}`)}
-                    translucent={currentVendor.clinic.length ? false : true}
+                    img={Doctin}
+                    label={[
+                        <p>Or verify Your <strong>Doctin</strong> user ID</p>,
+                        <p>And we will fetch all details</p>
+                    ]}
                 />
                 <RegistrationFormButton
-                    icon1={<BiWallet />}
-                    label={[<p>Payment Setting</p>]}
-                    icon2={currentVendor.payment.type ? <MdCheckCircle /> : <GoPlus />}
-                    onClick={(e) => history.push(`${match.url}/${PAYMENT_SETTING}`)}
-                    translucent={currentVendor.payment.type ? false : true}
+                    icon1={<IoLogoWhatsapp />}
+                    label={[<p>if you are facing problem chat with us</p>]}
+                    iconSize='2.5em'
                 />
             </div>
-            <RegistrationFormButton
-                img={Doctin}
-                label={[
-                    <p>Or verify Your <strong>Doctin</strong> user ID</p>,
-                    <p>And we will fetch all details</p>
-                ]}
-            />
-            <RegistrationFormButton
-                icon1={<IoLogoWhatsapp />}
-                label={[<p>if you are facing problem chat with us</p>]}
-                iconSize='2.5em'
-            />
-        </div>
+            {
+                isClinicAdded && isPaymentSettingDone
+                    ? <Redirect to={`${match.url}/profile`} />
+                    : null
+            }
+        </>
     );
 }
 

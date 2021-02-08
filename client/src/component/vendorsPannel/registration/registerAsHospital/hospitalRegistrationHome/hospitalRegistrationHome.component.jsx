@@ -25,23 +25,47 @@ const HospitalRegistrationHome = ({ history, match, currentVendor }) => {
                 <RegistrationFormButton
                     icon1={<AiOutlineClockCircle />}
                     label={[<p>Add Pannel & Timing</p>]}
-                    icon2={currentVendor.doctors.length ? <MdCheckCircle /> : <GoPlus />}
+                    icon2={
+                        currentVendor.doctors && currentVendor.doctors.length ?
+                            <MdCheckCircle /> :
+                            <GoPlus />
+                    }
                     onClick={(e) => { history.push(`${match.url}/${ADD_DOCTORS}`) }}
-                    translucent={currentVendor.doctors.length ? false : true}
+                    translucent={
+                        currentVendor.doctors && currentVendor.doctors.length
+                            ? false
+                            : true
+                    }
                 />
                 <RegistrationFormButton
                     icon1={<BiWallet />}
                     label={[<p>Payment Setting</p>]}
-                    icon2={currentVendor.payment.type ? <MdCheckCircle /> : <GoPlus />}
+                    icon2={
+                        currentVendor.payment
+                            ? <MdCheckCircle />
+                            : <GoPlus />
+                    }
                     onClick={(e) => { history.push(`${match.url}/${PAYMENT_SETTING}`) }}
-                    translucent={currentVendor.payment.type ? false : true}
+                    translucent={
+                        currentVendor.payment
+                            ? false
+                            : true
+                    }
                 />
                 <RegistrationFormButton
                     icon1={<BsFillPeopleFill />}
                     label={[<p>Add Support Staff</p>]}
-                    icon2={currentVendor.staffs.length ? <MdCheckCircle /> : <GoPlus />}
+                    icon2={
+                        currentVendor.staffs.length
+                            ? <MdCheckCircle />
+                            : <GoPlus />
+                    }
                     onClick={(e) => { history.push(`${match.url}/${ADD_STAFF}`) }}
-                    translucent={currentVendor.staffs.length ? false : true}
+                    translucent={
+                        currentVendor.staffs.length
+                            ? false
+                            : true
+                    }
                 />
             </div>
             <RegistrationFormButton

@@ -1,0 +1,59 @@
+@import '../../../assets/globalStyles.scss';
+.datePickerContainer {
+    .datePicker {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        background-color: $purple;
+        padding: 1%;
+
+        .picker {
+            margin-right: 1%;
+            width: 10%;
+        }
+
+        .selectDate {
+            width: 90%;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            overflow-x: scroll;
+            overflow-y: auto;
+            color: white;
+            height: 100%;
+
+            &>div {
+                font-weight: bold;
+                font-size: .9em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px;
+                border-radius: 50%;
+                min-width: 30px;
+                height: 30px;
+                margin: 0 1%;
+                transition: .2s ease-in-out;
+                position: relative;
+
+                &.selectedDate {
+                    color: $purple;
+                    background-color: white;
+                    transition: .2s ease-in-out;
+                }
+            }
+        }
+    }
+
+    .selectedDate {
+        padding: 2%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+
+        &>div {
+            margin: 0 2%;
+        }
+    }
+}

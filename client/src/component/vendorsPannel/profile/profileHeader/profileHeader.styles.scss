@@ -1,6 +1,6 @@
 @import '../../../../../assets/globalStyles.scss';
 
-$iconCircleSize:50px;
+$iconCircleSize:40px;
 
 .vendorProfileHeader {
     background: white;
@@ -9,12 +9,13 @@ $iconCircleSize:50px;
     align-items: center;
     justify-content: space-between;
     padding: 1%;
-    height:20%;
+    height: 17%;
+
     .vendorProfileHeaderButton {
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-        font-size: 0.9em;
+        font-size: 0.8em;
         color: lighten(black, 30%);
         font-weight: bold;
         width: 24%;

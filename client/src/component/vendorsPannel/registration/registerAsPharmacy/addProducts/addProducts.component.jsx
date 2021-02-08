@@ -17,10 +17,10 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { UPDATE_REGISTERED_USER } from '../../../../../services/services';
+import { ADD_TEST_AND_PRODUCTS } from '../../../../../services/services';
 
 //importing actions
-import { setCurrentVendor } from '../../../../../actions/action';
+import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
 
 const AddProducts = (props) => {
 
@@ -84,30 +84,26 @@ const AddProducts = (props) => {
 
     const addTestSubmit = (e) => {
         var Data = {
-            products: {
-                ownerId: props.currentVendor._id,
-                name: data.name,
-                category: 'pharmacy',
-                role: data.category,
-                mrp: data.mrp,
-                sellingPrice: data.sellingPrice,
-                qty: data.quantity,
-                qtyType: data.type,
-                details: data.productDetails,
-                company: data.company,
-                barcode: data.barcode
-            }
+            name: data.name,
+            category: 'pharmacy',
+            role: data.category,
+            mrp: data.mrp,
+            sellingPrice: data.sellingPrice,
+            qty: data.quantity,
+            qtyType: data.type,
+            details: data.productDetails,
+            company: data.company,
+            barcode: data.barcode
         }
         axios
-            .put(UPDATE_REGISTERED_USER, Data, {
+            .post(ADD_TEST_AND_PRODUCTS, Data, {
                 headers: {
                     'Authorization': `Bearer ${props.auth_token.accessToken}`
                 }
             })
             .then(res => {
-                props.setCurrentVendor(Data);
+                props.setProductsAndTestList(res.data.payload);
                 props.history.goBack();
-                console.log(res);
             })
             .catch(err => {
                 console.log(err);
@@ -264,7 +260,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToprops = dispatch => ({
-    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload)),
+    setProductsAndTestList: (payload) => dispatch(setProductsAndTestList(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToprops)(AddProducts);
