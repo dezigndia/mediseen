@@ -110,7 +110,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
             <div className="name">
                 <input
                     type='text'
-                    placeholder={`Enter name of hospital`}
+                    placeholder={`Enter name of the ${props.currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor'}`}
                     value={props.name}
                     onChange={(e) => { props.setName(e.target.value) }}
                 />
@@ -142,7 +142,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
             <div className="phoneNo">
                 <input
                     type='text'
-                    placeholder={`Enter phone number of hospital`}
+                    placeholder={`Enter phone no. ${props.currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor'}`}
                     value={props.phoneNumber}
                     onChange={(e) => { props.setPhoneNumber(e.target.value) }}
                 />

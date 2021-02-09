@@ -44,11 +44,10 @@ $registerAsHomeHeaderSize:1.2em;
     }
 }
 
-@mixin radio($margin:0 2px 0 0) {
+@mixin radio($margin:0 3px 0 0) {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-
     &>input[type='radio'] {
         margin: $margin;
     }

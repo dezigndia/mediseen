@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './registration.styles.scss';
 
@@ -23,11 +23,21 @@ import {
     GET_OTP
 } from './routes';
 
-const Registration = ({ match }) => {
+const Registration = ({ match, location }) => {
     const [countryCode, setCountryCode] = useState({ code: '+91', shortHand: 'IND', name: 'India' });
-    console.log(`${match.url}/${GET_OTP}`);
+    const [registrationDivHeight, setRegistrationDivHeight] = useState('100%');
+
+    useEffect(() => {
+        if (location.pathname.includes('/registerAs')) {
+            setRegistrationDivHeight('80%')
+        }
+        else {
+            setRegistrationDivHeight('100%')
+        }
+    }, [location.pathname, setRegistrationDivHeight]);
+
     return (
-        <div className="registrationContainer">
+        <div className="registrationContainer" style={{ height: registrationDivHeight }}>
             {
                 <Switch>
                     <Route exact path={`${match.url}/`} component={RegisterAs} />
@@ -37,6 +47,7 @@ const Registration = ({ match }) => {
                     <Route path={`${match.url}/${REGISTER_AS_HOSPITAL}`} component={RegisterAsHospital} />
                     <Route path={`${match.url}/${REGISTER_AS_PHARMACY}`} component={RegisterAsPharmacy} />
                     <Route path={`${match.url}/${REGISTER_AS_PATHOLOGY}`} component={RegisterAsPathology} />
+                    <Redirect to='/404' />
                 </Switch>
             }
         </div>

@@ -25,7 +25,7 @@ import { setProductsAndTestList } from '../../../../../actions/action';
 import { GET_TEST_AND_PRODUCTS } from '../../../../../services/services';
 import { Details } from '@material-ui/icons';
 
-const PharmacyRegistrationHome = ({ history, match, currentVendor, products, auth_token }) => {
+const PharmacyRegistrationHome = ({ history, match, currentVendor, products, auth_token, setProductsAndTestList }) => {
     useEffect(() => {
         axios
             .get(GET_TEST_AND_PRODUCTS, {
@@ -107,4 +107,8 @@ const mapStateToProps = state => ({
     auth_token: state.token
 });
 
-export default connect(mapStateToProps)(PharmacyRegistrationHome);
+const mapDispatchToProps = dispatch => ({
+    setProductsAndTestList: (payload) => dispatch(setProductsAndTestList(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PharmacyRegistrationHome);

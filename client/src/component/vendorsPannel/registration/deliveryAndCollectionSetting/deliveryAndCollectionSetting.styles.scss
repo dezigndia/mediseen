@@ -59,7 +59,7 @@
 
         .deliveryDistance {
             width: 96%;
-            margin: auto;
+            margin:auto;
 
             .deliveryDistanceLabel {
                 padding: 2% 0;
@@ -67,6 +67,7 @@
             }
 
             .MuiSlider-root {
+                margin:2% 0;
                 .MuiSlider-rail {
                     height: 10px;
                     border-radius: 20px;
