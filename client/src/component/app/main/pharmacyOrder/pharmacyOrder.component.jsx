@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import "./pharmacyOrder.styles.scss"
-import { Grid } from "@material-ui/core"
+import { Grid, SwipeableDrawer } from "@material-ui/core"
 import InfoCard from "./InfoCard"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
 import Button from "@material-ui/core/Button"
@@ -9,6 +9,7 @@ import hand from "./Hand.jpg"
 
 import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
+import UploadPres from "./UploadPres"
 
 const useStyles = makeStyles((theme) => ({
 	button: {
@@ -29,6 +30,16 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "#20E0B9",
 		color: "white",
 	},
+	container: {
+		height: "auto",
+		overflowY: "scroll",
+		padding: "0 0.5rem",
+	},
+	swipe: {
+		margin: "0 0.5rem",
+		borderTopLeftRadius: "1rem",
+		borderTopRightRadius: "1rem",
+	},
 }))
 
 const categoryList = ["OTC", "Ayurvedic", "Surgical", "Booster"]
@@ -36,10 +47,14 @@ const categoryList = ["OTC", "Ayurvedic", "Surgical", "Booster"]
 const PharmacyOrder = () => {
 	const classes = useStyles()
 
+	const [upload, setUpload] = useState(false)
+	const [file, setFile] = useState({})
 	const [active, setActive] = useState("OTC")
 
+	console.log(file)
+
 	return (
-		<Grid container direction="column" style={{ padding: "0 0.5rem" }}>
+		<Grid container direction="column" className={classes.container}>
 			<Grid item>
 				<InfoCard
 					name={"Rajam Medical Store"}
@@ -56,9 +71,25 @@ const PharmacyOrder = () => {
 					variant="contained"
 					className={classes.button}
 					startIcon={<ExitToAppIcon fontSize="2rem" />}
+					onClick={() => setUpload(true)}
+					setFile={(files) => setFile(files)}
 				>
 					Upload Prescription
 				</Button>
+			</Grid>
+			<Grid item>
+				<SwipeableDrawer
+					anchor="bottom"
+					open={upload}
+					classes={{
+						paper: classes.swipe,
+					}}
+				>
+					<UploadPres
+						name="Rajam Medical Store"
+						setUpload={(value) => setUpload(value)}
+					/>
+				</SwipeableDrawer>
 			</Grid>
 			<Grid container justify="center" spacing={2}>
 				<Grid item>
