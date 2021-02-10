@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import InfiniteCalendar from 'react-infinite-calendar';
 import './datePicker.styles.scss';
 
 //importing icon 
@@ -15,7 +14,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 const DatePicker = ({ setSelectedDate, selectedDate }) => {
     const [dateArray, setDateArray] = useState([]);
-    const [showDatePicker, setShowDatePicker] = useState(false);
+
     const date = new Date();
 
     useEffect(() => {
@@ -36,15 +35,14 @@ const DatePicker = ({ setSelectedDate, selectedDate }) => {
         <div className='datePickerContainer'>
             <div className="datePicker">
                 <div className="picker">
-                    <Icon iconColor='white' onClick={() => setShowDatePicker(prevState => !prevState)}>
+                    <Icon iconColor='white'>
                         <FaCalendarAlt />
                     </Icon>
-                    {
-                        showDatePicker &&
-                        <div className='calenderContiner'>
-                            
-                        </div>
-                    }
+                    <input type='date' onChange={(e) => {
+                        //["2021", "02", "19"]
+                        let val = e.target.value.split('-');
+                        setSelectedDate({ date: parseInt(val[2]), month: parseInt(val[1]) - 1, year: parseInt(val[0]) });
+                    }} />
                 </div>
                 <div className="selectDate">
                     {
@@ -61,7 +59,7 @@ const DatePicker = ({ setSelectedDate, selectedDate }) => {
                     }
                 </div>
             </div>
-            <div className="selectedDate">
+            <div className="fullSelectedDate">
                 <div>
                     {
                         selectedDate.date <= 9

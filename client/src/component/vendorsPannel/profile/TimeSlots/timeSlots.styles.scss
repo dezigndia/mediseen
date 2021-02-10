@@ -1,0 +1,56 @@
+@import '../../../../assets/globalStyles.scss';
+
+.appoinements {
+    border: 1px solid $purple;
+    background-color: lighten($purple, 75%);
+    height: 70px;
+    text-align: left;
+    padding: 2%;
+    margin-top: 10px;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 7fr 3fr;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas: "nameAndNumber time""actions null";
+    font-weight: bold;
+}
+
+.customerInfoContainer {
+    grid-area: nameAndNumber;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+
+    &>div:not(:last-child) {
+        margin-right: 5px;
+    }
+}
+
+.appointmentActions {
+    grid-area: actions;
+    align-self: end;
+
+    &>button {
+        padding: 2% 3%;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        outline: none;
+
+        &:nth-child(1) {
+            background-color: #f44336;
+            margin-right: 2%;
+        }
+
+        &:nth-child(2) {
+            background-color: $green;
+        }
+    }
+}
+
+.appointmentTime {
+    grid-area: time;
+    text-align: right;
+    font-size: .7em;
+    align-self: start;
+}
