@@ -14,33 +14,74 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor }) => {
         <div className="setPatient">
             <div className="setPatientForm">
                 <div className="setPatientFormHeader">
-                    <div>
+                    <div className='searchPatient'>
                         <label htmlFor="search Patient">Search Patient</label>
                         <InputWithIcon />
                     </div>
-                    <div>
+                    <div className='addPatient'>
                         <Icon>
                             <FiPlus />
                         </Icon>
-                        <p>
-                            Add Patient
-                    </p>
+                        <p>Add Patient</p>
                     </div>
                 </div>
-                <div className="searchPatient">
-                    <div className="editPatient">
-                        <p>
-                            Edit Patient
-                        </p>
-                        <Icon>
-                            <MdModeEdit />
-                        </Icon>
+                <div className="editPatient">
+                    <p> Edit Patient</p>
+                    <Icon size='1.2em'>
+                        <MdModeEdit />
+                    </Icon>
+                </div>
+                <div className="patientFirstName patientInfoInput">
+                    <label htmlFor="first name">First Name</label>
+                    <input />
+                </div>
+                <div className="patientLastName patientInfoInput">
+                    <label htmlFor="last Name">Last Name</label>
+                    <input />
+                </div>
+                <div className="patientMobileNumber patientInfoInput">
+                    <label htmlFor="Mobile No.">Mobile No.</label>
+                    <input />
+                </div>
+                <div className="patientGender patientInfoInput">
+                    <label htmlFor="Gender">Gender</label>
+                    <select>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div className="patientDob patientInfoInput">
+                    <label htmlFor="DOB">Date Of Birth</label>
+                    <input type='date' />
+                </div>
+                <div className="patientAge patientInfoInput">
+                    <label htmlFor="age">Age</label>
+                    <input />
+                </div>
+                <div className="patientPaymentStatus">
+                    <label htmlFor="Payment Status">Payment Status</label>
+                    <select>
+                        <option>Unpaid</option>
+                        <option>Paid</option>
+                    </select>
+                </div>
+                <div className="patientVideoConsulting">
+                    <label htmlFor="Video consulting">Video Consulting</label>
+                    <div>
+                        <div>
+                            <input type='radio' />
+                            <label htmlFor="Yes">Yes</label>
+                        </div>
+                        <div>
+                            <input type='radio' />
+                            <label htmlFor="No">No</label>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="setPatientsAction">
-                <button onClick={goToSetHospitalOrDoctor}>Back</button>
-                <button onClick={changeTab}>Book</button>
+                <button className='whiteButton' onClick={goToSetHospitalOrDoctor}>Back</button>
+                <button className='greenButton' onClick={changeTab}>Book</button>
             </div>
         </div>
     );

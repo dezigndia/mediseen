@@ -3,8 +3,8 @@ $red: #f44336;
 
 .appoinements {
     border: 1px solid $purple;
-    background-color: lighten($purple, 75%);
-    min-height: 70px;
+    background-color: lighten($purple, 80%);
+    min-height: 80px;
     text-align: left;
     padding: 2%;
     margin-top: 10px;
@@ -22,6 +22,12 @@ $red: #f44336;
         grid-template-rows: repeat(2, 1fr);
         grid-template-areas: "nameAndNumber time""actions null";
         font-weight: bold;
+        align-items: baseline;
+
+        &>div {
+            align-self: stretch;
+            justify-self: stretch;
+        }
     }
 
     &.vacant {
@@ -37,7 +43,7 @@ $red: #f44336;
         grid-area: nameAndNumber;
         display: flex;
         flex-flow: row nowrap;
-        align-items: flex-start;
+        align-items: center;
 
         &>div:not(:last-child) {
             margin-right: 5px;
@@ -46,7 +52,7 @@ $red: #f44336;
 
     .appointmentActions {
         grid-area: actions;
-        align-self: end;
+        align-self: end !important;
 
         &>button {
             padding: 2% 3%;
@@ -68,8 +74,13 @@ $red: #f44336;
 
     .appointmentTime {
         grid-area: time;
-        text-align: right;
-        font-size: .7em;
-        align-self: start;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: .8em;
+
+        &>p:not(:last-child) {
+            margin-right: 2%;
+        }
     }
 }
