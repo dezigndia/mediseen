@@ -1,7 +1,7 @@
 import React from 'react';
 import './timeSlots.styles.scss';
 
-const Appointments = ({ isBooked, name, phoneNo, timings }) => {
+const Appointments = ({ isBooked, name, phoneNo, timings, changeTab }) => {
     return (
         <div className={`appoinements ${isBooked ? 'booked' : 'vacant'}`}>
             {
@@ -26,7 +26,7 @@ const Appointments = ({ isBooked, name, phoneNo, timings }) => {
                             {timings.from}-{timings.to}
                         </div>
                     </>
-                    : null
+                    : <p onClick={changeTab}>{timings.from}-{timings.to}</p>
             }
         </div>
     );

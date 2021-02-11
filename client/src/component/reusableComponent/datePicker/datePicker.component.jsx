@@ -15,13 +15,12 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 const DatePicker = ({ setSelectedDate, selectedDate }) => {
     const [dateArray, setDateArray] = useState([]);
 
-    const date = new Date();
-
     useEffect(() => {
         function getDay(date) {
             // Sun Feb 28 2021 00:00:00 GMT+0530
             return parseInt(date.toString().split(' ')[2]);
         }
+        let date = new Date();
         let lastDay = getDay(new Date(date.getFullYear(), date.getMonth() + 1, 0));
         let currentDay = getDay(new Date());
         let date_array = [];
