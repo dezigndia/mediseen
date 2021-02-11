@@ -13,6 +13,7 @@ import staffTimingReducer from "./staffTiming/staffTimingReducer"
 import deliveryAndCollectionReducer from "./deliveryAndCollection/deliveryAndCollecrionReducer"
 import addStaffReducer from "./addStaff/addStaffReducer"
 import currentVendorReducer from "./currentVendor/currentVendorReducer"
+import prescription from "./prescription/prescription-reducer"
 
 const rootReducer = combineReducers({
 	location: locationReducer,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
 	deliveryAndCollection: deliveryAndCollectionReducer,
 	addStaff: addStaffReducer,
 	currentVendor: currentVendorReducer,
+	prescription,
 })
 
 const store = createStore(

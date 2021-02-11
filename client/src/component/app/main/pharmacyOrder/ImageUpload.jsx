@@ -2,6 +2,17 @@ import React, { Component } from "react"
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary"
 
 export class ImageUpload extends Component {
+	handleImage = (e) => {
+		const reader = new FileReader()
+
+		reader.onload = () => {
+			if (reader.readyState === 2) {
+				this.props.select(reader.result)
+			}
+		}
+		reader.readAsDataURL(e.target.files[0])
+	}
+
 	render() {
 		return (
 			<>
@@ -11,7 +22,7 @@ export class ImageUpload extends Component {
 					name="gallery"
 					ref={(fileInput) => (this.fileInput = fileInput)}
 					onChange={(e) => {
-						this.props.select(e.target.files[0])
+						this.handleImage(e)
 					}}
 				/>
 				<PhotoLibraryIcon />

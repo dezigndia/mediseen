@@ -1,13 +1,13 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import CameraAltIcon from "@material-ui/icons/CameraAlt"
-import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary"
 import CropFreeIcon from "@material-ui/icons/CropFree"
 import ClearIcon from "@material-ui/icons/Clear"
-import { ImagePicker } from "react-file-picker"
+import { useDispatch } from "react-redux"
 
 import { makeStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ImageUpload from "./ImageUpload"
+import { Redirect } from "react-router"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -37,8 +37,20 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const UploadPres = ({ name, setUpload, setFile }) => {
+const UploadPres = ({ name, setUpload }) => {
 	const classes = useStyles()
+
+	const [fileImage, setFileImage] = useState("")
+
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch({ type: "SET_PRES_IMAGE", payload: fileImage })
+	}, [fileImage])
+
+	if (fileImage) {
+		return <Redirect to="confirm"></Redirect>
+	}
 
 	return (
 		<Grid
@@ -67,8 +79,7 @@ const UploadPres = ({ name, setUpload, setFile }) => {
 			<Grid item className={classes.options}>
 				<ImageUpload
 					select={(files) => {
-						console.log(files)
-						setFile(files)
+						setFileImage(files)
 					}}
 				/>
 			</Grid>

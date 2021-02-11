@@ -12,6 +12,7 @@ import SearchPage from "./searchPage/searchPage.component"
 import UploadPrescription from "./uploadPrescription/uploadPrescription.component"
 import BookOrder from "./bookOrder/bookOrder.component"
 import AboutPage from "./aboutPage/aboutPage.component"
+import PharmOrderConfirm from "./pharmacyOrder/PharmOrderConfirm"
 
 const main = ({ match }) => {
 	return (
@@ -19,6 +20,11 @@ const main = ({ match }) => {
 			<Switch>
 				<Route exact path={`${match.url}/`} component={Home} />
 				<Route path={`${match.url}/doctorBooking`} component={DoctorBooking} />
+				<Route
+					exact
+					path={`${match.url}/pharmacyOrder/confirm`}
+					component={PharmOrderConfirm}
+				/>
 				<Route path={`${match.url}/pharmacyOrder`} component={PharmacyOrder} />
 				<Route
 					path={`${match.url}/hospitalBooking/:id`}

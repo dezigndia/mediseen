@@ -51,8 +51,6 @@ const PharmacyOrder = () => {
 	const [file, setFile] = useState({})
 	const [active, setActive] = useState("OTC")
 
-	console.log(file)
-
 	return (
 		<Grid container direction="column" className={classes.container}>
 			<Grid item>
@@ -72,7 +70,6 @@ const PharmacyOrder = () => {
 					className={classes.button}
 					startIcon={<ExitToAppIcon fontSize="2rem" />}
 					onClick={() => setUpload(true)}
-					setFile={(files) => setFile(files)}
 				>
 					Upload Prescription
 				</Button>
@@ -88,6 +85,7 @@ const PharmacyOrder = () => {
 					<UploadPres
 						name="Rajam Medical Store"
 						setUpload={(value) => setUpload(value)}
+						setFile={(files) => setFile(files)}
 					/>
 				</SwipeableDrawer>
 			</Grid>

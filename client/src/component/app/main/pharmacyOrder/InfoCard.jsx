@@ -65,6 +65,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 								<ReactStars
 									count={5}
 									size={20}
+									edit={false}
 									color2={"#FFFFFF"}
 									color1={"#FFC83D"}
 								/>
