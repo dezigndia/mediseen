@@ -23,7 +23,6 @@ import { setProductsAndTestList } from '../../../../../actions/action';
 
 //importing services
 import { GET_TEST_AND_PRODUCTS } from '../../../../../services/services';
-import { Details } from '@material-ui/icons';
 
 const PharmacyRegistrationHome = ({ history, match, currentVendor, products, auth_token, setProductsAndTestList }) => {
     useEffect(() => {
@@ -40,7 +39,8 @@ const PharmacyRegistrationHome = ({ history, match, currentVendor, products, aut
                 console.log(err);
                 alert("can't fetch product Details");
             })
-    }, [])
+    }, [auth_token.accessToken, setProductsAndTestList]);
+    
     return (
         <div className="pharmacyRegistrationHome">
             <div>

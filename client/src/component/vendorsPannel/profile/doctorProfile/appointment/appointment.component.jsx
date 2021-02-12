@@ -23,7 +23,7 @@ const ISSUE_NEW_APPOINTMENT = 'issueNewAppointments';
 
 const Appointments = () => {
 
-    const [selectedDate, setSelectedDate] = useState({ date: (new Date).getDate(), month: (new Date).getMonth(), year: (new Date).getFullYear() });
+    const [selectedDate, setSelectedDate] = useState({ date: (new Date()).getDate(), month: (new Date()).getMonth(), year: (new Date()).getFullYear() });
     const [tab, setTab] = useState(SHOW_APPOINTMENTS);
     //const [appointments,setAppointm]
     const hospitalList = useSelector(state => state.currentVendor.clinic);

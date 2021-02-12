@@ -3,8 +3,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import './registration.styles.scss';
 
 //custom Component
-import Header from '../header/header.component';
-import Footer from '../footer/footer.component';
 import WelcomeOtpScreen from './welcomeOtpScreen/welcomeOtpScreen.component';
 import BusinessInfoForm from './businessInfoForm/businessInfoForm.component';
 import RegisterAs from './registerAs/registerAs.component';

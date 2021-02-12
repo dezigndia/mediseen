@@ -20,11 +20,8 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 
 const DoctorsRegistrationHome = ({ history, match, currentVendor }) => {
 
-    const isClinicAdded = currentVendor.clinic && currentVendor.clinic.length;
-    const isPaymentSettingDone = currentVendor.payment && currentVendor.payment.type;
-
     useEffect(() => {
-        if (isClinicAdded && isPaymentSettingDone) {
+        if ((currentVendor.clinic && currentVendor.clinic.length) && (currentVendor.payment && currentVendor.payment.type)) {
             // form /vendor/registration/registerADoctor
             //to /vendor/profile
             let link = match.url.split('/');
@@ -35,7 +32,7 @@ const DoctorsRegistrationHome = ({ history, match, currentVendor }) => {
             console.log(link);
             history.push(link);
         }
-    }, [match.url]);
+    }, [match.url, currentVendor.clinic, currentVendor.payment, history]);
 
     return (
         <>
@@ -87,7 +84,7 @@ const DoctorsRegistrationHome = ({ history, match, currentVendor }) => {
                 />
             </div>
             {
-                isClinicAdded && isPaymentSettingDone
+                (currentVendor.clinic && currentVendor.clinic.length) && (currentVendor.payment && currentVendor.payment.type)
                     ? <Redirect to={`${match.url}/profile`} />
                     : null
             }

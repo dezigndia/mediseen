@@ -19,9 +19,9 @@ export const SEARCH_BUSINESS = (category, query, filter) => {
 
 //returns a url for retreiving available doctors in a hospital or
 //hospitals doctor is going to be vailable in
-export const getAvailablityList = (id) => {
-    let url = `${server}`;
-}
+//export const getAvailablityList = (id) => {
+  //  let url = `${server}`;
+//}
 
 //registring user 
 export const REGISTER_LINK = `${server}api/business`;
