@@ -13,6 +13,10 @@ import UploadPrescription from "./uploadPrescription/uploadPrescription.componen
 import BookOrder from "./bookOrder/bookOrder.component"
 import AboutPage from "./aboutPage/aboutPage.component"
 import PharmOrderConfirm from "./pharmacyOrder/PharmOrderConfirm"
+import PharmacyAbout from "./pharmacyOrder/PharmacyAbout"
+import Checkout from "./pharmacyOrder/CheckoutPharm"
+import PaymentPharm from "./pharmacyOrder/PaymentPharm"
+import CheckoutPharm from "./pharmacyOrder/CheckoutPharm"
 
 const main = ({ match }) => {
 	return (
@@ -24,6 +28,26 @@ const main = ({ match }) => {
 					exact
 					path={`${match.url}/pharmacyOrder/confirm`}
 					component={PharmOrderConfirm}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pharmacyOrder/checkout`}
+					component={CheckoutPharm}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pharmacyOrder/payment`}
+					component={PaymentPharm}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pharmacyOrder/confirm`}
+					component={PharmOrderConfirm}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pharmacyOrder/about`}
+					component={PharmacyAbout}
 				/>
 				<Route path={`${match.url}/pharmacyOrder`} component={PharmacyOrder} />
 				<Route

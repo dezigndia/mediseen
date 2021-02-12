@@ -3,6 +3,7 @@ import React from "react"
 import clsx from "clsx"
 import ReactStars from "react-stars"
 import Avatar from "@material-ui/core/Avatar"
+import { Link } from "react-router-dom"
 
 import { makeStyles } from "@material-ui/core/styles"
 const useStyles = makeStyles((theme) => ({
@@ -64,10 +65,14 @@ const ConfirmOrder = ({ name, address, stars, distance }) => {
 			</Grid>
 			<Grid container item xs={12} justify="space-evenly" spacing={3}>
 				<Grid item>
-					<Button className={clsx(classes.button1)}>No</Button>
+					<Link to="/home">
+						<Button className={clsx(classes.button1)}>No</Button>
+					</Link>
 				</Grid>
 				<Grid item>
-					<Button className={clsx(classes.button2)}>Yes</Button>
+					<Link to="">
+						<Button className={clsx(classes.button2)}>Yes</Button>
+					</Link>
 				</Grid>
 			</Grid>
 		</Grid>

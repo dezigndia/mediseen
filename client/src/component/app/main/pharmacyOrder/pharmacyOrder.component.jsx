@@ -6,6 +6,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp"
 import Button from "@material-ui/core/Button"
 import clsx from "clsx"
 import hand from "./Hand.jpg"
+import { Link } from "react-router-dom"
 
 import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
@@ -52,7 +53,12 @@ const PharmacyOrder = () => {
 	const [active, setActive] = useState("OTC")
 
 	return (
-		<Grid container direction="column" className={classes.container}>
+		<Grid
+			container
+			direction="column"
+			className={classes.container}
+			spacing={1}
+		>
 			<Grid item>
 				<InfoCard
 					name={"Rajam Medical Store"}
@@ -63,6 +69,13 @@ const PharmacyOrder = () => {
 					eos={22}
 					address="73 Algate St. Bandra"
 				/>
+			</Grid>
+			<Grid
+				style={{ textAlign: "right", fontSize: "1.2rem", fontWeight: "bold" }}
+				item
+				alignContent="flex-end"
+			>
+				<Link to="/home/pharmacyOrder/about">About</Link>
 			</Grid>
 			<Grid item>
 				<Button
