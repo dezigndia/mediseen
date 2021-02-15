@@ -1,0 +1,38 @@
+@import '../../../../../../assets/globalStyles.scss';
+
+$padding:0 2%;
+$margin-top:15px;
+
+.vendorHome {
+    position: relative;
+    padding: $padding;
+
+    .infoContainer {
+        &>.searchResultCard {
+            padding: 4% 0;
+        }
+
+        margin-top:5px;
+    }
+
+    .vendorProductListContainer {
+        margin: 20px 0;
+
+        .vendorProductListHeader {
+            display: flex;
+            align-items: center;
+            color: $blue;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .vendorProductList {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            overflow-y: scroll;
+            overflow-x: auto;
+            width: 100%;
+        }
+    }
+}

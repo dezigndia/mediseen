@@ -33,26 +33,6 @@ $margin-top:15px;
             overflow-y: scroll;
             overflow-x: auto;
             width: 100%;
-
-            .vendorTestAndProductListItem {
-                @include card();
-                height: 200px;
-                min-width: 200px;
-                box-shadow: 0 0 5px #ccc;
-
-                &:not(:last-child) {
-                    margin: 5px 0;
-                    margin-right: 10px;
-                }
-
-                .vendorTestAndProductListItemHeader{
-                    .vendorTestAndProductListItemHeaderCount{
-                        background-color: #ccc;
-                        padding:1%;
-                        display:inline-block;
-                    }
-                }
-            }
         }
     }
 }

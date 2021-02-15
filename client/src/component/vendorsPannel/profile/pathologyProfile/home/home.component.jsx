@@ -11,27 +11,11 @@ import { GET_TEST_CATEGORY } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
-
-//importing reusable component
 import Icon from '../../../../reusableComponent/icon/icon.component';
+import ProductAndTestListing from '../../../../reusableComponent/productAndTestListing/productAndTestListing.component';
 
 //importing icon
 import { MdLocalOffer } from 'react-icons/md';
-
-const TestsAndProductsListing = ({ label, value }) => {
-    return (
-        <div className="vendorTestAndProductListItem">
-            <div className="vendorTestAndProductListItemHeader">
-                <div className="vendorTestAndProductListItemHeaderCount">
-                    count
-                </div>
-                <div className="vendorTestAndProductListItemHeaderLabel">
-                    label
-                </div>
-            </div>
-        </div>
-    );
-}
 
 const Home = () => {
     const currentVendor = useSelector(state => state.currentVendor);
@@ -63,7 +47,7 @@ const Home = () => {
                 </div>
                 <div className="vendorTestList" onWheel={(e) => { e.preventDefault(); e.stopPropagation(); e.target.scrollLeft += parseInt(e.deltaY); console.log(e.deltaY + e.target.scrollLeft); }}>
                     {
-                        testCategories.map(item => <TestsAndProductsListing {...item} key={item._id} />)
+                        testCategories.map(item => <ProductAndTestListing {...item} key={item._id} />)
                     }
                 </div>
             </div>
