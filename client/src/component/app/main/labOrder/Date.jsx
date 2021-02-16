@@ -57,7 +57,7 @@ const Date = ({ date }) => {
 				container
 				xs={12}
 				direction="row"
-				alignItems="center"
+				alignItems="flex-start"
 			>
 				<Grid item xs={2}>
 					<DateRangeIcon style={{ color: "white" }} />
