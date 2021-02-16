@@ -1,5 +1,7 @@
 import React from "react"
 import { Grid } from "@material-ui/core"
+import moment from "moment"
+import Date from "./Date"
 
 import { makeStyles } from "@material-ui/core/styles"
 import Test from "./Test"
@@ -34,18 +36,23 @@ const LabBookTime = () => {
 	const classes = useStyles()
 
 	return (
-		<Grid container className={classes.container}>
+		<Grid container className={classes.container} spacing={5}>
 			<Grid container item>
 				{tests.map((test) => {
 					return (
-						<Test
-							name={test.name}
-							price={test.price}
-							fasting={test.fasting}
-							desc={test.desc}
-						/>
+						<Grid item xs={12}>
+							<Test
+								name={test.name}
+								price={test.price}
+								fasting={test.fasting}
+								desc={test.desc}
+							/>
+						</Grid>
 					)
 				})}
+			</Grid>
+			<Grid xs={12} item>
+				<Date date={JSON.stringify(moment()._d)} />
 			</Grid>
 		</Grid>
 	)

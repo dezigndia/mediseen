@@ -21,7 +21,7 @@ import PharmAddAddress from "./pharmacyOrder/PharmAddAddress"
 import LabOrderConfirm from "./labOrder/LabOrderConfirm"
 import LabAbout from "./labOrder/LabAbout"
 import LabBooking from "./labOrder/LabBooking"
-import LabBookTime from "./pharmacyOrder/LabBookTime"
+import LabBookTime from "./labOrder/LabBookTime"
 
 const main = ({ match }) => {
 	return (
