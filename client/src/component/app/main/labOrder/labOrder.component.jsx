@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import "./labOrder.styles.scss"
 import { makeStyles } from "@material-ui/core/styles"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { Grid, SwipeableDrawer, Button } from "@material-ui/core"
 import InfoCard from "./InfoCard"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
@@ -30,9 +30,10 @@ const useStyles = makeStyles(() => ({
 		color: "white",
 	},
 	container: {
-		height: "auto",
+		height: "100%",
 		overflowY: "scroll",
 		padding: "0 0.5rem",
+		flexWrap: "nowrap",
 	},
 	swipe: {
 		margin: "0 0.5rem",

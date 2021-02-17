@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
 import "./pharmacyOrder.styles.scss"
 import { Grid, SwipeableDrawer } from "@material-ui/core"
 import InfoCard from "./InfoCard"
@@ -6,7 +7,8 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp"
 import Button from "@material-ui/core/Button"
 import clsx from "clsx"
 import hand from "./Hand.jpg"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import fetchCall from "../../../../fetchCall/fetchCall"
 
 import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
@@ -26,15 +28,17 @@ const useStyles = makeStyles((theme) => ({
 		border: "0.5px solid black",
 		padding: "0.5rem",
 		borderRadius: "30px",
+		textTransform: "capitalize",
 	},
 	menuItemActive: {
 		backgroundColor: "#20E0B9",
 		color: "white",
 	},
 	container: {
-		height: "auto",
+		height: "100%",
 		overflowY: "scroll",
 		padding: "0 0.5rem",
+		flexWrap: "nowrap",
 	},
 	swipe: {
 		margin: "0 0.5rem",
@@ -43,14 +47,45 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const categoryList = ["OTC", "Ayurvedic", "Surgical", "Booster"]
+// const categoryList = ["OTC", "Ayurvedic", "Surgical", "Booster"]
 
 const PharmacyOrder = () => {
 	const classes = useStyles()
 
+	const cart = useSelector((state) => state.cart)
+
+	console.log(cart)
+
 	const [upload, setUpload] = useState(false)
 	const [file, setFile] = useState({})
-	const [active, setActive] = useState("OTC")
+	const [active, setActive] = useState("")
+	const [pharmacy, setPharmacy] = useState()
+	const [products, setProducts] = useState()
+	const [categoryList, setCategoryList] = useState()
+	const { pharmId } = useParams()
+
+	useEffect(() => {
+		const fetchPharm = async () => {
+			const data = await fetchCall(`pharmacy/${pharmId}`, "GET").then(
+				(res) => res.data.payload
+			)
+			setPharmacy(data)
+		}
+
+		const fetchProduct = async () => {
+			const data = await fetchCall(
+				`/product/find/all?itemType=product&ownerId=${pharmId}&limit=10`,
+				"GET"
+			).then((res) => res.data.payload)
+			setProducts(data)
+			let list = data.map((prod) => prod.category)
+			list = Array.from(new Set(list))
+			setCategoryList(list)
+			setActive(list[0])
+		}
+		fetchPharm()
+		fetchProduct()
+	}, [])
 
 	return (
 		<Grid
@@ -61,13 +96,13 @@ const PharmacyOrder = () => {
 		>
 			<Grid item>
 				<InfoCard
-					name={"Rajam Medical Store"}
-					delivery={500}
-					cod={true}
-					distance="2.5km"
-					start={4}
+					name={pharmacy && pharmacy.businessName}
+					delivery={pharmacy && pharmacy.deliveryDetails.deliveryCharges}
+					cod={pharmacy && pharmacy.deliveryDetails.codAvailable}
+					distance={pharmacy && pharmacy.deliveryDetails.deliveryDistance}
+					star={4}
 					eos={22}
-					address="73 Algate St. Bandra"
+					address={pharmacy && pharmacy.area}
 				/>
 			</Grid>
 			<Grid
@@ -107,63 +142,41 @@ const PharmacyOrder = () => {
 					<h2>To Rajam Medical Store</h2>
 				</Grid>
 				<Grid item container spacing={0} justify="center">
-					{categoryList.map((category) => (
-						<Grid
-							onClick={() => setActive(`${category}`)}
-							className={
-								active === category
-									? clsx(classes.menuItem, classes.menuItemActive)
-									: classes.menuItem
-							}
-							key={Math.random()}
-						>
-							{category}
-						</Grid>
-					))}
+					{categoryList &&
+						categoryList.map((category) => (
+							<Grid
+								onClick={() => setActive(`${category}`)}
+								className={
+									active === category
+										? clsx(classes.menuItem, classes.menuItemActive)
+										: classes.menuItem
+								}
+								key={Math.random()}
+							>
+								{category}
+							</Grid>
+						))}
 				</Grid>
 			</Grid>
 			<Grid container item>
-				{active === "OTC" ? (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Dettol Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				) : active === "Ayurvedic" ? (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Lifebuoy Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				) : active === "Surgical" ? (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Patanjali Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				) : (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Booster Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				)}
+				{products &&
+					products.map((product) => {
+						if (product.category === active) {
+							const cartQty = cart.filter((prod) => prod.id === product.id)
+							console.log(cartQty, "cartQty")
+							return (
+								<ProductCard
+									ogPrice={product.mrp}
+									dcPrice={product.sellingPrice}
+									name={product.name}
+									picture={hand}
+									quantity={`${product.qty}`}
+									cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+									product={product}
+								/>
+							)
+						}
+					})}
 			</Grid>
 		</Grid>
 	)

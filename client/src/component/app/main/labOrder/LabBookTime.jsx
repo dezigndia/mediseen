@@ -1,10 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { Grid } from "@material-ui/core"
 import moment from "moment"
 import Date from "./Date"
 
 import { makeStyles } from "@material-ui/core/styles"
 import Test from "./Test"
+import Time from "./Time"
 const useStyles = makeStyles(() => ({
 	container: {
 		padding: "1rem 2rem",
@@ -35,6 +36,10 @@ const tests = [
 const LabBookTime = () => {
 	const classes = useStyles()
 
+	const [date, setDate] = useState("")
+
+	console.log(date)
+
 	return (
 		<Grid container className={classes.container} spacing={5}>
 			<Grid container item>
@@ -52,7 +57,13 @@ const LabBookTime = () => {
 				})}
 			</Grid>
 			<Grid xs={12} item>
-				<Date date={JSON.stringify(moment()._d)} />
+				<Date
+					date={JSON.stringify(moment()._d)}
+					setDate={(value) => setDate(value)}
+				/>
+			</Grid>
+			<Grid xs={12} item>
+				<Time />
 			</Grid>
 		</Grid>
 	)

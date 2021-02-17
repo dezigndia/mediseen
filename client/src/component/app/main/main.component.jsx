@@ -14,7 +14,7 @@ import BookOrder from "./bookOrder/bookOrder.component"
 import AboutPage from "./aboutPage/aboutPage.component"
 import PharmOrderConfirm from "./pharmacyOrder/PharmOrderConfirm"
 import PharmacyAbout from "./pharmacyOrder/PharmacyAbout"
-import Checkout from "./pharmacyOrder/CheckoutPharm"
+// import Checkout from "./pharmacyOrder/CheckoutPharm"
 import PaymentPharm from "./pharmacyOrder/PaymentPharm"
 import CheckoutPharm from "./pharmacyOrder/CheckoutPharm"
 import PharmAddAddress from "./pharmacyOrder/PharmAddAddress"
@@ -22,6 +22,7 @@ import LabOrderConfirm from "./labOrder/LabOrderConfirm"
 import LabAbout from "./labOrder/LabAbout"
 import LabBooking from "./labOrder/LabBooking"
 import LabBookTime from "./labOrder/LabBookTime"
+import LabConfirm from "./labOrder/LabConfirm"
 
 const main = ({ match }) => {
 	return (
@@ -59,7 +60,10 @@ const main = ({ match }) => {
 					path={`${match.url}/pharmacyOrder/about`}
 					component={PharmacyAbout}
 				/>
-				<Route path={`${match.url}/pharmacyOrder`} component={PharmacyOrder} />
+				<Route
+					path={`${match.url}/pharmacyOrder/:pharmId`}
+					component={PharmacyOrder}
+				/>
 				<Route
 					path={`${match.url}/hospitalBooking/:id`}
 					component={HospitalBooking}
@@ -83,6 +87,11 @@ const main = ({ match }) => {
 					confirm
 					path={`${match.url}/labOrder/booking-time`}
 					component={LabBookTime}
+				/>
+				<Route
+					confirm
+					path={`${match.url}/labOrder/checkout`}
+					component={LabConfirm}
 				/>
 				<Route path={`${match.url}/labOrder`} component={LabOrder} />
 				<Route path={`${match.url}/search/:category`} component={SearchPage} />

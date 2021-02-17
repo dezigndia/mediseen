@@ -1,9 +1,17 @@
 import React from "react"
+import clsx from "clsx"
+import { useSelector, useDispatch } from "react-redux"
 
 import { makeStyles } from "@material-ui/core/styles"
 import { Button, Grid, Paper } from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
+import RemoveIcon from "@material-ui/icons/Remove"
 
 import tag from "../../../../assets/icons/tag.svg"
+import {
+	addCartProduct,
+	removeCartProduct,
+} from "../../../../store/cart/cartActions"
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -64,15 +72,35 @@ const useStyles = makeStyles(() => ({
 		marginLeft: "auto",
 		marginRight: "auto",
 		color: "white",
-		width: "50%",
+		width: "70%",
 		fontSize: "1.2rem",
+		padding: "0.5rem 0.9rem",
+	},
+	itemQty: {},
+	btn: {
 		padding: "0.3rem",
+	},
+	button: {
+		backgroundColor: "white",
+		borderRadius: "50%",
+		display: "flex",
+		justifyItems: "center",
+		alignItems: "center",
+		padding: "0.2rem",
 	},
 }))
 
-const ProductCard = ({ ogPrice, dcPrice, name, picture, quantity }) => {
+const ProductCard = ({
+	ogPrice,
+	dcPrice,
+	name,
+	picture,
+	quantity,
+	cart,
+	product,
+}) => {
 	const classes = useStyles()
-
+	const dispatch = useDispatch()
 	const discount = 100 - Math.round((dcPrice / ogPrice) * 100)
 
 	return (
@@ -115,7 +143,42 @@ const ProductCard = ({ ogPrice, dcPrice, name, picture, quantity }) => {
 					</Grid>
 				</Grid>
 			</Paper>
-			<Button className={classes.add}>Add</Button>
+			{cart === 0 ? (
+				<Button
+					onClick={() => dispatch(addCartProduct(product))}
+					className={clsx(classes.add, classes.btn)}
+				>
+					Add
+				</Button>
+			) : (
+				<Grid
+					xs={12}
+					alignItems="center"
+					container
+					justify="space-between"
+					className={clsx(classes.add, classes.itemQty)}
+				>
+					<Grid
+						item
+						alignContent="center"
+						justify="center"
+						className={classes.button}
+						onClick={() => dispatch(removeCartProduct(product))}
+					>
+						<RemoveIcon style={{ color: "black", margin: "auto" }} />
+					</Grid>
+					<Grid item>{cart}</Grid>
+					<Grid
+						item
+						alignContent="center"
+						justify="center"
+						className={classes.button}
+						onClick={() => dispatch(addCartProduct(product))}
+					>
+						<AddIcon style={{ color: "black", margin: "auto" }} />
+					</Grid>
+				</Grid>
+			)}
 		</div>
 	)
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import moment from "moment"
 
 import { makeStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
@@ -28,14 +29,16 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const Date = ({ date }) => {
+const Date = ({ date, setDate }) => {
 	const classes = useStyles()
 
 	const data = parseInt(date.split("-")[2])
 	console.log(JSON.parse(date))
-	const year = parseInt(date.split("-")[0])
-	let month = parseInt(date.split("-")[1])
+
 	const [active, setActive] = useState(data)
+
+	const month = moment().format("dddd Do MMMM YYYY").split(" ")[2]
+	const year = moment().format("dddd Do MMMM YYYY").split(" ")[3]
 
 	const dateArr = [
 		data,
@@ -66,7 +69,10 @@ const Date = ({ date }) => {
 					{dateArr.map((d) => (
 						<Grid item>
 							<h3
-								onClick={() => setActive(d)}
+								onClick={() => {
+									setActive(d)
+									setDate(d)
+								}}
 								className={active === d ? classes.date_active : classes.date}
 							>
 								{d}
@@ -74,6 +80,11 @@ const Date = ({ date }) => {
 						</Grid>
 					))}
 				</Grid>
+			</Grid>
+			<Grid item>
+				<h3 style={{ marginTop: "0.5rem" }}>
+					{active}th {month} {year}
+				</h3>
 			</Grid>
 		</Grid>
 	)
