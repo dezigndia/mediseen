@@ -9,7 +9,7 @@ $darkGreen:#128C7e;
 $blueGradient:linear-gradient(to right, #2BBEC8, #1DE9B6);
 $pinkGradient:linear-gradient(to right, #220555, #EC2B7A);
 
-@mixin card($borderRadius:10px){
+@mixin card($borderRadius:8px){
     box-shadow:0 0 10px #ccc;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;

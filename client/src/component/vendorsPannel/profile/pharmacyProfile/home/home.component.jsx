@@ -7,23 +7,30 @@ import './home.styles.scss';
 import { blue } from '../../../../../assets/globalJSS';
 
 //importing services 
-import { GET_PRODUCTS_CATEGORY } from '../../../../../services/services';
+import { GET_TEST_AND_PRODUCTS } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
 import Icon from '../../../../reusableComponent/icon/icon.component';
 import ProductAndTestListing from '../../../../reusableComponent/productAndTestListing/productAndTestListing.component';
+import RegistrationFormButton from '../../../../reusableComponent/registrationFormButton/registrationFormButton.component';
 
 //importing icon
 import { MdLocalOffer } from 'react-icons/md';
+import { FaUpload } from 'react-icons/fa';
 
 const Home = () => {
     const currentVendor = useSelector(state => state.currentVendor);
+    const auth_token = useSelector(state => state.token);
     const [productCategories, setProductCategories] = useState([]);
 
     useEffect(() => {
         axios
-            .get(GET_PRODUCTS_CATEGORY)
+            .get(GET_TEST_AND_PRODUCTS, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
             .then(res => {
                 setProductCategories(res.data.payload);
             })
@@ -45,11 +52,35 @@ const Home = () => {
                     </Icon>
                     <p>Products</p>
                 </div>
-                <div className="vendorProductList" onWheel={(e) => { e.preventDefault(); e.stopPropagation(); e.target.scrollLeft += parseInt(e.deltaY); console.log(e.deltaY + e.target.scrollLeft); }}>
+                <div className="vendorProductList">
                     {
-                        productCategories.map(item => <ProductAndTestListing {...item} key={item._id} />)
+                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
+                    }
+                    {
+                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
+                    }
+                    {
+                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
+                    }
+                    {
+                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
+                    }
+                    {
+                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
+                    }
+                    {
+                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
                     }
                 </div>
+            </div>
+            <div className="VendorHomePageButton">
+                <button className="greenButton">Add Products</button>
+            </div>
+            <div className="vendorHomeUploadExcel">
+                <RegistrationFormButton
+                    icon1={<FaUpload />}
+                    label={[<p>Or upload closing stock excel toMediseen Whatsaap</p>]}
+                />
             </div>
         </div>
     );
