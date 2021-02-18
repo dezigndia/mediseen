@@ -1,5 +1,5 @@
 import React from 'react';
-import './pending.styles.scss';
+import './collected.styles.scss';
 
 //importing custom components
 import CustomerDetails from '../customerDetails/customerDetails.component';
@@ -8,9 +8,9 @@ import TotalCostDetails from '../totalCostDetails/totalCostDetails.component';
 
 const height = window.screen.height - (window.screen.height / 100) * 20;
 
-const Pending = ({ setActiveTabNull }) => {
+const Collected = ({ setActiveTabNull }) => {
     return (
-        <div className="pendingOrders" onClick={setActiveTabNull} style={{ height: `${height}px` }}>
+        <div className="collectedOrders" onClick={setActiveTabNull} style={{ height: `${height}px` }}>
             <OrderDetails />
             <TotalCostDetails />
             <CustomerDetails />
@@ -18,4 +18,4 @@ const Pending = ({ setActiveTabNull }) => {
     );
 }
 
-export default Pending;
+export default Collected;

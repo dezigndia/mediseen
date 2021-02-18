@@ -1,10 +1,19 @@
 import React from 'react';
 import './shipped.styles.scss';
 
-const Shipped = () => {
+//importing custom components
+import CustomerDetails from '../customerDetails/customerDetails.component';
+import OrderDetails from '../orderDetails/orderDetails.component';
+import TotalCostDetails from '../totalCostDetails/totalCostDetails.component';
+
+const height = window.screen.height - (window.screen.height / 100) * 20;
+
+const Shipped = ({ setActiveTabNull }) => {
     return (
-        <div className="shippedOrder">
-            shipped
+        <div className="shippedOrders" onClick={setActiveTabNull} style={{ height: `${height}px` }}>
+            <OrderDetails />
+            <TotalCostDetails />
+            <CustomerDetails />
         </div>
     );
 }

@@ -1,7 +1,7 @@
 @import '../../profile.sharableStyles.scss';
 @import '../../../../../assets/globalStyles.scss';
 
-$orderDetailsAndOrderPaymentMethodPadding:40%;
+$orderDetailsAndOrderPaymentMethodPadding:31%;
 
 .vendorsOrders {
     padding: 2%;
@@ -149,7 +149,8 @@ $orderDetailsAndOrderPaymentMethodPadding:40%;
                     color: $green;
                 }
 
-                &.shipped {
+                &.shipped,
+                &.collected {
                     color: $blue;
                 }
 
@@ -172,7 +173,7 @@ $orderDetailsAndOrderPaymentMethodPadding:40%;
 
                 &>div {
                     position: relative;
-                    top: 8%;
+                    top: 9%;
 
                     &>div {
                         padding: 0 !important;
