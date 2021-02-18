@@ -5,8 +5,8 @@ $iconSize:25px;
 
 .vendorTestAndProductListItem {
     @include card();
-    height: 200px;
-    min-width: 200px;
+    height: 205px;
+    min-width: 205px;
     box-shadow: 0 0 5px #ccc;
     //border-radius: 10px;
     position: relative;
@@ -30,6 +30,7 @@ $iconSize:25px;
         top: 3%;
         left: 3%;
         text-align: left;
+        z-index: 1;
 
         .vendorTestAndProductListItemHeaderCount {
             padding: 1% 5px;
@@ -49,6 +50,7 @@ $iconSize:25px;
         top: 0;
         right: 0;
         transform: translate(36%, -20%) rotate(-44.5deg);
+        z-index: 1;
 
         .productDiscount {
             position: absolute;
@@ -70,8 +72,10 @@ $iconSize:25px;
     .vendorTestAndProductListItemMain {
         height: 70%;
         width: 60%;
-        margin: auto;
-        padding-top: 10px;
+        margin: 5px auto;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
 
         &>img {
             max-height: 100%;
@@ -81,6 +85,7 @@ $iconSize:25px;
 
     .vendorTestAndProductListFooter {
         font-weight: bold;
+        font-size: .9em;
 
         &>div {
             padding: 0 10%;
@@ -88,7 +93,6 @@ $iconSize:25px;
 
         .vendorTestAndProductListItemName {
             text-align: left;
-            font-size: .9em;
         }
 
         .vendorTestAndProductListItemPrice {
