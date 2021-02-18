@@ -3,6 +3,7 @@ import { Grid, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import ItemTable from "./ItemTable"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -23,13 +24,27 @@ const useStyles = makeStyles(() => ({
 		width: "100%",
 	},
 	btn: {
-		padding: "1rem",
-		fontSize: "1.5rem",
+		padding: "0.5rem",
+		width: "8rem",
+		fontSize: "1.2rem",
 	},
 }))
 
 const CheckoutPharm = () => {
 	const classes = useStyles()
+
+	const cart = useSelector((state) => state.cart)
+
+	let totalItem = 0
+
+	let totalCost = 0
+
+	const deliveryCharge = 0
+
+	cart.map((item) => {
+		totalCost = item.item.sellingPrice + totalCost
+		totalItem = item.qty + totalItem
+	})
 
 	return (
 		<Grid container className={classes.container} spacing={2}>
@@ -78,7 +93,7 @@ const CheckoutPharm = () => {
 			</Grid>
 			<Grid container item>
 				<Grid style={{ textAlign: "left", color: "gray" }} xs={6} item>
-					Total Items : 8
+					Total Items : {totalItem}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -86,7 +101,7 @@ const CheckoutPharm = () => {
 					xs={6}
 					item
 				>
-					Rs. 430
+					Rs. {totalCost}
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -99,7 +114,7 @@ const CheckoutPharm = () => {
 					xs={6}
 					item
 				>
-					Rs. 0.00
+					Rs. {deliveryCharge}
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -117,7 +132,7 @@ const CheckoutPharm = () => {
 					xs={6}
 					item
 				>
-					Rs. 430
+					Rs. {deliveryCharge + totalCost}
 				</Grid>
 			</Grid>
 			<div className={classes.divider}></div>

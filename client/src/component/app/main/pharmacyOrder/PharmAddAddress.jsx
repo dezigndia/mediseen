@@ -3,6 +3,7 @@ import React from "react"
 import { Grid, TextField, Button } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/core/styles"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -18,6 +19,12 @@ const useStyles = makeStyles(() => ({
 	},
 	bold: {
 		fontWeight: "bold",
+	},
+	btn: {
+		padding: "0.5rem",
+		width: "10rem",
+		fontSize: "1.2rem",
+		backgroundColor: "#1FE1B9",
 	},
 }))
 
@@ -132,9 +139,11 @@ const PharmAddAddress = () => {
 					/>
 				</Grid>
 				<Grid item xs={12}>
-					<Button variant="contained" color="primary">
-						Back
-					</Button>
+					<Link to="/home/pharmacyOrder/payment">
+						<Button className={classes.btn} variant="contained" color="primary">
+							Back
+						</Button>
+					</Link>
 				</Grid>
 			</Grid>
 		</Grid>

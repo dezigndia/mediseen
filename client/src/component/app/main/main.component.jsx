@@ -14,6 +14,7 @@ import BookOrder from "./bookOrder/bookOrder.component"
 import AboutPage from "./aboutPage/aboutPage.component"
 import PharmOrderConfirm from "./pharmacyOrder/PharmOrderConfirm"
 import PharmacyAbout from "./pharmacyOrder/PharmacyAbout"
+import PharmOrderSuccess from "./pharmacyOrder/PharmOrderSuccess"
 // import Checkout from "./pharmacyOrder/CheckoutPharm"
 import PaymentPharm from "./pharmacyOrder/PaymentPharm"
 import CheckoutPharm from "./pharmacyOrder/CheckoutPharm"
@@ -54,6 +55,11 @@ const main = ({ match }) => {
 					exact
 					path={`${match.url}/pharmacyOrder/add-address`}
 					component={PharmAddAddress}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pharmacyOrder/success`}
+					component={PharmOrderSuccess}
 				/>
 				<Route
 					exact

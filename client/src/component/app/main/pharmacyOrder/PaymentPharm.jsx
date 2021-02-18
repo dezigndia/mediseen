@@ -8,22 +8,36 @@ import {
 	Select,
 	Button,
 } from "@material-ui/core"
+import { useSelector } from "react-redux"
 import AddIcon from "@material-ui/icons/Add"
 import Address from "./Address.jsx"
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
+import fetchCall from "../../../../fetchCall/fetchCall"
 
 const address = [
 	{
-		ad1: "iayskdhakdjadasdasdadwa",
-		ad2: "7687989 97979797",
+		city: "Kolkata",
+		state: "West Bengal",
+		country: "India",
+		pincode: 808989,
+		area: "71/A Belgachia",
+		payment: "UPI",
 	},
 	{
-		ad1: "iayskdhakdjadasdasdadwasdadwa",
-		ad2: "7687989 97979797",
+		city: "Kol",
+		state: "West",
+		country: "India",
+		pincode: 808989,
+		area: "71/A Kolakta",
+		payment: "UPI",
 	},
 	{
-		ad1: "iayskdhakdjadasdasdadwasdadwa",
-		ad2: "7687989 97979797",
+		city: "Sunderban",
+		state: "West Bengal",
+		country: "India",
+		pincode: 808989,
+		area: "71/A Sunderban",
+		payment: "UPI",
 	},
 ]
 
@@ -50,12 +64,62 @@ const useStyles = makeStyles(() => ({
 		fontSize: "1.2rem",
 		color: "black",
 	},
+	btn: {
+		padding: "0.5rem",
+		width: "10rem",
+		fontSize: "1.2rem",
+		backgroundColor: "#1FE1B9",
+	},
 }))
 
 const PaymentPharm = () => {
 	const classes = useStyles()
 
 	const [payment, setPayment] = useState(1)
+
+	const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsImRlZmF1bHQiOltdLCJfaWQiOiI2MDJlMDUxNzVmN2IxYjFlMWY0Y2QzMDkiLCJwaG9uZSI6Iis5MTgxNDY2MDI3OTYiLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwiX192IjowLCJpYXQiOjE2MTM2MjkxMDd9.GGI3wV58RlxvhYzejS_mhUXuxA5QSbQ2ZmD7rot3qE4`
+
+	const cart = useSelector((state) => state.cart)
+
+	const products = cart.map((prod) => {
+		return {
+			productId: prod.item.id,
+			qty: prod.qty,
+		}
+	})
+
+	let totalCost = 0
+
+	cart.map((item) => {
+		totalCost = item.item.sellingPrice + totalCost
+	})
+
+	const [selected, setSelected] = useState(null)
+
+	const [placed, setPlaced] = useState(false)
+
+	const placeOrder = async () => {
+		const body = {
+			userId: "57668688w9e89",
+			patientName: "Yash Sharma",
+			mobileNumber: "89089898686989",
+			userPhoneNumber: "787989089898989",
+			date: `${Date.now()}`,
+			products,
+			grandTotal: totalCost,
+			address: address[selected],
+		}
+
+		const data = await fetchCall("order", "POST", token, body)
+
+		if (data.sucess === true) {
+			setPlaced(true)
+		}
+	}
+
+	if (placed) {
+		return <Redirect to="success" />
+	}
 
 	return (
 		<Grid
@@ -108,7 +172,7 @@ const PaymentPharm = () => {
 					style={{ textAlign: "right" }}
 					xs={6}
 				>
-					Rs. 430
+					Rs. {totalCost}
 				</Grid>
 			</Grid>
 			<div className={classes.divider}></div>
@@ -158,9 +222,15 @@ const PaymentPharm = () => {
 					</Grid>
 				</Grid>
 				<Grid spacing={2} container item direction="column">
-					{address.map((addr) => (
+					{address.map((addr, ind) => (
 						<Grid item>
-							<Address ad1={addr.ad1} ad2={addr.ad2} />
+							<Address
+								setSelected={(value) => setSelected(value)}
+								ad1={addr.area}
+								ad2={`${addr.city}, ${addr.pincode}`}
+								ind={ind}
+								checked={selected === ind ? true : false}
+							/>
 						</Grid>
 					))}
 				</Grid>
@@ -197,7 +267,12 @@ const PaymentPharm = () => {
 					</Grid>
 				</Grid>
 				<Grid item xs={12}>
-					<Button variant="contained" color="primary">
+					<Button
+						onClick={placeOrder}
+						className={classes.btn}
+						variant="contained"
+						color="primary"
+					>
 						Place Order
 					</Button>
 				</Grid>

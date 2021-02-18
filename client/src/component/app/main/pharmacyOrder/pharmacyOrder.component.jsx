@@ -13,6 +13,7 @@ import fetchCall from "../../../../fetchCall/fetchCall"
 import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
 import UploadPres from "./UploadPres"
+import Checkout from "./Checkout"
 
 const useStyles = makeStyles((theme) => ({
 	button: {
@@ -54,8 +55,6 @@ const PharmacyOrder = () => {
 
 	const cart = useSelector((state) => state.cart)
 
-	console.log(cart)
-
 	const [upload, setUpload] = useState(false)
 	const [file, setFile] = useState({})
 	const [active, setActive] = useState("")
@@ -94,17 +93,25 @@ const PharmacyOrder = () => {
 			className={classes.container}
 			spacing={1}
 		>
-			<Grid item>
-				<InfoCard
-					name={pharmacy && pharmacy.businessName}
-					delivery={pharmacy && pharmacy.deliveryDetails.deliveryCharges}
-					cod={pharmacy && pharmacy.deliveryDetails.codAvailable}
-					distance={pharmacy && pharmacy.deliveryDetails.deliveryDistance}
-					star={4}
-					eos={22}
-					address={pharmacy && pharmacy.area}
-				/>
-			</Grid>
+			{cart[0] ? (
+				<Grid item>
+					<Link to="/home/pharmacyOrder/checkout">
+						<Checkout />
+					</Link>
+				</Grid>
+			) : (
+				<Grid item>
+					<InfoCard
+						name={pharmacy && pharmacy.businessName}
+						delivery={pharmacy && pharmacy.deliveryDetails.deliveryCharges}
+						cod={pharmacy && pharmacy.deliveryDetails.codAvailable}
+						distance={pharmacy && pharmacy.deliveryDetails.deliveryDistance}
+						star={4}
+						eos={22}
+						address={pharmacy && pharmacy.area}
+					/>
+				</Grid>
+			)}
 			<Grid
 				style={{ textAlign: "right", fontSize: "1.2rem", fontWeight: "bold" }}
 				item
@@ -139,7 +146,7 @@ const PharmacyOrder = () => {
 			</Grid>
 			<Grid container justify="center" spacing={2}>
 				<Grid item>
-					<h2>To Rajam Medical Store</h2>
+					<h2>To {pharmacy && pharmacy.businessName}</h2>
 				</Grid>
 				<Grid item container spacing={0} justify="center">
 					{categoryList &&
