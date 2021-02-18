@@ -1,10 +1,10 @@
 @import '../OrderAndCollection.sharableStyle.scss';
-@import '../../../profile.sharableStyles.scss';
+@import '../../profile.sharableStyles.scss';
 
 .pendingOrders {
     @include orderInfoModal();
 
-    &>div:not(:first-child), {
+    &>div:not(:first-child) {
         margin: 10px 0;
     }
 

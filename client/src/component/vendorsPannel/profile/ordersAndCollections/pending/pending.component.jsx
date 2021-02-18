@@ -8,7 +8,7 @@ import TotalCostDetails from '../totalCostDetails/totalCostDetails.component';
 import AcceptTab from './acceptTab/acceptTab.component';
 import DeclineTab from '../declineTab/declineTab.component';
 
-const height = window.screen.height - (window.screen.height / 100) * 20;
+const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
 const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost }) => {
     const [showAcceptTab, setShowAcceptTab] = useState(false);
@@ -36,7 +36,7 @@ const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             }
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost }} />
                     : null
             }
         </div>

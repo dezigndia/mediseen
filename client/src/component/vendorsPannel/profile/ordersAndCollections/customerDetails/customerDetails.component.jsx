@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './customerDetails.styles.scss';
 
 //importing jss
-import { green } from '../../../../../../assets/globalJSS';
+import { green } from '../../../../../assets/globalJSS';
 
 //importing icons
 import { IoLogoWhatsapp } from 'react-icons/io';
 
 //importing reusable components
-import Icon from '../../../../../reusableComponent/icon/icon.component';
+import Icon from '../../../../reusableComponent/icon/icon.component';
 
-const Customerdetails = ({ orderId }) => {
+const Customerdetails = ({ orderId, small }) => {
+    const hidden = useMemo(() => ({ display: small ? 'none' : 'flex' }), [small]);
     return (
         <div className="orderCustomerDetails">
-            <div className="vendorPopUpCustomerDetails">
+            <div className="vendorPopUpCustomerDetails" style={hidden}>
                 <div>
                     <p>Customer Detail</p>
                 </div>
@@ -21,14 +22,14 @@ const Customerdetails = ({ orderId }) => {
                     <p>Eat Delivery Timing: 23min</p>
                 </div>
             </div>
-            <div className="vendorPopupNamePhoneChat">
+            <div className={`vendorPopupNamePhoneChat ${small ? 'justifyFlexStart' : null}`}>
                 <div className="vendorPopupCustomerName">
                     <p>Sunjoy Ghosh</p>
                 </div>
                 <div className="vendorPopupCustomerPhone">
                     <p>+919928735840</p>
                 </div>
-                <div className="vendorPopupCustomerChat">
+                <div className="vendorPopupCustomerChat" style={hidden}>
                     <Icon iconColor={green} size='25px'>
                         <IoLogoWhatsapp />
                     </Icon>

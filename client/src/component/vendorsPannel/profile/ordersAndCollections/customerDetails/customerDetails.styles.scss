@@ -3,6 +3,14 @@
     font-size: .95em;
     font-weight: bold;
 
+    & .justifyFlexStart {
+        justify-content: flex-start;
+
+        &>div:nth-child(1) {
+            margin-right: 25px;
+        }
+    }
+
     &>div {
         display: flex;
         flex-flow: row nowrap;
