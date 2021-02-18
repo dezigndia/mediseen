@@ -37,7 +37,6 @@ const useStyles = makeStyles(() => ({
 		width: "30%",
 		minWidth: "5rem",
 		maxWidth: "5rem",
-		// height: "30%",
 		position: "absolute",
 		right: 0,
 	},

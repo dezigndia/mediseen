@@ -2,6 +2,9 @@ import React, { useState } from "react"
 
 import { makeStyles } from "@material-ui/core/styles"
 import { Button, Grid, TextField } from "@material-ui/core"
+import { useSelector, useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
+import { addTiming } from "../../../../store/book-timing/timingActions"
 const useStyles = makeStyles(() => ({
 	container: {
 		width: "100%",
@@ -23,10 +26,14 @@ const timeArray = [
 	"Evening 9:00 PM",
 ]
 
-const Time = () => {
+const Time = ({ date }) => {
 	const classes = useStyles()
 
 	const [active, setActive] = useState(null)
+
+	const dispatch = useDispatch()
+
+	console.log(date)
 
 	return (
 		<Grid container direction="column">
@@ -54,9 +61,17 @@ const Time = () => {
 							/>
 						</Grid>
 						<Grid item xs={4}>
-							<Button variant="contained" color="primary">
-								Confirm
-							</Button>
+							<Link to="/home/labOrder/checkout">
+								<Button
+									onClick={() =>
+										dispatch(addTiming({ date, timing: timeArray[active] }))
+									}
+									variant="contained"
+									color="primary"
+								>
+									Confirm
+								</Button>
+							</Link>
 						</Grid>
 					</Grid>
 				</Grid>

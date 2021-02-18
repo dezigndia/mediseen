@@ -9,6 +9,10 @@ import clsx from "clsx"
 import UploadPres from "./UploadPres"
 import ProductCard from "./ProductCard"
 import hand from "./Hand.jpg"
+import { useSelector, useDispatch } from "react-redux"
+import Checkout from "../pharmacyOrder/Checkout"
+
+import fetchCall from "../../../../fetchCall/fetchCall"
 
 const useStyles = makeStyles(() => ({
 	button: {
@@ -42,14 +46,42 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const categoryList = ["OTC", "Ayurvedic", "Surgical", "Booster"]
-
 const PharmacyOrder = () => {
 	const classes = useStyles()
 
+	const [lab, setLab] = useState()
+	const cart = useSelector((state) => state.cart)
+
 	const [upload, setUpload] = useState(false)
 	const [file, setFile] = useState({})
-	const [active, setActive] = useState("OTC")
+	const [active, setActive] = useState()
+	const [products, setProducts] = useState()
+	const [categoryList, setCategoryList] = useState()
+	const { labId } = useParams()
+
+	useEffect(() => {
+		const fetchLab = async () => {
+			const data = await fetchCall(`pharmacy/${labId}`, "GET").then(
+				(res) => res.data.payload
+			)
+			setLab(data)
+		}
+		const fetchProduct = async () => {
+			const data = await fetchCall(
+				`/product/find/all?itemType=test&ownerId=${labId}`,
+				"GET"
+			).then((res) => res.data.payload)
+			setProducts(data)
+			let list = data.map((prod) => prod.category)
+			list = Array.from(new Set(list))
+			setCategoryList(list)
+			setActive(list[0])
+		}
+		fetchLab()
+		fetchProduct()
+	}, [])
+
+	console.log(products)
 
 	return (
 		<Grid
@@ -59,15 +91,25 @@ const PharmacyOrder = () => {
 			spacing={1}
 		>
 			<Grid item>
-				<InfoCard
-					name={"Shree Pathalogy"}
-					delivery={500}
-					cod={true}
-					distance="2.5km"
-					start={4}
-					eos={22}
-					address="73 Algate St. Bandra"
-				/>
+				{cart[0] ? (
+					<Link to="/home/labOrder/booking-time">
+						<Checkout />
+					</Link>
+				) : (
+					<InfoCard
+						name={lab && lab.businessName}
+						delivery={
+							lab && lab.collections.hardCopyReportDeliveryCharges
+								? lab.collections.hardCopyReportDeliveryCharges
+								: 0
+						}
+						cod={lab && lab.collections.codAvailable}
+						distance="2.5km"
+						start={4}
+						eos={22}
+						address={lab && lab.area}
+					/>
+				)}
 			</Grid>
 			<Grid
 				style={{ textAlign: "right", fontSize: "1.2rem", fontWeight: "bold" }}
@@ -95,7 +137,7 @@ const PharmacyOrder = () => {
 					}}
 				>
 					<UploadPres
-						name="Rajam Medical Store"
+						name={lab && lab.businessName}
 						setUpload={(value) => setUpload(value)}
 						setFile={(files) => setFile(files)}
 					/>
@@ -103,66 +145,44 @@ const PharmacyOrder = () => {
 			</Grid>
 			<Grid container justify="center" spacing={2}>
 				<Grid item>
-					<h2>To Rajam Medical Store</h2>
+					<h2>To {lab && lab.businessName}</h2>
 				</Grid>
 				<Grid item container spacing={0} justify="center">
-					{categoryList.map((category) => (
-						<Grid
-							onClick={() => setActive(`${category}`)}
-							className={
-								active === category
-									? clsx(classes.menuItem, classes.menuItemActive)
-									: classes.menuItem
-							}
-							key={Math.random()}
-						>
-							{category}
-						</Grid>
-					))}
+					{categoryList &&
+						categoryList.map((category) => (
+							<Grid
+								onClick={() => setActive(`${category}`)}
+								className={
+									active === category
+										? clsx(classes.menuItem, classes.menuItemActive)
+										: classes.menuItem
+								}
+								key={Math.random()}
+							>
+								{category}
+							</Grid>
+						))}
 				</Grid>
 			</Grid>
 			<Grid container item>
-				{active === "OTC" ? (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Dettol Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				) : active === "Ayurvedic" ? (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Lifebuoy Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				) : active === "Surgical" ? (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Patanjali Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				) : (
-					<Grid item>
-						<ProductCard
-							ogPrice="45"
-							dcPrice="42"
-							name="Booster Handwash"
-							picture={hand}
-							quantity="100 g"
-						/>
-					</Grid>
-				)}
+				{products &&
+					products.map((product) => {
+						if (product.category === active) {
+							const cartQty = cart.filter((prod) => prod.id === product.id)
+							console.log(cartQty, "cartQty")
+							return (
+								<ProductCard
+									ogPrice={product.mrp}
+									dcPrice={product.sellingPrice}
+									name={product.name}
+									picture={hand}
+									quantity={`${product.qty}`}
+									cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+									product={product}
+								/>
+							)
+						}
+					})}
 			</Grid>
 		</Grid>
 	)

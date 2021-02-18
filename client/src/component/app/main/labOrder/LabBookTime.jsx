@@ -38,8 +38,6 @@ const LabBookTime = () => {
 
 	const [date, setDate] = useState("")
 
-	console.log(date)
-
 	return (
 		<Grid container className={classes.container} spacing={5}>
 			<Grid container item>
@@ -63,7 +61,7 @@ const LabBookTime = () => {
 				/>
 			</Grid>
 			<Grid xs={12} item>
-				<Time />
+				<Time date={date} />
 			</Grid>
 		</Grid>
 	)

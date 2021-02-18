@@ -1,6 +1,6 @@
 const initialState = []
 
-const prescription = (state = initialState, action) => {
+const cart = (state = initialState, action) => {
 	const { type, payload } = action
 	switch (type) {
 		case "ADD_CART_PRODUCT":
@@ -38,4 +38,4 @@ const prescription = (state = initialState, action) => {
 	}
 }
 
-export default prescription
+export default cart

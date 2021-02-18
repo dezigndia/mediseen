@@ -99,7 +99,7 @@ const main = ({ match }) => {
 					path={`${match.url}/labOrder/checkout`}
 					component={LabConfirm}
 				/>
-				<Route path={`${match.url}/labOrder`} component={LabOrder} />
+				<Route path={`${match.url}/labOrder/:labId`} component={LabOrder} />
 				<Route path={`${match.url}/search/:category`} component={SearchPage} />
 				<Route
 					path={`${match.url}/uploadPrescription`}
