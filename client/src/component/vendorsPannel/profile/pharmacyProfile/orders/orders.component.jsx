@@ -46,6 +46,7 @@ const Orders = () => {
     const [switchStatus, setSwitchStatus] = useState(true);
     const [showOrderStats, setShowOrderStats] = useState(false);
     const [activeTab, setActiveTab] = useState(null);
+    const [activeItem, setActiveItem] = useState(null);
     const businessType = useSelector(state => state.currentVendor.businessType);
 
     const handleChange = (event) => {
@@ -75,7 +76,7 @@ const Orders = () => {
                         </Icon>
                     </div>
                     <div className="todaySale">
-                        <p>Todsy's Sale</p>
+                        <p>Today's Sale</p>
                         <p>300</p>
                     </div>
                     <div className="totalSale">
@@ -126,65 +127,67 @@ const Orders = () => {
             </div>
             <div className="vendorsOrdersListContainer">
                 {
-                    data.map((item, index) => (
-                        <div className="orderListItem">
-                            <div className="orderNo">
-                                Order No.  {item.orderNo}
-                            </div>
-                            <div className="orderDateTime">
-                                <div className="orderDate">
-                                    {item.orderDate}
+                    data
+                        .filter(item => (status.toLowerCase() === 'all' || item.status.toLowerCase() === status.toLowerCase()) ? true : false)
+                        .map((item, index) => (
+                            <div className="orderListItem" key={index} onClick={(e) => { setActiveItem(item); setActiveTab(item.status); }}>
+                                <div className="orderNo">
+                                    Order No.  {item.orderNo}
                                 </div>
-                                <div className="orderTime">
-                                    {item.orderTime}
+                                <div className="orderDateTime">
+                                    <div className="orderDate">
+                                        {item.orderDate}
+                                    </div>
+                                    <div className="orderTime">
+                                        {item.orderTime}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="orderTotalItems">
-                                <p>Total Items: {item.totalItems}</p>
-                            </div>
-                            <div className="orderCost">
-                                <Icon noRippleEffect size='20px'>
-                                    <BiRupee />
-                                </Icon>
-                                <p>{item.cost}</p>
-                            </div>
-                            <div className="orderPaymentMethod">
-                                {item.paymentMethod}
-                            </div>
-                            <div className={`orderStatus ${item.status}`} onClick={(e) => setActiveTab(item.status)}>
-                                {item.status}
-                            </div>
-                            <div className="orderDetails">
-                                <p>Details</p>
-                                <div>
-                                    <Icon>
-                                        <MdChevronRight noRippleEffect size='20px' />
+                                <div className="orderTotalItems">
+                                    <p>Total Items: {item.totalItems}</p>
+                                </div>
+                                <div className="orderCost">
+                                    <Icon noRippleEffect size='20px'>
+                                        <BiRupee />
                                     </Icon>
+                                    <p>{item.cost}</p>
                                 </div>
+                                <div className="orderPaymentMethod">
+                                    {item.paymentMethod}
+                                </div>
+                                <div className={`orderStatus ${item.status}`}>
+                                    {item.status}
+                                </div>
+                                <div className="orderDetails">
+                                    <p>Details</p>
+                                    <div>
+                                        <Icon>
+                                            <MdChevronRight noRippleEffect size='20px' />
+                                        </Icon>
+                                    </div>
+                                </div>
+                                <div className='horizontalRule' />
                             </div>
-                            <div className='horizontalRule' />
-                        </div>
-                    ))
+                        ))
                 }
             </div>
             {
                 (activeTab === 'shipped' || activeTab === 'Shipped') && businessType === 'pharmacy'
-                    ? <Shipped setActiveTabNull={setActiveTabNull} />
+                    ? <Shipped setActiveTabNull={setActiveTabNull} {...activeItem} />
                     : null
             }
             {
                 activeTab === 'accepted' || activeTab === 'Accepted'
-                    ? <Accepted setActiveTabNull={setActiveTabNull} />
+                    ? <Accepted setActiveTabNull={setActiveTabNull} {...activeItem} />
                     : null
             }
             {
                 activeTab === 'pending' || activeTab === 'Pending'
-                    ? <Pending setActiveTabNull={setActiveTabNull} />
+                    ? <Pending setActiveTabNull={setActiveTabNull} {...activeItem} />
                     : null
             }
             {
                 (activeTab === 'collected' || activeTab === 'Collected') && businessType === 'pathology'
-                    ? <Collected setActiveTabNull={setActiveTabNull} />
+                    ? <Collected setActiveTabNull={setActiveTabNull} {...activeItem} />
                     : null
             }
         </div >
