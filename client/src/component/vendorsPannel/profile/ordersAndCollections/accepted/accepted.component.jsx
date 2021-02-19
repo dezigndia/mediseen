@@ -53,7 +53,10 @@ const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMeth
             <CustomerDetails />
             <div className="vendorPopupAcceptedActions">
                 <button className='whiteButton' onClick={(e) => setShowDeclineTab(true)}>Decline</button>
-                <button className='greenButton' onClick={(e) => setShowDeliverCollectionTab(true)}>Deliver Now</button>
+                <button className='greenButton' onClick={(e) => setShowDeliverCollectionTab(true)}>
+                    {businessType === 'pharmacy' ? 'Deliver Now' : null}
+                    {businessType === 'pathology' ? 'Collect Now' : null}
+                </button>
             </div>
             {
                 showDeclineTab

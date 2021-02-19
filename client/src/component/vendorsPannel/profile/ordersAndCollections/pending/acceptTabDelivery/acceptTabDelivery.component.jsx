@@ -1,9 +1,9 @@
 import React from 'react';
-import './acceptTab.styles.scss';
+import './acceptTabDelivery.styles.scss';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const AcceptTab = ({ setShowAcceptTab, setActiveTabNull }) => {
+const AcceptTabDelivery = ({ setShowAcceptTab, setActiveTabNull }) => {
     return (
         <div className="vendorPopupPendingAcceptTabContainer" style={{ height }}>
             <div className="vendorPopupPendingAcceptTab">
@@ -38,4 +38,4 @@ const AcceptTab = ({ setShowAcceptTab, setActiveTabNull }) => {
     );
 }
 
-export default AcceptTab;
+export default AcceptTabDelivery;

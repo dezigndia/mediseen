@@ -160,8 +160,8 @@ const Orders = () => {
                                 <div className="orderDetails">
                                     <p>Details</p>
                                     <div>
-                                        <Icon>
-                                            <MdChevronRight noRippleEffect size='20px' />
+                                        <Icon noRippleEffect>
+                                            <MdChevronRight size='20px' />
                                         </Icon>
                                     </div>
                                 </div>

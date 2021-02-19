@@ -1,10 +1,9 @@
 import React from 'react';
-import './collection.styles.scss';
 
-const Collection = () => {
-    <div className="vendorPopupAcceptedCollection">
-        collection
-    </div>
-}
+
+import VendorQR from '../../vendorQR/vendorQR.component';
+
+const Collection = ({ setShowDeliverCollectionTab, setActiveTabNull }) => <VendorQR showVendorQRTab={setShowDeliverCollectionTab} goBackToOrdersPage={setActiveTabNull} />
 
 export default Collection;
+

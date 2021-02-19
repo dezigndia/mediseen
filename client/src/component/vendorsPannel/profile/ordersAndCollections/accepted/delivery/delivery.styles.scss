@@ -1,17 +1,12 @@
 @import '../../../../../../assets/globalStyles.scss';
 @import '../../../profile.sharableStyles.scss';
+@import '../../OrderAndCollection.sharableStyle.scss';
 
 .vendorPopupAcceptedDeliveryContainer {
-    position: fixed;
-    top: 10%;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 2;
-    padding: 10px;
-    font-size: .95em;
-    overflow-y: scroll;
-    overflow-x: auto;
+    @include orderInfoInnerModal();
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .vendorPopupAcceptedDelivery {
         background-color: white;
@@ -26,35 +21,54 @@
             text-align: left;
         }
 
-        .vendorPopupAcceptedDeliveryMain {
-            margin-top: 30px;
+        .vendorPopupAcceptedDeliveryBoyAssignment {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
 
-            &>div {
-                &:nth-child(1) {
-                    color: $blue;
-                    font-weight: bold;
-                }
-
-                &:nth-child(2) {
-                    &>figure {
-                        height: 300px;
-
-                        &>img {
-                            max-height: 90%;
-                            max-width: 90%;
-                        }
-                    }
-                }
+            &>div:first-child {
+                color: rgb(133, 133, 133);
+                align-self: flex-end;
+                margin-bottom: 5px;
             }
         }
 
-        .vendorPopupAcceptedDeliveryPaymentMethod {
-            text-align: left;
-            margin-left: 5%;
+        .vendorPannelAcceptedAttachBill {
+            color: rgb(133, 133, 133);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 10px;
+
+            &>div:nth-child(2)>div {
+                padding: 0;
+                margin-left: 10px;
+                //removing padding from icon
+            }
+        }
+
+        .vendorPannelAcceptedAttachBillImage {
+            height: 230px;
+            margin: 10px 0;
+
+            &>img {
+                max-height: 100%;
+                max-width: 100%;
+            }
+        }
+
+        .vendorPannelAcceptedTotalCost {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px 0;
+            padding: 0 20px;
         }
 
         .vendorPopupAcceptedDeliveryActions {
-            margin: 20px 0;
+            margin-top: 20px;
+            margin-bottom: 10px;
 
             &>.whiteButton {
                 @include whiteButton();

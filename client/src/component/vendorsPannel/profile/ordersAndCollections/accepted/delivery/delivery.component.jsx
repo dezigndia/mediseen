@@ -1,56 +1,81 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import './delivery.styles.scss';
+import { FormControl, InputLabel, Select, makeStyles, MenuItem } from '@material-ui/core';
 
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
+//importing reusable components
+import Icon from '../../../../../reusableComponent/icon/icon.component';
+
+//importing icon
+import { ImAttachment } from 'react-icons/im';
+
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        minWidth: 120,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+    },
+}));
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
 const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull }) => {
-    const [value, setValue] = useState('Rs. 300 UPI received');
-    const businessName = useSelector(state => state.currentVendor.businessName);
+    const [deliveryBoy, setDeliveryBoy] = useState(null);
+    const staff = useSelector(state => state.currentVendor.staffs);
 
     const handleChange = (event) => {
-        setValue(event.target.value);
+        setDeliveryBoy(event.target.value);
     };
+
+    const classes = useStyles();
 
     return (
         <div className="vendorPopupAcceptedDeliveryContainer" style={{ height }}>
             <div className="vendorPopupAcceptedDelivery">
                 <div className="vendorPopupAcceptedDeliveryHeader">
-                    <p>Payment Received</p>
+                    <p>You are done with packing and are ready to deliver</p>
                 </div>
-                <div className="vendorPopupAcceptedDeliveryMain">
+                <div className='vendorPopupAcceptedDeliveryBoyAssignment'>
                     <div>
-                        <p>We have already sent customer payment link</p>
-                        <p>Still</p>
-                        <p>You can receive Payment from QR code scan</p>
+                        <p>Assign collection agent</p>
                     </div>
                     <div>
-                        <figure>
-                            <img src='https://pngimg.com/uploads/qr_code/qr_code_PNG24.png' alt='qr code' />
-                            <figcaption>QR for {businessName} </figcaption>
-                        </figure>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-simple-Deliver-label">Collecion Boy</InputLabel>
+                            <Select
+                                labelId="assign-delivery-boy"
+                                id="assign-delivery-boy"
+                                value={deliveryBoy}
+                                onChange={handleChange}
+                            >
+                                {
+                                    staff && staff.length && staff.map((item, index) => <MenuItem value={item.name} key={item._id}>{item.name}</MenuItem>)
+                                }
+                            </Select>
+                        </FormControl>
                     </div>
                 </div>
-                <div className="vendorPopupAcceptedDeliveryPaymentMethod">
-                    <FormControl component="fieldset">
-                        <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                            <FormControlLabel
-                                value={`Rs. 300 UPI received`}
-                                control={<Radio />}
-                                label={`Rs. 300 UPI received`}
-                            />
-                            <FormControlLabel
-                                value={`Rs. 300 Cash received`}
-                                control={<Radio />}
-                                label={`Rs. 300 Cash received`}
-                            />
-                        </RadioGroup>
-                    </FormControl>
+                <div className="vendorPannelAcceptedAttachBill">
+                    <div>
+                        <p>Attach Bill</p>
+                    </div>
+                    <div>
+                        <Icon iconColor="rgb(133,133,133)" size='20px'>
+                            <ImAttachment />
+                        </Icon>
+                    </div>
+                </div>
+                <div className="vendorPannelAcceptedAttachBillImage">
+                    <img src='https://i1.wp.com/www.thegoldprojectblog.com/wp-content/uploads/2016/01/medical-bill-payment-tracker.png' alt='bill' />
+                </div>
+                <div className="vendorPannelAcceptedTotalCost">
+                    <div>
+                        <p>Grand total:</p>
+                    </div>
+                    <div>
+                        {300}
+                    </div>
                 </div>
                 <div className="vendorPopupAcceptedDeliveryActions">
                     <button
@@ -60,12 +85,12 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull }) => {
                         }}
                     >
                         No
-                        </button>
+                    </button>
                     <button
                         className='greenButton'
-                        onClick={(e) => { 
+                        onClick={(e) => {
                             setShowDeliverCollectionTab(false);
-                            setActiveTabNull();//getting back to order page
+                            setActiveTabNull();//go back to orders page
                         }}
                     >
                         Yes
@@ -77,3 +102,4 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull }) => {
 }
 
 export default Delivery;
+
