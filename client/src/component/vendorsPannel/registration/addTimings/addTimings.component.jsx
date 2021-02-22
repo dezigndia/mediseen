@@ -3,6 +3,8 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import './addTimings.styles.scss';
 
+import Radio from '@material-ui/core/Radio';
+
 //importing custom components
 import AddDayAndTime from '../addDayAndTime/addDayAndTime.component';
 
@@ -108,25 +110,25 @@ const AddTimings = (props) => {
                     <div className="openHoursLabel">
                         <p>
                             24 Hours Open
-                            </p>
+                        </p>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
-                            value='no'
-                            name='twentyFourHoursOpen'
+                        <Radio
                             checked={props.storeOpen24Hours ? true : false}
                             onChange={(e) => props.setStoreOpen(true)}
+                            value="no"
+                            name="twentyFourHoursOpen"
+
                         />
                         <label htmlFor="twenty four hours open">yes</label>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
-                            value='yes'
-                            name='twentyFourHoursOpen'
+                        <Radio
                             checked={props.storeOpen24Hours ? false : true}
                             onChange={(e) => props.setStoreOpen(false)}
+                            value="yes"
+                            name="twentyFourHoursOpen"
+
                         />
                         <label htmlFor="not twenty four hours open ">no</label>
                     </div>

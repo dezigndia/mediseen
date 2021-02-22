@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Radio from '@material-ui/core/Radio';
 import './addDayAndTime.styles.scss';
 
 const AddDayAndTime = ({ day, setTimings }) => {
@@ -28,19 +29,39 @@ const AddDayAndTime = ({ day, setTimings }) => {
     return (
         <div className={`timingInput ${day}`}>
             <div className="daySelect labelInput">
-                <input type='radio' readOnly value={day} checked={isSelected ? true : false} onClick={(e) => { setIsSelected(prevState => !prevState) }} />
+                <Radio readOnly value={day} checked={isSelected ? true : false} onClick={(e) => { setIsSelected(prevState => !prevState) }} />
                 <label htmlFor={day}>{day}</label>
             </div>
             <div className="timeSelect" style={{ pointerEvents: `${isSelected ? 'auto' : 'none'}`, opacity: isSelected ? 1 : .4, transition: '.5s ease-in-out' }}>
                 <div className="morningShift">
-                    <input type='text' value={morningFrom} onChange={(e) => setMorningFrom(e.target.value)} />
+                    <input
+                        type='text'
+                        value={morningFrom}
+                        onChange={(e) => setMorningFrom(e.target.value)}
+                        placeholder='AM'
+                    />
                     <p>To</p>
-                    <input type='text' value={morningTo} onChange={(e) => setMorningTo(e.target.value)} />
+                    <input
+                        type='text'
+                        value={morningTo}
+                        onChange={(e) => setMorningTo(e.target.value)}
+                        placeholder='AM'
+                    />
                 </div>
                 <div className="eveningShift">
-                    <input type='text' value={eveningFrom} onChange={(e) => setEveningFrom(e.target.value)} />
+                    <input
+                        type='text'
+                        value={eveningFrom}
+                        onChange={(e) => setEveningFrom(e.target.value)}
+                        placeholder='PM'
+                    />
                     <p>To</p>
-                    <input type='text' value={eveningTo} onChange={(e) => setEveningTo(e.target.value)} />
+                    <input
+                        type='text'
+                        value={eveningTo}
+                        onChange={(e) => setEveningTo(e.target.value)}
+                        placeholder='PM'
+                    />
                 </div>
             </div>
         </div>

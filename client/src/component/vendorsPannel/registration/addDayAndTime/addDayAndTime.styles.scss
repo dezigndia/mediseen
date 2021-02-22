@@ -26,15 +26,20 @@
             justify-content: space-between;
 
             &>input {
-                width: 33%;
+                width: Min(40%, 100px);
                 text-align: center;
             }
+        }
+
+        .morningShift {
+            margin-bottom: 10px;
         }
     }
 
     .daySelect {
         width: 40%;
         position: relative;
+        left: -10px;
         top: 10px;
         @include radio();
     }
