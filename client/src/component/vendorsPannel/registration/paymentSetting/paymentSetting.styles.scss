@@ -52,7 +52,7 @@ $formButtonFieldHeight:15%;
         @include greenIconContainer($height2);
 
         .labelIconContainer {
-           @include greenIcon();
+            @include greenIcon();
         }
     }
 
@@ -60,14 +60,23 @@ $formButtonFieldHeight:15%;
         height: $formHeight;
         margin-top: $marginTop;
 
+        .radioInputLabelLabel {
+            width: 100% !important;
+            text-align: left;
+        }
+
         .radioInputLabelContainer {
-            font-size: .9em;
             font-weight: bold;
             display: flex;
-            flex-flow: row nowrap;
+            flex-flow: row wrap;
             align-items: center;
             justify-content: space-evenly;
             height: $formRadioInputHeight;
+            height: 70px;
+
+            &:first-child {
+                margin-bottom: 10px;
+            }
 
             .radioInputLabelLabel {
                 width: 50%;
@@ -75,18 +84,18 @@ $formButtonFieldHeight:15%;
             }
 
             .radioInputLabelOptions {
-                width: 50%;
+                width: 100%;
                 display: flex;
                 flex-flow: row nowrap;
                 align-items: center;
                 display: flex;
                 flex-flow: row nowrap;
                 align-items: center;
-                padding-left:2%;
+                padding-left: 2%;
 
                 .radioInputLabel {
                     @include radio();
-                    margin-left:2%;
+                    margin-left: 2%;
 
                     &:nth-child(1) {
                         width: 30%;

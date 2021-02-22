@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './deliveryAndCollectionSetting.styles.scss';
 import { Slider, Typography } from '@material-ui/core';
+import Radio from '@material-ui/core/Radio';
 
 //importing actions
 import {
@@ -114,8 +115,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <p>{Type.current} Available At</p>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='customerAddress'
                             name='availableAt'
                             checked={props.availableAt.customerAddress ? true : false}
@@ -129,8 +129,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <label htmlFor="available at customer Address">Customer Address</label>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='pickUpByCustomer'
                             name='availableAt'
                             checked={props.availableAt.pickUpByCustomer ? true : false}
@@ -182,8 +181,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <p>Cash On Delivery Available</p>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='yes'
                             name='cod'
                             checked={props.codAvailable ? true : false}
@@ -192,8 +190,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <label htmlFor="available at customer Address">Yes</label>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='no'
                             name='cod'
                             checked={props.codAvailable ? false : true}

@@ -23,8 +23,13 @@ $borderRadius:20px;
 
         .registerAsButtons {
             .registerAsButton {
+                &:hover {
+                    cursor: pointer;
+                }
+
                 background: white;
                 box-shadow: 0 0 15px #ccc;
+                border:1px solid #ccc;
                 margin-top: 5%;
                 padding: Min(7%, 25px) Min(2%, 8px);
                 display: flex;

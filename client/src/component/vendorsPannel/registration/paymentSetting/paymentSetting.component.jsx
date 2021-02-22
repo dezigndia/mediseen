@@ -3,6 +3,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './paymentSetting.styles.scss';
+import Radio from '@material-ui/core/Radio';
 
 //importing actions
 import {
@@ -89,7 +90,7 @@ const PaymentSetting = (props) => {
                     </Icon>
                 </div>
                 <div className='labelIconLabel'>
-                    <p>PaymentSetting</p>
+                    <p>Payment Setting</p>
                 </div>
             </div>
             <form id='paymentSettingForm'>
@@ -99,7 +100,7 @@ const PaymentSetting = (props) => {
                     </div>
                     <div className='onLinePaymentOptions  radioInputLabelOptions'>
                         <div className='radioInputLabel'>
-                            <input type='radio'
+                            <Radio
                                 checked={props.onlinePayment ? true : false}
                                 value='yes' name='onlinePayment'
                                 onChange={(e) => props.setOnlinePayment(true)}
@@ -107,8 +108,7 @@ const PaymentSetting = (props) => {
                             <label htmlFor="online payment yes">Yes</label>
                         </div>
                         <div className='radioInputLabel'>
-                            <input
-                                type='radio'
+                            <Radio
                                 checked={props.onlinePayment ? false : true}
                                 value='no' name='onlinePayment'
                                 onChange={(e) => props.setOnlinePayment(false)}
@@ -123,8 +123,7 @@ const PaymentSetting = (props) => {
                     </div>
                     <div className='paymentTypeOptions  radioInputLabelOptions'>
                         <div className='radioInputLabel'>
-                            <input
-                                type='radio'
+                            <Radio
                                 value='Upi'
                                 checked={props.paymentOption.upi ? true : false}
                                 name='paymentMode'
@@ -133,8 +132,7 @@ const PaymentSetting = (props) => {
                             <label htmlFor="payment mode upi">Upi</label>
                         </div>
                         <div className='radioInputLabel'>
-                            <input
-                                type='radio'
+                            <Radio
                                 value='bank Transfer'
                                 checked={props.paymentOption.bankTransfer ? true : false}
                                 name='paymentMode'
