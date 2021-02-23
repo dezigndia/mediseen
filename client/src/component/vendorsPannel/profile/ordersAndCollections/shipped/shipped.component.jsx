@@ -30,12 +30,12 @@ const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             </div>
             {
                 showDeliverTab
-                    ? <Delivered {...{ setShowDeliverTab, setActiveTabNull }} />
+                    ? <Delivered {...{ setShowDeliverTab, setActiveTabNull, cost, orderNo }} />
                     : null
             }
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, cost, orderNo }} />
                     : null
             }
         </div>

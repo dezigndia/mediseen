@@ -99,31 +99,28 @@ const Orders = () => {
                         <FaChartBar />
                     </Icon>
                 </div>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-label">Filter</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={status}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={'All'}>All</MenuItem>
-                        <MenuItem value={'Pending'}>Pending</MenuItem>
-                        <MenuItem value={'Accepted'}>Accepted</MenuItem>
-                        <MenuItem value={'Shipped'}>Shipped</MenuItem>
-                        {
-                            businessType === 'pharmacy'
-                                ? <MenuItem value={'Delivered'}>Delivered</MenuItem>
-                                : null
-                        }
-                        {
-                            businessType === 'pathology'
-                                ? <MenuItem value={'Collected'}>Collected</MenuItem>
-                                : null
-                        }
-                        <MenuItem value={'Cancelled'}>Cancled</MenuItem>
-                    </Select>
-                </FormControl>
+                <select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={status}
+                    onChange={handleChange}
+                >
+                    <option value={'All'}>All</option>
+                    <option value={'Pending'}>Pending</option>
+                    <option value={'Accepted'}>Accepted</option>
+                    <option value={'Shipped'}>Shipped</option>
+                    {
+                        businessType === 'pharmacy'
+                            ? <option value={'Delivered'}>Delivered</option>
+                            : null
+                    }
+                    {
+                        businessType === 'pathology'
+                            ? <option value={'Collected'}>Collected</option>
+                            : null
+                    }
+                    <option value={'Cancelled'}>Cancled</option>
+                </select>
             </div>
             <div className="vendorsOrdersListContainer">
                 {

@@ -8,7 +8,7 @@ import SetPatient from './setPatient/setPatient.component';
 const SET_HOSPITAL_OR_DOCTOR = 'setHospitalOrDoctor';
 const SET_PATIENT = 'setPatient';
 
-const BookAppointment = ({ changeTab }) => {
+const BookAppointment = ({ changeTab, bookAppointment, dispatch, timings, appointmentSlots }) => {
     const [tab, setTab] = useState(SET_HOSPITAL_OR_DOCTOR);
 
     const setTabSetHospitalOrDoctor = useCallback((e) => {
@@ -25,8 +25,8 @@ const BookAppointment = ({ changeTab }) => {
         <div className="vendorsAppointmentbooking">
             {
                 tab === SET_HOSPITAL_OR_DOCTOR
-                    ? <SetHospitalOrDoctor goToSetPatient={setTabSetPatient} changeTab={changeTab} />
-                    : <SetPatient goToSetHospitalOrDoctor={setTabSetHospitalOrDoctor} changeTab={changeTab} />
+                    ? <SetHospitalOrDoctor goToSetPatient={setTabSetPatient} changeTab={changeTab} {...{ bookAppointment, dispatch, timings, appointmentSlots }} />
+                    : <SetPatient goToSetHospitalOrDoctor={setTabSetHospitalOrDoctor} changeTab={changeTab} {...{ bookAppointment, dispatch }} />
             }
         </div>
     );

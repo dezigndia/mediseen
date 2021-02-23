@@ -79,7 +79,7 @@ const Home = () => {
             <div className="vendorHomeUploadExcel">
                 <RegistrationFormButton
                     icon1={<FaUpload />}
-                    label={[<p>Or upload closing stock excel toMediseen Whatsaap</p>]}
+                    label={[<p>Or upload closing stock excel to Mediseen Whatsaap</p>]}
                 />
             </div>
         </div>

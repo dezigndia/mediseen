@@ -22,16 +22,16 @@ const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab }) => {
                             <button>Delete</button>
                             <button>Accept</button>
                         </div>
-                        <div className="appointmentTime">
-                            <p>{timings.from}am</p>
+                        <div className="appointmentTime bookedAppointmentTime">
+                            <p>{timings.from}</p>
                             <p>-</p>
-                            <p>{timings.to}am</p>
+                            <p>{timings.to}</p>
                         </div>
                     </>
                     : <div onClick={changeTab} className='appointmentTime'>
-                        <p>{timings.from}am</p>
+                        <p>{timings.from}</p>
                         <p>-</p>
-                        <p>{timings.to}am</p>
+                        <p>{timings.to}</p>
                     </div>
             }
         </div>

@@ -44,3 +44,10 @@ export const GET_HOSPITAL_STAFF_ROLES = `${server}api/pharmacy/staff/roles`;
 export const GET_PHARMACY_STAFF_ROLES = `${server}api/pharmacy/staff/roles`;
 export const GET_PATHOLOGO_STAFF_ROLES = `${server}api/pharmacy/staff/roles`;
 
+//appointment
+export const createAppointment = `${server}api/appointment/`;
+export const getAppointmentByBusiness = `${server}api/appointment/buisness`;
+export const getAppointmentByCustomer = `${server}api/appointment/user`;
+export const getAppointmentById = (id) => `${server}api/appointment/id/${id}`;
+export const updateAppointmentByID = (id) => `${server}api/appointment/update/${id}`;
+

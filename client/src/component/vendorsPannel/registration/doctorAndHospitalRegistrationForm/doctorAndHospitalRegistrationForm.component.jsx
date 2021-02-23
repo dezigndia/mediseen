@@ -3,6 +3,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './doctorAndHospitalRegistrationForm.styles.scss';
+import { Radio } from '@material-ui/core';
 
 //importing custom components
 import AddDayAndTime from '../addDayAndTime/addDayAndTime.component';
@@ -170,8 +171,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <label htmlFor="fee Collection On The Accoun tOf">Fees collection On The Account Of </label>
                 </div>
                 <div className='labelInput'>
-                    <input
-                        type='radio'
+                    <Radio
                         name='feeCollcetionBy'
                         value='hospital'
                         checked={props.feesCollectOnAccountOf.hospital ? true : false}
@@ -180,8 +180,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <label htmlFor="hospital">hospital</label>
                 </div>
                 <div className='labelInput'>
-                    <input
-                        type='radio'
+                    <Radio
                         name='feeCollcetionBy'
                         value='doctor'
                         checked={props.feesCollectOnAccountOf.doctor ? true : false}
@@ -195,8 +194,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <label htmlFor="teteConsulting">Teleconsulting</label>
                 </div>
                 <div className='labelInput'>
-                    <input
-                        type='radio'
+                    <Radio
                         name='teleConsulting'
                         value='no'
                         checked={props.teleConsulting ? false : true}
@@ -205,8 +203,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <label htmlFor="no">no</label>
                 </div>
                 <div className='labelInput'>
-                    <input
-                        type='radio'
+                    <Radio
                         name='teleConsulting'
                         value='yes'
                         checked={props.teleConsulting ? true : false}

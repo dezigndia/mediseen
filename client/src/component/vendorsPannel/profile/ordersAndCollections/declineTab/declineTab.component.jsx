@@ -63,7 +63,7 @@ const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost }) => {
                             />
                             <FormControlLabel
                                 value="Delivery person is not Responsive"
-                                control={<Radio />} l
+                                control={<Radio />}
                                 label="Delivery person is not Responsive"
                             />
                             <FormControlLabel
