@@ -4,11 +4,13 @@ const fetchCall = async (endpoint, method, jwt, body) => {
 		method: `${method}`,
 		headers: {
 			Accept: "application/json",
-			"Content-Type": "application/json",
+
 			Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
 		},
-		body: body ? JSON.stringify(body) : null,
+		body: body ? body : null,
 	})
+
+	// console.log(response.json())
 
 	if (!response.ok) {
 		data = { sucess: false, errCode: response.status }

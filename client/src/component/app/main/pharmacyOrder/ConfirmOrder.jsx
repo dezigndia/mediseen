@@ -1,9 +1,11 @@
 import { Grid, Divider, Button } from "@material-ui/core"
-import React from "react"
+import React, { useState } from "react"
+import { useSelector } from "react-redux"
 import clsx from "clsx"
 import ReactStars from "react-stars"
 import Avatar from "@material-ui/core/Avatar"
 import { Link } from "react-router-dom"
+import fetchCall from "../../../../fetchCall/fetchCall"
 
 import { makeStyles } from "@material-ui/core/styles"
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +31,49 @@ const useStyles = makeStyles((theme) => ({
 
 const ConfirmOrder = ({ name, address, stars, distance }) => {
 	const classes = useStyles()
+	const [flag, setFlag] = useState(false)
+
+	const token =
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsImRlZmF1bHQiOltdLCJfaWQiOiI2MDJlMDUxNzVmN2IxYjFlMWY0Y2QzMDkiLCJwaG9uZSI6Iis5MTgxNDY2MDI3OTYiLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwiX192IjowLCJpYXQiOjE2MTM2MjkxMDd9.GGI3wV58RlxvhYzejS_mhUXuxA5QSbQ2ZmD7rot3qE4"
+
+	const image = useSelector((state) => state.prescription.image)
+	const [placed, setPlaced] = useState(false)
+
+	// const handleSubmit = async () => {
+	// 	// const img = Buffer.from(image)
+
+	// 	const img = await fetch(image)
+	// 		.then((res) => res.blob())
+	// 		.then((blob) => {
+	// 			const file = new File([blob], "File name", { type: "image/jpeg" })
+	// 			return file
+	// 		})
+	// 	let form = new FormData()
+	// 	form.append("file", img)
+
+	// const body = {
+	// 	userId: "57668688w9e89",
+	// 	patientName: "Yash Sharma",
+	// 	mobileNumber: "89089898686989",
+	// 	userPhoneNumber: "787989089898989",
+	// 	date: `${Date.now()}`,
+	// 	products,
+	// 	grandTotal: totalCost,
+	// 	address: address[selected],
+	// 	image_url: link,
+	// }
+
+	// const data = await fetchCall("order", "POST", token, body)
+
+	// if (data.sucess === true) {
+	// 	setPlaced(true)
+	// }
+
+	// if (placed) {
+	// 	return <Redirect to="success" />
+	// }
+	// }
+
 	return (
 		<Grid
 			container
@@ -70,7 +115,7 @@ const ConfirmOrder = ({ name, address, stars, distance }) => {
 					</Link>
 				</Grid>
 				<Grid item>
-					<Link to="">
+					<Link to="payment?order=pres">
 						<Button className={clsx(classes.button2)}>Yes</Button>
 					</Link>
 				</Grid>

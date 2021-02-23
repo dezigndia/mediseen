@@ -8,11 +8,12 @@ import {
 	Select,
 	Button,
 } from "@material-ui/core"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import AddIcon from "@material-ui/icons/Add"
 import Address from "./Address.jsx"
-import { Link, Redirect } from "react-router-dom"
+import { Link, Redirect, useLocation } from "react-router-dom"
 import fetchCall from "../../../../fetchCall/fetchCall"
+import { emptyCartProduct } from "../../../../store/cart/cartActions"
 
 const address = [
 	{
@@ -72,8 +73,21 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
+function useQuery() {
+	return new URLSearchParams(useLocation().search)
+
+	const query = useQuery()
+}
+
 const PaymentPharm = () => {
 	const classes = useStyles()
+	const query = useQuery()
+
+	const type = query.get("order")
+
+	const [flag, setFlag] = useState(false)
+
+	const image = useSelector((state) => state.prescription.image)
 
 	const [payment, setPayment] = useState(1)
 
@@ -88,6 +102,8 @@ const PaymentPharm = () => {
 		}
 	})
 
+	const dispatch = useDispatch()
+
 	let totalCost = 0
 
 	cart.map((item) => {
@@ -99,21 +115,52 @@ const PaymentPharm = () => {
 	const [placed, setPlaced] = useState(false)
 
 	const placeOrder = async () => {
-		const body = {
-			userId: "57668688w9e89",
-			patientName: "Yash Sharma",
-			mobileNumber: "89089898686989",
-			userPhoneNumber: "787989089898989",
-			date: `${Date.now()}`,
-			products,
-			grandTotal: totalCost,
-			address: address[selected],
+		// const img = Buffer.from(image)
+
+		const img = await fetch(image)
+			.then((res) => res.blob())
+			.then((blob) => {
+				const file = new File([blob], "File name", { type: "image/jpeg" })
+				return file
+			})
+		let form = new FormData()
+		form.append("file", img)
+
+		const res = await fetchCall("blob/upload", "POST", token, form)
+
+		const link = res.data.payload
+
+		let body
+		if (type === "pres") {
+			body = {
+				userId: "57668688w9e89",
+				patientName: "Yash Sharma",
+				mobileNumber: "89089898686989",
+				userPhoneNumber: "787989089898989",
+				date: `${Date.now()}`,
+				address: address[selected],
+				image_url: link,
+			}
+		} else {
+			body = {
+				userId: "57668688w9e89",
+				patientName: "Yash Sharma",
+				mobileNumber: "89089898686989",
+				userPhoneNumber: "787989089898989",
+				date: `${Date.now()}`,
+				products,
+				grandTotal: totalCost,
+				address: address[selected],
+			}
 		}
 
 		const data = await fetchCall("order", "POST", token, body)
 
+		console.log(data)
+
 		if (data.sucess === true) {
 			setPlaced(true)
+			dispatch(emptyCartProduct())
 		}
 	}
 

@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ImageUpload from "./ImageUpload"
 import { Redirect } from "react-router"
+import { setPrescriptionImage } from "../../../../store/prescription/prescription-actions"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -44,8 +45,10 @@ const UploadPres = ({ name, setUpload }) => {
 
 	const dispatch = useDispatch()
 
+	console.log(fileImage)
+
 	useEffect(() => {
-		dispatch({ type: "SET_PRES_IMAGE", payload: fileImage })
+		if (fileImage) dispatch(setPrescriptionImage(fileImage))
 	}, [fileImage])
 
 	if (fileImage) {

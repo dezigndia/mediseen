@@ -4,7 +4,6 @@ import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary"
 export class ImageUpload extends Component {
 	handleImage = (e) => {
 		const reader = new FileReader()
-
 		reader.onload = () => {
 			if (reader.readyState === 2) {
 				this.props.select(reader.result)

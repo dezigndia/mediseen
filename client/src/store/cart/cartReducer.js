@@ -32,7 +32,9 @@ const cart = (state = initialState, action) => {
 				const newList = state.filter((prod) => prod.item.id !== prod.item.id)
 				return [...newList]
 			}
-
+		case "EMPTY_CART_PRODUCT": {
+			return []
+		}
 		default:
 			return state
 	}

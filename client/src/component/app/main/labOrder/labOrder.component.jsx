@@ -68,9 +68,10 @@ const PharmacyOrder = () => {
 		}
 		const fetchProduct = async () => {
 			const data = await fetchCall(
-				`/product/find/all?itemType=test&ownerId=${labId}`,
+				`test/find/all?ownerId=${labId}`,
 				"GET"
 			).then((res) => res.data.payload)
+
 			setProducts(data)
 			let list = data.map((prod) => prod.category)
 			list = Array.from(new Set(list))
@@ -80,8 +81,6 @@ const PharmacyOrder = () => {
 		fetchLab()
 		fetchProduct()
 	}, [])
-
-	console.log(products)
 
 	return (
 		<Grid
