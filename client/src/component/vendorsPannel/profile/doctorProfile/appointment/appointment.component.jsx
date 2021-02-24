@@ -25,6 +25,7 @@ const Appointments = () => {
     const [tab, setTab] = useState(SHOW_APPOINTMENTS);
     const [timings, setTimings] = useState([]);
     const [appointmentSlots, setAppointmentSlots] = useState(null);
+    const [selectedHospital, setSelectedHospital] = useState('All');
 
     //timings is array for storing all available time slots on a particular day
     //appointSlots is array for storing info necessary to render timeSlots
@@ -77,16 +78,15 @@ const Appointments = () => {
     });
 
     useEffect(() => {
-        //runs only once for initializing timings field of reducer
-        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0].timeSlot })
+        //runs only for initializing timings field of reducer
+        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0] && appointmentSlots[0].timeSlot })
     }, [dispatch, appointmentSlots]);
 
     useEffect(() => {
         //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
         var isPresent = (arr, item) => {
             for (let i = 0; i < arr.length; i++) {
-                //replacing white spaces and am and pm 6:00;
-                if (arr[i].timings.from.replace(/am|pm|\s/gi, '') === item.from.replace(/am|pm|\s/gi, '') && arr[i].timings.to.replace(/am|pm|\s/gi, '') === item.to.replace(/am|pm|\s/gi, '')) {
+                if (arr[i].timings.from.replace(' ', '') === item.from.replace(' ', '') && arr[i].timings.to.replace(' ', '') === item.to.replace(' ', '')) {
                     return { present: true, index: i };
                 }
             }
@@ -109,6 +109,8 @@ const Appointments = () => {
                         //isdataPresent = {present:false} if false
 
                         //index is the index at which data is present in fetched array
+
+                        console.log(isDataPresent);
                         if (isDataPresent.present) {
                             return {
                                 timeSlot: item,
@@ -134,11 +136,13 @@ const Appointments = () => {
                     alert('unable to fetch appointments');
                 });
         }
+        else {
+            setAppointmentSlots([]);
+        }
     }, [setTimings, timings, setAppointmentSlots]);
 
     useEffect(() => {
         //effect for making all appointment timeslot array
-
         const convertToDateObject = (hrs, min) => {
             let date = new Date();
             date.setHours(hrs);
@@ -147,8 +151,8 @@ const Appointments = () => {
             return date;
         }
 
-        const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix) => {
-
+        const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix, hospitalName) => {
+            var temp = startTime;
             var start_time = convertToDateObject(startTime.split(':')[0], startTime.split(':')[1].split(' ')[0]);
             var end_time = convertToDateObject(endTime.split(':')[0], endTime.split(':')[1].split(' ')[0]);
 
@@ -159,29 +163,25 @@ const Appointments = () => {
                 let next_temp_time = new Date(temp_time.getTime() + 30 * 60 * 1000);//added 30 minutes , fix this
                 slotArr.push({
                     from: `${temp_time.getHours()}:${temp_time.getMinutes() <= 9 ? `0${temp_time.getMinutes()}` : temp_time.getMinutes()} ${suffix}`,
-                    to: `${next_temp_time.getHours()}:${next_temp_time.getMinutes() <= 9 ? `0${next_temp_time.getMinutes()}` : next_temp_time.getMinutes()} ${suffix}`
+                    to: `${next_temp_time.getHours()}:${next_temp_time.getMinutes() <= 9 ? `0${next_temp_time.getMinutes()}` : next_temp_time.getMinutes()} ${suffix}`,
+                    hospitalName
                 });
                 temp_time = next_temp_time;
             }
         }
-
         if (hospitalList) {
-            //getting working hours from all hospitals
-            let time = hospitalList.map(item => item.workingHours[days[(new Date).getDay()]]);
-
-            //temp arrays to store morning and evening shifts timings
+            let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
+            let time = hospitalList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name }));
             let morningShift = [], eveningShift = [];
-
-            //making timeslot array
-            time.forEach(item => {
-                makeAppointmentSlotsArray(morningShift, item.morning.from, item.morning.to, 'am');
-                makeAppointmentSlotsArray(eveningShift, item.evening.from, item.evening.to, 'pm');
+            console.log(time);
+            time[0].workingHours !== undefined && time.forEach(item => {
+                makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, 'am', item.hospitalName);
+                makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, 'pm', item.hospitalName);
             });
-
+            console.log(time);
             setTimings(morningShift.concat(eveningShift));
         }
-
-    }, [hospitalList, setTimings]);
+    }, [hospitalList, setTimings, selectedDate.year, selectedDate.month, selectedDate.date]);
 
     const setTabShowAppointment = useCallback((e) => {
         if (tab !== SHOW_APPOINTMENTS)
@@ -202,27 +202,32 @@ const Appointments = () => {
                         ?
                         <>
                             <div className='hospitalList'>
-                                <select>
+                                <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}>
+                                    <option value='All'>All</option>
                                     {
-                                        hospitalList.map((item, index) => <option key={index}>{item.name}</option>)
+                                        hospitalList.map((item, index) => <option key={index} value={item.name}>{item.name}</option>)
                                     }
                                 </select>
                             </div>
                             {
-                                appointmentSlots && appointmentSlots.map((item, index) =>
-                                    <>
-                                        <TimeSlots
-                                            key={index}
-                                            name={item.customerName}
-                                            phoneNo={item.phoneNo}
-                                            timings={item.timeSlot}
-                                            isBooked={item.isBooked}
-                                            key={index}
-                                            changeTab={setTabIssueNewAppointment}
-                                        />
+                                appointmentSlots &&
+                                appointmentSlots.length > 0 &&
+                                appointmentSlots
+                                    .filter(item => selectedHospital === 'All' || item.timeSlot.hospitalName === selectedHospital)
+                                    .map((item, index) =>
+                                        <>
+                                            <TimeSlots
+                                                key={index}
+                                                name={item.customerName}
+                                                phoneNo={item.phoneNo}
+                                                timings={item.timeSlot}
+                                                isBooked={item.isBooked}
+                                                key={index}
+                                                changeTab={setTabIssueNewAppointment}
+                                            />
 
-                                    </>
-                                )
+                                        </>
+                                    )
                             }
                         </>
                         : <BookAppointment
