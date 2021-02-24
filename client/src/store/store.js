@@ -16,6 +16,8 @@ import currentVendorReducer from "./currentVendor/currentVendorReducer"
 import prescription from "./prescription/prescription-reducer"
 import cart from "./cart/cartReducer"
 import timing from "./book-timing/timingReducer"
+import myProductAndTestReducer from './myProductsAndTests/myProductsAndTestReducer';
+
 
 const rootReducer = combineReducers({
 	location: locationReducer,
@@ -29,10 +31,13 @@ const rootReducer = combineReducers({
 	deliveryAndCollection: deliveryAndCollectionReducer,
 	addStaff: addStaffReducer,
 	currentVendor: currentVendorReducer,
+	myProductsAndTests: myProductAndTestReducer,
 	prescription,
 	cart,
 	timing,
 })
+
+
 
 const store = createStore(
 	rootReducer,

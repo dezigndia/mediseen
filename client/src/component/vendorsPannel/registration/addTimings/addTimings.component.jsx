@@ -3,6 +3,8 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import './addTimings.styles.scss';
 
+import Radio from '@material-ui/core/Radio';
+
 //importing custom components
 import AddDayAndTime from '../addDayAndTime/addDayAndTime.component';
 
@@ -19,7 +21,7 @@ import { setCurrentVendor, setStaffTiming, setStoreOpen } from '../../../../acti
 import { ADD_STAFF } from '../routes';
 
 //importing services
-import { UPDATE_REGISTERED_USER } from '../../../../services/services';
+import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN } from '../../../../services/services';
 
 //importing actions
 import { setcurrentVendor } from '../../../../actions/action';
@@ -51,14 +53,26 @@ const AddTimings = (props) => {
                 }
             })
             .then(res => {
-                props.setCurrentVendor(data);
-                let nextUrl = props.match.url.split('/');
-                //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
-                nextUrl.pop();//removing last two element
-                nextUrl.pop();
-                nextUrl.shift();//removing first element
-                nextUrl.push(ADD_STAFF);
-                props.history.push('/' + nextUrl.join('/'));
+                axios
+                    .get(GET_USER_DEETAIL_BY_TOKEN, {
+                        headers: {
+                            'Authorization': `Bearer ${props.auth_token.accessToken}`
+                        }
+                    })
+                    .then(response => {
+                        props.setCurrentVendor(response.data.payload);
+                        let nextUrl = props.match.url.split('/');
+                        //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
+                        nextUrl.pop();//removing last two element
+                        nextUrl.pop();
+                        nextUrl.shift();//removing first element
+                        nextUrl.push(ADD_STAFF);
+                        props.history.push('/' + nextUrl.join('/'));
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        alert('something went wrong');
+                    })
             })
             .catch(err => {
                 console.log(err);
@@ -96,25 +110,25 @@ const AddTimings = (props) => {
                     <div className="openHoursLabel">
                         <p>
                             24 Hours Open
-                            </p>
+                        </p>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
-                            value='no'
-                            name='twentyFourHoursOpen'
+                        <Radio
                             checked={props.storeOpen24Hours ? true : false}
                             onChange={(e) => props.setStoreOpen(true)}
+                            value="no"
+                            name="twentyFourHoursOpen"
+
                         />
                         <label htmlFor="twenty four hours open">yes</label>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
-                            value='yes'
-                            name='twentyFourHoursOpen'
+                        <Radio
                             checked={props.storeOpen24Hours ? false : true}
                             onChange={(e) => props.setStoreOpen(false)}
+                            value="yes"
+                            name="twentyFourHoursOpen"
+
                         />
                         <label htmlFor="not twenty four hours open ">no</label>
                     </div>

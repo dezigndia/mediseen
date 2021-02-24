@@ -30,6 +30,18 @@ $padding:1% 4%;
         @include radio();
     }
 
+    .feeCollectionBy,
+    .teleConsulting {
+
+        &>div:nth-child(1) {
+            min-width: 100%;
+        }
+    }
+
+    .feeCollectionBy {
+        padding-top:10px;
+    }
+
     &>div {
         display: flex;
         flex-flow: row nowrap;
@@ -59,11 +71,11 @@ $padding:1% 4%;
 
     .feeCollectionBy,
     .teleConsulting {
-        font-size: .8em;
-        height: 40px;
+        height: 80px;
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: row wrap;
         align-items: center;
+        justify-content: space-evenly;
 
         & label:nth-child(1) {
             font-size: .95em;

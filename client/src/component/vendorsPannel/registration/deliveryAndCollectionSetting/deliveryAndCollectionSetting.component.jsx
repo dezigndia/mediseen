@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './deliveryAndCollectionSetting.styles.scss';
 import { Slider, Typography } from '@material-ui/core';
+import Radio from '@material-ui/core/Radio';
 
 //importing actions
 import {
@@ -23,7 +24,7 @@ import Icon from '../../../reusableComponent/icon/icon.component';
 import { GiScooter } from 'react-icons/gi';
 
 //importing services
-import { UPDATE_REGISTERED_USER } from '../../../../services/services';
+import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN } from '../../../../services/services';
 
 //own props=['collectionSetting','deliverySetting']
 const DeliveryAndCollectionSetting = (props) => {
@@ -63,14 +64,26 @@ const DeliveryAndCollectionSetting = (props) => {
                 }
             })
             .then(res => {
-                props.setCurrentVendor(data);
-                let nextUrl = props.match.url.split('/');
-                //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
-                nextUrl.pop();//removing last two element
-                nextUrl.pop();
-                nextUrl.shift();//removing first element
-                nextUrl.push('paymentSetting');
-                props.history.push('/' + nextUrl.join('/'));
+                axios
+                    .get(GET_USER_DEETAIL_BY_TOKEN, {
+                        headers: {
+                            'Authorization': `Bearer ${props.auth_token.accessToken}`
+                        }
+                    })
+                    .then(response => {
+                        props.setCurrentVendor(response.data.payload);
+                        let nextUrl = props.match.url.split('/');
+                        //nextUrl=['','vendor','registerAs*','deliverySetting or collectionSetting',""]
+                        nextUrl.pop();//removing last two element
+                        nextUrl.pop();
+                        nextUrl.shift();//removing first element
+                        nextUrl.push('paymentSetting');
+                        props.history.push('/' + nextUrl.join('/'));
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        alert('something went wrong');
+                    })
             })
             .catch(err => {
                 console.log(err);
@@ -102,8 +115,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <p>{Type.current} Available At</p>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='customerAddress'
                             name='availableAt'
                             checked={props.availableAt.customerAddress ? true : false}
@@ -117,8 +129,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <label htmlFor="available at customer Address">Customer Address</label>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='pickUpByCustomer'
                             name='availableAt'
                             checked={props.availableAt.pickUpByCustomer ? true : false}
@@ -170,8 +181,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <p>Cash On Delivery Available</p>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='yes'
                             name='cod'
                             checked={props.codAvailable ? true : false}
@@ -180,8 +190,7 @@ const DeliveryAndCollectionSetting = (props) => {
                         <label htmlFor="available at customer Address">Yes</label>
                     </div>
                     <div className="radioInput">
-                        <input
-                            type='radio'
+                        <Radio
                             value='no'
                             name='cod'
                             checked={props.codAvailable ? false : true}

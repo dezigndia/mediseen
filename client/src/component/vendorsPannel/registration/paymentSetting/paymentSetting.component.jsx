@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './paymentSetting.styles.scss';
+import Radio from '@material-ui/core/Radio';
 
 //importing actions
 import {
@@ -20,7 +22,7 @@ import Icon from '../../../reusableComponent/icon/icon.component';
 import { BiWallet } from 'react-icons/bi';
 
 //importing services
-import { UPDATE_REGISTERED_USER, } from '../../../../services/services';
+import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN } from '../../../../services/services';
 
 const PaymentSetting = (props) => {
 
@@ -51,15 +53,28 @@ const PaymentSetting = (props) => {
                 }
             })
             .then(res => {
-                props.setCurrentVendor(data);
-                let nextUrl = props.match.url.split('/');
-                nextUrl.pop();
-                nextUrl.shift();
-                nextUrl = '/' + nextUrl.join('/');
-                props.history.push(nextUrl);
+                axios
+                    .get(GET_USER_DEETAIL_BY_TOKEN, {
+                        headers: {
+                            'Authorization': `Bearer ${props.auth_token.accessToken}`
+                        }
+                    })
+                    .then(response => {
+                        props.setCurrentVendor(response.data.payload);
+                        let nextUrl = props.match.url.split('/');
+                        nextUrl.pop();
+                        nextUrl.shift();
+                        nextUrl = '/' + nextUrl.join('/');
+                        props.history.push(nextUrl);
+                    })
+                    .catch(err => {
+                        alert('something went wrong');
+                        console.log(err);
+                    })
             })
             .catch(err => {
                 alert('something went wrong');
+                console.log(err);
             });
     }
 
@@ -75,7 +90,7 @@ const PaymentSetting = (props) => {
                     </Icon>
                 </div>
                 <div className='labelIconLabel'>
-                    <p>PaymentSetting</p>
+                    <p>Payment Setting</p>
                 </div>
             </div>
             <form id='paymentSettingForm'>
@@ -85,7 +100,7 @@ const PaymentSetting = (props) => {
                     </div>
                     <div className='onLinePaymentOptions  radioInputLabelOptions'>
                         <div className='radioInputLabel'>
-                            <input type='radio'
+                            <Radio
                                 checked={props.onlinePayment ? true : false}
                                 value='yes' name='onlinePayment'
                                 onChange={(e) => props.setOnlinePayment(true)}
@@ -93,8 +108,7 @@ const PaymentSetting = (props) => {
                             <label htmlFor="online payment yes">Yes</label>
                         </div>
                         <div className='radioInputLabel'>
-                            <input
-                                type='radio'
+                            <Radio
                                 checked={props.onlinePayment ? false : true}
                                 value='no' name='onlinePayment'
                                 onChange={(e) => props.setOnlinePayment(false)}
@@ -109,8 +123,7 @@ const PaymentSetting = (props) => {
                     </div>
                     <div className='paymentTypeOptions  radioInputLabelOptions'>
                         <div className='radioInputLabel'>
-                            <input
-                                type='radio'
+                            <Radio
                                 value='Upi'
                                 checked={props.paymentOption.upi ? true : false}
                                 name='paymentMode'
@@ -119,8 +132,7 @@ const PaymentSetting = (props) => {
                             <label htmlFor="payment mode upi">Upi</label>
                         </div>
                         <div className='radioInputLabel'>
-                            <input
-                                type='radio'
+                            <Radio
                                 value='bank Transfer'
                                 checked={props.paymentOption.bankTransfer ? true : false}
                                 name='paymentMode'
@@ -201,4 +213,4 @@ const mapDispatchToProps = dispatch => ({
     setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 });
 
-export default connect(mapStatetoProps, mapDispatchToProps)(PaymentSetting);
+export default connect(mapStatetoProps, mapDispatchToProps)(withRouter(PaymentSetting));

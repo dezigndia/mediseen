@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import './pathologyRegistrationHome.styles.scss';
 
@@ -16,7 +18,28 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 //importing routes
 import { ADD_TIMINGS, COLLECTION_SETTING, ADD_TESTS } from '../../routes';
 
-const PathologyRegistrationHome = ({ history, match, currentVendor }) => {
+//importing services
+import { GET_TEST_AND_PRODUCTS } from '../../../../../services/services';
+
+//importing actions
+import { setProductsAndTestList } from '../../../../../actions/action';
+
+const PathologyRegistrationHome = ({ history, match, currentVendor, auth_token, tests, setProductsAndTestList }) => {
+    useEffect(() => {
+        axios
+            .get(GET_TEST_AND_PRODUCTS, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                setProductsAndTestList(res.data.payload);
+            })
+            .catch(err => {
+                console.log(err);
+                alert(`can't fetch products details`);
+            })
+    }, [auth_token.accessToken, setProductsAndTestList]);
     return (
         <div className="pathologyRegistrationHome">
             <div>
@@ -55,12 +78,12 @@ const PathologyRegistrationHome = ({ history, match, currentVendor }) => {
                     icon1={<BiWallet />}
                     label={[<p>Add Or Import Test</p>]}
                     icon2={
-                        currentVendor.tests
+                        tests.length
                             ? <MdCheckCircle />
                             : <GoPlus />
                     }
-                    translucen={
-                        currentVendor.tests
+                    translucent={
+                        tests.length
                             ? false
                             : true
                     }
@@ -73,12 +96,23 @@ const PathologyRegistrationHome = ({ history, match, currentVendor }) => {
                     label={[<p>If You Are facing Problems Chat With Us</p>]}
                 />
             </div>
+            {
+                (currentVendor.staffs && currentVendor.workingHours) && (currentVendor.collections && currentVendor.payment) && tests.length
+                    ? <Redirect to='/vendor/profile' />
+                    : null
+            }
         </div>
     );
 }
 
 const mapStateToProps = state => ({
-    currentVendor: state.currentVendor
+    currentVendor: state.currentVendor,
+    auth_token: state.token,
+    tests: state.myProductsAndTests
 });
 
-export default connect(mapStateToProps)(PathologyRegistrationHome);
+const mapDispatchtoprops = dispatch => ({
+    setProductsAndTestList: (payload) => dispatch(setProductsAndTestList(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchtoprops)(PathologyRegistrationHome);
