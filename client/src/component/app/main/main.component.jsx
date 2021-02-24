@@ -24,6 +24,8 @@ import LabAbout from "./labOrder/LabAbout"
 import LabBooking from "./labOrder/LabBooking"
 import LabBookTime from "./labOrder/LabBookTime"
 import LabConfirm from "./labOrder/LabConfirm"
+import LabBook from "./labOrder/LabBook"
+import LabSuccess from "./labOrder/LabSuccess"
 
 const main = ({ match }) => {
 	return (
@@ -99,6 +101,8 @@ const main = ({ match }) => {
 					path={`${match.url}/labOrder/checkout`}
 					component={LabConfirm}
 				/>
+				<Route path={`${match.url}/labOrder/book`} component={LabBook} />
+				<Route path={`${match.url}/labOrder/success`} component={LabSuccess} />
 				<Route path={`${match.url}/labOrder/:labId`} component={LabOrder} />
 				<Route path={`${match.url}/search/:category`} component={SearchPage} />
 				<Route
