@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const config = require("config")
 module.exports = (err, req, res, next) => {
     if (err instanceof mongoose.Error.ValidationError) {
         err.statusCode = 400

@@ -1,6 +1,5 @@
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
-const AppError = require("../utils/errorHandler")
 const config = require("config")
 const Busboy = require("busboy")
 const s3 = require("../utils/s3Bucket")

@@ -1,7 +1,7 @@
 const expressAsyncHandler = require("express-async-handler")
 const statusCodes = require("http-status-codes")
 const jwt = require("jsonwebtoken")
-
+const config = require("config")
 const UserService = require("../services/users/user.service")
 const userService = new UserService()
 

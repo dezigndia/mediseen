@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
 const AppError = require("../utils/errorHandler")
 const jwt = require("jsonwebtoken")
+const config = require("config")
 const BusinessService = require("../services/business/business.service")
 const businessService = new BusinessService()
 

@@ -4,6 +4,7 @@ const Admin = require("../models/AdminModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const saltRounds = 10
+const config = require("config")
 
 class AdminController {
     register = expressAsyncHandler(async (req, res) => {

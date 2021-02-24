@@ -5,6 +5,7 @@ const Hospital = require("../models/HospitalModel")
 const Pathology = require("../models/PathologyModel")
 const Pharmarcy = require("../models/PharmacyModel")
 const User = require("../models/UserModel")
+const config = require("config")
 
 function authenticate() {
     return async (req, res, next) => {
