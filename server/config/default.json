@@ -23,5 +23,6 @@
         "sizelimit": 300000000,
         "accessKeyId": "AKIAT6QKWO4WSSR2CUIV",
         "secretAccessKey": "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"
-    }
+    },
+    "mode": "DEFAULT"
 }

@@ -24,7 +24,10 @@ function authenticate() {
         }
 
         try {
-            const user = await jwt.verify(token, process.env.JWT_SECRET)
+            const user = await jwt.verify(
+                token,
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             if (!user) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
                     success: false,

@@ -18,7 +18,7 @@ class AuthService {
         if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
         const user = await Doctor.findOne({ phone: phoneNumber })
         if (user) {
-            const token = await jwt.sign(user.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(user.toObject(), config.has("jwt.secret") ? config.get("jwt.secret") : null)
             return { auth_token: token, isRegistered: user ? true : false }
         } else return { isRegistered: false }
     })
@@ -35,7 +35,7 @@ class AuthService {
         return { data: data, isRegistered: user ? true : false }
     })
     getUser = expressAsyncHandler(async token => {
-        return await jwt.verify(token, process.env.JWT_SECRET)
+        return await jwt.verify(token, config.has("jwt.secret") ? config.get("jwt.secret") : null)
     })
 }
 module.exports = AuthService

@@ -18,11 +18,17 @@ class UserService {
         if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
         const user = await User.findOne({ phone: phoneNumber })
         if (user) {
-            const token = await jwt.sign(user.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(
+                user.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             return { auth_token: token, isRegistered: user ? true : false }
         } else {
             const user = await User.create({ phone: phoneNumber })
-            const token = await jwt.sign(user.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(
+                user.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             return { auth_token: token, isRegistered: user ? true : false }
         }
     })

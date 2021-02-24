@@ -35,7 +35,10 @@ class BusinessController {
         const data = await businessService.createNewBusiness(category, body)
 
         if (data) {
-            const token = await jwt.sign(data.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(
+                data.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             return res.status(StatusCodes.OK).json({ status: true, payload: data, token: token })
         } else {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Busisness could'nt be added")
