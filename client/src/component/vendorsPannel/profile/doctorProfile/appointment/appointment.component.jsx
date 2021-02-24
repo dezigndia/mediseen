@@ -11,7 +11,7 @@ import TimeSlots from '../../TimeSlots/timeSlots.component';
 import BookAppointment from '../../bookAppointment/bookAppointment.component';
 
 //importing services
-import { getAppointmentByBusiness } from '../../../../../services/services';
+import { getAppointmentByBusiness, updateAppointmentByID } from '../../../../../services/services';
 
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturdy'];
@@ -32,6 +32,34 @@ const Appointments = () => {
 
     const hospitalList = useSelector(state => state.currentVendor.clinic);
     const auth_token = useSelector(state => state.token);
+
+    const deleteAppointment = (id, timings) => {
+        //id of appointment
+        //in which time slot appointment is booked
+        axios
+            .put(updateAppointmentByID(id), { isCancelled: true }, {
+                headers: {
+                    'Authorization': `Beared ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                for (let i = 0; i < appointmentSlots.length; i++) {
+                    console.log(appointmentSlots[i].timeSlot.from.replace(' ', ''), timings.from.replace(' ', ''), appointmentSlots[i].timeSlot.to.replace(' ', ''), appointmentSlots[i].timeSlot.to.replace(' ', ''));
+                    if (appointmentSlots[i].timeSlot.from.replace(' ', '') === timings.from.replace(' ', '') && appointmentSlots[i].timeSlot.to.replace(' ', '') === timings.to.replace(' ', '')) {
+                        setAppointmentSlots(prevState => {
+                            let arr = prevState;
+                            arr[i].isBooked = false;
+                            return [...arr];
+                        });
+                        break;
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                alert('unable to delete appointment');
+            });
+    }
 
     const [bookAppointment, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -79,18 +107,22 @@ const Appointments = () => {
 
     useEffect(() => {
         //runs only for initializing timings field of reducer
-        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0] && appointmentSlots[0].timeSlot })
+        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0] && appointmentSlots[0].timeSlot });
     }, [dispatch, appointmentSlots]);
 
     useEffect(() => {
         //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
         var isPresent = (arr, item) => {
+            let return_data = { present: false };
+
+            //checking for latest entry
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].timings.from.replace(' ', '') === item.from.replace(' ', '') && arr[i].timings.to.replace(' ', '') === item.to.replace(' ', '')) {
-                    return { present: true, index: i };
+                    return_data = { present: true, index: i, isCancelled: arr[i].isCancelled };
                 }
             }
-            return { present: false };
+
+            return return_data;
         }
 
         if (timings.length != 0) {
@@ -114,9 +146,10 @@ const Appointments = () => {
                         if (isDataPresent.present) {
                             return {
                                 timeSlot: item,
-                                isBooked: true,
+                                isBooked: !isDataPresent.isCancelled,
                                 customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
-                                phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`
+                                phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
+                                _id: res.data.payload[isDataPresent.index]._id
                             }
                         }
                         else {
@@ -222,8 +255,10 @@ const Appointments = () => {
                                                 phoneNo={item.phoneNo}
                                                 timings={item.timeSlot}
                                                 isBooked={item.isBooked}
+                                                _id={item._id}
                                                 key={index}
                                                 changeTab={setTabIssueNewAppointment}
+                                                deleteAppointment={deleteAppointment}
                                             />
 
                                         </>
