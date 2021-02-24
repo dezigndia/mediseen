@@ -1,0 +1,65 @@
+const mongoose = require("mongoose")
+
+const userSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+        },
+        email: {
+            type: String,
+        },
+        password: {
+            type: String,
+        },
+        phone: {
+            type: String,
+        },
+        status: {
+            type: String,
+        },
+        photo: {
+            type: String,
+        },
+        loggedIn: {
+            type: Boolean,
+        },
+        type: {
+            type: String,
+            default: "user",
+        },
+        address: [
+            {
+                city: {
+                    type: String,
+                    required: true,
+                },
+                state: {
+                    type: String,
+                    required: true,
+                },
+                country: {
+                    type: String,
+                    required: true,
+                },
+                pincode: {
+                    type: Number,
+                    required: true,
+                },
+                area: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
+        default: [],
+    },
+    { timestamps: true }
+)
+
+userSchema.pre("save", function () {
+    this.type = "user"
+})
+
+const User = mongoose.model("User", userSchema)
+
+module.exports = User
