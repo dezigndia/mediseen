@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useReducer } from 'react';
+import React, { useState, useCallback, useReducer, useEffect } from 'react';
 import './bookAppointment.styles.scss';
 
 //importing custom components
@@ -10,6 +10,11 @@ const SET_PATIENT = 'setPatient';
 
 const BookAppointment = ({ changeTab, bookAppointment, dispatch, timings, appointmentSlots, setAppointmentSlots }) => {
     const [tab, setTab] = useState(SET_HOSPITAL_OR_DOCTOR);
+
+    useEffect(() => {
+        //runs only for initializing timings field of reducer
+        dispatch({ type: 'setTimings', payload: timings });
+    }, [timings]);
 
     const setTabSetHospitalOrDoctor = useCallback((e) => {
         if (tab !== SET_HOSPITAL_OR_DOCTOR)
