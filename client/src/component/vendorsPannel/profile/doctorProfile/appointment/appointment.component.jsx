@@ -232,7 +232,7 @@ const Appointments = () => {
                         </>
                         : <BookAppointment
                             changeTab={setTabShowAppointment}
-                            {...{ bookAppointment, dispatch, appointmentSlots, timings }}
+                            {...{ bookAppointment, dispatch, appointmentSlots, setAppointmentSlots, timings }}
                         />
                 }
             </div>

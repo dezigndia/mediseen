@@ -240,7 +240,7 @@ const Appointments = () => {
                         </>
                         : <BookAppointment
                             changeTab={setTabShowAppointment}
-                            {...{ bookAppointment, dispatch, appointmentSlots, timings }}
+                            {...{ bookAppointment, dispatch, appointmentSlots, timings, setAppointmentSlots }}
                         />
                 }
             </div>

@@ -15,7 +15,7 @@ import Icon from '../../../../reusableComponent/icon/icon.component';
 import { FiPlus } from 'react-icons/fi';
 import { MdModeEdit } from 'react-icons/md';
 
-const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispatch }) => {
+const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispatch, setAppointmentSlots }) => {
 
     const auth_token = useSelector(state => state.token);
     const currentVendor = useSelector(state => state.currentVendor);
@@ -49,6 +49,26 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
             })
             .then(res => {
                 //console.log(res.data.payload);
+                setAppointmentSlots(prevState => {
+                    let arr = prevState;
+                    for (let i = 0; i < prevState.length; i++) {
+                        if (bookAppointment.timings.from.replace(' ', '') === prevState[i].timeSlot.from.replace(' ', '') &&
+                            bookAppointment.timings.to.replace(' ', '') === prevState[i].timeSlot.to.replace(' ', '')) {
+                            // targeting the time appointment was booked 
+                            arr[i].timeSlot = {
+                                from: bookAppointment.timings.from,
+                                to: bookAppointment.timings.to,
+                                hospitalName: prevState[i].timeSlot.doctorName,
+                                doctorName: prevState[i].timeSlot.hospitalName
+                                //setting both as the one not required will be set to null and ignored by others components
+                            };
+                            arr[i].isBooked = true;
+                            arr[i].customerName = `${bookAppointment.patientFirstName}  ${bookAppointment.patientLastName}`
+                            arr[i].phoneNo = bookAppointment.patientMobileNo;
+                        }
+                    }
+                    return arr;
+                });//changing the status of appointment as booked
                 changeTab();
             })
             .catch(err => {
