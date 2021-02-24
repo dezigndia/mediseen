@@ -87,11 +87,14 @@ const Appointments = () => {
                 return { ...state, paymentStatus: action.payload }
             case 'setVideoConsulting':
                 return { ...state, videoConsulting: action.payload }
+            case 'setDate':
+                return { ...state, date: action.payload }
             default:
                 return state;
         }
     }, {
         businessName: '',
+        date: '',
         refMobileNumber: '',
         timings: '',
         notes: '',
@@ -106,9 +109,11 @@ const Appointments = () => {
     });
 
     useEffect(() => {
-        //runs only for initializing timings field of reducer
-        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0] && appointmentSlots[0].timeSlot });
-    }, [dispatch, appointmentSlots]);
+        //effect for setting date for appointment booking form
+        //month ranges from [0,11]
+        let date = `${selectedDate.date}/${selectedDate.month + 1}/${selectedDate.year}`;
+        dispatch({ type: 'setDate', payload: date });
+    }, [selectedDate]);
 
     useEffect(() => {
         //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
@@ -185,7 +190,7 @@ const Appointments = () => {
         }
 
         const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix, hospitalName) => {
-            var temp = startTime;
+            //var temp = startTime;
             var start_time = convertToDateObject(startTime.split(':')[0], startTime.split(':')[1].split(' ')[0]);
             var end_time = convertToDateObject(endTime.split(':')[0], endTime.split(':')[1].split(' ')[0]);
 
@@ -259,6 +264,7 @@ const Appointments = () => {
                                                 key={index}
                                                 changeTab={setTabIssueNewAppointment}
                                                 deleteAppointment={deleteAppointment}
+                                                dispatch={dispatch}
                                             />
 
                                         </>

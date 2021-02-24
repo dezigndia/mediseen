@@ -85,6 +85,8 @@ const Appointments = () => {
                 return { ...state, paymentStatus: action.payload }
             case 'setVideoConsulting':
                 return { ...state, videoConsulting: action.payload }
+            case 'setDate':
+                return { ...state, date: action.payload }
             default:
                 return state;
         }
@@ -100,13 +102,21 @@ const Appointments = () => {
         dob: '',
         age: '',
         paymentStatus: 'unpaid',
-        videoConsulting: false
+        videoConsulting: false,
+        date: ''
     });
 
     useEffect(() => {
+        //effect for setting date for appointment booking form
+        //month ranges from [0,11]
+        let date = `${selectedDate.date}/${selectedDate.month + 1}/${selectedDate.year}`;
+        dispatch({ type: 'setDate', payload: date });
+    }, [selectedDate]);
+
+    /*useEffect(() => {
         //runs only for initializing timings field of reducer
         dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0] && appointmentSlots[0].timeSlot });
-    }, [dispatch, appointmentSlots]);
+    }, [dispatch, appointmentSlots]);*/
 
     useEffect(() => {
         //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
@@ -256,6 +266,7 @@ const Appointments = () => {
                                                 key={index}
                                                 changeTab={setTabIssueNewAppointment}
                                                 deleteAppointment={deleteAppointment}
+                                                dispatch={dispatch}
                                             />
 
                                         </>

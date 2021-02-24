@@ -28,6 +28,7 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
             timings: bookAppointment.timings,
             notes: bookAppointment.notes,
             mobileNumber: bookAppointment.refMobileNumber,
+            //date: bookAppointment.date,
             patient: {
                 firstName: bookAppointment.patientFirstName,
                 lastName: bookAppointment.patientLastName,
@@ -65,6 +66,7 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
                             arr[i].isBooked = true;
                             arr[i].customerName = `${bookAppointment.patientFirstName}  ${bookAppointment.patientLastName}`
                             arr[i].phoneNo = bookAppointment.patientMobileNo;
+                            arr[i]._id = res.data.payload._id;
                         }
                     }
                     return arr;
