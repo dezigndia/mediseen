@@ -22,7 +22,7 @@ class AppointmentService {
     })
     updateAppointmentbyId = expressAsyncHandler(async (id, newData) => {
         let appointment = {}
-        for (const [key, value] of Object.entries(payload)) {
+        for (const [key, value] of Object.entries(newData)) {
             appointment[`${key}`] = value
         }
         return await Appointment.findByIdAndUpdate(id, appointment)
