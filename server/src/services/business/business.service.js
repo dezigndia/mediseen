@@ -36,7 +36,6 @@ class BusinessService {
                 }
             }
         } else {
-    
             throw new AppError(StatusCodes.BAD_REQUEST, "Validation error, phone must be specified")
         }
     })

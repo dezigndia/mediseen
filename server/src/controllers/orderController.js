@@ -39,13 +39,13 @@ class OrderController {
         const { user } = res.locals
         const { limit, skip } = req.query
         const searchQuery = req.query
-        if (user.type != "pharmacy" || user.type != "pathology") {
+        if (user.type != "pharmacy" && user.type != "pathology") {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
                 error: "Unauthorized Access",
             })
         }
-        const data = await orderService.getAllMyBusinessOrders(limit, skip, user.phone.searchQuery)
+        const data = await orderService.getAllMyBusinessOrders(limit, skip, user.phone, searchQuery)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
