@@ -11,7 +11,7 @@ class AppointmentController {
         let bodydata = req.body
         user.type == "user"
             ? (bodydata.userPhoneNumber = user.phone)
-            : (bodydata.buisnessPhoneNumber = user.phone)
+            : (bodydata.businessPhoneNumber = user.phone)
 
         bodydata.createdBy = user.phone
         bodydata.createdByType = user.type
@@ -22,7 +22,7 @@ class AppointmentController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
-    getAppointmentbyBuisness = expressAsyncHandler(async (req, res) => {
+    getAppointmentbybusiness = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
         const { limit, skip } = req.query
         const searchQuery = req.query
@@ -32,7 +32,7 @@ class AppointmentController {
                 error: "Unauthorized Access",
             })
         }
-        const data = await appointmentService.getAppointmentbyBuisness(
+        const data = await appointmentService.getAppointmentbybusiness(
             limit,
             skip,
             user.phone,

@@ -27,11 +27,11 @@ const orderSchema = new mongoose.Schema(
         image_url: {
             type: String,
         },
-        buisnessPhoneNumber: {
+        businessPhoneNumber: {
             type: String,
             required: true,
         },
-        buisnessType: {
+        businessType: {
             type: String,
             required: true,
         },

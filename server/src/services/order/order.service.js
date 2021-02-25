@@ -39,7 +39,7 @@ class OrderService {
             date = searchQuery.date
             delete searchQuery["date"]
         }
-        let data = Order.find({ buisnessPhoneNumber: phoneNumber, ...searchQuery })
+        let data = Order.find({ businessPhoneNumber: phoneNumber, ...searchQuery })
             .limit(parseInt(limit))
             .skip(parseInt(skip))
         if (date) {

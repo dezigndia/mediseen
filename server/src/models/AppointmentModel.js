@@ -6,7 +6,7 @@ const appointmentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        buisnessPhoneNumber: {
+        businessPhoneNumber: {
             type: String,
             required: true,
         },
@@ -18,11 +18,11 @@ const appointmentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        buisnessType: {
+        businessType: {
             type: String,
             required: true,
         },
-        buisnessName: {
+        businessName: {
             type: String,
             required: true,
         },

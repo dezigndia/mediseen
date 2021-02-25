@@ -6,8 +6,8 @@ class AppointmentService {
         return await Appointment.create(body)
     })
 
-    getAppointmentbyBuisness = expressAsyncHandler(
-        async (limit, skip, buisnessPhoneNumber, searchQuery) => {
+    getAppointmentbybusiness = expressAsyncHandler(
+        async (limit, skip, businessPhoneNumber, searchQuery) => {
             delete searchQuery["limit"]
             delete searchQuery["skip"]
             let date
@@ -16,7 +16,7 @@ class AppointmentService {
                 delete searchQuery["date"]
             }
             let data = await Appointment.find({
-                buisnessPhoneNumber: buisnessPhoneNumber,
+                businessPhoneNumber: businessPhoneNumber,
                 ...searchQuery,
             })
                 .limit(parseInt(limit))
