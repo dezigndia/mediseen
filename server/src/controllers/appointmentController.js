@@ -25,13 +25,19 @@ class AppointmentController {
     getAppointmentbyBuisness = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
         const { limit, skip } = req.query
+        const searchQuery = req.query
         if (!(user.type == "doctor" || user.type == "hospital")) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
                 error: "Unauthorized Access",
             })
         }
-        const data = await appointmentService.getAppointmentbyBuisness(limit, skip, user.phone)
+        const data = await appointmentService.getAppointmentbyBuisness(
+            limit,
+            skip,
+            user.phone,
+            searchQuery
+        )
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
@@ -42,13 +48,19 @@ class AppointmentController {
     getAppointmentbyUser = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
         const { limit, skip } = req.query
+        const searchQuery = req.query
         if (user.type != "user") {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
                 error: "Unauthorized Access",
             })
         }
-        const data = await appointmentService.getAppointmentbyUser(limit, skip, user.phone)
+        const data = await appointmentService.getAppointmentbyUser(
+            limit,
+            skip,
+            user.phone,
+            searchQuery
+        )
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })

@@ -29,25 +29,9 @@ const pharmacySchema = new mongoose.Schema(
             type: [paymentSchema],
             default: [],
         },
-        // Products Model Separated
-        // products: {
-        //     type: [productSchema],
-        //     default: [],
-        // },
         deliveryDetails: {
             type: deliverySchema,
         },
-        //REVIEW need to confirm if required
-        // about: {
-        //     type: String,
-        // },
-        // status: {
-        //     type: String,
-        // },
-        // loggedIn: {
-        //     type: Boolean,
-        //     // default: true,
-        // },
     },
     { timestamps: true }
 )

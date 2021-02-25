@@ -17,16 +17,35 @@ class OrderController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
-    getAllMyOrders = expressAsyncHandler(async (req, res) => {
+    getAllMyUserOrders = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
         const { limit, skip } = req.query
+        const searchQuery = req.query
         if (user.type != "user") {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
                 error: "Unauthorized Access",
             })
         }
-        const data = await orderService.getAllMyOrders(limit, skip, user.phone)
+        const data = await orderService.getAllMyUserOrders(limit, skip, user.phone, searchQuery)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
+    getAllMyBusinessOrders = expressAsyncHandler(async (req, res) => {
+        const { user } = res.locals
+        const { limit, skip } = req.query
+        const searchQuery = req.query
+        if (user.type != "pharmacy" || user.type != "pathology") {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                success: false,
+                error: "Unauthorized Access",
+            })
+        }
+        const data = await orderService.getAllMyBusinessOrders(limit, skip, user.phone.searchQuery)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })

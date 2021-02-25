@@ -4,18 +4,22 @@ const orderSchema = new mongoose.Schema(
     {
         userId: {
             type: String,
+            required: true,
         },
         patientName: {
             type: String,
         },
         mobileNumber: {
             type: String,
+            required: true,
         },
         userPhoneNumber: {
             type: String,
+            required: true,
         },
         date: {
-            type: String,
+            type: Date,
+            required: true,
         },
         time: {
             type: String,
@@ -25,9 +29,11 @@ const orderSchema = new mongoose.Schema(
         },
         buisnessPhoneNumber: {
             type: String,
+            required: true,
         },
         buisnessType: {
             type: String,
+            required: true,
         },
         productType: {
             type: String,

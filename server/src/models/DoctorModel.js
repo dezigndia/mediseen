@@ -19,10 +19,8 @@ const doctorSchema = new mongoose.Schema(
             default: [],
         },
         payment: {
-            type: paymentSchema, //REVIEW if array of object
+            type: paymentSchema,
         },
-        //REVIEW education: [{ type: String }],
-        //REVIEW  websiteProfile
     },
     { timestamps: true }
 )

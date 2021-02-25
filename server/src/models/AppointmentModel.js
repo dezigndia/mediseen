@@ -4,28 +4,34 @@ const appointmentSchema = new mongoose.Schema(
     {
         userPhoneNumber: {
             type: String,
+            required: true,
         },
         buisnessPhoneNumber: {
             type: String,
+            required: true,
         },
         createdBy: {
             type: String,
+            required: true,
         },
         createdByType: {
             type: String,
+            required: true,
         },
         buisnessType: {
             type: String,
+            required: true,
         },
         buisnessName: {
             type: String,
+            required: true,
         },
         timings: {
             from: { type: String },
             to: { type: String },
         },
         date: {
-            type: String,
+            type: Date,
         },
         isCancelled: {
             type: Boolean,
