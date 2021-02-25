@@ -64,7 +64,7 @@ const Home = () => {
             <div className="vendorHomeUploadExcel">
                 <RegistrationFormButton
                     icon1={<FaUpload />}
-                    label={[<p>Or upload test list excel toMediseen Whatsaap</p>]}
+                    label={[<p>Or upload test list excel to Mediseen Whatsaap</p>]}
                 />
             </div>
         </div>

@@ -12,12 +12,22 @@ import BookAppointment from '../../bookAppointment/bookAppointment.component';
 
 //importing services
 import { getAppointmentByBusiness, updateAppointmentByID } from '../../../../../services/services';
+import { LabelTwoTone } from '@material-ui/icons';
 
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturdy'];
 
 const SHOW_APPOINTMENTS = 'showAppointments';
 const ISSUE_NEW_APPOINTMENT = 'issueNewAppointments';
+
+const convertToTimeStamp = (selectedDate) => {
+    //function to convert selected date in timeStamp
+    let date = new Date();
+    date.setDate(selectedDate.date);
+    date.setMonth(selectedDate.month);
+    date.setFullYear(selectedDate.year);
+    return date.getTime();
+}
 
 const Appointments = () => {
 
@@ -111,14 +121,8 @@ const Appointments = () => {
     useEffect(() => {
         //effect for setting date for appointment booking form
         //month ranges from [0,11]
-        let date = `${selectedDate.date}/${selectedDate.month + 1}/${selectedDate.year}`;
-        dispatch({ type:'setDate', payload: date });
+        dispatch({ type: 'setDate', payload: selectedDate });
     }, [selectedDate]);
-
-    /*useEffect(() => {
-        //runs only for initializing timings field of reducer
-        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0] && appointmentSlots[0].timeSlot });
-    }, [dispatch, appointmentSlots]);*/
 
     useEffect(() => {
         //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
@@ -137,7 +141,7 @@ const Appointments = () => {
 
         if (timings.length != 0) {
             axios
-                .get(getAppointmentByBusiness, {
+                .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
                     headers: {
                         'Authorization': `Bearer ${auth_token.accessToken}`
                     }
@@ -182,7 +186,7 @@ const Appointments = () => {
         else {
             setAppointmentSlots([]);
         }
-    }, [setTimings, timings, setAppointmentSlots]);
+    }, [setTimings, timings, setAppointmentSlots, selectedDate]);
 
     useEffect(() => {
         //effect for making all appointment timeslot array
@@ -269,6 +273,7 @@ const Appointments = () => {
                                                 key={index}
                                                 changeTab={setTabIssueNewAppointment}
                                                 deleteAppointment={deleteAppointment}
+                                                dispatch={dispatch}
                                             />
 
                                         </>

@@ -19,6 +19,16 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 const SHOW_APPOINTMENTS = 'showAppointments';
 const ISSUE_NEW_APPOINTMENT = 'issueNewAppointments';
 
+const convertToTimeStamp = (selectedDate) => {
+    //function to convert selected date in timeStamp
+    let date = new Date();
+    date.setDate(selectedDate.date);
+    date.setMonth(selectedDate.month);
+    date.setFullYear(selectedDate.year);
+    return date.getTime();
+}
+
+
 const Appointments = () => {
     const [selectedDate, setSelectedDate] = useState({ date: (new Date()).getDate(), month: (new Date()).getMonth(), year: (new Date()).getFullYear() });
     const [tab, setTab] = useState(SHOW_APPOINTMENTS);
@@ -109,8 +119,7 @@ const Appointments = () => {
     useEffect(() => {
         //effect for setting date for appointment booking form
         //month ranges from [0,11]
-        let date = `${selectedDate.date}/${selectedDate.month + 1}/${selectedDate.year}`;
-        dispatch({ type: 'setDate', payload: date });
+        dispatch({ type: 'setDate', payload: selectedDate });
     }, [selectedDate]);
 
     /*useEffect(() => {
@@ -134,7 +143,7 @@ const Appointments = () => {
 
         if (timings.length != 0) {
             axios
-                .get(getAppointmentByBusiness, {
+                .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
                     headers: {
                         'Authorization': `Bearer ${auth_token.accessToken}`
                     }
@@ -266,6 +275,7 @@ const Appointments = () => {
                                                 key={index}
                                                 changeTab={setTabIssueNewAppointment}
                                                 deleteAppointment={deleteAppointment}
+                                                dispatch={dispatch}
                                             />
 
                                         </>
