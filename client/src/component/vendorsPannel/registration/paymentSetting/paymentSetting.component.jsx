@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './paymentSetting.styles.scss';
 import Radio from '@material-ui/core/Radio';
+
+import { VALIDATE } from './validator/validator';
 
 //importing actions
 import {
@@ -26,6 +28,9 @@ import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN } from '../../../../s
 
 const PaymentSetting = (props) => {
 
+    const [reEnteredAccountNumber, setReEnteredAccountNumber] = useState('');
+    const [errorsField, setErrorsField] = useState('');
+
     const back = (e) => {
         e.preventDefault();
         props.history.goBack();
@@ -45,37 +50,44 @@ const PaymentSetting = (props) => {
                 }
             }
         }
-        console.log(data);
-        axios
-            .put(UPDATE_REGISTERED_USER, data, {
-                headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`
-                }
-            })
-            .then(res => {
-                axios
-                    .get(GET_USER_DEETAIL_BY_TOKEN, {
-                        headers: {
-                            'Authorization': `Bearer ${props.auth_token.accessToken}`
-                        }
-                    })
-                    .then(response => {
-                        props.setCurrentVendor(response.data.payload);
-                        let nextUrl = props.match.url.split('/');
-                        nextUrl.pop();
-                        nextUrl.shift();
-                        nextUrl = '/' + nextUrl.join('/');
-                        props.history.push(nextUrl);
-                    })
-                    .catch(err => {
-                        alert('something went wrong');
-                        console.log(err);
-                    })
-            })
-            .catch(err => {
-                alert('something went wrong');
-                console.log(err);
-            });
+
+        let errors = VALIDATE({ ...data.payment, reEnteredAccountNumber });
+
+        if (Object.keys(errors).length === 0) {
+            axios
+                .put(UPDATE_REGISTERED_USER, data, {
+                    headers: {
+                        'Authorization': `Bearer ${props.auth_token.accessToken}`
+                    }
+                })
+                .then(res => {
+                    axios
+                        .get(GET_USER_DEETAIL_BY_TOKEN, {
+                            headers: {
+                                'Authorization': `Bearer ${props.auth_token.accessToken}`
+                            }
+                        })
+                        .then(response => {
+                            props.setCurrentVendor(response.data.payload);
+                            let nextUrl = props.match.url.split('/');
+                            nextUrl.pop();
+                            nextUrl.shift();
+                            nextUrl = '/' + nextUrl.join('/');
+                            props.history.push(nextUrl);
+                        })
+                        .catch(err => {
+                            alert('something went wrong');
+                            console.log(err);
+                        });
+                })
+                .catch(err => {
+                    alert('something went wrong');
+                    console.log(err);
+                });
+        }
+        else {
+            setErrorsField(errors);
+        }
     }
 
     return (
@@ -152,6 +164,7 @@ const PaymentSetting = (props) => {
                                     placeholder='Upi ID'
                                     value={props.upiID}
                                     onChange={(e) => props.setUpiID(e.target.value)}
+                                    className={`${props.paymentOption.upi && errorsField.upiId ? 'erroredInput' : null}`}
                                 />
                             </div>
                             : null
@@ -166,6 +179,7 @@ const PaymentSetting = (props) => {
                                         placeholder='Bank IFSC Code'
                                         value={props.IFSC}
                                         onChange={(e) => props.setBankIFSC(e.target.value)}
+                                        className={`${props.paymentOption.bankTransfer && errorsField.ifsc ? 'erroredInput' : null}`}
                                     />
                                 </div>
                                 <div className='inputInfo'>
@@ -175,11 +189,18 @@ const PaymentSetting = (props) => {
                                         placeholder='Bank Account Number'
                                         value={props.accountNo}
                                         onChange={(e) => props.setBankAccountNumber(e.target.value)}
+                                        className={`${props.paymentOption.bankTransfer && errorsField.accountNumber ? 'erroredInput' : null}`}
                                     />
                                 </div>
                                 <div className='inputInfo'>
                                     <label htmlFor="Re Enter Account Number">Re-enter Account Number</label>
-                                    <input type='text' placeholder='Re-enter Account Number' />
+                                    <input
+                                        type='number'
+                                        placeholder='Re-enter Account Number'
+                                        value={reEnteredAccountNumber}
+                                        onChange={(e) => setReEnteredAccountNumber(e.target.value)}
+                                        className={`${props.paymentOption.bankTransfer && errorsField.reEnteredAccountNumber ? 'erroredInput' : null}`}
+                                    />
                                 </div>
                             </div>
                             : null
