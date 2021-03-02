@@ -53,7 +53,7 @@ const PaymentSetting = (props) => {
 
         let errors = VALIDATE({ ...data.payment, reEnteredAccountNumber });
 
-        if (Object.keys(errors).length === 0) {
+        if ((Object.keys(errors).length === 0) || (data.payment.type === 'upi' && !Object.keys(errors).includes('upiId'))) {
             axios
                 .put(UPDATE_REGISTERED_USER, data, {
                     headers: {
@@ -87,6 +87,7 @@ const PaymentSetting = (props) => {
         }
         else {
             setErrorsField(errors);
+            console.log(errors);
         }
     }
 

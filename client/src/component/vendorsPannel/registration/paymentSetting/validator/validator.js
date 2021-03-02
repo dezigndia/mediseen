@@ -15,8 +15,6 @@ export function VALIDATE(data) {
     let { upiId, reEnteredAccountNumber } = data;
     let { ifsc, accNum } = data.bankInfo;
 
-    console.log(data);
-
     //validating upiId
     if (upiId.length !== 14 || !upiId.includes('@')) {
         addToErrorsField('upiId', 'upiId is invalid');

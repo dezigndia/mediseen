@@ -12,13 +12,52 @@ import BookAppointment from '../../bookAppointment/bookAppointment.component';
 
 //importing services
 import { getAppointmentByBusiness, updateAppointmentByID } from '../../../../../services/services';
-import { LabelTwoTone } from '@material-ui/icons';
 
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturdy'];
 
 const SHOW_APPOINTMENTS = 'showAppointments';
 const ISSUE_NEW_APPOINTMENT = 'issueNewAppointments';
+
+const convertToDateObject = (hrs, min) => {
+    let date = new Date();
+    date.setHours(hrs);
+    date.setMinutes(min);
+    date.setSeconds(0);
+    return date;
+}
+
+const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix, hospitalName) => {
+    //var temp = startTime;
+    var start_time = convertToDateObject(startTime.split(':')[0], startTime.split(':')[1].split(' ')[0]);
+    var end_time = convertToDateObject(endTime.split(':')[0], endTime.split(':')[1].split(' ')[0]);
+
+    var temp_time = start_time; //eg 6:00 am
+
+    //pushing to the array in the interval of 30 minutes
+    while (temp_time < end_time) {
+        let next_temp_time = new Date(temp_time.getTime() + 30 * 60 * 1000);//added 30 minutes , fix this
+        slotArr.push({
+            from: `${temp_time.getHours()}:${temp_time.getMinutes() <= 9 ? `0${temp_time.getMinutes()}` : temp_time.getMinutes()} ${suffix}`,
+            to: `${next_temp_time.getHours()}:${next_temp_time.getMinutes() <= 9 ? `0${next_temp_time.getMinutes()}` : next_temp_time.getMinutes()} ${suffix}`,
+            hospitalName
+        });
+        temp_time = next_temp_time;
+    }
+}
+
+var isPresent = (arr, item) => {
+    let return_data = { present: false };
+
+    //checking for latest entry
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].timings.from.replace(' ', '') === item.from.replace(' ', '') && arr[i].timings.to.replace(' ', '') === item.to.replace(' ', '')) {
+            return_data = { present: true, index: i, isCancelled: arr[i].isCancelled };
+        }
+    }
+
+    return return_data;
+}
 
 const convertToTimeStamp = (selectedDate) => {
     //function to convert selected date in timeStamp
@@ -29,6 +68,10 @@ const convertToTimeStamp = (selectedDate) => {
     return date.getTime();
 }
 
+
+/****************************************** Component ***************************************** */
+
+
 const Appointments = () => {
 
     const [selectedDate, setSelectedDate] = useState({ date: (new Date()).getDate(), month: (new Date()).getMonth(), year: (new Date()).getFullYear() });
@@ -36,6 +79,9 @@ const Appointments = () => {
     const [timings, setTimings] = useState([]);
     const [appointmentSlots, setAppointmentSlots] = useState(null);
     const [selectedHospital, setSelectedHospital] = useState('All');
+
+    //memoized function used i useEffect
+
 
     //timings is array for storing all available time slots on a particular day
     //appointSlots is array for storing info necessary to render timeSlots
@@ -125,110 +171,68 @@ const Appointments = () => {
     }, [selectedDate]);
 
     useEffect(() => {
-        //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
-        var isPresent = (arr, item) => {
-            let return_data = { present: false };
-
-            //checking for latest entry
-            for (let i = 0; i < arr.length; i++) {
-                if (arr[i].timings.from.replace(' ', '') === item.from.replace(' ', '') && arr[i].timings.to.replace(' ', '') === item.to.replace(' ', '')) {
-                    return_data = { present: true, index: i, isCancelled: arr[i].isCancelled };
-                }
-            }
-
-            return return_data;
-        }
-
-        if (timings.length != 0) {
-            axios
-                .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
-                    headers: {
-                        'Authorization': `Bearer ${auth_token.accessToken}`
-                    }
-                })
-                .then(res => {
-                    let data = timings.map(item => {
-                        //checking if a particulat timeslot is present in fetched appointment time slot  
-                        let isDataPresent = isPresent(res.data.payload, item);
-
-                        //isDataPresent = {present:true,index} if true
-                        //isdataPresent = {present:false} if false
-
-                        //index is the index at which data is present in fetched array
-
-                        console.log(isDataPresent);
-                        if (isDataPresent.present) {
-                            return {
-                                timeSlot: item,
-                                isBooked: !isDataPresent.isCancelled,
-                                customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
-                                phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
-                                _id: res.data.payload[isDataPresent.index]._id
-                            }
-                        }
-                        else {
-                            return {
-                                timeSlot: item,
-                                isBooked: false,
-                                customerName: '',
-                                phoneNo: ''
-                            }
-                        }
-                    });
-
-                    setAppointmentSlots(data);
-                })
-                .catch(err => {
-                    console.log(err);
-                    alert('unable to fetch appointments');
-                });
-        }
-        else {
-            setAppointmentSlots([]);
-        }
-    }, [setTimings, timings, setAppointmentSlots, selectedDate]);
-
-    useEffect(() => {
         //effect for making all appointment timeslot array
-        const convertToDateObject = (hrs, min) => {
-            let date = new Date();
-            date.setHours(hrs);
-            date.setMinutes(min);
-            date.setSeconds(0);
-            return date;
-        }
 
-        const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix, hospitalName) => {
-            //var temp = startTime;
-            var start_time = convertToDateObject(startTime.split(':')[0], startTime.split(':')[1].split(' ')[0]);
-            var end_time = convertToDateObject(endTime.split(':')[0], endTime.split(':')[1].split(' ')[0]);
-
-            var temp_time = start_time; //eg 6:00 am
-
-            //pushing to the array in the interval of 30 minutes
-            while (temp_time < end_time) {
-                let next_temp_time = new Date(temp_time.getTime() + 30 * 60 * 1000);//added 30 minutes , fix this
-                slotArr.push({
-                    from: `${temp_time.getHours()}:${temp_time.getMinutes() <= 9 ? `0${temp_time.getMinutes()}` : temp_time.getMinutes()} ${suffix}`,
-                    to: `${next_temp_time.getHours()}:${next_temp_time.getMinutes() <= 9 ? `0${next_temp_time.getMinutes()}` : next_temp_time.getMinutes()} ${suffix}`,
-                    hospitalName
-                });
-                temp_time = next_temp_time;
-            }
-        }
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
             let time = hospitalList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name }));
+
             let morningShift = [], eveningShift = [];
-            console.log(time);
+
             time[0].workingHours !== undefined && time.forEach(item => {
                 makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, 'am', item.hospitalName);
                 makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, 'pm', item.hospitalName);
             });
-            console.log(time);
             setTimings(morningShift.concat(eveningShift));
+            let Timings = morningShift.concat(eveningShift), appSlots = [];
+
+            if (Timings.length != 0) {
+                axios
+                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
+                        headers: {
+                            'Authorization': `Bearer ${auth_token.accessToken}`
+                        }
+                    })
+                    .then(res => {
+                        let data = Timings.map(item => {
+                            //checking if a particulat timeslot is present in fetched appointment time slot  
+                            let isDataPresent = isPresent(res.data.payload, item);
+                            //isDataPresent = {present:true,index} if true
+                            //isdataPresent = {present:false} if false
+
+                            //index is the index at which data is present in fetched array
+
+                            if (isDataPresent.present) {
+                                return {
+                                    timeSlot: item,
+                                    isBooked: !isDataPresent.isCancelled,
+                                    customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
+                                    phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
+                                    _id: res.data.payload[isDataPresent.index]._id
+                                }
+                            }
+                            else {
+                                return {
+                                    timeSlot: item,
+                                    isBooked: false,
+                                    customerName: '',
+                                    phoneNo: ''
+                                }
+                            }
+                        });
+
+                        setAppointmentSlots(data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        alert('unable to fetch appointments');
+                    });
+            }
+            else {
+                setAppointmentSlots([]);
+            }
         }
-    }, [hospitalList, setTimings, selectedDate.year, selectedDate.month, selectedDate.date]);
+    }, [hospitalList, setTimings, selectedDate.year, selectedDate.month, selectedDate.date, selectedDate, setAppointmentSlots]);
 
     const setTabShowAppointment = useCallback((e) => {
         if (tab !== SHOW_APPOINTMENTS)
