@@ -103,7 +103,14 @@ const AddProducts = (props) => {
             })
             .then(res => {
                 props.setProductsAndTestList(res.data.payload);
-                props.history.goBack();
+                if (props.setShowAddProducts) {
+                    //ie rendered inside pharmacy home
+                    props.setShowAddProducts(false);
+                }
+                else {
+                    //ie rendered inside pharmacy registration
+                    props.history.goBack();
+                }
             })
             .catch(err => {
                 console.log(err);

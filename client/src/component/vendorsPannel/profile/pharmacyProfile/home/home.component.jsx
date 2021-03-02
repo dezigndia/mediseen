@@ -19,10 +19,14 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 import { MdLocalOffer } from 'react-icons/md';
 import { FaUpload } from 'react-icons/fa';
 
+//importing custom components
+import AddProducts from './addProducts/addProducts.component';
+
 const Home = () => {
     const currentVendor = useSelector(state => state.currentVendor);
     const auth_token = useSelector(state => state.token);
     const [productCategories, setProductCategories] = useState([]);
+    const [showAddProducts, setShowAddProducts] = useState(false);
 
     useEffect(() => {
         axios
@@ -56,25 +60,10 @@ const Home = () => {
                     {
                         productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
                     }
-                    {
-                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
-                    }
-                    {
-                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
-                    }
-                    {
-                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
-                    }
-                    {
-                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
-                    }
-                    {
-                        productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
-                    }
                 </div>
             </div>
             <div className="VendorHomePageButton">
-                <button className="greenButton">Add Products</button>
+                <button className="greenButton" onClick={(e) => { setShowAddProducts(true) }}>Add Products</button>
             </div>
             <div className="vendorHomeUploadExcel">
                 <RegistrationFormButton
@@ -82,6 +71,9 @@ const Home = () => {
                     label={[<p>Or upload closing stock excel to Mediseen Whatsaap</p>]}
                 />
             </div>
+            {
+                showAddProducts ? <AddProducts {...{ setShowAddProducts }} /> : null
+            }
         </div>
     );
 }

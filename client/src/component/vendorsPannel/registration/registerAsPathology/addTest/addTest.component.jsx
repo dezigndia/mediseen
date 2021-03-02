@@ -16,10 +16,12 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TEST_AND_PRODUCTS} from '../../../../../services/services';
+import { ADD_TEST_AND_PRODUCTS } from '../../../../../services/services';
 
 //importing actions
-import { setCurrentVendor,setProductsAndTestList } from '../../../../../actions/action';
+import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
+
+//setShowAddtests is sent as prop from pathology profile
 
 const AddTests = (props) => {
 
@@ -92,17 +94,24 @@ const AddTests = (props) => {
         axios
             .post(ADD_TEST_AND_PRODUCTS, Data, {
                 headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`,  
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
                 }
             })
             .then(res => {
                 props.setProductsAndTestList(res.data.payload);
-                props.history.goBack();
+                if (props.setShowAddTests) {
+                    //ie rendered in pathology profile
+                    props.setShowAddTests(false);
+                }
+                else {
+                    //ie rendering in pathology registration
+                    props.history.goBack();
+                }
             })
             .catch(err => {
                 console.log(err);
                 alert('something went wrong');
-            })
+            });
     }
 
     useEffect(() => {
@@ -257,7 +266,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload)),
-    setProductsAndTestList:(payload)=>dispatch(setProductsAndTestList(payload))
+    setProductsAndTestList: (payload) => dispatch(setProductsAndTestList(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTests);

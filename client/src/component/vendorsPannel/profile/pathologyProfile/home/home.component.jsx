@@ -19,10 +19,14 @@ import RegistrationFormButton from '../../../../reusableComponent/registrationFo
 import { MdLocalOffer } from 'react-icons/md';
 import { FaUpload } from 'react-icons/fa';
 
+//importing custom components
+import AddTest from './addTest/addTest.component';
+
 const Home = () => {
     const currentVendor = useSelector(state => state.currentVendor);
     const auth_token = useSelector(state => state.token);
     const [testCategories, setTestCategories] = useState([]);
+    const [showAddTests, setShowAddTests] = useState(false);
 
     useEffect(() => {
         axios
@@ -59,7 +63,7 @@ const Home = () => {
                 </div>
             </div>
             <div className="VendorHomePageButton">
-                <button className="greenButton">Add Products</button>
+                <button className="greenButton" onClick={(e) => { setShowAddTests(true) }}>Add Tests</button>
             </div>
             <div className="vendorHomeUploadExcel">
                 <RegistrationFormButton
@@ -67,6 +71,9 @@ const Home = () => {
                     label={[<p>Or upload test list excel to Mediseen Whatsaap</p>]}
                 />
             </div>
+            {
+                showAddTests ? <AddTest {...{ setShowAddTests }} /> : null
+            }
         </div>
     );
 }
