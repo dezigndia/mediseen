@@ -1,7 +1,8 @@
 import React from 'react';
 import './timeSlots.styles.scss';
 
-const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab }) => {
+const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab, _id, deleteAppointment, dispatch }) => {
+
     return (
         <div className={`appoinements ${isBooked ? 'booked' : 'vacant'}`}>
             {
@@ -19,7 +20,7 @@ const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab }) => {
                             </div>
                         </div>
                         <div className="appointmentActions">
-                            <button>Delete</button>
+                            <button onClick={() => deleteAppointment(_id, timings)} > Delete</button>
                             <button>Accept</button>
                         </div>
                         <div className="appointmentTime bookedAppointmentTime">
@@ -28,7 +29,12 @@ const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab }) => {
                             <p>{timings.to}</p>
                         </div>
                     </>
-                    : <div onClick={changeTab} className='appointmentTime'>
+                    : <div onClick={(e) => {
+                        changeTab();
+                        dispatch({ type: 'setTimings', payload: timings });
+                    }}
+                        className='appointmentTime'
+                    >
                         <p>{timings.from}</p>
                         <p>-</p>
                         <p>{timings.to}</p>
