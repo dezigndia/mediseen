@@ -3,7 +3,7 @@ import Radio from '@material-ui/core/Radio';
 import TimeKeeper from 'react-timekeeper';
 import './addDayAndTime.styles.scss';
 
-const AddDayAndTime = ({ day, setTimings }) => {
+const AddDayAndTime = ({ day, setTimings, error }) => {
     const [isSelected, setIsSelected] = useState(false);
     const [morningFrom, setMorningFrom] = useState('');
     const [morningTo, setMorningTo] = useState('');
@@ -32,6 +32,10 @@ const AddDayAndTime = ({ day, setTimings }) => {
             }
         });
     }, [day, morningFrom, morningTo, eveningFrom, eveningTo, isSelected]);
+
+    useEffect(() => {
+
+    }, [error]);
 
     const setTime = (Time) => {
         console.log(Time);
@@ -77,6 +81,7 @@ const AddDayAndTime = ({ day, setTimings }) => {
                                 setSelectedTime(e.target.value);
                         }}
                         ref={morningFromRef}
+                        className={`${error && (morningFrom.includes('pm') || morningFrom === '') ? 'erroredInput' : null}`}
                     />
                     <p>To</p>
                     <input
@@ -90,6 +95,7 @@ const AddDayAndTime = ({ day, setTimings }) => {
                                 setSelectedTime(e.target.value);
                         }}
                         ref={morningToRef}
+                        className={`${error && (morningTo.includes('pm') || morningTo === '') ? 'erroredInput' : null}`}
                     />
                 </div>
                 <div className="eveningShift">
@@ -104,6 +110,7 @@ const AddDayAndTime = ({ day, setTimings }) => {
                                 setSelectedTime(e.target.value);
                         }}
                         ref={eveningFromRef}
+                        className={`${error && (eveningFrom.includes('am') || eveningFrom === '') ? 'erroredInput' : null}`}
                     />
                     <p>To</p>
                     <input
@@ -117,6 +124,7 @@ const AddDayAndTime = ({ day, setTimings }) => {
                                 setSelectedTime(e.target.value);
                         }}
                         ref={eveningToRef}
+                        className={`${error && (eveningTo.includes('am') || eveningTo === '') ? 'erroredInput' : null}`}
                     />
                 </div>
             </div>

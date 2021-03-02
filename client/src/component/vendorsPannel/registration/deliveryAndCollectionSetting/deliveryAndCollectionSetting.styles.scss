@@ -30,6 +30,10 @@
         @include input();
     }
 
+    .deliveryAndCollectionButtonContainer {
+        margin: 15px;
+    }
+
     .radioInputContainer {
         display: flex;
         flex-flow: row wrap;
@@ -52,7 +56,7 @@
 
             //first radio input container
             &>div:not(:first-child) {
-                width:  100%;
+                width: 100%;
             }
         }
     }

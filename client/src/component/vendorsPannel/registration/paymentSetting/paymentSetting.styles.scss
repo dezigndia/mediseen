@@ -3,7 +3,7 @@
 
 $buttonHeight:40px;
 $inputHeight:40px;
-$marginTop:10px;
+$marginTop:20px;
 $padding:4%;
 $height1:10%;
 $height2:10%;
@@ -22,6 +22,7 @@ $formButtonFieldHeight:15%;
     align-items: stretch;
     font-weight: bold;
     padding: $padding;
+
 
     & button {
 
@@ -50,6 +51,7 @@ $formButtonFieldHeight:15%;
 
     .paymentSettingLabel {
         @include greenIconContainer($height2);
+        margin-top: $marginTop;
 
         .labelIconContainer {
             @include greenIcon();
@@ -57,7 +59,8 @@ $formButtonFieldHeight:15%;
     }
 
     #paymentSettingForm {
-        height: $formHeight;
+        height: auto;
+        //min-height: $formHeight;
         margin-top: $marginTop;
 
         .radioInputLabelLabel {
@@ -131,6 +134,7 @@ $formButtonFieldHeight:15%;
 
         .paymentSettingButton {
             height: $formButtonFieldHeight;
+            margin-bottom:10px;
         }
     }
 }
