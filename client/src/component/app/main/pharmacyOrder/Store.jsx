@@ -8,7 +8,11 @@ import IconButton from "@material-ui/core/IconButton"
 import SearchIcon from "@material-ui/icons/Search"
 
 import { makeStyles } from "@material-ui/core/styles"
-import ProductCard from "./ProductCard"
+import ProductCard from "./ProductCard";
+
+//importing from reusabonents
+import ProductAndtestListing from '../../../reusableComponent/../reusableComponent/productAndTestListing/productAndTestListing.component';
+
 const useStyles = makeStyles((theme) => ({
 	slider: {
 		width: "100vw",
@@ -84,12 +88,20 @@ const Store = () => {
 				<div className={classes.slider}>
 					{category.map((item) => (
 						<div style={{ margin: "0.5rem" }}>
-							<ProductCard
+							{/*<ProductCard
 								ogPrice="45"
 								dcPrice="43"
 								name={item}
 								picture="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
 								quantity="100gm"
+							/>*/}
+							<ProductAndtestListing
+								category='category'
+								image='https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg'
+								mrp='100'
+								name={item}
+								qty='10'
+								sellingPrice='90'
 							/>
 						</div>
 					))}
