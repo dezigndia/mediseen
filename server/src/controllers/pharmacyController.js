@@ -42,22 +42,6 @@ class PharmacyController {
             throw new AppError(StatusCodes.NOT_FOUND, "Pharmacy not found with given id.")
         }
     })
-    getPharmacyProductCategories = expressAsyncHandler(async (req, res) => {
-        const data = await pharmacyService.getPharmacyProductCategories()
-        if (data) {
-            return res.status(StatusCodes.OK).json({ status: true, payload: data })
-        } else {
-            throw new AppError(StatusCodes.NOT_FOUND, "No categories found")
-        }
-    })
-    getPharmacyStaffRoles = expressAsyncHandler(async (req, res) => {
-        const data = await pharmacyService.getPharmacyStaffRoles()
-        if (data) {
-            return res.status(StatusCodes.OK).json({ status: true, payload: data })
-        } else {
-            throw new AppError(StatusCodes.NOT_FOUND, "No Roles found")
-        }
-    })
 }
 
 module.exports = PharmacyController

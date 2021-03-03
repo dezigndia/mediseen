@@ -7,7 +7,6 @@ const { authenticate } = require("../utils/authenticate")
 router.post("/", bc.createNewBusiness) // create new business
 
 router.get("/", bc.getBusinessList) // get all business list as array
-router.get("/category", bc.getBusinessCategory) // get all business categories as array  FIXME categories
 
 router.get("/find/", bc.getBusinessByPhoneNumber) // find business by phoneNumber
 router.get("/details/", authenticate(), bc.getBusinessDetails) // find business by token
