@@ -45,7 +45,7 @@ class BusinessService {
         return await Doctor.findById(id)
     })
     getAllBusiness = expressAsyncHandler(
-        async (limit, skip, category, specialist, area, search) => {
+        async (limit, skip, city, category, specialist, area, search) => {
             let filter = {}
             if (city) {
                 filter.area = getRegex(city)
