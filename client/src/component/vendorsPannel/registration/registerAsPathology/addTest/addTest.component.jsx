@@ -16,15 +16,19 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TEST_AND_PRODUCTS} from '../../../../../services/services';
+import { ADD_TEST_AND_PRODUCTS, UPLOAD_FILE } from '../../../../../services/services';
 
 //importing actions
-import { setCurrentVendor,setProductsAndTestList } from '../../../../../actions/action';
+import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
+
+//setShowAddtests is sent as prop from pathology profile
 
 const AddTests = (props) => {
 
     const [category, setCategory] = useState([]);
     const [type, setType] = useState([]);
+    const [uploading, setUploading] = useState(false);
+
     const initialState = {
         image: [],
         name: '',
@@ -32,7 +36,7 @@ const AddTests = (props) => {
         mrp: '',
         sellingPrice: '',
         testDetails: '',
-        quantity: '0',
+        quantity: '',
         type: 'tablet',
         fastingRequired: false
     };
@@ -66,49 +70,74 @@ const AddTests = (props) => {
     }, initialState);
 
     const addButtonhandler = (e) => {
-        var Data = {
-            image: 'amk',
-            name: data.name,
-            mrp: data.mrp,
-            sellingPrice: data.sellingPrice,
-            details: data.testDetails,
-            qty: data.quantity,
-            fastingRequired: data.fastingRequired,
-            category: data.category,
-            qtyType: data.type
-        }
-        /*let formData = new FormData();
-        Object.keys(Data).forEach(item => {
-            if (item === 'image') {
-                Data[item].forEach(image => {
-                    formData.append('image', image);
-                })
-            }
-            else {
-                formData.append(item, Data[item]);
-            }
-        });*/
+
+        setUploading(true);
+
+        const imagesArray = data.image;
+        console.log(imagesArray);
+
+        let formData = new FormData();
+        formData.append('file', imagesArray[0]);
 
         axios
-            .post(ADD_TEST_AND_PRODUCTS, Data, {
+            .post(UPLOAD_FILE, formData, {
                 headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`,  
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                    'Content-type': 'multipart/form-data'
                 }
             })
-            .then(res => {
-                props.setProductsAndTestList(res.data.payload);
-                props.history.goBack();
+            .then(response => {
+                var Data = {
+                    image: response.data.payload.location,
+                    name: data.name,
+                    mrp: data.mrp,
+                    sellingPrice: data.sellingPrice,
+                    details: data.testDetails,
+                    qty: data.quantity,
+                    fastingRequired: data.fastingRequired,
+                    category: data.category,
+                    qtyType: data.type
+                }
+                axios
+                    .post(ADD_TEST_AND_PRODUCTS, Data, {
+                        headers: {
+                            'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                        }
+                    })
+                    .then(res => {
+                        setUploading(false);
+
+                        props.setProductsAndTestList(res.data.payload);
+
+                        if (props.setShowAddTests) {
+                            //ie rendered in pathology profile
+                            props.setTestCategories(prevState => [...prevState, Data])
+                            props.setShowAddTests(false);
+                        }
+                        else {
+                            //ie rendering in pathology registration
+                            props.history.goBack();
+                        }
+                    })
+                    .catch(err => {
+                        setUploading(false);
+
+                        console.log(err);
+                        alert('something went wrong');
+                    });
             })
             .catch(err => {
+                setUploading(false);
+
                 console.log(err);
-                alert('something went wrong');
-            })
+                alert('file not uploaded');
+            });
     }
 
     useEffect(() => {
         setCategory(['a', 'b', 'c']);
         setType(['a', 'b', 'c', 'd']);
-    }, [])
+    }, [setCategory, setType])
 
     const inputContainerRef = useRef(null);
     const imageInputRef = useRef(null);
@@ -242,10 +271,22 @@ const AddTests = (props) => {
                         />
                     </div>
                 </div>
-                <div className="greenButton">
-                    <button onClick={addButtonhandler}>Add Test</button>
+                <div className="Button">
+                    {
+                        props.setShowAddTests
+                            ? <button className='whiteButton' onClick={(e) => props.setShowAddTests(false)} >cancel</button>
+                            : null
+                    }
+                    <button className='greenButton' onClick={addButtonhandler}>Add Test</button>
                 </div>
             </div>
+            {
+                uploading
+                    ? <div className="uploadingSpinner">
+                        <div />
+                    </div>
+                    : null
+            }
         </div >
     );
 }
@@ -257,7 +298,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload)),
-    setProductsAndTestList:(payload)=>dispatch(setProductsAndTestList(payload))
+    setProductsAndTestList: (payload) => dispatch(setProductsAndTestList(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTests);

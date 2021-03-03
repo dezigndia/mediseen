@@ -39,6 +39,8 @@ export function deliveryValidator(data) {
     if (deliveryDistance === '0') {
         addToErrorsField('distance', 'distance not set');
     }
+
+    return errorsField;
 }
 
 export function collectionValidator(data) {
