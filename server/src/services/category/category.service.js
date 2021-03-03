@@ -32,11 +32,11 @@ class CategoryService {
     })
 
     getCategoriesByType = expressAsyncHandler(async (type, phone) => {
-        const data = Category.findOne({ type, userPhone: phone })
+        const data = await Category.findOne({ type, userPhone: phone })
         if (data) {
             return data
         } else {
-            return await Category.find({ type, isDefault: true })
+            return await Category.findOne({ type, isDefault: true })
         }
     })
 }
