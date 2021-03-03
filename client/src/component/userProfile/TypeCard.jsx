@@ -103,7 +103,7 @@ const TypeCard = ({ type }) => {
 					</Grid>
 				</Grid>
 			</Grid>
-			<SortBy type={type} open={open} />
+			<SortBy setOpen={(value) => setOpen(value)} type={type} open={open} />
 		</Paper>
 	)
 }

@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
 import BusinessIcon from "@material-ui/icons/Business"
 import { Divider, Grid, Paper } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
+import AddContact from "./AddContact"
 
 import { makeStyles } from "@material-ui/core/styles"
 
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 const Row = () => {
 	const classes = useStyles()
 
+	const [open, setOpen] = useState(false)
+
 	return (
 		<Grid container direction="column" spacing={2}>
 			<Grid item alignItems="center" container spacing={1} xs={12}>
@@ -45,7 +48,9 @@ const Row = () => {
 					98708976542
 				</Grid>
 				<Grid item xs={3}>
-					<h4 className={classes.fontPurple}>Edit</h4>
+					<h4 onClick={() => setOpen(true)} className={classes.fontPurple}>
+						Edit
+					</h4>
 				</Grid>
 				<Grid item xs={3}>
 					<h4 className={classes.fontPurple}>Delete</h4>
@@ -54,6 +59,7 @@ const Row = () => {
 			<Grid item xs={12}>
 				<Divider />
 			</Grid>
+			<AddContact open={open} setOpen={(value) => setOpen(value)} />
 		</Grid>
 	)
 }
