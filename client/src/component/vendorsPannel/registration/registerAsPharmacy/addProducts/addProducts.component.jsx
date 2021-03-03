@@ -17,7 +17,7 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TEST_AND_PRODUCTS } from '../../../../../services/services';
+import { ADD_TEST_AND_PRODUCTS, UPLOAD_FILE } from '../../../../../services/services';
 
 //importing actions
 import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
@@ -26,6 +26,7 @@ const AddProducts = (props) => {
 
     const [category, setCategory] = useState([]);
     const [type, setType] = useState([]);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         setCategory(['a', 'b', 'c']);
@@ -47,7 +48,12 @@ const AddProducts = (props) => {
     const [data, dispatch] = useReducer((state, action) => {
         switch (action.type) {
             case 'setImages':
-                return { ...state, images: [...state.images, action.payload] };
+                let imageArray = [];
+                Object.keys(action.payload).forEach(item => {
+                    imageArray.push(action.payload[item]);
+                });
+                return { ...state, images: imageArray };
+            //return { ...state, images: [...state.images, action.payload] };
             case 'setName':
                 return { ...state, name: action.payload };
             case 'setCategory':
@@ -83,39 +89,70 @@ const AddProducts = (props) => {
     }
 
     const addTestSubmit = (e) => {
-        var Data = {
-            name: data.name,
-            category: 'pharmacy',
-            role: data.category,
-            mrp: data.mrp,
-            sellingPrice: data.sellingPrice,
-            qty: data.quantity,
-            qtyType: data.type,
-            details: data.productDetails,
-            company: data.company,
-            barcode: data.barcode
-        }
+
+        setUploading(true);
+
+        const imagesArray = data.images;
+        console.log(imagesArray);
+
+        let formData = new FormData();
+        formData.append('file', imagesArray[0]);
+
         axios
-            .post(ADD_TEST_AND_PRODUCTS, Data, {
+            .post(UPLOAD_FILE, formData, {
                 headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                    'Content-type': 'multipart/form-data'
                 }
             })
-            .then(res => {
-                props.setProductsAndTestList(res.data.payload);
-                if (props.setShowAddProducts) {
-                    //ie rendered inside pharmacy home
-                    props.setShowAddProducts(false);
-                }
-                else {
-                    //ie rendered inside pharmacy registration
-                    props.history.goBack();
-                }
+            .then(response => {
+                console.log(response.data.payload);
+                var Data = {
+                    image: response.data.payload.location,
+                    name: data.name,
+                    category: 'pharmacy',
+                    role: data.category,
+                    mrp: data.mrp,
+                    sellingPrice: data.sellingPrice,
+                    qty: data.quantity,
+                    qtyType: data.type,
+                    details: data.productDetails,
+                    company: data.company,
+                    barcode: data.barcode
+                };
+
+                axios
+                    .post(ADD_TEST_AND_PRODUCTS, Data, {
+                        headers: {
+                            'Authorization': `Bearer ${props.auth_token.accessToken}`
+                        }
+                    })
+                    .then(res => {
+                        setUploading(false);
+
+                        props.setProductsAndTestList(res.data.payload);
+
+                        if (props.setShowAddProducts) {
+                            //ie rendered inside pharmacy home
+                            props.setProductCategories(prevState => [...prevState, Data]);
+                            props.setShowAddProducts(false);
+                        }
+                        else {
+                            //ie rendered inside pharmacy registration
+                            props.history.goBack();
+                        }
+                    })
+                    .catch(err => {
+                        setUploading(false);
+                        console.log(err);
+                        alert('something went wrong');
+                    });
             })
             .catch(err => {
+                setUploading(false);
                 console.log(err);
-                alert('something went wrong');
-            })
+                alert('file not uploaded');
+            });
     }
 
     return (
@@ -161,17 +198,22 @@ const AddProducts = (props) => {
                         onChange={(e) => dispatch({ type: 'setName', payload: e.target.value })}
                     />
                 </div>
-                <div className="selectTest addProductsAndTestInput selectInputContainer">
-                    <div className='selectInputCaption'>
-                        <p>{data.category}</p>
+                <div className="selectTest addProductsAndTestInput selectInputContainer selectCategory">
+                    <div>
+                        <div className='selectInputCaption'>
+                            <p>{data.category}</p>
+                        </div>
+                        <div className='selectInput'>
+                            <select onChange={(e) => dispatch({ type: 'setCategory', payload: e.target.value })}>
+                                {
+                                    category.map((item, index) => <option key={index} value={item}>{item}</option>)
+                                }
+                            </select>
+                        </div>
                     </div>
-                    <div className='selectInput'>
-                        <select onChange={(e) => dispatch({ type: 'setCategory', payload: e.target.value })}>
-                            {
-                                category.map((item, index) => <option key={index} value={item}>{item}</option>)
-                            }
-                        </select>
-                    </div>
+                    {/*<div>
+                        add
+                    </div>*/}
                 </div>
                 <div className="price flexInputContainer">
                     <div className="mrp addProductsAndTestInput rupeeInout">
@@ -244,19 +286,35 @@ const AddProducts = (props) => {
                     />
                 </div>
             </div>
-            <div className="greenButton">
-                <button onClick={addTestSubmit}>Add Test</button>
+            <div className="Button">
+                {
+                    props.setShowAddProducts
+                        ? <button className='whiteButton' onClick={(e) => props.setShowAddProducts(false)}>Cancel</button>
+                        : null
+                }
+                <button className='greenButton' onClick={addTestSubmit}>Add Test</button>
             </div>
-            <div className="uploadtestList">
-                <div>
-                    <Icon iconColor='white' size='2em'>
-                        <ImUpload3 />
-                    </Icon>
-                </div>
-                <div>
-                    <p>or Upload test list excel to Mediseen Whatsaap</p>
-                </div>
-            </div>
+            {
+                props.setShowAddProducts
+                    ? null
+                    : <div className="uploadtestList">
+                        <div>
+                            <Icon iconColor='white' size='2em'>
+                                <ImUpload3 />
+                            </Icon>
+                        </div>
+                        <div>
+                            <p>or Upload test list excel to Mediseen Whatsaap</p>
+                        </div>
+                    </div>
+            }
+            {
+                uploading
+                    ? <div className="uploadingSpinner">
+                        <div />
+                    </div>
+                    : null
+            }
         </div >
     );
 }

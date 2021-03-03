@@ -20,7 +20,7 @@ const ProductAndTestListing = ({ category, company, details, fastingRequired, im
                     {qty}KG
                 </div>
                 {
-                    businessType === 'pathology'
+                    businessType === 'pathology' && fastingRequired
                         ? <div className="vendorTestAndProductListItemHeaderLabel">
                             <p>Fasting Required</p>
                         </div>
@@ -45,7 +45,7 @@ const ProductAndTestListing = ({ category, company, details, fastingRequired, im
                 })()
             }
             <div className="vendorTestAndProductListItemMain">
-                <img src="https://img10.hkrtcdn.com/2034/prd_203349_o.jpg" alt='product' />
+                <img src={image} alt='product' />
             </div>
             <div className="vendorTestAndProductListFooter">
                 <div className="vendorTestAndProductListItemName">

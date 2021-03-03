@@ -4,10 +4,10 @@ import './addProducts.styles.scss';
 //importing custom components from pharmacy registration
 import AddProducts from '../../../../registration/registerAsPharmacy/addProducts/addProducts.component';
 
-const AddProduct = ({ setShowAddProducts }) => {
+const AddProduct = ({ setShowAddProducts, setProductCategories }) => {
     return (
         <div className="addProductPharmacyProfileHome">
-            <AddProducts {...{ setShowAddProducts }} />
+            <AddProducts {...{ setShowAddProducts, setProductCategories }} />
         </div>
     );
 }

@@ -31,6 +31,10 @@ $iconSize:25px;
         left: 3%;
         text-align: left;
         z-index: 1;
+        width: 95%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .vendorTestAndProductListItemHeaderCount {
             padding: 1% 5px;
@@ -42,6 +46,7 @@ $iconSize:25px;
         .vendorTestAndProductListItemHeaderLabel {
             font-weight: bold;
             font-size: .8em;
+            margin-left: 5px;
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import './home.styles.scss';
@@ -6,8 +6,10 @@ import './home.styles.scss';
 ///importing jss
 import { blue } from '../../../../../assets/globalJSS';
 
+import xlsx from 'xlsx';
+
 //importing services 
-import { GET_TEST_AND_PRODUCTS } from '../../../../../services/services';
+import { GET_TEST_AND_PRODUCTS, ADD_BULK_PRODUCTS } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
@@ -27,6 +29,37 @@ const Home = () => {
     const auth_token = useSelector(state => state.token);
     const [productCategories, setProductCategories] = useState([]);
     const [showAddProducts, setShowAddProducts] = useState(false);
+    const [excelData, setExcelData] = useState(null);
+    const excelUploadInputRef = useRef(null);
+
+    const changeHandler = (e) => {
+        setExcelData(e.target.files[0]);
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(e.target.files[0]);
+        fileReader.onload = (event) => {
+            let data = event.target.result;
+            let workBook = xlsx.read(data, { type: 'binary' });
+            let result = [];
+            workBook.SheetNames.forEach(sheet => {
+                result.push(xlsx.utils.sheet_to_row_object_array(workBook.Sheets[sheet]));
+            });
+            axios
+                .post(ADD_BULK_PRODUCTS, result[0], {
+                    headers: {
+                        'Authorization': `Bearer ${auth_token.accessToken}`
+                    }
+                })
+                .then(res => {
+                    console.log(res.data.payload);
+                    setProductCategories(prevState => [...prevState, ...result[0]]);
+                })
+                .catch(err => {
+                    console.log(err);
+                    alert('cant add tests in bulk');
+                });
+        };
+    }
+
 
     useEffect(() => {
         axios
@@ -42,7 +75,7 @@ const Home = () => {
                 alert("can't fetch products categories");
                 console.log(err);
             })
-    }, []);
+    }, [setProductCategories]);
 
     return (
         <div className="vendorHome">
@@ -69,10 +102,18 @@ const Home = () => {
                 <RegistrationFormButton
                     icon1={<FaUpload />}
                     label={[<p>Or upload closing stock excel to Mediseen Whatsaap</p>]}
+                    onClick={(e) => { excelUploadInputRef.current.click(); }}
+                />
+                <input
+                    type='file'
+                    //accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    style={{ display: 'none' }}
+                    ref={excelUploadInputRef}
+                    onChange={changeHandler}
                 />
             </div>
             {
-                showAddProducts ? <AddProducts {...{ setShowAddProducts }} /> : null
+                showAddProducts ? <AddProducts {...{ setShowAddProducts, setProductCategories }} /> : null
             }
         </div>
     );
