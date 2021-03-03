@@ -26,9 +26,15 @@ class BusinessController {
         }
     })
     getBusinessCount = expressAsyncHandler(async (req, res) => {
-        const { category, specialist, area, search } = req.query
+        const { category, specialist, area, search, city } = req.query
 
-        const data = await businessService.getBusinessCount(category, specialist, area, search)
+        const data = await businessService.getBusinessCount(
+            city,
+            category,
+            specialist,
+            area,
+            search
+        )
         return res.status(StatusCodes.OK).json({ status: true, payload: data })
     })
     createNewBusiness = expressAsyncHandler(async (req, res) => {

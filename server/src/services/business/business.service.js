@@ -6,6 +6,7 @@ const { StatusCodes } = require("http-status-codes")
 const AppError = require("../../utils/errorHandler")
 const expressAsyncHandler = require("express-async-handler")
 const { getRegex, splitStringRegex } = require("../../utils/getRegex")
+const buisnessHelper = require("../../utils/buisnessHelper")
 
 class BusinessService {
     createNewBusiness = expressAsyncHandler(async (category, data) => {
@@ -76,10 +77,10 @@ class BusinessService {
         }
     )
 
-    getBusinessCount = expressAsyncHandler(async (category, specialist, area, search) => {
+    getBusinessCount = expressAsyncHandler(async (city, category, specialist, area, search) => {
         let filter = {}
         if (city) {
-            filter.area = getRegex(city)
+            filter.city = getRegex(city)
         }
         if (area) {
             filter.area = getRegex(area)
@@ -98,11 +99,11 @@ class BusinessService {
                 $or: [{ businessName: getRegex(search) }, { firstName: getRegex(searchfirstName) }],
                 $and: [filter],
             })
-            return result.length
+            return buisnessHelper.getBusinessCountByType(result)
         } else {
             //FIXME fix type
             const data = await Doctor.find(filter)
-            return data.length
+            return buisnessHelper.getBusinessCountByType(data)
         }
     })
 
