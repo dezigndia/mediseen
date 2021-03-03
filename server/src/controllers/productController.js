@@ -35,7 +35,7 @@ class ProductController {
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "Product List not found.")
+            throw new AppError(StatusCodes.NOT_FOUND, "Product List not found.")
         }
     })
 
@@ -48,7 +48,7 @@ class ProductController {
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "Product List not found.")
+            throw new AppError(StatusCodes.NOT_FOUND, "Product List not found.")
         }
     })
 }

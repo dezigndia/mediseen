@@ -4,8 +4,9 @@ const config = require("config")
 const Busboy = require("busboy")
 const s3 = require("../utils/s3Bucket")
 const path = require("path")
+const User = require("../models/UserModel")
 class BlobController {
-    blobUpload = expressAsyncHandler((req, res) => {
+    blobUpload = expressAsyncHandler(async (req, res) => {
         const storage = s3
         const busboy = new Busboy({
             headers: req.headers,
@@ -33,7 +34,7 @@ class BlobController {
                 req.unpipe()
             })
 
-            const uploadRequest = storage.upload(uploadParams, (err, result) => {
+            const uploadRequest = storage.upload(uploadParams, async (err, result) => {
                 if (err) {
                     console.log(err)
                     if (!res.headersSent) {
@@ -47,6 +48,7 @@ class BlobController {
                 }
 
                 if (!res.headersSent) {
+                    await addImageURLtoUserData(res.locals.user, result.Location)
                     return res
                         .status(StatusCodes.CREATED)
                         .json({ status: true, payload: { location: result.Location } })
@@ -81,6 +83,13 @@ class BlobController {
 
         req.pipe(busboy)
     })
+}
+
+async function addImageURLtoUserData(user, url) {
+    if (user.type === "user") {
+        const r = await User.updateOne({ phone: user.phone }, { $push: { photos: url } })
+        console.log(r)
+    }
 }
 
 module.exports = BlobController

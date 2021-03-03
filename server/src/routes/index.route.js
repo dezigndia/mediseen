@@ -12,6 +12,7 @@ const blobRouter = require("./blob.route")
 const appointmentRouter = require("./appointment.route")
 const orderRouter = require("./order.route")
 const testRouter = require("./test.route")
+const categoryRouter = require("./category.route")
 
 router.use("/auth", authRouter)
 router.use("/hospital", hospitalRouter)
@@ -25,5 +26,6 @@ router.use("/blob", blobRouter)
 router.use("/appointment", appointmentRouter)
 router.use("/order", orderRouter)
 router.use("/test", testRouter)
+router.use("/category", categoryRouter)
 
 module.exports = router

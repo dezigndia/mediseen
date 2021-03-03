@@ -2,6 +2,9 @@ const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema(
     {
+        avatar: {
+            type: String,
+        },
         name: {
             type: String,
         },
@@ -27,8 +30,20 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "user",
         },
+        photos: {
+            type: [String],
+            default: [],
+        },
         address: [
             {
+                name: {
+                    type: String,
+                    required: true,
+                },
+                number: {
+                    type: String,
+                    required: true,
+                },
                 city: {
                     type: String,
                     required: true,

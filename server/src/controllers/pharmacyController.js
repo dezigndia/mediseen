@@ -27,7 +27,7 @@ class PharmacyController {
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
-            throw new AppError(statusCodes.NOT_FOUND, "Pharmacy List not found.")
+            throw new AppError(StatusCodes.NOT_FOUND, "Pharmacy List not found.")
         }
     })
 
