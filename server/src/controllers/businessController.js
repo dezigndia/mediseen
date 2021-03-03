@@ -25,6 +25,12 @@ class BusinessController {
             throw new AppError(StatusCodes.NOT_FOUND, "Businesss List not found.")
         }
     })
+    getBusinessCount = expressAsyncHandler(async (req, res) => {
+        const { category, specialist, area, search } = req.query
+
+        const data = await businessService.getBusinessCount(category, specialist, area, search)
+        return res.status(StatusCodes.OK).json({ status: true, payload: data })
+    })
     createNewBusiness = expressAsyncHandler(async (req, res) => {
         const { category } = req.query
         const body = req.body

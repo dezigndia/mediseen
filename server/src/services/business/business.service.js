@@ -46,6 +46,9 @@ class BusinessService {
     getAllBusiness = expressAsyncHandler(
         async (limit, skip, category, specialist, area, search) => {
             let filter = {}
+            if (city) {
+                filter.area = getRegex(city)
+            }
             if (area) {
                 filter.area = getRegex(area)
             }
@@ -72,6 +75,36 @@ class BusinessService {
             }
         }
     )
+
+    getBusinessCount = expressAsyncHandler(async (category, specialist, area, search) => {
+        let filter = {}
+        if (city) {
+            filter.area = getRegex(city)
+        }
+        if (area) {
+            filter.area = getRegex(area)
+        }
+        if (specialist) {
+            filter.specialist = getRegex(specialist)
+        }
+        if (category) {
+            filter.type = getRegex(category)
+        }
+        if (search) {
+            const op = splitStringRegex(search)
+            const searchfirstName = op[0]
+            //FIXME fix type
+            const result = Doctor.find({
+                $or: [{ businessName: getRegex(search) }, { firstName: getRegex(searchfirstName) }],
+                $and: [filter],
+            })
+            return result.length
+        } else {
+            //FIXME fix type
+            const data = await Doctor.find(filter)
+            return data.length
+        }
+    })
 
     getBusinessByPhoneNumber = expressAsyncHandler(async (phoneNumber, category) => {
         switch (category) {
