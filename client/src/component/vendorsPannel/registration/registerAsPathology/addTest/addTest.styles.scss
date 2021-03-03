@@ -31,6 +31,7 @@ $formHeight:70%;
             width: 50px;
             border: 10px solid $blue;
             border-radius: 50%;
+            border-top-color: white;
             animation-name: loadngSpinner;
             animation-iteration-count: infinite;
             animation-duration: .5s;

@@ -37,7 +37,7 @@ const ProductAndTestListing = ({ category, company, details, fastingRequired, im
                                 <MdLocalOffer />
                             </Icon>
                             <div className="productDiscount">
-                                <p>{discount}%</p>
+                                <p>{discount.toFixed()}%</p>
                                 <p>Off</p>
                             </div>
                         </div>
