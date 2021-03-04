@@ -3,7 +3,7 @@ function getBusinessCountByType(data) {
         doctor: 0,
         hospital: 0,
         pharmacy: 0,
-        phathology: 0,
+        pathology: 0,
     }
     data.forEach(b => {
         count[b.type]++
