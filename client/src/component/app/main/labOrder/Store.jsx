@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
 
 //importing reusable components
-import ProductAndTestListing from '../../../reusableComponent/productAndTestListing/productAndTestListing.component';
+import ProductAndTestListing from "../../../reusableComponent/productAndTestListing/productAndTestListing.component"
 
 const useStyles = makeStyles((theme) => ({
 	slider: {
@@ -95,13 +95,13 @@ const Store = () => {
 								picture="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
 								quantity="100gm"
 							/>*/}
-							<ProductAndtestListing
-								category='category'
-								image='https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg'
-								mrp='100'
+							<ProductAndTestListing
+								category="category"
+								image="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
+								mrp="100"
 								name={item}
-								qty='10'
-								sellingPrice='90'
+								qty="10"
+								sellingPrice="90"
 							/>
 						</div>
 					))}
