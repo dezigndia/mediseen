@@ -68,7 +68,7 @@ const PharmacyOrder = () => {
 		}
 		const fetchProduct = async () => {
 			const data = await fetchCall(
-				`test/find/all?ownerId=${labId}`,
+				`product/find/all?ownerId=${labId}`,
 				"GET"
 			).then((res) => res.data.payload)
 

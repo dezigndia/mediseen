@@ -70,7 +70,7 @@ const ConfirmOrder = ({ name, address, stars, distance }) => {
 					</Link>
 				</Grid>
 				<Grid item>
-					<Link to="">
+					<Link to="booking-time?order=pres">
 						<Button className={clsx(classes.button2)}>Yes</Button>
 					</Link>
 				</Grid>

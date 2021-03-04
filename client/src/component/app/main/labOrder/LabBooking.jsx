@@ -10,9 +10,13 @@ import {
 	FormControlLabel,
 	Button,
 } from "@material-ui/core"
+import { useDispatch } from "react-redux"
 const useStyles = makeStyles(() => ({
 	container: {
-		padding: "1rem 2rem",
+		height: "100%",
+		overflowY: "scroll",
+		padding: "0 0.5rem",
+		flexWrap: "nowrap",
 	},
 	image: {
 		padding: "1rem",
@@ -31,13 +35,14 @@ const useStyles = makeStyles(() => ({
 const LabBooking = () => {
 	const classes = useStyles()
 
+	const dispatch = useDispatch()
+
 	return (
 		<Grid
 			container
-			className={classes.container}
 			direction="column"
-			xs={12}
-			spacing={2}
+			className={classes.container}
+			spacing={1}
 		>
 			<Grid container direction="column" xs={2} item>
 				<Grid item className={classes.image}>

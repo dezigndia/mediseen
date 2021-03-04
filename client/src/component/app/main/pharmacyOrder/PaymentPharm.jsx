@@ -75,8 +75,6 @@ const useStyles = makeStyles(() => ({
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search)
-
-	const query = useQuery()
 }
 
 const PaymentPharm = () => {

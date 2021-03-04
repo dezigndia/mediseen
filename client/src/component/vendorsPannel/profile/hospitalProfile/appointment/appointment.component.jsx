@@ -11,27 +11,72 @@ import TimeSlots from '../../TimeSlots/timeSlots.component';
 import BookAppointment from '../../bookAppointment/bookAppointment.component';
 
 //importing services
-import { getAppointmentByBusiness } from '../../../../../services/services';
+import { getAppointmentByBusiness, updateAppointmentByID } from '../../../../../services/services';
 
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturdy'];
 
-const dummydata = [
-    { timeSlot: { from: '10:00', to: '10:30' }, isBooked: true, customerName: 'Amresh Kumar', phoneNo: '9219158811' },
-    { timeSlot: { from: '10:30', to: '11:00' }, isBooked: true, customerName: 'Amresh Kumar', phoneNo: '9219158811' },
-    { timeSlot: { from: '11:00', to: '11:30' }, isBooked: false, customerName: 'Amresh Kumar', phoneNo: '9219158811' },
-    { timeSlot: { from: '12:00', to: '12:30' }, isBooked: true, customerName: 'Amresh Kumar', phoneNo: '9219158811' },
-    { timeSlot: { from: '12:30', to: '1:00' }, isBooked: true, customerName: 'Amresh Kumar', phoneNo: '9219158811' }
-];
-
 const SHOW_APPOINTMENTS = 'showAppointments';
 const ISSUE_NEW_APPOINTMENT = 'issueNewAppointments';
+
+const convertToDateObject = (hrs, min) => {
+    let date = new Date();
+    date.setHours(hrs);
+    date.setMinutes(min);
+    date.setSeconds(0);
+    return date;
+}
+
+const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix, hospitalName) => {
+    //var temp = startTime;
+    var start_time = convertToDateObject(startTime.split(':')[0], startTime.split(':')[1].split(' ')[0]);
+    var end_time = convertToDateObject(endTime.split(':')[0], endTime.split(':')[1].split(' ')[0]);
+
+    var temp_time = start_time; //eg 6:00 am
+
+    //pushing to the array in the interval of 30 minutes
+    while (temp_time < end_time) {
+        let next_temp_time = new Date(temp_time.getTime() + 30 * 60 * 1000);//added 30 minutes , fix this
+        slotArr.push({
+            from: `${temp_time.getHours()}:${temp_time.getMinutes() <= 9 ? `0${temp_time.getMinutes()}` : temp_time.getMinutes()} ${suffix}`,
+            to: `${next_temp_time.getHours()}:${next_temp_time.getMinutes() <= 9 ? `0${next_temp_time.getMinutes()}` : next_temp_time.getMinutes()} ${suffix}`,
+            hospitalName
+        });
+        temp_time = next_temp_time;
+    }
+}
+
+var isPresent = (arr, item) => {
+    let return_data = { present: false };
+
+    //checking for latest entry
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].timings.from.replace(' ', '') === item.from.replace(' ', '') && arr[i].timings.to.replace(' ', '') === item.to.replace(' ', '')) {
+            return_data = { present: true, index: i, isCancelled: arr[i].isCancelled };
+        }
+    }
+
+    return return_data;
+}
+
+
+const convertToTimeStamp = (selectedDate) => {
+    //function to convert selected date in timeStamp
+    let date = new Date();
+    date.setDate(selectedDate.date);
+    date.setMonth(selectedDate.month);
+    date.setFullYear(selectedDate.year);
+    return date.getTime();
+}
+
+/****************************************** Component ***************************************** */
 
 const Appointments = () => {
     const [selectedDate, setSelectedDate] = useState({ date: (new Date()).getDate(), month: (new Date()).getMonth(), year: (new Date()).getFullYear() });
     const [tab, setTab] = useState(SHOW_APPOINTMENTS);
     const [timings, setTimings] = useState([]);
     const [appointmentSlots, setAppointmentSlots] = useState(null);
+    const [selectedDoctor, setSelectedDoctor] = useState('All');
 
     //timings is array for storing all available time slots on a particular day
     //appointSlots is array for storing info necessary to render timeSlots
@@ -39,6 +84,32 @@ const Appointments = () => {
     //const [appointments,setAppointm]
     const doctorsList = useSelector(state => state.currentVendor.doctors);
     const auth_token = useSelector(state => state.token);
+
+    const deleteAppointment = (id, timings) => {
+        axios
+            .put(updateAppointmentByID(id), { isCancelled: true }, {
+                headers: {
+                    'Authorization': `Beared ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                for (let i = 0; i < appointmentSlots.length; i++) {
+                    console.log(appointmentSlots[i].timeSlot.from.replace(' ', ''), timings.from.replace(' ', ''), appointmentSlots[i].timeSlot.to.replace(' ', ''), appointmentSlots[i].timeSlot.to.replace(' ', ''));
+                    if (appointmentSlots[i].timeSlot.from.replace(' ', '') === timings.from.replace(' ', '') && appointmentSlots[i].timeSlot.to.replace(' ', '') === appointmentSlots[i].timeSlot.to.replace(' ', '')) {
+                        setAppointmentSlots(prevState => {
+                            let arr = prevState;
+                            arr[i].isBooked = false;
+                            return [...arr];
+                        });
+                        break;
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                alert('unable to delete appointment');
+            });
+    }
 
     const [bookAppointment, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -66,6 +137,8 @@ const Appointments = () => {
                 return { ...state, paymentStatus: action.payload }
             case 'setVideoConsulting':
                 return { ...state, videoConsulting: action.payload }
+            case 'setDate':
+                return { ...state, date: action.payload }
             default:
                 return state;
         }
@@ -81,111 +154,79 @@ const Appointments = () => {
         dob: '',
         age: '',
         paymentStatus: 'unpaid',
-        videoConsulting: false
+        videoConsulting: false,
+        date: ''
     });
 
     useEffect(() => {
-        //runs only once for initializing timings field of reducer
-        dispatch({ type: 'setTimings', payload: appointmentSlots && appointmentSlots[0].timeSlot })
-    }, [dispatch, appointmentSlots]);
-
-    useEffect(() => {
-        //effect for making appointmentSlots array necessary for rendering TimeSlotComponent
-        var isPresent = (arr, item) => {
-            for (let i = 0; i < arr.length; i++) {
-                if (arr[i].timings.from === item.from && arr[i].timings.to === item.to) {
-                    return { present: true, index: i };
-                }
-            }
-            return { present: false };
-        }
-
-        if (timings.length != 0) {
-            axios
-                .get(getAppointmentByBusiness, {
-                    headers: {
-                        'Authorization': `Bearer ${auth_token.accessToken}`
-                    }
-                })
-                .then(res => {
-                    let data = timings.map(item => {
-                        //checking if a particulat timeslot is present in fetched appointment time slot  
-                        let isDataPresent = isPresent(res.data.payload, item);
-
-                        //isDataPresent = {present:true,index} if true
-                        //isdataPresent = {present:false} if false
-
-                        //index is the index at which data is present in fetched array
-
-                        console.log(isDataPresent);
-                        if (isDataPresent.present) {
-                            return {
-                                timeSlot: item,
-                                isBooked: true,
-                                customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
-                                phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`
-                            }
-                        }
-                        else {
-                            return {
-                                timeSlot: item,
-                                isBooked: false,
-                                customerName: '',
-                                phoneNo: ''
-                            }
-                        }
-                    });
-
-                    setAppointmentSlots(data);
-                })
-                .catch(err => {
-                    console.log(err);
-                    alert('unable to fetch appointments');
-                });
-        }
-    }, [setTimings, timings, setAppointmentSlots]);
+        //effect for setting date for appointment booking form
+        //month ranges from [0,11]
+        dispatch({ type: 'setDate', payload: selectedDate });
+    }, [selectedDate]);
 
     useEffect(() => {
         //effect for making all appointment timeslot array
-        const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix) => {
-            var temp = startTime;
-            console.log(startTime, endTime, temp);
-            while (temp <= endTime) {
-                var hrs = parseInt(temp.split(':')[0]);
-                var min = parseInt(temp.split(':')[1].split(' ')[0]);
-                var step = 1; //min addition start from 0
-                console.log(startTime, endTime, temp);
-                while (step <= 30) {
-                    if (min < 59) {
-                        min += 1;
-                    }
-                    else {
-                        min = 0;
-                        if (hrs < 12) {
-                            hrs += 1;
-                        }
-                        else {
-                            hrs = 1;
-                        }
-                    }
-                    step += 1;
-                    console.log(step);
-                }  //30 minutes added to current time
-                slotArr.push({ from: `${temp.split(':')[0]}:${temp.split(':')[1]}${suffix}`, to: `${hrs}:${min <= 9 ? `0${min}` : min}${suffix}` });
-                temp = `${hrs}:${min <= 9 ? `0${min}` : min}`
-            }
-        }
-        if (doctorsList.length) {
-            let time = doctorsList.map(item => item.workingHours[days[(new Date).getDay()]]);
+
+        if (doctorsList) {
+            let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
+            let time = doctorsList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name }));
+
             let morningShift = [], eveningShift = [];
-            time.forEach(item => {
-                makeAppointmentSlotsArray(morningShift, item.morning.from, item.morning.to, 'am');
-                makeAppointmentSlotsArray(eveningShift, item.evening.from, item.evening.to, 'pm');
+
+            time[0].workingHours !== undefined && time.forEach(item => {
+                makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, 'am', item.hospitalName);
+                makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, 'pm', item.hospitalName);
             });
             setTimings(morningShift.concat(eveningShift));
-            console.log(morningShift, eveningShift);
+            let Timings = morningShift.concat(eveningShift), appSlots = [];
+
+            if (Timings.length != 0) {
+                axios
+                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
+                        headers: {
+                            'Authorization': `Bearer ${auth_token.accessToken}`
+                        }
+                    })
+                    .then(res => {
+                        let data = Timings.map(item => {
+                            //checking if a particulat timeslot is present in fetched appointment time slot  
+                            let isDataPresent = isPresent(res.data.payload, item);
+                            //isDataPresent = {present:true,index} if true
+                            //isdataPresent = {present:false} if false
+
+                            //index is the index at which data is present in fetched array
+
+                            if (isDataPresent.present) {
+                                return {
+                                    timeSlot: item,
+                                    isBooked: !isDataPresent.isCancelled,
+                                    customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
+                                    phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
+                                    _id: res.data.payload[isDataPresent.index]._id
+                                }
+                            }
+                            else {
+                                return {
+                                    timeSlot: item,
+                                    isBooked: false,
+                                    customerName: '',
+                                    phoneNo: ''
+                                }
+                            }
+                        });
+
+                        setAppointmentSlots(data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        alert('unable to fetch appointments');
+                    });
+            }
+            else {
+                setAppointmentSlots([]);
+            }
         }
-    }, [doctorsList, setTimings]);
+    }, [doctorsList, setTimings, selectedDate.year, selectedDate.month, selectedDate.date, selectedDate, setAppointmentSlots]);
 
     const setTabShowAppointment = useCallback((e) => {
         if (tab !== SHOW_APPOINTMENTS)
@@ -205,28 +246,41 @@ const Appointments = () => {
                     tab === SHOW_APPOINTMENTS
                         ?
                         <>
-                            <div className='hospitalList'>
+                            <div className='hospitalList' value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)}>
                                 <select>
+                                    <option value='All'>All</option>
                                     {
-                                        doctorsList.map((item, index) => <option key={index}>{item.name}</option>)
+                                        doctorsList.map((item, index) => <option key={index} value={item.name}>{item.name}</option>)
                                     }
                                 </select>
                             </div>
                             {
-                                dummydata.map((item, index) =>
-                                    <TimeSlots
-                                        name={item.customerName}
-                                        phoneNo={item.phoneNo}
-                                        timings={item.timeSlot}
-                                        isBooked={item.isBooked}
-                                        key={index}
-                                        changeTab={setTabIssueNewAppointment}
-                                    />)
+                                appointmentSlots &&
+                                appointmentSlots.length > 0 &&
+                                appointmentSlots
+                                    .filter(item => selectedDoctor === 'All' || item.timeSlot.doctorName === selectedDoctor)
+                                    .map((item, index) =>
+                                        <>
+                                            <TimeSlots
+                                                key={index}
+                                                name={item.customerName}
+                                                phoneNo={item.phoneNo}
+                                                timings={item.timeSlot}
+                                                isBooked={item.isBooked}
+                                                _id={item._id}
+                                                key={index}
+                                                changeTab={setTabIssueNewAppointment}
+                                                deleteAppointment={deleteAppointment}
+                                                dispatch={dispatch}
+                                            />
+
+                                        </>
+                                    )
                             }
                         </>
                         : <BookAppointment
                             changeTab={setTabShowAppointment}
-                            {...{ bookAppointment, dispatch, appointmentSlots, timings }}
+                            {...{ bookAppointment, dispatch, appointmentSlots, timings, setAppointmentSlots }}
                         />
                 }
             </div>

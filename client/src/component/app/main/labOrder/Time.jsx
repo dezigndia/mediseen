@@ -26,14 +26,12 @@ const timeArray = [
 	"Evening 9:00 PM",
 ]
 
-const Time = ({ date }) => {
+const Time = ({ date, type }) => {
 	const classes = useStyles()
 
 	const [active, setActive] = useState(null)
 
 	const dispatch = useDispatch()
-
-	console.log(date)
 
 	return (
 		<Grid container direction="column">
@@ -61,7 +59,11 @@ const Time = ({ date }) => {
 							/>
 						</Grid>
 						<Grid item xs={4}>
-							<Link to="/home/labOrder/checkout">
+							<Link
+								to={`/home/labOrder/checkout?${
+									type === "pres" ? "order=pres" : ""
+								}`}
+							>
 								<Button
 									onClick={() =>
 										dispatch(addTiming({ date, timing: timeArray[active] }))

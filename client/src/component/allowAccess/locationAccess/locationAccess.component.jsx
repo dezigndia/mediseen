@@ -1,120 +1,176 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import './locationAccessComponent.styles.scss';
+import React, { useState, useRef, useEffect } from "react"
+import { withRouter } from "react-router-dom"
+import "./locationAccessComponent.styles.scss"
+import GeoCoder from "node-geocoder"
 
 //icon
-import { makeStyles } from '@material-ui/core';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import CloseIcon from '@material-ui/icons/Close';
-import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import { Button, makeStyles } from "@material-ui/core"
+import LocationOnIcon from "@material-ui/icons/LocationOn"
+import CloseIcon from "@material-ui/icons/Close"
+import GpsFixedIcon from "@material-ui/icons/GpsFixed"
+import { useDispatch, useSelector } from "react-redux"
 
 //reusable button
-import PrimaryIconButton from '../../reusableComponent/primaryButton.component';
+import PrimaryIconButton from "../../reusableComponent/primaryButton.component"
+import {
+	setLocation,
+	setLocationFromPin,
+} from "../../../store/location/locationActions"
 
 const dummyData = {
-    abc: { city: 'a', state: 'b' }
+	abc: { city: "a", state: "b" },
 }
 
-const useStyles = makeStyles(theme => ({
-    blue: {
-        color: '#2BBEC8'
-    }
-}));
+const useStyles = makeStyles((theme) => ({
+	blue: {
+		color: "#2BBEC8",
+	},
+}))
+
+const options = {
+	provider: "mapquest",
+
+	// Optional depending on the providers
+	httpAdapter: "https", // Default
+	apiKey: "Lhu9s4fQBXxbRNd69dsMuihNuXtKZGkmLhu9s4fQBXxbRNd69dsMuihNuXtKZGkm", // for Mapquest, OpenCage, Google Premier
+	formatter: null, // 'gpx', 'string', ...
+}
+
+const geocoder = GeoCoder(options)
 
 const LocationAccess = ({ history }) => {
+	const returnBackToAllowAccessPage = (e) => {
+		history.goBack()
+	}
 
-    const returnBackToAllowAccessPage = (e) => {
-        history.goBack();
-    }
+	const state = useSelector((state) => state.location.st)
+	const city = useSelector((state) => state.location.city)
 
-    const [cityPinCode, setCityPinCode] = useState('');
-    const [result, setResult] = useState({ state: '', city: '', error: false });
-    const stateRef = useRef(null);
-    const cityRef = useRef(null);
+	const [cityPinCode, setCityPinCode] = useState("")
+	const [result, setResult] = useState({ state: "", city: "", error: false })
+	const stateRef = useRef(null)
+	const cityRef = useRef(null)
+	const [lat, setLat] = useState(null)
+	const [lon, setLon] = useState(null)
+	const [loc, setLoc] = useState(false)
 
-    const classes = useStyles();
+	const classes = useStyles()
 
-    const setCurrentLocation = (e) => {
-        function success(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            console.log(longitude, latitude);
-        }
+	const dispatch = useDispatch()
 
-        function error() {
-            alert('Unable to retrieve your location');
-        }
+	function getLocation() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition((position) => {
+				setLat(position.coords.latitude)
+				setLon(position.coords.longitude)
+			})
+		} else {
+			console.log("geolocation not supported.")
+		}
+	}
+	useEffect(() => {
+		getLocation()
 
-        if (!navigator.geolocation) {
-            alert('Geolocation is not supported by your browser');
-        } else {
-            navigator.geolocation.getCurrentPosition(success, error);
-        }
-    };
+		if (lat && lon && loc) {
+			dispatch(setLocation(lat, lon))
+		}
+	}, [lat, lon, loc])
 
-    useEffect(() => {
-        if (cityPinCode.length !== 0) {
-            if (cityPinCode in dummyData) {
-                setResult({ state: dummyData.abc.state, city: dummyData.abc.city, error: false });
-            }
-            else {
-                setResult({ error: true })
-            }
-        }
-    }, [cityPinCode]);
+	const getCityFromPin = async () => {
+		dispatch(setLocationFromPin(cityPinCode))
+	}
 
-    useEffect(() => {
-        if (!result.error) {
-            stateRef.current.value = result.state;
-            cityRef.current.value = result.city;
-        }
-    }, [result]);
+	// const setCurrentLocation = (e) => {
+	// 	function success(position) {
+	// 		const latitude = position.coords.latitude
+	// 		const longitude = position.coords.longitude
+	// 		console.log(longitude, latitude)
+	// 	}
 
-    return (
-        <div className="locationAccessContainer">
-            <div className="locationAccess">
+	// 	function error() {
+	// 		alert("Unable to retrieve your location")
+	// 	}
 
-                <div className="locationAccessHeader">
-                    <div className='searchContainer'>
-                        <div className='searchLabel'>
-                            Search
-                        </div>
-                        <div className='searchIcon'>
-                            <CloseIcon onClick={returnBackToAllowAccessPage} />
-                        </div>
-                    </div>
-                    <div className='setCurrentLocationContainer' onClick={setCurrentLocation}>
-                        <div className='setCurrrentLocationIcon'>
-                            <GpsFixedIcon className={classes.blue} />
-                        </div>
-                        <div className='setCurrentLocationLabel'>
-                            Set Current Location
-                        </div>
-                    </div>
-                </div>
+	// 	if (!navigator.geolocation) {
+	// 		alert("Geolocation is not supported by your browser")
+	// 	} else {
+	// 		navigator.geolocation.getCurrentPosition(success, error)
+	// 	}
+	// }
 
-                <div className="enterCityPincode">
-                    <div className="inputCityPincodeIcon">
-                        <LocationOnIcon />
-                    </div>
-                    <input id='cityPincodeInput' value={cityPinCode} onChange={(e) => { setCityPinCode(e.target.value) }} placeholder='Enter Pin Code Or City Name' />
-                    {result.error ? <p className='cityPincodeInputError'>no result found enter again</p> : null}
-                </div>
+	useEffect(() => {
+		if (cityPinCode.length !== 0) {
+			if (cityPinCode in dummyData) {
+				setResult({
+					state: dummyData.abc.state,
+					city: dummyData.abc.city,
+					error: false,
+				})
+			} else {
+				setResult({ error: true })
+			}
+		}
+	}, [cityPinCode])
 
-                <div className="cityPincodeSearchResult">
-                    <input id='state' disabled ref={stateRef} placeholder='state' />
-                </div>
+	// useEffect(() => {
+	// 	if (!result.error) {
+	// 		stateRef.current.value = result.state
+	// 		cityRef.current.value = result.city
+	// 	}
+	// }, [result])
 
-                <div className='cityPincodeSearchResult'>
-                    <input id='city' disabled ref={cityRef} placeHolder='city' />
-                </div>
+	return (
+		<div className="locationAccessContainer">
+			<div className="locationAccess">
+				<div className="locationAccessHeader">
+					<div className="searchContainer">
+						<div className="searchLabel">Search</div>
+						<div className="searchIcon">
+							<CloseIcon onClick={returnBackToAllowAccessPage} />
+						</div>
+					</div>
+					<div
+						className="setCurrentLocationContainer"
+						onClick={() => setLoc(true)}
+					>
+						<div className="setCurrrentLocationIcon">
+							<GpsFixedIcon className={classes.blue} />
+						</div>
+						<div className="setCurrentLocationLabel">Set Current Location</div>
+					</div>
+				</div>
 
-                <div className="setCityPinCodeSearchOk">
-                    <PrimaryIconButton label='ok' onClick={returnBackToAllowAccessPage} />
-                </div>
-            </div>
-        </div>
-    );
+				<div className="enterCityPincode">
+					<div className="inputCityPincodeIcon">
+						<LocationOnIcon />
+					</div>
+					<input
+						id="cityPincodeInput"
+						value={cityPinCode}
+						onChange={(e) => {
+							setCityPinCode(e.target.value)
+						}}
+						placeholder="Enter Pin Code Or City Name"
+					/>
+					{/* {result.error ? (
+						<p className="cityPincodeInputError">no result found enter again</p>
+					) : null} */}
+				</div>
+
+				<div className="cityPincodeSearchResult">
+					<input id="state" disabled value={state} placeholder="state" />
+				</div>
+
+				<div className="cityPincodeSearchResult">
+					<input id="city" disabled value={city} placeHolder="city" />
+				</div>
+				<div className="setCityPinCodeSearchOk">
+					<PrimaryIconButton label="ok" onClick={getCityFromPin} />
+				</div>
+				<Button>Home</Button>
+			</div>
+		</div>
+	)
 }
 
-export default withRouter(LocationAccess);
+export default withRouter(LocationAccess)

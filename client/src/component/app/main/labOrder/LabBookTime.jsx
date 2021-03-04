@@ -2,7 +2,8 @@ import React, { useState } from "react"
 import { Grid } from "@material-ui/core"
 import moment from "moment"
 import Date from "./Date"
-
+import { useSelector, useDispatch } from "react-redux"
+import { useLocation } from "react-router-dom"
 import { makeStyles } from "@material-ui/core/styles"
 import Test from "./Test"
 import Time from "./Time"
@@ -24,36 +25,48 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const tests = [
-	{
-		name: "Full body Test",
-		price: 300,
-		fasting: true,
-		desc: "Internal Medicine physician",
-	},
-]
+// const tests = [
+// 	{
+// 		name: "Full body Test",
+// 		price: 300,
+// 		fasting: true,
+// 		desc: "Internal Medicine physician",
+// 	},
+// ]
+
+function useQuery() {
+	return new URLSearchParams(useLocation().search)
+}
 
 const LabBookTime = () => {
 	const classes = useStyles()
 
 	const [date, setDate] = useState("")
 
+	const tests = useSelector((state) => state.cart)
+
+	const query = useQuery()
+
+	const type = query.get("order")
+
 	return (
 		<Grid container className={classes.container} spacing={5}>
-			<Grid container item>
-				{tests.map((test) => {
-					return (
-						<Grid item xs={12}>
-							<Test
-								name={test.name}
-								price={test.price}
-								fasting={test.fasting}
-								desc={test.desc}
-							/>
-						</Grid>
-					)
-				})}
-			</Grid>
+			{tests.length > 0 && (
+				<Grid container item>
+					{tests.map((test) => {
+						return (
+							<Grid item xs={12}>
+								<Test
+									name={test.item.name}
+									price={test.item.sellingPrice}
+									fasting={test.item.fastingRequired}
+									desc={test.desc}
+								/>
+							</Grid>
+						)
+					})}
+				</Grid>
+			)}
 			<Grid xs={12} item>
 				<Date
 					date={JSON.stringify(moment()._d)}
@@ -61,7 +74,7 @@ const LabBookTime = () => {
 				/>
 			</Grid>
 			<Grid xs={12} item>
-				<Time date={date} />
+				<Time date={date} type={type} />
 			</Grid>
 		</Grid>
 	)
