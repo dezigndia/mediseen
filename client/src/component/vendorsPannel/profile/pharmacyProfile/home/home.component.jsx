@@ -29,11 +29,25 @@ const Home = () => {
     const auth_token = useSelector(state => state.token);
     const [productCategories, setProductCategories] = useState([]);
     const [showAddProducts, setShowAddProducts] = useState(false);
-    const [excelData, setExcelData] = useState(null);
+    //const [excelData, setExcelData] = useState(null);
     const excelUploadInputRef = useRef(null);
+    const productContainerRef = useRef(null);
+
+    useEffect(() => {
+        let a = null;
+        if (productContainerRef.current) {
+            a = productContainerRef.current;
+            const onWheelHandler = (e) => {
+                e.preventDefault();
+                productContainerRef.current.scrollLeft += e.deltaY / 2;
+            }
+            productContainerRef.current.addEventListener('wheel', onWheelHandler, { passive: false });
+            return () => a && a.removeEventListener('wheel', onWheelHandler);
+        }
+    }, [productContainerRef.current]);
 
     const changeHandler = (e) => {
-        setExcelData(e.target.files[0]);
+        //setExcelData(e.target.files[0]);
         let fileReader = new FileReader();
         fileReader.readAsBinaryString(e.target.files[0]);
         fileReader.onload = (event) => {
@@ -89,7 +103,7 @@ const Home = () => {
                     </Icon>
                     <p>Products</p>
                 </div>
-                <div className="vendorProductList">
+                <div className="vendorProductList" ref={productContainerRef}>
                     {
                         productCategories.map((item, index) => <ProductAndTestListing {...item} key={item._id} />)
                     }

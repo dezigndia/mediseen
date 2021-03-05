@@ -25,19 +25,19 @@ import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions
 
 const AddTests = (props) => {
 
-    const [category, setCategory] = useState([]);
-    const [type, setType] = useState([]);
+    const [category, setCategory] = useState(['Cytopathology','Dermapathology','Forensic Pathology','Histopathology','NeuroPathology']);
+    const [type, setType] = useState(['x-ray','ct-scan','blood-test','urine-test','mri-scan']);
     const [uploading, setUploading] = useState(false);
 
     const initialState = {
         image: [],
         name: '',
-        category: 'Choose Category',
+        category: 'Cytopathology',
         mrp: '',
         sellingPrice: '',
         testDetails: '',
         quantity: '',
-        type: 'tablet',
+        type: 'x-ray',
         fastingRequired: false
     };
     const [data, dispatch] = useReducer((state, action) => {
@@ -133,11 +133,6 @@ const AddTests = (props) => {
                 alert('file not uploaded');
             });
     }
-
-    useEffect(() => {
-        setCategory(['a', 'b', 'c']);
-        setType(['a', 'b', 'c', 'd']);
-    }, [setCategory, setType])
 
     const inputContainerRef = useRef(null);
     const imageInputRef = useRef(null);
