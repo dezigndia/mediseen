@@ -36,6 +36,8 @@ export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`;
 export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`;
 export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`;
 export const ADD_BULK_TEST = `${server}api/product/create/batch`;
+export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
+export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
 
 //getting products or test categories
 export const GET_PRODUCTS_CATEGORY = `${server}api/pharmacy/product/categories`;
