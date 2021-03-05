@@ -43,7 +43,7 @@ class UserController {
     })
 
     updateUser = expressAsyncHandler(async (req, res) => {
-        const { phone } = req.locals.user
+        const { phone } = res.locals.user
 
         const data = await userService.updateUser(phone, req.body)
 
