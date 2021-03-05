@@ -31,7 +31,7 @@ class ProductService {
             newData[`${key}`] = value
         }
         delete newData["ownerId"]
-        return await Product.findOneAndUpdate(id, newData)
+        return await Product.findOneAndUpdate({ _id: id }, newData)
     })
 }
 module.exports = ProductService

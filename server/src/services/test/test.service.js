@@ -31,7 +31,7 @@ class TestService {
             newData[`${key}`] = value
         }
         delete newData["ownerId"]
-        return await Test.findOneAndUpdate(id, newData)
+        return await Test.findOneAndUpdate({ _id: id }, newData)
     })
 }
 module.exports = TestService
