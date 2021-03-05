@@ -25,5 +25,13 @@ class TestService {
     getTestsByBusiness = expressAsyncHandler(async (limit, skip, ownerId) => {
         return await Test.find({ ownerId: ownerId }).limit(parseInt(limit)).skip(parseInt(skip))
     })
+    updateTestByID = expressAsyncHandler(async (id, payload) => {
+        let newData = {}
+        for (const [key, value] of Object.entries(payload)) {
+            newData[`${key}`] = value
+        }
+        delete newData["ownerId"]
+        return await Test.findOneAndUpdate(id, newData)
+    })
 }
 module.exports = TestService

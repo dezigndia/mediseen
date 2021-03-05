@@ -13,7 +13,7 @@ class TestController {
         if (data) {
             return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
         } else {
-            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Something went wrong.")
         }
     })
     createBatchTest = expressAsyncHandler(async (req, res) => {
@@ -23,7 +23,7 @@ class TestController {
         if (data) {
             return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
         } else {
-            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Something went wrong.")
         }
     })
 
@@ -49,6 +49,18 @@ class TestController {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
             throw new AppError(StatusCodes.NOT_FOUND, "Test List not found.")
+        }
+    })
+    updateTestByID = expressAsyncHandler(async (req, res) => {
+        const { id } = req.params
+        const newData = req.body
+
+        const data = await testService.updateTestByID(id, newData)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error updating test")
         }
     })
 }
