@@ -7,5 +7,6 @@ router.post("/create", authenticate(), productController.createProduct)
 router.post("/create/batch", authenticate(), productController.createBatchProduct)
 router.get("/find/all", productController.getAllProducts)
 router.get("/find/business", authenticate(), productController.getProductsByBusiness)
+router.put("/update/:id", authenticate(), productController.updateProductByID)
 
 module.exports = router

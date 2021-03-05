@@ -25,5 +25,13 @@ class ProductService {
     getProductsByBusiness = expressAsyncHandler(async (limit, skip, ownerId) => {
         return await Product.find({ ownerId: ownerId }).limit(parseInt(limit)).skip(parseInt(skip))
     })
+    updateProductByID = expressAsyncHandler(async (id, payload) => {
+        let newData = {}
+        for (const [key, value] of Object.entries(payload)) {
+            newData[`${key}`] = value
+        }
+        delete newData["ownerId"]
+        return await Product.findOneAndUpdate(id, newData)
+    })
 }
 module.exports = ProductService

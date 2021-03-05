@@ -51,6 +51,18 @@ class ProductController {
             throw new AppError(StatusCodes.NOT_FOUND, "Product List not found.")
         }
     })
+    updateProductByID = expressAsyncHandler(async (req, res) => {
+        const { id } = req.params
+        const newData = req.body
+
+        const data = await productService.updateProductByID(id, newData)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.NOT_FOUND, "Product List not found.")
+        }
+    })
 }
 
 module.exports = ProductController
