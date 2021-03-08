@@ -38,18 +38,17 @@ const addAdmin = expressAsyncHandler(async (req, res) => {
 
 const removeAdmin = expressAsyncHandler(async (req, res) => {
     const { emails } = req.body
-
-    let resReq;
-    emails.forEach(email => {
-      resReq = await Admin.deleteOne({ email: email, isSuperAdmin: false })
-      if(!resReq.ok){
-        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
-      }
+    console.log(req.body)
+    let resReq
+    emails.forEach(async email => {
+        resReq = await Admin.deleteOne({ email: email, isSuperAdmin: false })
+        if (!resReq.ok) {
+            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        }
     })
-   
-    console.log(resReq)
-    res.status(StatusCodes.OK).json({message: "Deleted successfully!"})
 
+    console.log(resReq)
+    res.status(StatusCodes.OK).json({ message: "Deleted successfully!" })
 })
 
 const getTotalUsers = expressAsyncHandler(async (req, res) => {

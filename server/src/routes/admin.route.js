@@ -9,6 +9,8 @@ const {
     getTotalBusinesses,
 } = require("../controllers/adminController")
 const { isSuperAdmin } = require("../utils/adminHelper")
+const BusinessController = require("../controllers/businessController")
+
 const bc = new BusinessController()
 const router = express.Router()
 
