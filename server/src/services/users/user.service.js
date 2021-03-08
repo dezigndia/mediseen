@@ -45,6 +45,29 @@ class UserService {
         return { data: data, isRegistered: user ? true : false }
     })
 
+    generalVerifyOtp = expressAsyncHandler(async (phoneNumber, otp) => {
+        const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
+        const { data } = await axios(
+            `https://api.msg91.com/api/v5/otp/verify?mobile=${phoneNumber}&otp=${otp}&authkey=${authKey}`,
+            {
+                method: "POST",
+            }
+        )
+        if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
+        else return { data: data }
+    })
+    generalSendOTP = expressAsyncHandler(async mobileNumber => {
+        const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
+        const templateid = config.has("msg91.templateid") ? config.get("msg91.templateid") : null
+        const { data } = await axios(
+            `https://api.msg91.com/api/v5/otp?authkey=${authKey}&template_id=${templateid}&mobile=${mobileNumber}`,
+            {
+                method: "GET",
+            }
+        )
+        return { data: data }
+    })
+
     getUserDetails = expressAsyncHandler(async phoneNumber => {
         return await User.findOne({ phone: phoneNumber })
     })
