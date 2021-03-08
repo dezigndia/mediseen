@@ -31,7 +31,7 @@ const VendorsPannelHome = ({ history, match }) => {
                     <p>With <strong>Zero-Fees</strong> <strong>Zero-Commision</strong></p>
                 </div>
                 <div className="introFooter">
-                    <div className="cancel">
+                    <div className="cancel" onClick={() => {history.push('/home')}}>
                         Cancel
                     </div>
                     <div className="getStarted" onClick={(e) => history.push(`${match.url}/registration`)}>
