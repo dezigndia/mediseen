@@ -1,9 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import "./home.styles.scss"
 
 import clsx from "clsx"
 
 import { HOSPITAL, DOCTOR, PATHOLOGY, PHARMACY, AMBULANCE } from "../categories"
+
+import fetchCall from "../../../../fetchCall/fetchCall"
+import { useSelector } from "react-redux"
 
 //icons
 import { IconButton, makeStyles, Button } from "@material-ui/core"
@@ -31,7 +34,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const IconButtonContainer = ({ icon, caption, onClick, hideInSmallScreen }) => {
+const IconButtonContainer = ({
+	icon,
+	caption,
+	onClick,
+	hideInSmallScreen,
+	count,
+}) => {
 	return (
 		<div
 			className={`iconButton ${hideInSmallScreen ? "hiddenIconButton" : null}`}
@@ -40,7 +49,7 @@ const IconButtonContainer = ({ icon, caption, onClick, hideInSmallScreen }) => {
 				<IconButton onClick={onClick}>{icon}</IconButton>
 			</div>
 			<p className="caption">{caption}</p>
-			{/* <div className="iconTabNotification">4</div> */}
+			<div className="iconTabNotification">{count}</div>
 		</div>
 	)
 }
@@ -58,11 +67,35 @@ const ButtonContainer = ({ label, onClick }) => {
 }
 
 const Home = ({ history, match }) => {
+	const [count, setCount] = useState({
+		hospital: 0,
+		doctor: 0,
+		pharmacy: 0,
+		pathology: 0,
+	})
+
+	const city = useSelector((state) => state.location.city)
+
+	useEffect(() => {
+		const fetchCount = async () => {
+			const data = await fetchCall(`business/count?city=${city}`, "GET")
+
+			setCount(data.data.payload)
+			console.log(data)
+		}
+
+		if (city) {
+			fetchCount()
+		}
+	}, [city])
+
 	const classes = useStyles()
 
 	const gotoPage = (page) => {
 		history.push(`${match.url}/${page}/`)
 	}
+
+	console.log(count)
 
 	return (
 		<div
@@ -80,6 +113,7 @@ const Home = ({ history, match }) => {
 					onClick={() => {
 						gotoPage(`search/${DOCTOR}`)
 					}}
+					count={count && count.doctor}
 				/>
 				<IconButtonContainer
 					icon={
@@ -92,6 +126,7 @@ const Home = ({ history, match }) => {
 					onClick={() => {
 						gotoPage(`search/${PHARMACY}`)
 					}}
+					count={count && count.pharmacy}
 				/>
 				<IconButtonContainer
 					icon={
@@ -104,6 +139,7 @@ const Home = ({ history, match }) => {
 					onClick={() => {
 						gotoPage(`search/${HOSPITAL}`)
 					}}
+					count={count && count.hospital}
 				/>
 				<IconButtonContainer
 					icon={
@@ -116,6 +152,7 @@ const Home = ({ history, match }) => {
 					onClick={() => {
 						gotoPage(`search/${PATHOLOGY}`)
 					}}
+					count={count && count.pathology}
 				/>
 				<IconButtonContainer
 					icon={
