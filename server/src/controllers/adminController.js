@@ -7,7 +7,14 @@ const saltRounds = 10
 const config = require("config")
 const { isSuperAdmin } = require("../utils/adminHelper")
 const { errorMessage, adminNotFound } = require("../utils/constants")
-
+const { getConditions } = require("../services/admin/admin.service")
+const Product = require("../models/ProductModel")
+const User = require("../models/UserModel")
+const Pathology = require("../models/PathologyModel")
+const Hospital = require("../models/HospitalModel")
+const Pharmarcy = require("../models/PharmacyModel")
+const Doctor = require("../models/DoctorModel")
+// const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
     const email = req.body.email
@@ -43,14 +50,54 @@ const removeAdmin = expressAsyncHandler(async (req, res) => {
     }
 })
 
-const getAdmins = expressAsyncHandler(async (req, res) => {
-    let { skip, limit } = req.body
+const getTotalUsers = expressAsyncHandler(async (req, res) => {
+    return await User.countDocuments({})
+})
 
+// case "doctor": {
+//   return await Doctor.updateOne(
+//       { phone: phoneNumber, type: category },
+//       { $set: data }
+//   )
+// }
+// case "pharmacy": {
+//   return await Pharmacy.updateOne(
+//       { phone: phoneNumber, type: category },
+//       { $set: data }
+//   )
+// }
+// case "hospital": {
+//   return await Hospital.updateOne(
+//       { phone: phoneNumber, type: category },
+//       { $set: data }
+//   )
+// }
+// case "pathology": {
+//   return await Pathology.updateOne(
+//       { phone: phoneNumber, type: category },
+//       { $set: data }
+//   )
+// }
+
+const getTotalBusinesses = expressAsyncHandler(async (req, res) => {
+    return (
+        (await Pathology.countDocuments({})) +
+        (await Hospital.countDocuments({})) +
+        (await Pharmarcy.countDocuments({})) +
+        (await Doctor.countDocuments({}))
+    )
+})
+
+const getAdmins = expressAsyncHandler(async (req, res) => {
+    let { skip, limit } = req.query
+    skip = skip - "0"
+    limit = limit - "0"
     if (skip === null || limit === null) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage + "this one" })
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
-        const data = await Admin.find({}).limit(limit).skip(skip)
-        const totalCount = await Admin.countDocuments({})
+        let conditions = await getConditions(req)
+        const data = await Admin.find(conditions).limit(limit).skip(skip)
+        const totalCount = await Admin.countDocuments(conditions)
 
         res.status(StatusCodes.OK).json({
             data: data,
@@ -59,6 +106,68 @@ const getAdmins = expressAsyncHandler(async (req, res) => {
     }
 })
 
+const getProducts = expressAsyncHandler(async (req, res) => {
+    let { skip, limit } = req.query
+    skip = skip - "0"
+    limit = limit - "0"
+    if (skip === null || limit === null) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    } else {
+        let conditions = getConditions(req)
+        const data = await Product.find(conditions).limit(limit).skip(skip)
+        const totalCount = await Product.countDocuments(conditions)
+
+        res.status(StatusCodes.OK).json({
+            data: data,
+            totalCount: totalCount,
+        })
+    }
+})
+const getUsers = expressAsyncHandler(async (req, res) => {
+    let { skip, limit } = req.query
+    skip = skip - "0"
+    limit = limit - "0"
+    if (skip === null || limit === null) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    } else {
+        let conditions = getConditions(req)
+        const data = await User.find(conditions).limit(limit).skip(skip)
+        const totalCount = await User.countDocuments(conditions)
+
+        res.status(StatusCodes.OK).json({
+            data: data,
+            totalCount: totalCount,
+        })
+    }
+})
+
+// const getInfo = expressAsyncHandler(async (req, res, next, type) => {
+//     let { skip, limit } = req.query
+//     skip = skip - "0"
+//     limit = limit - "0"
+//     if (skip === null || limit === null) {
+//         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+//     } else {
+//         let conditions = getConditions(req)
+//         let data
+//         let totalCount
+//         if (type === "product") {
+//             data = await Product.find(conditions).limit(limit).skip(skip)
+//             totalCount = await Product.countDocuments(conditions)
+//         } else if (type === "users") {
+//             data = await User.find(conditions).limit(limit).skip(skip)
+//             totalCount = await User.countDocuments(conditions)
+//         } else if (type === "admins") {
+//             data = await Product.find(conditions).limit(limit).skip(skip)
+//             totalCount = await Product.countDocuments(conditions)
+//         }
+
+//         res.status(StatusCodes.OK).json({
+//             data: data,
+//             totalCount: totalCount,
+//         })
+//     }
+// })
 const loginAdmin = expressAsyncHandler(async (req, res) => {
     const email = req.body.email
     const password = req.body.password
@@ -100,4 +209,13 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
     }
 })
 
-module.exports = { addAdmin, loginAdmin, removeAdmin, getAdmins }
+module.exports = {
+    addAdmin,
+    loginAdmin,
+    removeAdmin,
+    getAdmins,
+    getProducts,
+    getUsers,
+    getTotalUsers,
+    getTotalBusinesses,
+}
