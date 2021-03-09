@@ -1,6 +1,8 @@
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
+const { getConditions, getSortingConditions } = require("../services/admin/admin.service")
 const AppointmentService = require("../services/appointment/appointment.service")
+const { errorMessage } = require("../utils/constants")
 const AppError = require("../utils/errorHandler")
 
 const appointmentService = new AppointmentService()
@@ -75,6 +77,33 @@ class AppointmentController {
         } else {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
+    })
+    getAppointments = expressAsyncHandler(async (req, res) => {
+        let { limit, skip } = req.query
+        limit = limit - "0"
+        skip = skip - "0"
+
+        let conditions = getConditions(req)
+        let sortingCond = getSortingConditions(req)
+        let data = await appointmentService.getAllAppointments(limit, skip, conditions, sortingCond)
+
+        let totalCount = await appointmentService.getTotalAppointmentCount(
+            limit,
+            skip,
+            conditions,
+            sortingCond
+        )
+
+        if (!data || totalCount === null) {
+            return res.status(StatusCodes.BAD_GATEWAY).json({ message: errorMessage })
+        }
+
+        return res.status(StatusCodes.OK).json({ data: data, totalCount: totalCount })
+    })
+
+    getAppointmentbyBuisnessCount = expressAsyncHandler(async (req, res) => {
+        let count = await appointmentService.getAppointmentByBusinessCount(req, res)
+        res.status(StatusCodes.OK).json({ count: count })
     })
 }
 

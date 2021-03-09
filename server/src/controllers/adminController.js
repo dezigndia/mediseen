@@ -97,9 +97,11 @@ const getAdmins = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = await getConditions(req)
-        const data = await Admin.find(conditions).limit(limit).skip(skip)
+        let data = await Admin.find(conditions).limit(limit).skip(skip)
         const totalCount = await Admin.countDocuments(conditions)
-
+        data.forEach((each, i) => {
+            data[i].password = undefined
+        })
         res.status(StatusCodes.OK).json({
             data: data,
             totalCount: totalCount,
@@ -132,9 +134,11 @@ const getUsers = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = getConditions(req)
-        const data = await User.find(conditions).limit(limit).skip(skip)
+        let data = await User.find(conditions).limit(limit).skip(skip)
         const totalCount = await User.countDocuments(conditions)
-
+        data.forEach((each, i) => {
+            data[i].password = undefined
+        })
         res.status(StatusCodes.OK).json({
             data: data,
             totalCount: totalCount,

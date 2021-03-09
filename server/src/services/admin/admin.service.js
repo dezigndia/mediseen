@@ -1,25 +1,7 @@
-// const Admin = require("../../models/AdminModel")
-// const expressAsyncHandler = require("express-async-handler")
-
-// class AdminService {
-// register = expressAsyncHandler(async body => {
-//     const { name, email, password } = body
-//     return Admin.create({ name, email, password })
-// })
-// login = expressAsyncHandler(async (req, res) => {
-//     const { email } = req.body.email
-//     const admin = await Admin.findOne({ email })
-//     if (!admin) {
-//         return res.status(401).json({ message: "User not found" })
-//     }
-//     if (admin.password != req.body.password) {
-//         return res.status(401).json({ message: "Auth Failed" })
-//     }
-//     return res.status(200).json({ message: "Admin found" })
-// })
-// }
-
-// module.exports = AdminService
+const jwt = require("jsonwebtoken")
+const config = require("config")
+const User = require("../../models/UserModel")
+const Admin = require("../../models/AdminModel")
 
 function exactMatch(val) {
     if (val === "businessType") return true
@@ -58,6 +40,34 @@ function getConditions(req) {
     return conditions
 }
 
+async function getSortingConditions(req) {
+    let { sortBy, asc } = req.query
+    let ans = {}
+    ans[sortBy] = asc
+
+    return ans
+}
+
+async function getAdminFromToken(req) {
+    const header = req.headers["authorization"]
+    if (!header) {
+        return null
+    }
+    const token = header
+    if (!token) {
+        return null
+    }
+
+    const { id } = jwt.verify(token, config.has("jwt.secret") ? config.get("jwt.secret") : null, {
+        expiresIn: "1h",
+    })
+    let user = await Admin.findById(id)
+    user.password = null
+    return user
+}
+
 module.exports = {
     getConditions,
+    getAdminFromToken,
+    getSortingConditions,
 }

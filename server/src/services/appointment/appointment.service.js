@@ -1,5 +1,6 @@
 const Appointment = require("../../models/AppointmentModel")
 const expressAsyncHandler = require("express-async-handler")
+const { getConditions } = require("../admin/admin.service")
 
 class AppointmentService {
     createAppointment = expressAsyncHandler(async body => {
@@ -26,6 +27,35 @@ class AppointmentService {
             appointment[`${key}`] = value
         }
         return await Appointment.findByIdAndUpdate(id, appointment)
+    })
+
+    getAllAppointments = async (limit, skip, conditions, sortConditions) => {
+        try {
+            let data = await Appointment.find(conditions)
+                .sort(sortConditions)
+                .skip(skip)
+                .limit(limit)
+            return data
+        } catch (e) {
+            return null
+        }
+    }
+
+    getTotalAppointmentCount = async (limit, skip, conditions, sortConditions) => {
+        try {
+            let data = await Appointment.countDocuments(conditions)
+                .sort(sortConditions)
+                .skip(skip)
+                .limit(limit)
+            return data
+        } catch (e) {
+            console.log(e)
+            return null
+        }
+    }
+
+    getAppointmentByBusinessCount = expressAsyncHandler(async (req, res) => {
+        return await Appointment.countDocuments(getConditions(req))
     })
 }
 
