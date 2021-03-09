@@ -114,7 +114,7 @@ const AddTests = (props) => {
 
                         if (props.setShowAddTests) {
                             //ie rendered in pathology profile
-                            props.setTestCategories(prevState => [...prevState, Data])
+                            props.setTestCategories(prevState => [...prevState, res.data.payload]); //test categories is list of test
                             props.setShowAddTests(false);
                         }
                         else {

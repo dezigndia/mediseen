@@ -137,7 +137,7 @@ const AddProducts = (props) => {
 
                         if (props.setShowAddProducts) {
                             //ie rendered inside pharmacy home
-                            props.setProductCategories(prevState => [...prevState, Data]);
+                            props.setProductCategories(prevState => [...prevState, res.data.payload]); //product categories is list of products
                             props.setShowAddProducts(false);
                         }
                         else {
@@ -191,7 +191,7 @@ const AddProducts = (props) => {
                     <div className="addImagesCaption">
                         {
                             data.images.length
-                                ?<p>Change Images</p>
+                                ? <p>Change Images</p>
                                 : <>
                                     <p>Add Images</p>
                                     <p>(Upto 3 images)</p>
