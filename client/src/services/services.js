@@ -32,10 +32,14 @@ export const UPDATE_REGISTERED_USER = `${server}api/business/update`;
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`;
 
 //adding products and tests
-export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`;
-export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`;
+//export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`;
+//export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`;
+export const ADD_TESTS = `${server}api/test/create`;
+export const ADD_PRODUCTS = `${server}api/product/create`;
+export const GET_TESTS = `${server}api/test/find/business`;
+export const GET_PRODUCTS = `${server}api/product/find/business`;
 export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`;
-export const ADD_BULK_TEST = `${server}api/product/create/batch`;
+export const ADD_BULK_TEST = `${server}api/test/create/batch`;
 export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
 export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
 

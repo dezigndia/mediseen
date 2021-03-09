@@ -9,7 +9,7 @@ import { blue } from '../../../../../assets/globalJSS';
 import xlsx from 'xlsx';
 
 //importing services 
-import { GET_TEST_AND_PRODUCTS, ADD_BULK_PRODUCTS } from '../../../../../services/services';
+import { GET_PRODUCTS, ADD_BULK_PRODUCTS } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
@@ -80,7 +80,7 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get(GET_TEST_AND_PRODUCTS, {
+            .get(GET_PRODUCTS, {
                 headers: {
                     'Authorization': `Bearer ${auth_token.accessToken}`
                 }

@@ -10,7 +10,7 @@ import xlsx from 'xlsx';
 import { blue } from '../../../../../assets/globalJSS';
 
 //importing services 
-import { GET_TEST_AND_PRODUCTS, ADD_BULK_TEST } from '../../../../../services/services';
+import { GET_TESTS, ADD_BULK_TEST } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
@@ -82,7 +82,7 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get(GET_TEST_AND_PRODUCTS, {
+            .get(GET_TESTS, {
                 headers: {
                     'Authorization': `Bearer ${auth_token.accessToken}`
                 }
@@ -98,7 +98,7 @@ const Home = () => {
 
     return (
         <div className="vendorHome">
-             {
+            {
                 testsAdded && (
                     <div className="testsAddedPopupContainer">
                         <div className="testsAdded">

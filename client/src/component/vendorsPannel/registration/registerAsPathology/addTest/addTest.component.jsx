@@ -16,7 +16,7 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TEST_AND_PRODUCTS, UPLOAD_FILE } from '../../../../../services/services';
+import { ADD_TESTS, UPLOAD_FILE } from '../../../../../services/services';
 
 //importing actions
 import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
@@ -102,7 +102,7 @@ const AddTests = (props) => {
                     qtyType: data.type
                 }
                 axios
-                    .post(ADD_TEST_AND_PRODUCTS, Data, {
+                    .post(ADD_TESTS, Data, {
                         headers: {
                             'Authorization': `Bearer ${props.auth_token.accessToken}`,
                         }
