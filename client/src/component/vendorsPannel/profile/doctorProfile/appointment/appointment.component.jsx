@@ -117,6 +117,31 @@ const Appointments = () => {
             });
     }
 
+    const acceptAppointment = (id, timings) => {
+        axios
+            .put(updateAppointmentByID(id), { isCancelled: true }, {
+                headers: {
+                    'Authorization': `Beared ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                for (let i = 0; i < appointmentSlots.length; i++) {
+                    if (appointmentSlots[i].timeSlot.from.replace(' ', '') === timings.from.replace(' ', '') && appointmentSlots[i].timeSlot.to.replace(' ', '') === appointmentSlots[i].timeSlot.to.replace(' ', '')) {
+                        setAppointmentSlots(prevState => {
+                            let arr = prevState;
+                            arr[i].accepted = true;
+                            return [...arr];
+                        });
+                        break;
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+                alert('unable to accept appointment');
+            });
+    }
+
+
     const [bookAppointment, dispatch] = useReducer((state, action) => {
         switch (action.type) {
             case 'setBusinessName':
@@ -202,13 +227,15 @@ const Appointments = () => {
 
                             //index is the index at which data is present in fetched array
 
+                            //returned data will be saved in appointment slots
                             if (isDataPresent.present) {
                                 return {
                                     timeSlot: item,
                                     isBooked: !isDataPresent.isCancelled,
                                     customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
-                                    _id: res.data.payload[isDataPresent.index]._id
+                                    _id: res.data.payload[isDataPresent.index]._id,
+                                    accepted: res.data.payload[isDataPresent.index].accepted
                                 }
                             }
                             else {
@@ -278,6 +305,8 @@ const Appointments = () => {
                                                 changeTab={setTabIssueNewAppointment}
                                                 deleteAppointment={deleteAppointment}
                                                 dispatch={dispatch}
+                                                acceptAppointment={acceptAppointment}
+                                                accepted={item.accepted}
                                             />
 
                                         </>

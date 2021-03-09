@@ -15,7 +15,7 @@ import Icon from '../../reusableComponent/icon/icon.component';
 //importing services
 import { UPDATE_MY_PRODUCT, UPDATE_MY_TEST } from '../../../services/services';
 
-const ProductAndTestListing = ({ _id, category, company, details, fastingRequired, image, itemType, mrp, name, qty, qtyType, sellingPrice }) => {
+const ProductAndTestListing = ({ _id, category, company, details, fastingRequired, image, itemType, mrp, name, qty, qtyType, sellingPrice, hasDiscount, discount }) => {
 
     const businessType = useSelector(state => state.currentVendor.businessType);
     const auth_token = useSelector(state => state.token);
@@ -57,7 +57,7 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
     }, [businessType, quantity, setQuantity]);
 
     return (
-        <div className={`vendorTestAndProductListItem ${businessType === 'pathology' ? 'flexDisplay' : null}`} title={category}>
+        <div className={`vendorTestAndProductListItem ${businessType === 'pathology' ? 'flexDisplay' : null} ${quantity === 0 ? 'outOfStock' : null}`} title={category}>
             <div className="vendorTestAndProductListItemHeader">
                 <div className="vendorTestAndProductListItemHeaderCount">
                     {qty}KG
@@ -71,7 +71,7 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
                 }
             </div>
             {
-                (() => {
+                /*(() => {
                     let discount = 0;
                     discount = 100 - ((sellingPrice / mrp) * 100);
                     return businessType === 'pharmacy' && discount > 0
@@ -85,7 +85,19 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
                             </div>
                         </div>
                         : null
-                })()
+                })()*/
+
+                hasDiscount && discount && (
+                    <div className="productsOffer">
+                        <Icon size='65px' iconColor={blue}>
+                            <MdLocalOffer />
+                        </Icon>
+                        <div className="productDiscount">
+                            <p>{discount && discount.toFixed()}%</p>
+                            <p>Off</p>
+                        </div>
+                    </div>
+                )
             }
             <div className="vendorTestAndProductListItemMain">
                 <img src={image} alt='product' />
@@ -111,9 +123,13 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
                 businessType === 'pharmacy'
                     ? <div className="vendorTestAndProductListItemActions">
                         {
-                            qty === 0
-                                ? <div className="ProductListAddButton">
-                                    add button
+                            quantity === 0
+                                ? <div className="productListAddButton">
+                                    <div className="AddMoreProductsToList">
+                                        <Icon size='18px' onClick={incrementProduct}>
+                                            <BiPlus />
+                                        </Icon>
+                                    </div>
                                 </div>
                                 : <div className='productListAddRemoveButton'>
                                     <div className="removeProductsFromList">

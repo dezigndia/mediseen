@@ -25,6 +25,29 @@ $iconSize:25px;
         margin-right: 20px;
     }
 
+    &.outOfStock {
+        position: relative;
+
+        &>div:not(:last-child) {
+            opacity: .4
+        }
+
+        &::before {
+            content: 'out of stock';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateZ(-15deg);
+            color: red;
+            font-size: 1.2em;
+            border: 1px solid red;
+            width: max-content;
+            padding: 10px;
+            font-weight: 900;
+        }
+    }
+
     .vendorTestAndProductListItemHeader {
         position: absolute;
         top: 3%;
@@ -127,6 +150,25 @@ $iconSize:25px;
         background-color: $green;
         color: white;
         box-shadow: 0 0 5px #ccc;
+
+        .productListAddButton {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 4%;
+
+            .AddMoreProductsToList {
+                background-color: white;
+                border-radius: 50%;
+                height: $iconSize;
+                width: $iconSize;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
 
         .productListAddRemoveButton {
             display: flex;
