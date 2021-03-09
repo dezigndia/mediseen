@@ -1,5 +1,6 @@
 const Product = require("../../models/ProductModel")
 const expressAsyncHandler = require("express-async-handler")
+const { StatusCodes } = require("http-status-codes")
 
 class ProductService {
     createProduct = expressAsyncHandler(async (body, ownerId) => {
@@ -45,6 +46,12 @@ class ProductService {
         }
         delete newData["ownerId"]
         return await Product.findOneAndUpdate({ _id: id }, newData)
+    })
+
+    getProductById = expressAsyncHandler(async id => {
+        const product = await Product.findOne(id)
+        if (!product) new AppError(StatusCodes.NOT_FOUND, "No Product found with given Id")
+        else return product
     })
 }
 module.exports = ProductService

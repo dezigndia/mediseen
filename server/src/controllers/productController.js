@@ -63,6 +63,16 @@ class ProductController {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error updating product.")
         }
     })
+    getTestById = expressAsyncHandler(async (req, res) => {
+        const { id } = req.params
+        const data = await productService.getProductById(id)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error fetching product")
+        }
+    })
 }
 
 module.exports = ProductController

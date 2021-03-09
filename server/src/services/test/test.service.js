@@ -1,5 +1,6 @@
 const Test = require("../../models/TestModel")
 const expressAsyncHandler = require("express-async-handler")
+const { StatusCodes } = require("http-status-codes")
 
 class TestService {
     createTest = expressAsyncHandler(async (body, ownerId) => {
@@ -42,6 +43,11 @@ class TestService {
         }
         delete newData["ownerId"]
         return await Test.findOneAndUpdate({ _id: id }, newData)
+    })
+    getTestById = expressAsyncHandler(async id => {
+        const test = await Test.findOne(id)
+        if (!test) new AppError(StatusCodes.NOT_FOUND, "No test found with given Id")
+        else return test
     })
 }
 module.exports = TestService

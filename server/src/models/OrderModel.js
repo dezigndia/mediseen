@@ -27,6 +27,10 @@ const orderSchema = new mongoose.Schema(
         image_url: {
             type: String,
         },
+        businessName: {
+            type: String,
+            required: true,
+        },
         businessPhoneNumber: {
             type: String,
             required: true,

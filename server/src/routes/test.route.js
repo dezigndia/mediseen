@@ -8,5 +8,8 @@ router.post("/create/batch", authenticate(), testController.createBatchTest)
 router.get("/find/all", testController.getAllTests)
 router.get("/find/business", authenticate(), testController.getTestsByBusiness)
 router.put("/update/:id", authenticate(), testController.updateTestByID)
+router.get("/find/id/:id", testController.getTestById)
 
 module.exports = router
+
+//TODO make get test by id
