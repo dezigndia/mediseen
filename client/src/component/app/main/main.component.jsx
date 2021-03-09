@@ -32,7 +32,10 @@ const main = ({ match }) => {
 		<main className="appMain">
 			<Switch>
 				<Route exact path={`${match.url}/`} component={Home} />
-				<Route path={`${match.url}/doctorBooking`} component={DoctorBooking} />
+				<Route
+					path={`${match.url}/doctorBooking/:id`}
+					component={DoctorBooking}
+				/>
 				<Route
 					exact
 					path={`${match.url}/pharmacyOrder/confirm`}

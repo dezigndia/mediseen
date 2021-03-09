@@ -1,4 +1,4 @@
-const fetchCall = async (endpoint, method, jwt, body) => {
+const fetchCall = async (endpoint, method, jwt, body, type) => {
 	let data
 	const response = await fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, {
 		method: `${method}`,
@@ -7,7 +7,7 @@ const fetchCall = async (endpoint, method, jwt, body) => {
 
 			Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
 		},
-		body: body ? body : null,
+		body: body && type === "json" ? JSON.stringify(body) : body,
 	})
 
 	console.log(response)
