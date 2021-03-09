@@ -10,8 +10,6 @@ const fetchCall = async (endpoint, method, jwt, body, type) => {
 		body: body && type === "file" ? body : JSON.stringify(body),
 	})
 
-	console.log(response)
-
 	if (!response.ok) {
 		data = { sucess: false, errCode: response.status }
 	} else {

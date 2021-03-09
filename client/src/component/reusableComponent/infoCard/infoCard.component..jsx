@@ -1,27 +1,27 @@
-import React from "react"
-import { connect } from "react-redux"
-import "./infoCard.styles.scss"
-import { withRouter } from "react-router-dom"
+import React from 'react';
+import { connect } from 'react-redux';
+import './infoCard.styles.scss';
+import { withRouter } from 'react-router-dom';
 
 //importing actions
-import { selectData } from "../../../actions/action"
+import { selectData } from '../../../actions/action';
 
-//importing icons
-import { MdLocationOn } from "react-icons/md"
-import { IconContext } from "react-icons"
-import { RiStarSFill, RiWalletFill } from "react-icons/ri"
-import { GrAdd } from "react-icons/gr"
-import { BsCalendarFill } from "react-icons/bs"
-import { IoLogoWhatsapp } from "react-icons/io"
+//importing icons 
+import { MdLocationOn } from 'react-icons/md';
+import { IconContext } from 'react-icons';
+import { RiStarSFill, RiWalletFill } from 'react-icons/ri';
+import { GrAdd } from 'react-icons/gr';
+import { BsCalendarFill } from 'react-icons/bs';
+import { IoLogoWhatsapp } from 'react-icons/io';
 
 //verified logo
-import logo from "./check.svg"
+import logo from './check.svg';
 
 //importing reusable component
-import Icon from "../icon/icon.component"
+import Icon from '../icon/icon.component';
 
 //importing jss
-import { green } from "../../../assets/globalJSS"
+import { green } from '../../../assets/globalJSS';
 
 const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large }) => {
     const {
@@ -40,18 +40,19 @@ const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, 
         specialist
     } = data;
 
-	const gotoPage = (e) => {
-		selectData(data)
-		if (type === "doctor") {
-			history.push(`/home/doctorBooking/${_id}`)
-		} else if (type === "hospital") {
-			history.push(`/home/hospitalBooking/${_id}`)
-		} else if (type === "pharmacy") {
-			history.push(`/home/pharmacyOrder/${_id}`)
-		} else if (type === "pathology") {
-			history.push(`/home/labOrder/${_id}`)
-		}
-	}
+    const gotoPage = (e) => {
+        selectData(data);
+        if (type === 'doctor') {
+            history.push(`/home/doctorBooking/${_id}`);
+        }
+        else if (type === 'hospital') {
+            history.push(`/home/hospitalBooking/${_id}`);
+        } else if (type === 'pharmacy') {
+            history.push(`/home/pharmacyOrder/${_id}`);
+        } else if (type === 'pathology') {
+            history.push(`/home/labOrder/${_id}`);
+        }
+    }
 
     const share = (e) => {
         e.stopPropagation();
@@ -156,10 +157,11 @@ const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, 
             </div>
         </div>
     );
+
 }
 
-const mapDispatchToProps = (dispatch) => ({
-	selectData: (data) => dispatch(selectData(data)),
-})
+const mapDispatchToProps = dispatch => ({
+    selectData: (data) => dispatch(selectData(data))
+});
 
-export default connect(null, mapDispatchToProps)(withRouter(InfoCard))
+export default connect(null, mapDispatchToProps)(withRouter(InfoCard));

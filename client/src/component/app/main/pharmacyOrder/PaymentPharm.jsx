@@ -124,7 +124,7 @@ const PaymentPharm = () => {
 		let form = new FormData()
 		form.append("file", img)
 
-		const res = await fetchCall("blob/upload", "POST", token, form)
+		const res = await fetchCall("blob/upload", "POST", token, form, "file")
 
 		const link = res.data.payload
 
