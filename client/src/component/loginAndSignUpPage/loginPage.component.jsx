@@ -1,106 +1,139 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import './loginPage.styles.scss';
-import { connect } from 'react-redux';
+import React, { useEffect } from "react"
+import axios from "axios"
+import "./loginPage.styles.scss"
+import { connect, useDispatch } from "react-redux"
 
 //importing icons
-import { Button } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PhoneIcon from '@material-ui/icons/Phone';
-import StorefrontIcon from '@material-ui/icons/Storefront';
+import { Button } from "@material-ui/core"
+import AccountCircleIcon from "@material-ui/icons/AccountCircle"
+import PhoneIcon from "@material-ui/icons/Phone"
+import StorefrontIcon from "@material-ui/icons/Storefront"
 
 //custom components
-import OtpInput from './otpInput/otpInput.component';
-import Input from './input/input.component';
+import OtpInput from "./otpInput/otpInput.component"
+import Input from "./input/input.component"
 
 //reusableComponent
-import SecondaryIconButton from '../reusableComponent/secondaryIconButton.component';
+import SecondaryIconButton from "../reusableComponent/secondaryIconButton.component"
 
 //importing actions
-import { setUserName, setPhoneNo, setOtpEnabledTrue, setOtpSendingTrue, setOtpWrongTrue, setOtpErrorTrue, updateAccessToken } from '../../actions/action';
+import {
+	setUserName,
+	setPhoneNo,
+	setOtpEnabledTrue,
+	setOtpSendingTrue,
+	setOtpWrongTrue,
+	setOtpErrorTrue,
+	updateAccessToken,
+} from "../../actions/action"
 
 //importing services
-import { USER_VERIFY_OTP } from '../../services/services';
+import { USER_VERIFY_OTP } from "../../services/services"
 
+const LoginPage = ({
+	history,
+	userName,
+	phoneNo,
+	otp,
+	setUserName,
+	setPhoneNo,
+	setOtpEnabledTrue,
+	setOtpSendingTrue,
+	setOtpWrongTrue,
+}) => {
+	useEffect(() => {
+		if (phoneNo.length === 10 && !otp.enabled) {
+			setOtpEnabledTrue()
+			setOtpSendingTrue()
+		}
+	}, [phoneNo, otp.enabled, setOtpEnabledTrue, setOtpSendingTrue])
 
-const LoginPage = ({ history, userName, phoneNo, otp, setUserName, setPhoneNo, setOtpEnabledTrue, setOtpSendingTrue, setOtpWrongTrue }) => {
+	const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (phoneNo.length === 10 && !otp.enabled) {
-            setOtpEnabledTrue();
-            setOtpSendingTrue();
-        }
-    }, [phoneNo, otp.enabled, setOtpEnabledTrue, setOtpSendingTrue]);
+	const signIn = (e) => {
+		const reqBody = {
+			name: userName,
+			phoneNumber: `+91${phoneNo}`,
+			otp: otp.value.join(""),
+		}
+		console.log(reqBody)
+		axios
+			.post(USER_VERIFY_OTP, reqBody)
+			.then((res) => res.data)
+			.then((data) => {
+				console.log(data)
+				if (data.status) {
+					dispatch(updateAccessToken(data.payload.auth_token))
+					console.log(data.payload.auth_token)
+					history.push("/allowAccess")
+				} else {
+					setOtpWrongTrue()
+				}
+			})
+			.catch((err) => {
+				setOtpErrorTrue()
+			})
+	}
 
-    const signIn = (e) => {
-        const reqBody = { name: userName, phoneNumber: `+91${phoneNo}`, otp: otp.value.join('') };
-        console.log(reqBody);
-        axios
-            .post(USER_VERIFY_OTP, reqBody)
-            .then(res => res.data)
-            .then(data => {
-                if (data.status) {
-                    updateAccessToken(data.payload.token);
-                    console.log(data.payload);
-                    history.push('/allowAccess');
-                }
-                else {
-                    setOtpWrongTrue();
-                }
-            })
-            .catch(err => {
-                setOtpErrorTrue();
-            });
-    }
+	return (
+		<div className="loginPage">
+			<div className="signUpContent">
+				<SecondaryIconButton label="User Login">
+					<AccountCircleIcon />
+				</SecondaryIconButton>
+				<Input
+					value={userName}
+					onChange={(e) => {
+						setUserName(e.target.value)
+					}}
+					placeholder="user name"
+				>
+					<AccountCircleIcon />
+				</Input>
 
-    return (
-        <div className="loginPage">
+				<Input
+					type="number"
+					value={phoneNo}
+					onChange={(e) => {
+						setPhoneNo(e.target.value)
+					}}
+					placeholder="phone no."
+				>
+					<PhoneIcon />
+				</Input>
 
-            <div className="signUpContent">
-                <SecondaryIconButton label='User Login'>
-                    <AccountCircleIcon />
-                </SecondaryIconButton>
+				<OtpInput />
 
-                <Input value={userName} onChange={(e) => { setUserName(e.target.value) }} placeholder='user name'>
-                    <AccountCircleIcon />
-                </Input>
+				<Button fullWidth variant="contained" color="primary" onClick={signIn}>
+					Sign In
+				</Button>
+			</div>
 
-                <Input type='number' value={phoneNo} onChange={(e) => { setPhoneNo(e.target.value) }} placeholder='phone no.'>
-                    <PhoneIcon />
-                </Input>
-
-                <OtpInput />
-
-                <Button fullWidth variant='contained' color='primary' onClick={signIn} >Sign In</Button>
-            </div>
-
-            <div className="signUpPageFooter">
-                <SecondaryIconButton label='Store Login'>
-                    <StorefrontIcon />
-                </SecondaryIconButton>
-                <h4>Or</h4>
-                <h4>Set up your store here </h4>
-            </div>
-
-        </div >
-    );
+			<div className="signUpPageFooter">
+				<SecondaryIconButton label="Store Login">
+					<StorefrontIcon />
+				</SecondaryIconButton>
+				<h4>Or</h4>
+				<h4>Set up your store here </h4>
+			</div>
+		</div>
+	)
 }
 
-const mapStateToProps = state => ({
-    userName: state.login.userName,
-    phoneNo: state.login.phoneNo,
-    otp: state.login.otp
-});
-
-const mapDispatchToProps = dispatch => ({
-    setUserName: (val) => dispatch(setUserName(val)),
-    setPhoneNo: (val) => dispatch(setPhoneNo(val)),
-    setOtpEnabledTrue: () => dispatch(setOtpEnabledTrue()),
-    setOtpSendingTrue: () => dispatch(setOtpSendingTrue()),
-    setOtpWrongTrue: () => dispatch(setOtpWrongTrue()),
-    setOtpErrorTrue: () => dispatch(setOtpErrorTrue()),
-    updateAccessToken: () => dispatch(updateAccessToken())
+const mapStateToProps = (state) => ({
+	userName: state.login.userName,
+	phoneNo: state.login.phoneNo,
+	otp: state.login.otp,
 })
 
+const mapDispatchToProps = (dispatch) => ({
+	setUserName: (val) => dispatch(setUserName(val)),
+	setPhoneNo: (val) => dispatch(setPhoneNo(val)),
+	setOtpEnabledTrue: () => dispatch(setOtpEnabledTrue()),
+	setOtpSendingTrue: () => dispatch(setOtpSendingTrue()),
+	setOtpWrongTrue: () => dispatch(setOtpWrongTrue()),
+	setOtpErrorTrue: () => dispatch(setOtpErrorTrue()),
+	updateAccessToken: () => dispatch(updateAccessToken()),
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)
