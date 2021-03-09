@@ -6,11 +6,21 @@ class TestService {
         let data = body
         data.ownerId = ownerId
         data.discount = data.mrp - data.sellingPrice
+        data.hasDiscount = true
         return await Test.create(body)
     })
     createBatchTest = expressAsyncHandler(async (body, ownerId) => {
         let data = body.map(item => {
-            return { ...item, ownerId, discount: item.mrp - item.sellingPrice }
+            if (item.mrp - item.sellingPrice > 0) {
+                return {
+                    ...item,
+                    ownerId,
+                    discount: ((item.mrp - item.sellingPrice) / item.mrp) * 100,
+                    hasDiscount: true,
+                }
+            } else {
+                return { ...item, ownerId }
+            }
         })
         return await Test.insertMany(data)
     })

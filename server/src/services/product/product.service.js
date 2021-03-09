@@ -5,12 +5,24 @@ class ProductService {
     createProduct = expressAsyncHandler(async (body, ownerId) => {
         let data = body
         data.ownerId = ownerId
-        data.discount = data.mrp - data.sellingPrice
+        if (data.mrp - data.sellingPrice >= 0) {
+            data.discount = ((item.mrp - item.sellingPrice) / item.mrp) * 100
+            data.hasDiscount = true
+        }
         return await Product.create(body)
     })
     createBatchProduct = expressAsyncHandler(async (body, ownerId) => {
         let data = body.map(item => {
-            return { ...item, ownerId, discount: item.mrp - item.sellingPrice }
+            if (item.mrp - item.sellingPrice >= 0) {
+                return {
+                    ...item,
+                    ownerId,
+                    discount: ((item.mrp - item.sellingPrice) / item.mrp) * 100,
+                    hasDiscount: true,
+                }
+            } else {
+                return { ...item, ownerId }
+            }
         })
         return await Product.insertMany(data)
     })

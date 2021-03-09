@@ -16,6 +16,10 @@ const testSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    hasDiscount: {
+        type: Boolean,
+        default: false,
+    },
     discount: {
         type: String,
         required: true,
