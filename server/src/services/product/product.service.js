@@ -7,7 +7,7 @@ class ProductService {
         let data = body
         data.ownerId = ownerId
         if (data.mrp - data.sellingPrice >= 0) {
-            data.discount = ((item.mrp - item.sellingPrice) / item.mrp) * 100
+            data.discount = ((data.mrp - data.sellingPrice) / data.mrp) * 100
             data.hasDiscount = true
         }
         return await Product.create(body)

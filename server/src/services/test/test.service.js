@@ -6,8 +6,10 @@ class TestService {
     createTest = expressAsyncHandler(async (body, ownerId) => {
         let data = body
         data.ownerId = ownerId
-        data.discount = data.mrp - data.sellingPrice
-        data.hasDiscount = true
+        if (data.mrp - data.sellingPrice >= 0) {
+            data.discount = ((data.mrp - data.sellingPrice) / data.mrp) * 100
+            data.hasDiscount = true
+        }
         return await Test.create(body)
     })
     createBatchTest = expressAsyncHandler(async (body, ownerId) => {
