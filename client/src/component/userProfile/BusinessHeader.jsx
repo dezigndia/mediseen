@@ -3,13 +3,11 @@ import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { Avatar, Grid } from "@material-ui/core"
 
-import DP from "./pexels-photo-220453.jpeg"
-
 const useStyles = makeStyles((theme) => ({
 	header: {
 		width: "100vw",
 		backgroundColor: "#220555",
-		height: "10rem",
+		height: "5rem",
 		padding: "1rem",
 	},
 	avatar: {
@@ -21,7 +19,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Header = ({ image, name, address }) => {
+const BusinessHeader = ({
+	name = "Raju Store",
+	address = "71/a, Belgachia Road",
+	stars,
+}) => {
 	const classes = useStyles()
 
 	return (
@@ -30,12 +32,9 @@ const Header = ({ image, name, address }) => {
 				container
 				direction="column"
 				justify="space-evenly"
-				alignItems="center"
+				alignItems="flex-start"
 				spacing={2}
 			>
-				<Grid item>
-					<Avatar alt="Remy Sharp" className={classes.avatar} src={image} />
-				</Grid>
 				<Grid item>
 					<h4 className={classes.fontWhite}>{name}</h4>
 				</Grid>
@@ -47,4 +46,4 @@ const Header = ({ image, name, address }) => {
 	)
 }
 
-export default Header
+export default BusinessHeader

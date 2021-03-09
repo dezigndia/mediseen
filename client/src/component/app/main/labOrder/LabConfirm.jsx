@@ -17,6 +17,7 @@ import clsx from "clsx"
 import { Link, Redirect, useLocation } from "react-router-dom"
 import AddIcon from "@material-ui/icons/Add"
 import { addLabAddress } from "../../../../store/lab/labActions"
+import fetchCall from "../../../../fetchCall/fetchCall"
 
 // const tests = [
 // 	{

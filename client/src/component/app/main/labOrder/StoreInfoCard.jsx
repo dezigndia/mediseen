@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
 		height: "1.5rem",
 	},
 	paper: {
-		width: "100%",
-		margin: "1rem 0",
+		width: "95vw",
+		margin: "0.5rem 0",
 		padding: "1rem",
 	},
 	starts: {
@@ -33,14 +33,31 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: "0.5rem",
 		fontWeight: "800",
 	},
+	container: {
+		width: "100%",
+	},
 }))
 
-const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
+const StoreInfoCard = ({
+	name,
+	delivery,
+	cod,
+	distance,
+	start,
+	eos,
+	address,
+}) => {
 	const classes = useStyles()
 
 	return (
-		<Grid container direction="column" spacing={2}>
-			<Grid container item xs={12}>
+		<Grid
+			container
+			className={classes.container}
+			xs={12}
+			direction="column"
+			spacing={2}
+		>
+			<Grid item xs={12}>
 				<Paper elevation={4} className={classes.paper}>
 					<Grid container spacing={2} justify="space-between" xs={12}>
 						<Grid container item spacing={2} justify="space-between" xs={12}>
@@ -53,7 +70,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 						</Grid>
 					</Grid>
 					<Grid container item alignItems="center" spacing={2}>
-						<Grid item container xs={8}>
+						<Grid item container xs={12}>
 							<Grid item justify="flex-end" xs={12}>
 								<h3>{address}</h3>
 							</Grid>
@@ -86,7 +103,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 								</Grid>
 							</Grid>
 						</Grid> */}
-						<Grid container item>
+						{/* <Grid container item>
 							<Grid container direction="column" item xs={5}>
 								<Grid item xs={12} className={classes.redHead}>
 									Hardcopy Delivery
@@ -115,7 +132,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 							<Grid item xs={3}>
 								Closes by {eos < 12 ? `${eos} am` : `${eos - 12} pm`}
 							</Grid>
-						</Grid>
+						</Grid> */}
 					</Grid>
 				</Paper>
 			</Grid>
@@ -123,4 +140,4 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 	)
 }
 
-export default InfoCard
+export default StoreInfoCard

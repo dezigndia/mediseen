@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const TypeCard = ({ type }) => {
+const TypeCard = ({ type, orders }) => {
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
@@ -91,7 +91,7 @@ const TypeCard = ({ type }) => {
 						<Divider />
 					</Grid>
 				</Grid>
-				<Grid container item xs={12} spacing={2}>
+				{/* <Grid container item xs={12} spacing={2}>
 					<Grid item xs={12}>
 						<TypeRow order={returnOrder()} />
 					</Grid>
@@ -101,7 +101,18 @@ const TypeCard = ({ type }) => {
 					<Grid item xs={12}>
 						<TypeRow order={returnOrder()} />
 					</Grid>
-				</Grid>
+				</Grid> */}
+				{orders && orders.length > 0 ? (
+					orders.map((order) => (
+						<Grid item xs={12}>
+							<TypeRow order={returnOrder()} />
+						</Grid>
+					))
+				) : (
+					<Grid item>
+						<h4>No record.</h4>
+					</Grid>
+				)}
 			</Grid>
 			<SortBy setOpen={(value) => setOpen(value)} type={type} open={open} />
 		</Paper>

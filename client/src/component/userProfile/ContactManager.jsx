@@ -3,7 +3,7 @@ import BusinessIcon from "@material-ui/icons/Business"
 import { Divider, Grid, Paper } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import AddContact from "./AddContact"
-
+import { useSelector } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Row = () => {
+const Row = ({ address }) => {
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
@@ -42,10 +42,10 @@ const Row = () => {
 		<Grid container direction="column" spacing={2}>
 			<Grid item alignItems="center" container spacing={1} xs={12}>
 				<Grid item xs={3}>
-					<h4>Jusu</h4>
+					<h4>{address.name}</h4>
 				</Grid>
 				<Grid item xs={3}>
-					98708976542
+					{address.phone}
 				</Grid>
 				<Grid item xs={3}>
 					<h4 onClick={() => setOpen(true)} className={classes.fontPurple}>
@@ -64,8 +64,14 @@ const Row = () => {
 	)
 }
 
-const ContactManager = () => {
+const ContactManager = ({ address }) => {
 	const classes = useStyles()
+
+	console.log(address)
+
+	let token = useSelector((state) => state.token.token)
+
+	const [open, setOpen] = useState(false)
 
 	return (
 		<Paper elevation={4} className={classes.container}>
@@ -88,7 +94,10 @@ const ContactManager = () => {
 							alignContent="flex-end"
 						>
 							<Grid item>
-								<AddIcon className={classes.add} />
+								<AddIcon
+									onClick={() => setOpen(true)}
+									className={classes.add}
+								/>
 							</Grid>
 						</Grid>
 					</Grid>
@@ -96,8 +105,8 @@ const ContactManager = () => {
 						<Divider />
 					</Grid>
 				</Grid>
-				<Grid container item xs={12} spacing={2}>
-					<Grid item xs={12}>
+				<Grid container item justify="center" xs={12} spacing={2}>
+					{/* <Grid item xs={12}>
 						<Row />
 					</Grid>
 					<Grid item xs={12}>
@@ -105,9 +114,21 @@ const ContactManager = () => {
 					</Grid>
 					<Grid item xs={12}>
 						<Row />
-					</Grid>
+					</Grid> */}
+					{address && address.length > 0 ? (
+						address.map((add) => (
+							<Grid item>
+								<Row address={add} />
+							</Grid>
+						))
+					) : (
+						<Grid item>
+							<h4>No address record.</h4>
+						</Grid>
+					)}
 				</Grid>
 			</Grid>
+			<AddContact open={open} setOpen={(value) => setOpen(value)} />
 		</Paper>
 	)
 }

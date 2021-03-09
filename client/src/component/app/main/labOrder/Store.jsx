@@ -1,14 +1,16 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Grid, Paper } from "@material-ui/core"
-import InfoCard from "./InfoCard"
+import StoreInfoCard from "./StoreInfoCard"
 import CategoryChip from "./CategoryChip"
-
+import fetchCall from "../../../../fetchCall/fetchCall"
 import InputBase from "@material-ui/core/InputBase"
 import IconButton from "@material-ui/core/IconButton"
 import SearchIcon from "@material-ui/icons/Search"
-
+import { Link, useParams } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
+import Checkout from "../pharmacyOrder/Checkout"
 
 //importing reusable components
 import ProductAndTestListing from "../../../reusableComponent/productAndTestListing/productAndTestListing.component"
@@ -21,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
 		flexWrap: "nowrap",
 		paddingRight: "10rem",
 		overflowY: "hidden",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	paper: {
 		display: "flex",
@@ -44,29 +48,72 @@ const category = ["OTC", "Ayurveda", "Booster", "Nutrition", "Vitamin"]
 const Store = () => {
 	const classes = useStyles()
 
-	const [active, setActive] = useState(category[0])
+	const [lab, setLab] = useState()
+	const cart = useSelector((state) => state.cart)
+
+	const [upload, setUpload] = useState(false)
+	const [file, setFile] = useState({})
+	const [active, setActive] = useState()
+	const [products, setProducts] = useState()
+	const [categoryList, setCategoryList] = useState()
+	const { labId } = useParams()
+
+	useEffect(() => {
+		const fetchLab = async () => {
+			const data = await fetchCall(`pharmacy/${labId}`, "GET").then(
+				(res) => res.data.payload
+			)
+			setLab(data)
+		}
+		const fetchProduct = async () => {
+			const data = await fetchCall(
+				`product/find/all?ownerId=${labId}`,
+				"GET"
+			).then((res) => res.data.payload)
+
+			setProducts(data)
+			let list = data.map((prod) => prod.category)
+			list = Array.from(new Set(list))
+			setCategoryList(list)
+			setActive(list[0])
+		}
+		fetchLab()
+		fetchProduct()
+	}, [])
 
 	return (
 		<Grid container direction="column" alignItems="center" spacing={2}>
 			<Grid item>
-				<InfoCard
-					name={"Rajam Medical Store"}
-					delivery={500}
-					cod={true}
-					distance="2.5km"
-					start={4}
-					eos={22}
-					address="73 Algate St. Bandra"
-				/>
+				{/* <StoreInfoCard
+					name={lab && lab.businessName}
+					// distance="2.5km"
+					// start={4}
+					// eos={22}
+					address={lab && lab.area + lab.city}
+				/> */}
+				<Grid item>
+					{cart[0] ? (
+						<Link to="/home/labOrder/booking-time">
+							<Checkout />
+						</Link>
+					) : (
+						<StoreInfoCard
+							name={lab && lab.businessName}
+							// distance="2.5km"
+							// start={4}
+							// eos={22}
+							address={lab && lab.area + lab.city}
+						/>
+					)}
+				</Grid>
 			</Grid>
-			<Grid item>
-				<div className={classes.slider}>
-					{category.map((item) => (
+			<Grid container item className={classes.slider}>
+				{categoryList &&
+					categoryList.map((item) => (
 						<div onClick={() => setActive(item)}>
 							<CategoryChip name={item} active={active} />
 						</div>
 					))}
-				</div>
 			</Grid>
 			<Grid item>
 				<Paper component="form" elevation={3} className={classes.paper}>
@@ -84,31 +131,57 @@ const Store = () => {
 					</IconButton>
 				</Paper>
 			</Grid>
-			<div item>
+			<Grid item>
 				<div className={classes.slider}>
-					{category.map((item) => (
-						<div style={{ margin: "0.5rem" }}>
-							{/*<ProductCard
-								ogPrice="45"
-								dcPrice="43"
-								name={item}
-								picture="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
-								quantity="100gm"
-							/>*/}
-							<ProductAndTestListing
-								category="category"
-								image="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
-								mrp="100"
-								name={item}
-								qty="10"
-								sellingPrice="90"
-							/>
-						</div>
-					))}
+					{products &&
+						products.map((product) => {
+							if (product.category === active) {
+								console.log(product)
+								const cartQty = cart.filter(
+									(prod) => prod.item._id === product._id
+								)
+								return (
+									<ProductCard
+										category="category"
+										image={product.image}
+										mrp={product.mrp}
+										name={product.name}
+										qty={product.qty}
+										cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+										sellingPrice={product.sellingPrice}
+										businessType="pathology"
+										product={product}
+									/>
+								)
+							}
+						})}
 				</div>
-			</div>
+			</Grid>
 		</Grid>
 	)
 }
 
 export default Store
+
+// {
+// 	category.map((item) => (
+// 		<div style={{ margin: "0.5rem" }}>
+// 			{/*<ProductCard
+// 								ogPrice="45"
+// 								dcPrice="43"
+// 								name={item}
+// 								picture="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
+// 								quantity="100gm"
+// 							/>*/}
+// 			<ProductCard
+// 				category="category"
+// 				image="https://images-na.ssl-images-amazon.com/images/I/61VdTZiUs2L._SL1000_.jpg"
+// 				mrp="100"
+// 				name={item}
+// 				qty="10"
+// 				sellingPrice="90"
+// 				businessType="pathology"
+// 			/>
+// 		</div>
+// 	))
+// }
