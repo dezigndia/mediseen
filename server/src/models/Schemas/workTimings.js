@@ -3,12 +3,12 @@ const mongoose = require("mongoose")
 const daySchema = new mongoose.Schema({
     _id: false,
     morning: {
-        from: { type: Number },
-        to: { type: Number },
+        from: { type: String },
+        to: { type: String },
     },
     evening: {
-        from: { type: Number },
-        to: { type: Number },
+        from: { type: String },
+        to: { type: String },
     },
 })
 

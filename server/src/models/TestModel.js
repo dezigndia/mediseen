@@ -21,8 +21,8 @@ const testSchema = new mongoose.Schema({
         default: false,
     },
     discount: {
-        type: String,
-        required: true,
+        type: Number,
+        min: 0,
     },
     mrp: {
         type: Number,
