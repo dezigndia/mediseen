@@ -9,7 +9,7 @@ import { blue } from '../../../../../assets/globalJSS';
 import xlsx from 'xlsx';
 
 //importing services 
-import { GET_TEST_AND_PRODUCTS, ADD_BULK_PRODUCTS } from '../../../../../services/services';
+import { GET_PRODUCTS, ADD_BULK_PRODUCTS } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
@@ -27,8 +27,9 @@ import AddProducts from './addProducts/addProducts.component';
 const Home = () => {
     const currentVendor = useSelector(state => state.currentVendor);
     const auth_token = useSelector(state => state.token);
-    const [productCategories, setProductCategories] = useState([]);
+    const [productCategories, setProductCategories] = useState([]); //product categoriees is list of products
     const [showAddProducts, setShowAddProducts] = useState(false);
+    const [productsAdded, setProductsAdded] = useState(false);
     //const [excelData, setExcelData] = useState(null);
     const excelUploadInputRef = useRef(null);
     const productContainerRef = useRef(null);
@@ -39,7 +40,7 @@ const Home = () => {
             a = productContainerRef.current;
             const onWheelHandler = (e) => {
                 e.preventDefault();
-                productContainerRef.current.scrollLeft += e.deltaY / 2;
+                productContainerRef.current.scrollLeft += e.deltaY * 10;
             }
             productContainerRef.current.addEventListener('wheel', onWheelHandler, { passive: false });
             return () => a && a.removeEventListener('wheel', onWheelHandler);
@@ -48,6 +49,8 @@ const Home = () => {
 
     const changeHandler = (e) => {
         //setExcelData(e.target.files[0]);
+        //upload excel
+
         let fileReader = new FileReader();
         fileReader.readAsBinaryString(e.target.files[0]);
         fileReader.onload = (event) => {
@@ -64,8 +67,8 @@ const Home = () => {
                     }
                 })
                 .then(res => {
-                    console.log(res.data.payload);
-                    setProductCategories(prevState => [...prevState, ...result[0]]);
+                    setProductsAdded(true);
+                    setProductCategories(prevState => [...prevState, ...res.data.payload]);
                 })
                 .catch(err => {
                     console.log(err);
@@ -77,7 +80,7 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get(GET_TEST_AND_PRODUCTS, {
+            .get(GET_PRODUCTS, {
                 headers: {
                     'Authorization': `Bearer ${auth_token.accessToken}`
                 }
@@ -93,6 +96,16 @@ const Home = () => {
 
     return (
         <div className="vendorHome">
+            {
+                productsAdded && (
+                    <div className="productsAddedPopupContainer">
+                        <div className="productsAdded">
+                            <p>Products from excel Sheet added sucessfully.</p>
+                            <button className='greenButton' onClick={(e) => setProductsAdded(false)}>Ok</button>
+                        </div>
+                    </div>
+                )
+            }
             <div className="infoContainer">
                 <InfoCard data={currentVendor} large />
             </div>

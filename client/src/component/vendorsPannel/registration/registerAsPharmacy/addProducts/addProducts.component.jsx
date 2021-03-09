@@ -17,10 +17,13 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TEST_AND_PRODUCTS, UPLOAD_FILE } from '../../../../../services/services';
+import { ADD_PRODUCTS, UPLOAD_FILE } from '../../../../../services/services';
 
 //importing actions
 import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
+
+//importing custom components
+import UploadedImagesPreview from '../../uploadedImagePreview/uploadedImagesPreview.component';
 
 const AddProducts = (props) => {
 
@@ -106,7 +109,7 @@ const AddProducts = (props) => {
                 }
             })
             .then(response => {
-                console.log(response.data.payload);
+                //console.log(response.data.payload);
                 var Data = {
                     image: response.data.payload.location,
                     name: data.name,
@@ -122,7 +125,7 @@ const AddProducts = (props) => {
                 };
 
                 axios
-                    .post(ADD_TEST_AND_PRODUCTS, Data, {
+                    .post(ADD_PRODUCTS, Data, {
                         headers: {
                             'Authorization': `Bearer ${props.auth_token.accessToken}`
                         }
@@ -134,7 +137,7 @@ const AddProducts = (props) => {
 
                         if (props.setShowAddProducts) {
                             //ie rendered inside pharmacy home
-                            props.setProductCategories(prevState => [...prevState, Data]);
+                            props.setProductCategories(prevState => [...prevState, res.data.payload]); //product categories is list of products
                             props.setShowAddProducts(false);
                         }
                         else {
@@ -171,23 +174,32 @@ const AddProducts = (props) => {
                     <p>Or Scan Barcode</p>
                 </div>
             </div>
-            <div className="addImages">
-                <div className="addImagesIconContainer">
-                    <Icon onClick={(e) => imageInputRef.current.click()} noRippleEffect iconColor='grey' size='40px'>
-                        <AiOutlineCamera />
-                    </Icon>
-                    <input
-                        type='file'
-                        multiple="multiple"
-                        style={{ display: 'none' }}
-                        ref={imageInputRef}
-                        onChange={(e) => dispatch({ type: 'setImages', payload: e.target.files })}
-                    />
+            <div className="addImagesContainer">
+                <div className="addImages">
+                    <div className="addImagesIconContainer">
+                        <Icon onClick={(e) => imageInputRef.current.click()} noRippleEffect iconColor='grey' size='40px'>
+                            <AiOutlineCamera />
+                        </Icon>
+                        <input
+                            type='file'
+                            multiple="multiple"
+                            style={{ display: 'none' }}
+                            ref={imageInputRef}
+                            onChange={(e) => dispatch({ type: 'setImages', payload: e.target.files })}
+                        />
+                    </div>
+                    <div className="addImagesCaption">
+                        {
+                            data.images.length
+                                ? <p>Change Images</p>
+                                : <>
+                                    <p>Add Images</p>
+                                    <p>(Upto 3 images)</p>
+                                </>
+                        }
+                    </div>
                 </div>
-                <div className="addImagesCaption">
-                    <p>Add Images</p>
-                    <p>(Upto 3 images)</p>
-                </div>
+                <UploadedImagesPreview imagesArray={data.images} />
             </div>
             <div className="addProductsAndTestInputContainer">
                 <div className="testName addProductsAndTestInput">
@@ -201,7 +213,7 @@ const AddProducts = (props) => {
                 <div className="selectTest addProductsAndTestInput selectInputContainer selectCategory">
                     <div>
                         <div className='selectInputCaption'>
-                            <p>{data.category}</p>
+                            <p>{/*data.category*/}</p>
                         </div>
                         <div className='selectInput'>
                             <select onChange={(e) => dispatch({ type: 'setCategory', payload: e.target.value })}>
@@ -250,7 +262,7 @@ const AddProducts = (props) => {
                     </div>
                     <div className="selectTest addProductsAndTestInput selectInputContainer">
                         <div className='selectInputCaption'>
-                            <p>{data.type}</p>
+                            <p>{/*data.type*/}</p>
                         </div>
                         <div className='selectInput'>
                             <select onChange={(e) => dispatch({ type: 'setType', payload: e.target.value })}>

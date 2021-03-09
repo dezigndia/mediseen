@@ -13,7 +13,7 @@ export const USER_VERIFY_OTP = `${server}api/user/user-verify-otp`
 // returns a url for retreiving search result
 export const SEARCH_BUSINESS = (category, query, filter) => {
   let searchQuery = query !== '' ? `&search=${query}` : '';
-  let locationQuery = filter.location ? `&area=${filter.value}` : '';
+  let locationQuery = filter.location ? `&city=${filter.value}` : '';
   let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : '';
   let categoryQuery = category !== 'All' ? `&category=${category}` : '';
   let url = `${server}api/business?${searchQuery}${locationQuery}${specialityQuery}${categoryQuery}`;
@@ -36,6 +36,8 @@ export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`;
 export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`;
 export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`;
 export const ADD_BULK_TEST = `${server}api/product/create/batch`;
+export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
+export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
 
 //getting products or test categories
 export const GET_PRODUCTS_CATEGORY = `${server}api/pharmacy/product/categories`;
@@ -59,3 +61,5 @@ export const UPLOAD_FILE = `${server}api/blob/upload`;
 //orders details
 export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`;
 
+
+export const FILE_UPLOAD = `${server}api/blob/upload/`;

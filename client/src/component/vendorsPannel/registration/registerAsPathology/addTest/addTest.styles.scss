@@ -121,29 +121,36 @@ $formHeight:70%;
         }
     }
 
-    .addImages {
-        height: $inputImageHeight;
-        min-height: $imageInputSize;
-        width: $imageInputSize;
+    .addImagesContainer {
         display: flex;
-        flex-flow: column nowrap;
-        align-items: stretch;
-        margin-top: 10px;
+        align-items: baseline;
+        justify-content: flex-start;
+        flex-flow: row nowrap;
 
-        .addImagesIconContainer {
-            height: $imageInputSize;
+        .addImages {
+            height: $inputImageHeight;
+            min-height: $imageInputSize;
             width: $imageInputSize;
-            border: 1px solid #ccc;
-            border-radius: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
+            flex-flow: column nowrap;
+            align-items: stretch;
+            margin-top: 10px;
 
-        .addImagesCaption {
-            font-weight: bold;
-            font-size: .6em;
+            .addImagesIconContainer {
+                height: $imageInputSize;
+                width: $imageInputSize;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+
+            .addImagesCaption {
+                font-weight: bold;
+                font-size: .6em;
+            }
         }
     }
 

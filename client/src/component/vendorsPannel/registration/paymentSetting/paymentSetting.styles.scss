@@ -25,7 +25,7 @@ $formButtonFieldHeight:15%;
 
 
     & button {
-
+        //margin:20px 0;
         &:focus {
             outline: none;
         }
@@ -134,7 +134,7 @@ $formButtonFieldHeight:15%;
 
         .paymentSettingButton {
             height: $formButtonFieldHeight;
-            margin-bottom:10px;
+            margin:10px 0;
         }
     }
 }

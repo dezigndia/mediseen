@@ -116,26 +116,38 @@ $inputBorder:1px solid #ccc;
         }
     }
 
-    .addImages {
-        min-height: $imageInputSize;
-        width: $imageInputSize;
+    .addImagesContainer {
         display: flex;
-        flex-flow: column nowrap;
-        align-items: stretch;
+        align-items: baseline;
+        justify-content: flex-start;
+        flex-flow: row nowrap;
 
-        .addImagesIconContainer {
-            height: $imageInputSize;
+        .addImages {
+            min-height: $imageInputSize;
             width: $imageInputSize;
-            border: 1px solid #ccc;
-            border-radius: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+            flex-flow: column nowrap;
+            align-items: stretch;
+            margin-right: 10px;
 
-        .addImagesCaption {
-            font-weight: bold;
-            font-size: .6em;
+            &:hover {
+                cursor: pointer;
+            }
+
+            .addImagesIconContainer {
+                height: $imageInputSize;
+                width: $imageInputSize;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .addImagesCaption {
+                font-weight: bold;
+                font-size: .6em;
+            }
         }
     }
 

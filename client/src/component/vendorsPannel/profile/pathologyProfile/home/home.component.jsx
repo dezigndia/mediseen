@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import './home.styles.scss';
+import { toast } from 'react-toastify';
 
 import xlsx from 'xlsx';
 
@@ -9,7 +10,7 @@ import xlsx from 'xlsx';
 import { blue } from '../../../../../assets/globalJSS';
 
 //importing services 
-import { GET_TEST_AND_PRODUCTS, ADD_BULK_TEST } from '../../../../../services/services';
+import { GET_TESTS, ADD_BULK_TEST } from '../../../../../services/services';
 
 //importing reusable components
 import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.';
@@ -27,27 +28,29 @@ import AddTest from './addTest/addTest.component';
 const Home = () => {
     const currentVendor = useSelector(state => state.currentVendor);
     const auth_token = useSelector(state => state.token);
-    const [testCategories, setTestCategories] = useState([]);
+    const [testCategories, setTestCategories] = useState([]); //test categories is list og test
     const [showAddTests, setShowAddTests] = useState(false);
+    const [testsAdded, setTestsAdded] = useState(false);
     //const [excelData, setExcelData] = useState(null);
     const excelUploadInputRef = useRef(null);
     const testListRef = useRef(null);
 
-    useEffect(() => { 
+    useEffect(() => {
         let a = null;
         if (testListRef.current) {
             a = testListRef.current;
             const onWheelHandler = (e) => {
                 e.preventDefault();
-                testListRef.current.scrollLeft += e.deltaY / 2;
+                testListRef.current.scrollLeft += e.deltaY * 20;
             }
             testListRef.current.addEventListener('wheel', onWheelHandler, { passive: false });
             return () => a && a.removeEventListener('wheel', onWheelHandler);
         }
-    },[testListRef.current]);
+    }, [testListRef.current]);
 
     const changeHandler = (e) => {
         //setExcelData(e.target.files[0]);
+        //UPLOAD EXCELL SHEET
         let fileReader = new FileReader();
         fileReader.readAsBinaryString(e.target.files[0]);
         fileReader.onload = (event) => {
@@ -66,8 +69,9 @@ const Home = () => {
                     }
                 })
                 .then(res => {
-                    console.log(res.data.payload);
-                    setTestCategories(prevState => [...prevState, ...result[0]]);
+                    setTestsAdded(true);
+                    setTestCategories(prevState => [...prevState, ...res.data.payload]);
+
                 })
                 .catch(err => {
                     console.log(err);
@@ -78,7 +82,7 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get(GET_TEST_AND_PRODUCTS, {
+            .get(GET_TESTS, {
                 headers: {
                     'Authorization': `Bearer ${auth_token.accessToken}`
                 }
@@ -94,6 +98,16 @@ const Home = () => {
 
     return (
         <div className="vendorHome">
+            {
+                testsAdded && (
+                    <div className="testsAddedPopupContainer">
+                        <div className="testsAdded">
+                            <p>tests from excel Sheet added sucessfully.</p>
+                            <button className='greenButton' onClick={(e) => setTestsAdded(false)}>Ok</button>
+                        </div>
+                    </div>
+                )
+            }
             <div className="infoContainer">
                 <InfoCard data={currentVendor} large />
             </div>
