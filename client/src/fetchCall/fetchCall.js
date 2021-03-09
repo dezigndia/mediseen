@@ -7,10 +7,8 @@ const fetchCall = async (endpoint, method, jwt, body, type) => {
 
 			Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
 		},
-		body: body && type === "json" ? JSON.stringify(body) : body,
+		body: body && type === "file" ? body : JSON.stringify(body),
 	})
-
-	console.log(response)
 
 	if (!response.ok) {
 		data = { sucess: false, errCode: response.status }
