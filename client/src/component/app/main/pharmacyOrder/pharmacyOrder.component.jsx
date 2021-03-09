@@ -17,7 +17,7 @@ import Checkout from "./Checkout"
 
 const useStyles = makeStyles((theme) => ({
 	button: {
-		backgroundColor: "#2AC0C7",
+		backgroundImage: "linear-gradient(left,#2BBEC8, #1DE9B6)",
 		width: "80%",
 		padding: "0.5rem",
 		fontSize: "1.3rem",
@@ -45,6 +45,14 @@ const useStyles = makeStyles((theme) => ({
 		margin: "0 0.5rem",
 		borderTopLeftRadius: "1rem",
 		borderTopRightRadius: "1rem",
+	},
+	slider: {
+		width: "100vw",
+		display: "flex",
+		overflowX: "scroll",
+		flexWrap: "nowrap",
+		paddingRight: "10rem",
+		overflowY: "hidden",
 	},
 }))
 
@@ -165,20 +173,34 @@ const PharmacyOrder = () => {
 						))}
 				</Grid>
 			</Grid>
-			<Grid container item>
+			<Grid container item className={classes.slider}>
 				{products &&
 					products.map((product) => {
 						if (product.category === active) {
-							const cartQty = cart.filter((prod) => prod.id === product.id)
+							console.log(product)
+							const cartQty = cart.filter(
+								(prod) => prod.item._id === product._id
+							)
 							console.log(cartQty, "cartQty")
 							return (
+								// <ProductCard
+								// 	ogPrice={product.mrp}
+								// 	dcPrice={product.sellingPrice}
+								// 	name={product.name}
+								// 	picture={hand}
+								// 	quantity={`${product.qty}`}
+								// 	cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+								// 	product={product}
+								// />
 								<ProductCard
-									ogPrice={product.mrp}
-									dcPrice={product.sellingPrice}
+									category="category"
+									image={product.image}
+									mrp={product.mrp}
 									name={product.name}
-									picture={hand}
-									quantity={`${product.qty}`}
+									qty={product.qty}
 									cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+									sellingPrice={product.sellingPrice}
+									businessType="pharmacy"
 									product={product}
 								/>
 							)

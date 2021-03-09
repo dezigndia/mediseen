@@ -58,7 +58,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 								<h3>{address}</h3>
 							</Grid>
 						</Grid>
-						<Grid item container alignItems="flex-end" xs={4}>
+						{/* <Grid item container alignItems="flex-end" xs={4}>
 							<Grid item>
 								<h3>Verifed</h3>
 							</Grid>
@@ -85,7 +85,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 									<h3>{distance}</h3>
 								</Grid>
 							</Grid>
-						</Grid>
+						</Grid> */}
 						<Grid container item>
 							<Grid container direction="column" item xs={5}>
 								<Grid item xs={12} className={classes.redHead}>

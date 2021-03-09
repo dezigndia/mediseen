@@ -1,5 +1,5 @@
-import React from "react"
-import { Grid, Paper } from "@material-ui/core"
+import React, { useState } from "react"
+import { Button, Grid, Paper } from "@material-ui/core"
 import { useSpring, animated } from "react-spring/web.cjs"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
@@ -7,7 +7,8 @@ import Modal from "@material-ui/core/Modal"
 import InputBase from "@material-ui/core/InputBase"
 import IconButton from "@material-ui/core/IconButton"
 import SearchIcon from "@material-ui/icons/Search"
-
+import { useSelector } from "react-redux"
+import fetchCall from "../../fetchCall/fetchCall"
 const useStyles = makeStyles((theme) => ({
 	modal: {
 		display: "flex",
@@ -69,6 +70,34 @@ Fade.propTypes = {
 
 const AddContact = ({ open, setOpen }) => {
 	const classes = useStyles()
+	let token = useSelector((state) => state.token.token)
+
+	const [name, setName] = useState("")
+	const [mobile, setMobile] = useState("")
+	const [add, setAdd] = useState("")
+	const [pincode, setPincode] = useState(0)
+
+	token = token
+		? token
+		: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwM2YzOTg1NTFkOTQ1MzFmMTEzMzM0YSIsImRlZmF1bHQiOltdLCJwaG9uZSI6Iis5MTg5MTA3MTkxNDciLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwidXBkYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwiX192IjowLCJpYXQiOjE2MTUxMTcwODB9.gg2XoDzt9twPmWZ1esrrNaiMhdTRdLiMTuoqcrvzgGo"
+
+	const handleSubmit = async () => {
+		const address = [
+			{
+				name,
+				mobile,
+				area: add,
+				pincode,
+			},
+		]
+
+		const data = await fetchCall("user", "PUT", token, address)
+
+		if (data.status) {
+			setOpen(false)
+		}
+	}
+
 	return (
 		<Modal
 			onClose={() => setOpen(false)}
@@ -90,23 +119,47 @@ const AddContact = ({ open, setOpen }) => {
 						</Grid>
 						<Grid item xs={12}>
 							<Paper component="form" elevation={3} className={classes.search}>
-								<InputBase className={classes.input} placeholder="Name" />
+								<InputBase
+									onChange={(e) => setName(e.target.value)}
+									className={classes.input}
+									placeholder="Name"
+								/>
 							</Paper>
 						</Grid>
 						<Grid item xs={12}>
 							<Paper component="form" elevation={3} className={classes.search}>
-								<InputBase className={classes.input} placeholder="Mobile" />
+								<InputBase
+									onChange={(e) => setMobile(e.target.value)}
+									className={classes.input}
+									placeholder="Mobile"
+								/>
 							</Paper>
 						</Grid>
 						<Grid item xs={12}>
 							<Paper component="form" elevation={3} className={classes.search}>
-								<InputBase className={classes.input} placeholder="Address" />
+								<InputBase
+									onChange={(e) => setAdd(e.target.value)}
+									className={classes.input}
+									placeholder="Address"
+								/>
 							</Paper>
 						</Grid>
 						<Grid item xs={12}>
 							<Paper component="form" elevation={3} className={classes.search}>
-								<InputBase className={classes.input} placeholder="Pincode" />
+								<InputBase
+									onChange={(e) => setPincode(e.target.value)}
+									className={classes.input}
+									placeholder="Pincode"
+								/>
 							</Paper>
+						</Grid>
+						<Grid item>
+							<Button
+								onClick={handleSubmit}
+								style={{ backgroundColor: "#2BBEC8", color: "white" }}
+							>
+								Submit
+							</Button>
 						</Grid>
 					</Grid>
 				</Paper>

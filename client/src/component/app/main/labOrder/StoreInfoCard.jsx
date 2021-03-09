@@ -3,6 +3,7 @@ import React from "react"
 import wp from "../../../../assets/icons/whatsapp.svg"
 import pin from "../../../../assets/icons/pin.svg"
 import ReactStars from "react-stars"
+import MotorcycleIcon from "@material-ui/icons/Motorcycle"
 
 import { makeStyles } from "@material-ui/core/styles"
 
@@ -16,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
 		height: "1.5rem",
 	},
 	paper: {
-		width: "100%",
-		margin: "1rem 0",
+		width: "95vw",
+		margin: "0.5rem 0",
 		padding: "1rem",
 	},
 	starts: {
@@ -32,14 +33,31 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: "0.5rem",
 		fontWeight: "800",
 	},
+	container: {
+		width: "100%",
+	},
 }))
 
-const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
+const StoreInfoCard = ({
+	name,
+	delivery,
+	cod,
+	distance,
+	start,
+	eos,
+	address,
+}) => {
 	const classes = useStyles()
 
 	return (
-		<Grid container direction="column" spacing={2}>
-			<Grid container item xs={12}>
+		<Grid
+			container
+			className={classes.container}
+			xs={12}
+			direction="column"
+			spacing={2}
+		>
+			<Grid item xs={12}>
 				<Paper elevation={4} className={classes.paper}>
 					<Grid container spacing={2} justify="space-between" xs={12}>
 						<Grid container item spacing={2} justify="space-between" xs={12}>
@@ -52,15 +70,15 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 						</Grid>
 					</Grid>
 					<Grid container item alignItems="center" spacing={2}>
-						<Grid item container xs={8}>
+						<Grid item container xs={12}>
 							<Grid item justify="flex-end" xs={12}>
 								<h3>{address}</h3>
 							</Grid>
 						</Grid>
-						<Grid item container alignItems="flex-end" xs={4}>
-							{/* <Grid item>
+						{/* <Grid item container alignItems="flex-end" xs={4}>
+							<Grid item>
 								<h3>Verifed</h3>
-							</Grid> */}
+							</Grid>
 							<Grid item>
 								<ReactStars
 									count={5}
@@ -77,21 +95,30 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 								item
 								alignItems="flex-start"
 							>
-								{/* <Grid container item xs={3}>
+								<Grid container item xs={3}>
 									<img className={classes.pinIcon} src={pin} alt="location" />
 								</Grid>
 								<Grid item xs={4}>
 									<h3>{distance}</h3>
-								</Grid> */}
+								</Grid>
 							</Grid>
-						</Grid>
-						<Grid container item>
+						</Grid> */}
+						{/* <Grid container item>
 							<Grid container direction="column" item xs={5}>
 								<Grid item xs={12} className={classes.redHead}>
-									Free Delivery on
+									Hardcopy Delivery
 								</Grid>
-								<Grid item xs={12}>
-									{delivery}
+								<Grid
+									alignItems="center"
+									justify="center"
+									item
+									container
+									xs={12}
+								>
+									<Grid style={{ margin: "0 0.5rem" }} item>
+										<MotorcycleIcon />
+									</Grid>
+									<Grid item>{delivery}</Grid>
 								</Grid>
 							</Grid>
 							<Grid container item xs={4}>
@@ -105,7 +132,7 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 							<Grid item xs={3}>
 								Closes by {eos < 12 ? `${eos} am` : `${eos - 12} pm`}
 							</Grid>
-						</Grid>
+						</Grid> */}
 					</Grid>
 				</Paper>
 			</Grid>
@@ -113,4 +140,4 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 	)
 }
 
-export default InfoCard
+export default StoreInfoCard

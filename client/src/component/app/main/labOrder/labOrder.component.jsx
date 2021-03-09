@@ -115,7 +115,7 @@ const PharmacyOrder = () => {
 				item
 				alignContent="flex-end"
 			>
-				<Link to="/home/labOrder/about">About</Link>
+				<Link to={`/home/labOrder/about/${labId}`}>About</Link>
 			</Grid>
 			<Grid item>
 				<Button
@@ -164,7 +164,7 @@ const PharmacyOrder = () => {
 				</Grid>
 			</Grid>
 			<Grid container item>
-				{products &&
+				{/* {products &&
 					products.map((product) => {
 						if (product.category === active) {
 							const cartQty = cart.filter((prod) => prod.id === product.id)
@@ -177,6 +177,28 @@ const PharmacyOrder = () => {
 									picture={hand}
 									quantity={`${product.qty}`}
 									cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+									product={product}
+								/>
+							)
+						}
+					})} */}
+				{products &&
+					products.map((product) => {
+						if (product.category === active) {
+							console.log(product)
+							const cartQty = cart.filter(
+								(prod) => prod.item._id === product._id
+							)
+							return (
+								<ProductCard
+									category="category"
+									image={product.image}
+									mrp={product.mrp}
+									name={product.name}
+									qty={product.qty}
+									cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
+									sellingPrice={product.sellingPrice}
+									businessType="pathology"
 									product={product}
 								/>
 							)

@@ -83,7 +83,7 @@ const main = ({ match }) => {
 				/>
 				<Route
 					confirm
-					path={`${match.url}/labOrder/about`}
+					path={`${match.url}/labOrder/about/:labId`}
 					component={LabAbout}
 				/>
 				<Route
