@@ -1,10 +1,10 @@
 import React from 'react';
 import './timeSlots.styles.scss';
 
-const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab, _id, deleteAppointment, dispatch }) => {
+const TimeSlots = ({ accepted, isBooked, name, phoneNo, timings, changeTab, _id, deleteAppointment, acceptAppointment, dispatch }) => {
 
     return (
-        <div className={`appoinements ${isBooked ? 'booked' : 'vacant'}`}>
+        <div className={`appoinements ${isBooked ? 'booked' : 'vacant'} ${accepted ? 'accepted' : 'notAccepted'}`}>
             {
                 isBooked
                     ? <>
@@ -20,8 +20,14 @@ const TimeSlots = ({ isBooked, name, phoneNo, timings, changeTab, _id, deleteApp
                             </div>
                         </div>
                         <div className="appointmentActions">
-                            <button onClick={() => deleteAppointment(_id, timings)} > Delete</button>
-                            <button>Accept</button>
+                            {
+                                !accepted
+                                    ? <>
+                                        <button onClick={() => deleteAppointment(_id, timings)} > Delete</button>
+                                        <button onClick={() => acceptAppointment(_id, timings)}>Accept</button>
+                                    </>
+                                    : <p>Accepted</p>
+                            }
                         </div>
                         <div className="appointmentTime bookedAppointmentTime">
                             <p>{timings.from}</p>
