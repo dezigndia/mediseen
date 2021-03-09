@@ -43,6 +43,10 @@ const appointmentSchema = new mongoose.Schema(
         mobileNumber: {
             type: String,
         },
+        accepted: {
+            type: Boolean,
+            default: false,
+        },
         patient: {
             firstName: {
                 type: String,
