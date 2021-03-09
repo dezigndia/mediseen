@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { withRouter } from "react-router-dom"
 import "./locationAccessComponent.styles.scss"
-import GeoCoder from "node-geocoder"
+//import GeoCoder from "node-geocoder"
 import { Link } from "react-router-dom"
 
 //icon
@@ -32,16 +32,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const options = {
+/*const options = {
 	provider: "mapquest",
 
 	// Optional depending on the providers
 	httpAdapter: "https", // Default
 	apiKey: "Lhu9s4fQBXxbRNd69dsMuihNuXtKZGkmLhu9s4fQBXxbRNd69dsMuihNuXtKZGkm", // for Mapquest, OpenCage, Google Premier
 	formatter: null, // 'gpx', 'string', ...
-}
+}*/
 
-const geocoder = GeoCoder(options)
+//const geocoder = GeoCoder(options)
 
 const LocationAccess = ({ history }) => {
 	const returnBackToAllowAccessPage = (e) => {

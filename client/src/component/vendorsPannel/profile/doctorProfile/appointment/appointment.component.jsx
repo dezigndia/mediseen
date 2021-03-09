@@ -197,7 +197,7 @@ const Appointments = () => {
 
     useEffect(() => {
         //effect for making all appointment timeslot array
-
+        console.log(`${auth_token.accessToken}`);
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
             let time = hospitalList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name }));

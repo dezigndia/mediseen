@@ -117,7 +117,7 @@ const main = ({ match }) => {
 					path={`${match.url}/bookOrder/:category/:subCategory`}
 					component={BookOrder}
 				/>
-				<Redirect to="/404" />
+				
 			</Switch>
 		</main>
 	)

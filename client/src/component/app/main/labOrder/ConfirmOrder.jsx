@@ -1,7 +1,7 @@
 import { Grid, Button } from "@material-ui/core"
 import React from "react"
 import clsx from "clsx"
-import ReactStars from "react-stars"
+//import ReactStars from "react-stars"
 import Avatar from "@material-ui/core/Avatar"
 import { Link } from "react-router-dom"
 
@@ -45,13 +45,13 @@ const ConfirmOrder = ({ name, address, stars, distance }) => {
 						{name}
 					</Grid>
 					<Grid item xs={4}>
-						<ReactStars
+						{/*<ReactStars
 							count={5}
 							size={24}
 							value={2}
 							color1={"grey"}
 							color2={"#FFC83D"}
-						/>
+						/>*/}
 					</Grid>
 				</Grid>
 				<Grid item container xs={12} justify="space-between">
