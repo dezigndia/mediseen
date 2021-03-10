@@ -81,6 +81,16 @@ class AppointmentService {
     getAppointmentByBusinessCount = expressAsyncHandler(async (req, res) => {
         return await Appointment.countDocuments(getConditions(req))
     })
+    getPatients = expressAsyncHandler(async (limit, skip, businessPhoneNumber) => {
+        const data = await Appointment.find({ businessPhoneNumber }, "patient")
+            .limit(parseInt(limit))
+            .skip(parseInt(skip))
+        let patients = []
+        data.forEach(pat => {
+            patients.push(pat.patient)
+        })
+        return patients
+    })
 }
 
 module.exports = AppointmentService

@@ -117,6 +117,16 @@ class AppointmentController {
         let count = await appointmentService.getAppointmentByBusinessCount(req, res)
         res.status(StatusCodes.OK).json({ count: count })
     })
+    getPatients = expressAsyncHandler(async (req, res) => {
+        const { user } = res.locals
+        const { limit, skip } = req.query
+        const data = await appointmentService.getPatients(limit, skip, user.phone)
+        if (data) {
+            return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
 }
 
 module.exports = AppointmentController
