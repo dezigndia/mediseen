@@ -170,6 +170,22 @@ const Appointments = () => {
                 return { ...state, videoConsulting: action.payload }
             case 'setDate':
                 return { ...state, date: action.payload }
+            case 'clear':
+                return {
+                    businessName: '',
+                    date: '',
+                    refMobileNumber: '',
+                    timings: '',
+                    notes: '',
+                    patientFirstName: '',
+                    patientLastName: '',
+                    patientMobileNo: '',
+                    gender: 'Male',
+                    dob: '',
+                    age: '',
+                    paymentStatus: 'unpaid',
+                    videoConsulting: false
+                }
             default:
                 return state;
         }
@@ -197,7 +213,7 @@ const Appointments = () => {
 
     useEffect(() => {
         //effect for making all appointment timeslot array
-        console.log(`${auth_token.accessToken}`);
+
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
             let time = hospitalList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name }));
@@ -289,28 +305,29 @@ const Appointments = () => {
                             </div>
                             {
                                 appointmentSlots &&
-                                appointmentSlots.length > 0 &&
-                                appointmentSlots
-                                    .filter(item => selectedHospital === 'All' || item.timeSlot.hospitalName === selectedHospital)
-                                    .map((item, index) =>
-                                        <>
-                                            <TimeSlots
-                                                key={index}
-                                                name={item.customerName}
-                                                phoneNo={item.phoneNo}
-                                                timings={item.timeSlot}
-                                                isBooked={item.isBooked}
-                                                _id={item._id}
-                                                key={index}
-                                                changeTab={setTabIssueNewAppointment}
-                                                deleteAppointment={deleteAppointment}
-                                                dispatch={dispatch}
-                                                acceptAppointment={acceptAppointment}
-                                                accepted={item.accepted}
-                                            />
+                                    appointmentSlots.length > 0
+                                    ? appointmentSlots
+                                        .filter(item => selectedHospital === 'All' || item.timeSlot.hospitalName === selectedHospital)
+                                        .map((item, index) =>
+                                            <>
+                                                <TimeSlots
+                                                    key={index}
+                                                    name={item.customerName}
+                                                    phoneNo={item.phoneNo}
+                                                    timings={item.timeSlot}
+                                                    isBooked={item.isBooked}
+                                                    _id={item._id}
+                                                    key={index}
+                                                    changeTab={setTabIssueNewAppointment}
+                                                    deleteAppointment={deleteAppointment}
+                                                    dispatch={dispatch}
+                                                    acceptAppointment={acceptAppointment}
+                                                    accepted={item.accepted}
+                                                />
 
-                                        </>
-                                    )
+                                            </>
+                                        )
+                                    :<h3 style={{ color: '#ccc', marginTop:'150px' }}>No Appointments Today</h3>    
                             }
                         </>
                         : <BookAppointment

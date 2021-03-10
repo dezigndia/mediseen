@@ -38,9 +38,11 @@ const DatePicker = ({ setSelectedDate, selectedDate }) => {
                         <FaCalendarAlt />
                     </Icon>
                     <input type='date' onChange={(e) => {
-                        //["2021", "02", "19"]
-                        let val = e.target.value.split('-');
-                        setSelectedDate({ date: parseInt(val[2]), month: parseInt(val[1]) - 1, year: parseInt(val[0]) });
+                         if (e.target.value && e.target.value !== '') {
+                            //["2021", "02", "19"]
+                            let val = e.target.value.split('-');
+                            setSelectedDate({ date: parseInt(val[2]), month: parseInt(val[1]) - 1, year: parseInt(val[0]) });
+                        }
                     }} />
                 </div>
                 <div className="selectDate">
