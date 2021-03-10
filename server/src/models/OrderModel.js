@@ -2,10 +2,6 @@ const mongoose = require("mongoose")
 
 const orderSchema = new mongoose.Schema(
     {
-        userId: {
-            type: String,
-            required: true,
-        },
         patientName: {
             type: String,
         },
@@ -16,13 +12,6 @@ const orderSchema = new mongoose.Schema(
         userPhoneNumber: {
             type: String,
             required: true,
-        },
-        date: {
-            type: Date,
-            required: true,
-        },
-        time: {
-            type: String,
         },
         image_url: {
             type: String,
