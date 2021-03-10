@@ -10,6 +10,11 @@ class OrderController {
         const { user } = res.locals
         let bodydata = req.body
         bodydata.userPhoneNumber = user.phone
+        if (bodydata.img_url) {
+            bodydata.isPrescription = true
+        } else {
+            bodydata.isPrescription = false
+        }
         const data = await orderService.createOrder(bodydata)
         if (data) {
             return res.status(StatusCodes.CREATED).json({ status: true, payload: data })

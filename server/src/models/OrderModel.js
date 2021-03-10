@@ -51,6 +51,10 @@ const orderSchema = new mongoose.Schema(
         grandTotal: {
             type: Number,
         },
+        isPrescription: {
+            type: Boolean,
+            default: false,
+        },
         address: {
             city: {
                 type: String,
