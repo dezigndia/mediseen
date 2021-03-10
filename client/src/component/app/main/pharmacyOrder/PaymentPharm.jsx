@@ -89,7 +89,7 @@ const PaymentPharm = () => {
 
 	const [payment, setPayment] = useState(1)
 
-	const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsImRlZmF1bHQiOltdLCJfaWQiOiI2MDJlMDUxNzVmN2IxYjFlMWY0Y2QzMDkiLCJwaG9uZSI6Iis5MTgxNDY2MDI3OTYiLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwiX192IjowLCJpYXQiOjE2MTM2MjkxMDd9.GGI3wV58RlxvhYzejS_mhUXuxA5QSbQ2ZmD7rot3qE4`
+	const token = useSelector((state) => state.token.token)
 
 	const cart = useSelector((state) => state.cart)
 
@@ -141,10 +141,10 @@ const PaymentPharm = () => {
 			}
 		} else {
 			body = {
-				userId: "57668688w9e89",
+				userId: "603f398551d94531f113334a",
 				patientName: "Yash Sharma",
-				mobileNumber: "89089898686989",
-				userPhoneNumber: "787989089898989",
+				mobileNumber: "8910719147",
+				userPhoneNumber: "8910719147",
 				date: `${Date.now()}`,
 				products,
 				grandTotal: totalCost,

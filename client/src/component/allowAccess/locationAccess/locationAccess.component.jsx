@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from "react"
 import { withRouter } from "react-router-dom"
 import "./locationAccessComponent.styles.scss"
 import GeoCoder from "node-geocoder"
+import { Link } from "react-router-dom"
 
 //icon
-import { Button, makeStyles } from "@material-ui/core"
+import { Button, makeStyles, Grid } from "@material-ui/core"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import CloseIcon from "@material-ui/icons/Close"
 import GpsFixedIcon from "@material-ui/icons/GpsFixed"
@@ -24,6 +25,10 @@ const dummyData = {
 const useStyles = makeStyles((theme) => ({
 	blue: {
 		color: "#2BBEC8",
+	},
+	container: {
+		position: "absolute",
+		bottom: "2rem",
 	},
 }))
 
@@ -167,8 +172,20 @@ const LocationAccess = ({ history }) => {
 				<div className="setCityPinCodeSearchOk">
 					<PrimaryIconButton label="ok" onClick={getCityFromPin} />
 				</div>
-				<Button>Home</Button>
 			</div>
+			{/* <Grid
+				container
+				className={classes.container}
+				xs={12}
+				alignItems="center"
+				justify="center"
+			>
+				<Grid item xs={8}>
+					<Link to="/home">
+						<PrimaryIconButton label="Home" />
+					</Link>
+				</Grid>
+			</Grid> */}
 		</div>
 	)
 }

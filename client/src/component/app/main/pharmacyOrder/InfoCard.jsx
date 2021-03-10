@@ -58,9 +58,9 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 							</Grid>
 						</Grid>
 						<Grid item container alignItems="flex-end" xs={4}>
-							<Grid item>
+							{/* <Grid item>
 								<h3>Verifed</h3>
-							</Grid>
+							</Grid> */}
 							<Grid item>
 								<ReactStars
 									count={5}
@@ -77,12 +77,12 @@ const InfoCard = ({ name, delivery, cod, distance, start, eos, address }) => {
 								item
 								alignItems="flex-start"
 							>
-								<Grid container item xs={3}>
+								{/* <Grid container item xs={3}>
 									<img className={classes.pinIcon} src={pin} alt="location" />
 								</Grid>
 								<Grid item xs={4}>
 									<h3>{distance}</h3>
-								</Grid>
+								</Grid> */}
 							</Grid>
 						</Grid>
 						<Grid container item>

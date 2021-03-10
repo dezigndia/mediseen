@@ -62,7 +62,7 @@ $orderDetailsAndOrderPaymentMethodPadding:20px;
         justify-content: space-between;
         height: 35px;
 
-        &>div:nth-child(1)>div{
+        &>div:nth-child(1)>div {
             padding-bottom: 0;
         }
 
@@ -86,7 +86,7 @@ $orderDetailsAndOrderPaymentMethodPadding:20px;
             margin: auto;
             margin-top: 10px;
             height: 112px;
-            width: Min(100%, 400px);
+            min-width: Min(100%, 400px);
             font-weight: bold;
             padding: 7px 13px;
             padding-top: 13px;
@@ -219,6 +219,16 @@ $orderDetailsAndOrderPaymentMethodPadding:20px;
                 top: 75px;
                 border: 1px solid #ccc;
             }
+        }
+    }
+}
+
+@media only screen and (min-width : $medium) {
+    .vendorsOrders {
+        .vendorsOrdersListContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            column-gap: 10px;
         }
     }
 }

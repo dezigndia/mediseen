@@ -29,18 +29,18 @@ const AddProducts = (props) => {
     const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
-        setCategory(['a', 'b', 'c']);
-        setType(['a', 'b', 'c', 'd']);
+        setCategory(['anti-biotic', 'anti-inflammatory', 'enzyme', 'tonic', 'anti-septic']);
+        setType(['liquid', 'tablet', 'injection', 'inhaler', 'cream']);
     }, []);
 
     const initialState = {
         images: [],
         name: '',
-        category: '',
+        category: 'anti-biotic',
         mrp: '',
         sellingPrice: '',
         quantity: '',
-        type: '',
+        type: 'liquid',
         productDetails: '',
         company: '',
         barcode: ''
@@ -242,7 +242,7 @@ const AddProducts = (props) => {
                 <div className="tests flexInputContainer">
                     <div className="ten addProductsAndTestInput">
                         <input
-                            type='text'
+                            type='number'
                             placeholder='quantity'
                             value={data.quantity}
                             onChange={(e) => dispatch({ type: 'setQuantity', payload: e.target.value })}

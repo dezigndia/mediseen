@@ -13,6 +13,7 @@ const appointmentRouter = require("./appointment.route")
 const orderRouter = require("./order.route")
 const testRouter = require("./test.route")
 const categoryRouter = require("./category.route")
+const adminRouter = require("./admin.route")
 
 router.use("/auth", authRouter)
 router.use("/hospital", hospitalRouter)
@@ -27,5 +28,6 @@ router.use("/appointment", appointmentRouter)
 router.use("/order", orderRouter)
 router.use("/test", testRouter)
 router.use("/category", categoryRouter)
+router.use("/admin", adminRouter)
 
 module.exports = router

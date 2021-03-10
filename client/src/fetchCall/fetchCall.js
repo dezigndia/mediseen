@@ -10,7 +10,7 @@ const fetchCall = async (endpoint, method, jwt, body) => {
 		body: body ? body : null,
 	})
 
-	// console.log(response.json())
+	console.log(response)
 
 	if (!response.ok) {
 		data = { sucess: false, errCode: response.status }

@@ -25,12 +25,14 @@ $formHeight:70%;
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 2;
 
         &>div {
             height: 50px;
             width: 50px;
             border: 10px solid $blue;
             border-radius: 50%;
+            border-top-color: white;
             animation-name: loadngSpinner;
             animation-iteration-count: infinite;
             animation-duration: .5s;
