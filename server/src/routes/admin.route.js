@@ -25,6 +25,6 @@ router.get("/get-businesses", isAdmin(), bc.getBusinessList)
 router.get("/get-total-users", isAdmin(), getTotalUsers)
 router.get("/get-total-businesses", isAdmin(), getTotalBusinesses)
 router.get("/get-appointments", isAdmin(), ac.getAppointments)
-router.get("/get-appointment-per-business", isAdmin(), ac.getAppointmentbyBuisness)
+router.get("/get-appointment-per-business", isAdmin(), ac.getAppointmentbybusiness)
 
 module.exports = router
