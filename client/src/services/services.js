@@ -12,34 +12,12 @@ export const USER_VERIFY_OTP = `${server}api/user/user-verify-otp`
 
 // returns a url for retreiving search result
 export const SEARCH_BUSINESS = (category, query, filter) => {
-<<<<<<< HEAD
   let searchQuery = query !== '' ? `&search=${query}` : '';  //search value
   let locationQuery = filter.location ? `&city=${filter.value}` : ''; //location
   let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : ''; //speciality
   let categoryQuery = category !== 'All' ? `&category=${category}` : '';  //category
   let url = `${server}api/business?${searchQuery}${locationQuery}${specialityQuery}${categoryQuery}`;
   return url;
-=======
-	let searchQuery = query !== "" ? `&search=${query}` : "" //search value
-	let locationQuery = filter.location ? `&city=${filter.value}` : "" //location
-	let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : "" //speciality
-	let categoryQuery = category !== "All" ? `&category=${category}` : "" //category
-
-	// let searchQuery = query !== "" ? `&search=${query}` : ""
-	// let locationQuery = filter.location ? `&city=${filter.value}` : ""
-	// let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : ""
-	// let categoryQuery = category !== "All" ? `&category=${category}` : ""
-
-	let url = `${server}api/business?${searchQuery}${locationQuery}${specialityQuery}${categoryQuery}`
-	return url
-
-	/*let searchQuery = query !== "" ? `&search=${query}` : ""
-	let locationQuery = filter.location ? `&city=${filter.value}` : ""
-	let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : ""
-	let categoryQuery = category !== "All" ? `&category=${category}` : ""
-	let url = `${server}api/business?${searchQuery}${locationQuery}${specialityQuery}${categoryQuery}`
-	return url*/
->>>>>>> 1a2e4935c8a68e0b0b70b68ed11fef1417e04536
 }
 
 //returns a url for retreiving available doctors in a hospital or
@@ -56,7 +34,6 @@ export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`;
 //adding products and tests
 //export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`;
 //export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`;
-<<<<<<< HEAD
 export const ADD_TESTS = `${server}api/test/create`;
 export const ADD_PRODUCTS = `${server}api/product/create`;
 export const GET_TESTS = `${server}api/test/find/business`;
@@ -65,25 +42,6 @@ export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`;
 export const ADD_BULK_TEST = `${server}api/test/create/batch`;
 export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
 export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
-=======
-export const ADD_TESTS = `${server}api/test/create`
-export const ADD_PRODUCTS = `${server}api/product/create`
-export const GET_TESTS = `${server}api/test/find/business`
-export const GET_PRODUCTS = `${server}api/product/find/business`
-export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`
-export const ADD_BULK_TEST = `${server}api/test/create/batch`
-export const UPDATE_MY_PRODUCT = (productId) =>
-	`${server}api/product/update/${productId}`
-export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`
-
-export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`
-export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`
-// export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`
-// export const ADD_BULK_TEST = `${server}api/product/create/batch`
-// export const UPDATE_MY_PRODUCT = (productId) =>
-// 	`${server}api/product/update/${productId}`
-// export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`
->>>>>>> 1a2e4935c8a68e0b0b70b68ed11fef1417e04536
 
 //getting products or test categories
 export const GET_PRODUCTS_CATEGORY = `${server}api/pharmacy/product/categories`;
@@ -95,7 +53,6 @@ export const GET_PHARMACY_STAFF_ROLES = `${server}api/pharmacy/staff/roles`;
 export const GET_PATHOLOGO_STAFF_ROLES = `${server}api/pharmacy/staff/roles`;
 
 //appointment
-<<<<<<< HEAD
 export const createAppointment = `${server}api/appointment/`;
 export const getAppointmentByBusiness = `${server}api/appointment/business`;
 export const getAppointmentByCustomer = `${server}api/appointment/user`;
@@ -110,35 +67,3 @@ export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`;
 
 
 export const FILE_UPLOAD = `${server}api/blob/upload/`;
-=======
-
-export const createAppointment = `${server}api/appointment/`
-export const getAppointmentByBusiness = `${server}api/appointment/business`
-export const getAppointmentByCustomer = `${server}api/appointment/user`
-export const getAppointmentById = (id) => `${server}api/appointment/id/${id}`
-export const updateAppointmentByID = (id) =>
-	`${server}api/appointment/update/${id}`
-
-//uploading files
-export const UPLOAD_FILE = `${server}api/blob/upload`
-
-//orders details
-export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`
-
-export const FILE_UPLOAD = `${server}api/blob/upload/`
-
-// export const createAppointment = `${server}api/appointment/`
-// export const getAppointmentByBusiness = `${server}api/appointment/business`
-// export const getAppointmentByCustomer = `${server}api/appointment/user`
-// export const getAppointmentById = (id) => `${server}api/appointment/id/${id}`
-// export const updateAppointmentByID = (id) =>
-// 	`${server}api/appointment/update/${id}`
-
-// //uploading files
-// export const UPLOAD_FILE = `${server}api/blob/upload`
-
-// //orders details
-// export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`;
-
-// export const FILE_UPLOAD = `${server}api/blob/upload/`;
->>>>>>> 1a2e4935c8a68e0b0b70b68ed11fef1417e04536
