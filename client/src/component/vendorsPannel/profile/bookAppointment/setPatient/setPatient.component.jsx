@@ -73,6 +73,8 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
                     }
                 })
                 .then(res => {
+                    //clearing form
+                    dispatch({ type: 'clear' });
                     //console.log(res.data.payload);
                     setAppointmentSlots(prevState => {
                         let arr = prevState;
