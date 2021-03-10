@@ -1,7 +1,10 @@
 const mongoose = require("mongoose")
-
+const autoIncrement = require("mongoose-auto-increment")
 const orderSchema = new mongoose.Schema(
     {
+        orderId: {
+            type: Number,
+        },
         patientName: {
             type: String,
         },
@@ -44,8 +47,8 @@ const orderSchema = new mongoose.Schema(
                     qty: Number,
                 },
             ],
-            default: [],
-            minlength: 1,
+            validate: [arrayLimit, "{PATH} must be of length 1"],
+            required: true,
         },
         totalItems: {
             type: Number,
@@ -94,7 +97,19 @@ const orderSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+autoIncrement.initialize(mongoose.connection)
+
+orderSchema.plugin(autoIncrement.plugin, {
+    model: "Order",
+    field: "orderId",
+    startAt: 1234,
+    incrementBy: 1,
+})
 
 const Order = mongoose.model("Order", orderSchema)
 
 module.exports = Order
+
+function arrayLimit(val) {
+    return val.length > 0
+}
