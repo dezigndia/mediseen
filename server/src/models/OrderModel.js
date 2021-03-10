@@ -16,6 +16,10 @@ const orderSchema = new mongoose.Schema(
         image_url: {
             type: String,
         },
+        bill: {
+            type: String,
+            default: "",
+        },
         businessName: {
             type: String,
             required: true,
@@ -31,14 +35,18 @@ const orderSchema = new mongoose.Schema(
         productType: {
             type: String,
         },
-        products: [
-            {
-                productId: String,
-            },
-            {
-                qty: Number,
-            },
-        ],
+        products: {
+            type: [
+                {
+                    productId: String,
+                },
+                {
+                    qty: Number,
+                },
+            ],
+            default: [],
+            minlength: 1,
+        },
         totalItems: {
             type: Number,
         },

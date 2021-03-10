@@ -73,6 +73,16 @@ class ProductController {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error fetching product")
         }
     })
+    getBulkProductsById = expressAsyncHandler(async (req, res) => {
+        const { ids } = req.body
+        const data = await productService.getBulkProductsById(ids)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error fetching product")
+        }
+    })
 }
 
 module.exports = ProductController

@@ -45,13 +45,17 @@ class ProductService {
             newData[`${key}`] = value
         }
         delete newData["ownerId"]
-        return await Product.findOneAndUpdate({ _id: id }, newData)
+        return await Product.findOneAndUpdate({ _id: id }, newData, { new: true })
     })
 
     getProductById = expressAsyncHandler(async id => {
         const product = await Product.findOne(id)
         if (!product) new AppError(StatusCodes.NOT_FOUND, "No Product found with given Id")
         else return product
+    })
+    getBulkProductsById = expressAsyncHandler(async ids => {
+        const product = await Product.find({ _id: { $in: ids } })
+        return product
     })
 }
 module.exports = ProductService

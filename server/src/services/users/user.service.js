@@ -103,7 +103,7 @@ class UserService {
         for (const [key, value] of Object.entries(payload)) {
             newUser[`${key}`] = value
         }
-        return await User.findOneAndUpdate({ phone: phone }, newUser)
+        return await User.findOneAndUpdate({ phone: phone }, newUser, { new: true })
     })
 
     async deleteUser(id) {

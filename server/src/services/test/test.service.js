@@ -44,7 +44,7 @@ class TestService {
             newData[`${key}`] = value
         }
         delete newData["ownerId"]
-        return await Test.findOneAndUpdate({ _id: id }, newData)
+        return await Test.findOneAndUpdate({ _id: id }, newData, { new: true })
     })
     getTestById = expressAsyncHandler(async id => {
         const test = await Test.findOne(id)
