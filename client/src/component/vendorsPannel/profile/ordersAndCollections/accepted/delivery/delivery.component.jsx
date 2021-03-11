@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import './delivery.styles.scss';
 import { FormControl, InputLabel, Select, makeStyles, MenuItem } from '@material-ui/core';
@@ -8,6 +8,10 @@ import Icon from '../../../../../reusableComponent/icon/icon.component';
 
 //importing icon
 import { ImAttachment } from 'react-icons/im';
+
+//importing services
+import { UPLOAD_FILE } from '../../../../../../services/services';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -21,14 +25,51 @@ const useStyles = makeStyles((theme) => ({
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
 const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem, cost }) => {
-    const [deliveryBoy, setDeliveryBoy] = useState(null);
     const staff = useSelector(state => state.currentVendor.staffs);
+    const [deliveryBoy, setDeliveryBoy] = useState(staff && staff.length && staff[0].name);
     const businessType = useSelector(state => state.currentVendor.businessType);
     const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
+    const auth_token = useSelector(state => state.token);
+    const [bill, setBill] = useState(null);
+    const attachBillInputRef = useRef();
 
     const handleChange = (event) => {
         setDeliveryBoy(event.target.value);
     };
+
+    const setBillImage = (e) => {
+        let reader = new FileReader();
+        reader.onload = event => setBill(event.target.result);
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    const yesButtonHandler = (e) => {
+        let formData = new FormData();
+        formData.append('file', attachBillInputRef.current.files[0]);
+
+        if (typeof attachBillInputRef.current.files[0] !== 'undefined') {
+            axios
+                .post(UPLOAD_FILE, formData, {
+                    headers: {
+                        'Authorization': `Bearer ${auth_token.accessToken}`
+                    }
+                })
+                .then(res => {
+                    updateActiveItem({ status: 'shipped', bill: res.data.payload.location, assignedDeliveryPerson: deliveryBoy });
+                    setShowDeliverCollectionTab(false);
+                    setActiveTabNull();//go back to orders page
+                })
+                .catch(err => {
+                    console.log(err);
+                    alert("can't upload bill");
+                });
+        }
+        else {
+            updateActiveItem({ status: 'shipped', assignedDeliveryPerson: deliveryBoy });
+            setShowDeliverCollectionTab(false);
+            setActiveTabNull();//go back to orders page
+        }
+    }
 
     const classes = useStyles();
 
@@ -72,7 +113,7 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveI
                         </FormControl>
                     </div>
                 </div>
-                <div className="vendorPannelAcceptedAttachBill">
+                <div className="vendorPannelAcceptedAttachBill" onClick={e => attachBillInputRef.current.click()}>
                     <div>
                         <p>Attach Bill</p>
                     </div>
@@ -81,9 +122,10 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveI
                             <ImAttachment />
                         </Icon>
                     </div>
+                    <input type='file' style={{ display: 'none' }} ref={attachBillInputRef} onChange={setBillImage} />
                 </div>
                 <div className="vendorPannelAcceptedAttachBillImage">
-                    <img src='https://i1.wp.com/www.thegoldprojectblog.com/wp-content/uploads/2016/01/medical-bill-payment-tracker.png' alt='bill' />
+                    {bill && <img src={bill} alt='bill' />}
                 </div>
                 <div className="vendorPannelAcceptedTotalCost">
                     <div>
@@ -104,11 +146,7 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveI
                     </button>
                     <button
                         className='greenButton'
-                        onClick={(e) => {
-                            updateActiveItem({ status: 'shipped' });
-                            setShowDeliverCollectionTab(false);
-                            setActiveTabNull();//go back to orders page
-                        }}
+                        onClick={yesButtonHandler}
                     >
                         Yes
                     </button>

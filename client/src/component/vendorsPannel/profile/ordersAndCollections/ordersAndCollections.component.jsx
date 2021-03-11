@@ -65,7 +65,10 @@ const Orders = () => {
             .then(res => {
                 setOrderList(prevState => {
                     let arr = [...prevState];
-                    arr[activeItem.index].status = updateObject.status;
+                    Object.keys(updateObject).forEach(item => {
+                        arr[activeItem.index][item] = updateObject[item];
+                    });
+                    //arr[activeItem.index].status = updateObject.status;
                     return [...arr];
                 })
             })
@@ -197,7 +200,7 @@ const Orders = () => {
                                             </div>
                                         </div>
                                         <div className="orderTotalItems">
-                                            <p>Total Items: {item.products && item.products.length}</p>
+                                            <p>Total Items: {item.products && item.products.reduce((a, b) => a + b.qty, 0)}</p>
                                         </div>
                                         <div className="orderCost">
                                             <Icon noRippleEffect size='20px'>
@@ -233,8 +236,8 @@ const Orders = () => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%,-50%)',
-                                'font-size':'2em',
-                                color:'rgba(0,0,0,.6)'
+                                'font-size': '2em',
+                                color: 'rgba(0,0,0,.6)'
                             }}>
                             No Orders
                         </p>
@@ -250,13 +253,15 @@ const Orders = () => {
                         orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                         paymentMethod={activeItem.address && activeItem.address.payment}
                         status={activeItem.status}
-                        totalItems={activeItem.products && activeItem.products.length}
+                        totalItems={activeItem.products && activeItem.products.reduce((a, b) => a + b.qty, 0)}
                         cost={activeItem.grandTotal}
                         mobileNo={activeItem.userPhoneNumber}
                         name={activeItem.patientName}
                         address={activeItem.address}
                         updateActiveItem={updateActiveItem}
                         products={activeItem.products}
+                        image={activeItem.image_url}
+                        bill={activeItem.bill}
                     />
                     : null
             }
@@ -270,13 +275,15 @@ const Orders = () => {
                         orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                         paymentMethod={activeItem.address && activeItem.address.payment}
                         status={activeItem.status}
-                        totalItems={activeItem.products && activeItem.products.length}
+                        totalItems={activeItem.products && activeItem.products.reduce((a, b) => a + b.qty, 0)}
                         cost={activeItem.grandTotal}
                         mobileNo={activeItem.userPhoneNumber}
                         name={activeItem.patientName}
                         address={activeItem.address}
                         updateActiveItem={updateActiveItem}
                         products={activeItem.products}
+                        image={activeItem.image_url}
+                        bill={activeItem.bill}
                     />
                     : null
             }
@@ -290,13 +297,15 @@ const Orders = () => {
                         orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                         paymentMethod={activeItem.address && activeItem.address.payment}
                         status={activeItem.status}
-                        totalItems={activeItem.products && activeItem.products.length}
+                        totalItems={activeItem.products && activeItem.products.reduce((a, b) => a + b.qty, 0)}
                         cost={activeItem.grandTotal}
                         mobileNo={activeItem.userPhoneNumber}
                         name={activeItem.patientName}
                         address={activeItem.address}
                         updateActiveItem={updateActiveItem}
                         products={activeItem.products}
+                        image={activeItem.image_url}
+                        bill={activeItem.bill}
                     />
                     : null
             }
@@ -310,13 +319,15 @@ const Orders = () => {
                         orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                         paymentMethod={activeItem.address && activeItem.address.payment}
                         status={activeItem.status}
-                        totalItems={activeItem.products && activeItem.products.length}
+                        totalItems={activeItem.products && activeItem.products.reduce((a, b) => a + b.qty, 0)}
                         cost={activeItem.grandTotal}
                         mobileNo={activeItem.userPhoneNumber}
                         name={activeItem.patientName}
                         address={activeItem.address}
                         updateActiveItem={updateActiveItem}
                         products={activeItem.products}
+                        image={activeItem.image_url}
+                        bill={activeItem.bill}
                     />
                     : null
             }

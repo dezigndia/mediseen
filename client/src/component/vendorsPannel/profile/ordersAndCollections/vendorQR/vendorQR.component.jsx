@@ -10,8 +10,9 @@ import FormControl from '@material-ui/core/FormControl';
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
 const VendorQR = ({ showVendorQRTab, goBackToOrdersPage, cost, updateActiveItem }) => {
-    const [value, setValue] = useState(`Rs. ${cost} UPI received`);
     const businessName = useSelector(state => state.currentVendor.businessName);
+    const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
+    const [value, setValue] = useState(`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`);
 
     const handleChange = (event) => {
         setValue(event.target.value);
@@ -40,14 +41,14 @@ const VendorQR = ({ showVendorQRTab, goBackToOrdersPage, cost, updateActiveItem 
                     <FormControl component="fieldset">
                         <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
                             <FormControlLabel
-                                value={`Rs. ${cost} UPI received`}
+                                value={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`}
                                 control={<Radio />}
-                                label={`Rs. ${cost} UPI received`}
+                                label={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`}
                             />
                             <FormControlLabel
-                                value={`Rs. ${cost} Cash received`}
+                                value={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} Cash received`}
                                 control={<Radio />}
-                                label={`Rs. ${cost} Cash received`}
+                                label={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} Cash received`}
                             />
                         </RadioGroup>
                     </FormControl>

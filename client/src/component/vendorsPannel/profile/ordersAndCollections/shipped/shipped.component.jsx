@@ -10,7 +10,7 @@ import Delivered from './delivered/delivered.component';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem }) => {
+const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem, bill }) => {
     const [showDeliverTab, setShowDeliverTab] = useState(false);
     const [showDeclineTab, setShowDeclineTab] = useState(false);
 
@@ -19,7 +19,7 @@ const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             <OrderDetails {...{ orderNo, orderDate, orderTime, paymentMethod, status }} />
             <hr />
             <div className='vendorPopupShippedInvoice'>
-                <img src='https://i1.wp.com/www.thegoldprojectblog.com/wp-content/uploads/2016/01/medical-bill-payment-tracker.png' alt='bill/invoice' />
+                {bill && <img src={bill} alt='bill/invoice' />}
             </div>
             <hr />
             <TotalCostDetails {...{ totalItems, cost }} />

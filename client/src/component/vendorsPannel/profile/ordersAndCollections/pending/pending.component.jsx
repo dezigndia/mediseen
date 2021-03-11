@@ -12,7 +12,7 @@ import DeclineTab from '../declineTab/declineTab.component';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem, products }) => {
+const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem, products, image }) => {
     const [showAcceptTab, setShowAcceptTab] = useState(false);
     const [showDeclineTab, setShowDeclineTab] = useState(false);
     const businessType = useSelector(state => state.currentVendor.businessType);
@@ -22,7 +22,10 @@ const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             <OrderDetails {...{ orderNo, orderDate, orderTime, paymentMethod, status }} />
             <hr />
             <div className='vendorPopupInvoice'>
-                <img src='https://i1.wp.com/www.thegoldprojectblog.com/wp-content/uploads/2016/01/medical-bill-payment-tracker.png' alt='bill/invoice' />
+                {image
+                    ? <img src={image} alt='bill/invoice' />
+                    : <p style={{ color: '#ccc' }}>No prescription image provided</p>
+                }
             </div>
             <hr />
             <TotalCostDetails {...{ totalItems, cost }} />
