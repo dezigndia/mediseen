@@ -41,14 +41,13 @@ const orderSchema = new mongoose.Schema(
         products: {
             type: [
                 {
-                    productId: String,
-                },
-                {
-                    qty: Number,
+                    productId: { type: String, required: true },
+                    qty: { type: Number, required: true },
                 },
             ],
             validate: [arrayLimit, "{PATH} must be of length 1"],
             required: true,
+            _id: false,
         },
         totalItems: {
             type: Number,
