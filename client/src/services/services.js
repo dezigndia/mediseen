@@ -64,6 +64,7 @@ export const UPLOAD_FILE = `${server}api/blob/upload`;
 
 //orders details
 export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`;
+export const UPDATE_ORDER_BY_ID=(id)=>`${server}api/order/update/${id}`;
 
 
 export const FILE_UPLOAD = `${server}api/blob/upload/`;
