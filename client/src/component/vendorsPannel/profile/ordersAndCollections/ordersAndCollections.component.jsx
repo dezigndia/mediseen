@@ -17,21 +17,21 @@ import { green } from '../../../../assets/globalJSS';
 import Icon from '../../../reusableComponent/icon/icon.component';
 
 //importing services
-import { GET_ORDERS_BY_BUSINESS } from '../../../../services/services';
+import { GET_ORDERS_BY_BUSINESS, UPDATE_ORDER_BY_ID } from '../../../../services/services';
 
 //importing icons
 import { FaChartBar } from 'react-icons/fa';
 import { BiRupee } from 'react-icons/bi';
 import { MdChevronRight } from 'react-icons/md';
 
-const useStyles = makeStyles((theme) => ({
+/*const useStyles = makeStyles((theme) => ({
     formControl: {
         minWidth: 120,
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
-}));
+}));*/
 
 const data = [
     { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'COD', status: 'shipped' },
@@ -45,14 +45,36 @@ const data = [
 ]
 
 const Orders = () => {
-    const classes = useStyles();
+    //const classes = useStyles();
+    const [orderList, setOrderList] = useState([]);
     const [status, setStatus] = useState('All');
-    const [switchStatus, setSwitchStatus] = useState(true);
-    const [showOrderStats, setShowOrderStats] = useState(false);
-    const [activeTab, setActiveTab] = useState(null);
-    const [activeItem, setActiveItem] = useState(null);
+    const [switchStatus, setSwitchStatus] = useState(true); //toggle switch
+    const [showOrderStats, setShowOrderStats] = useState(false);// todays and total sale popup
+    const [activeTab, setActiveTab] = useState(null);  //shipped accepted pending collected
+    const [activeItem, setActiveItem] = useState(null); // details of the oreders card which is clicked
     const businessType = useSelector(state => state.currentVendor.businessType);
     const auth_token = useSelector(state => state.token);
+
+    const updateActiveItem = (updateObject) => {
+        axios
+            .put(UPDATE_ORDER_BY_ID(activeItem._id), updateObject, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                setOrderList(prevState => {
+                    let arr = prevState;
+                    arr[activeItem.index] = res.data.payload;
+                    return [...arr];
+                })
+            })
+            .catch(err => {
+                console.log(err);
+                alert("unable to accept order");
+            });
+
+    };
 
     const handleChange = (event) => {
         setStatus(event.target.value);
@@ -79,7 +101,7 @@ const Orders = () => {
                 }
             })
             .then(res => {
-                console.log(res.data);
+                setOrderList(res.data.payload);
             })
             .catch(err => {
                 console.log(err);
@@ -145,67 +167,132 @@ const Orders = () => {
             </div>
             <div className="vendorsOrdersListContainer">
                 {
-                    data
+                    orderList
                         .filter(item => (status.toLowerCase() === 'all' || item.status.toLowerCase() === status.toLowerCase()) ? true : false)
-                        .map((item, index) => (
-                            <div className="orderListItem" key={index} onClick={(e) => { setActiveItem(item); setActiveTab(item.status); }}>
-                                <div className="orderNo">
-                                    Order No.  {item.orderNo}
-                                </div>
-                                <div className="orderDateTime">
-                                    <div className="orderDate">
-                                        {item.orderDate}
+                        .map((item, index) => {
+                            let date = new Date(item.createdAt);
+                            return (
+                                <div className="orderListItem" key={index} onClick={(e) => { setActiveItem({ ...item, index }); setActiveTab(item.status); }}>
+                                    <div className="orderNo">
+                                        Order No.  {item.orderId}
                                     </div>
-                                    <div className="orderTime">
-                                        {item.orderTime}
+                                    <div className="orderDateTime">
+                                        <div className="orderDate">
+                                            {date.getDate()}/
+                                        {date.getMonth()}/
+                                        {date.getFullYear() % 100}
+                                        </div>
+                                        <div className="orderTime">
+                                            {date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="orderTotalItems">
-                                    <p>Total Items: {item.totalItems}</p>
-                                </div>
-                                <div className="orderCost">
-                                    <Icon noRippleEffect size='20px'>
-                                        <BiRupee />
-                                    </Icon>
-                                    <p>{item.cost}</p>
-                                </div>
-                                <div className="orderPaymentMethod">
-                                    {item.paymentMethod}
-                                </div>
-                                <div className={`orderStatus ${item.status}`}>
-                                    {item.status}
-                                </div>
-                                <div className="orderDetails">
-                                    <p>Details</p>
-                                    <div>
-                                        <Icon noRippleEffect>
-                                            <MdChevronRight size='20px' />
+                                    <div className="orderTotalItems">
+                                        <p>Total Items: {item.products && item.products.length}</p>
+                                    </div>
+                                    <div className="orderCost">
+                                        <Icon noRippleEffect size='20px'>
+                                            <BiRupee />
                                         </Icon>
+                                        <p>{item.grandTotal}</p>
                                     </div>
+                                    <div className="orderPaymentMethod">
+                                        {item.address && item.address.payment}
+                                    </div>
+                                    <div className={`orderStatus ${item.status}`}>
+                                        {item.status}
+                                    </div>
+                                    <div className="orderDetails">
+                                        <p>Details</p>
+                                        <div>
+                                            <Icon noRippleEffect>
+                                                <MdChevronRight size='20px' />
+                                            </Icon>
+                                        </div>
+                                    </div>
+                                    <div className='horizontalRule' />
                                 </div>
-                                <div className='horizontalRule' />
-                            </div>
-                        ))
+                            )
+                        })
                 }
             </div>
             {
                 (activeTab === 'shipped' || activeTab === 'Shipped') && businessType === 'pharmacy'
-                    ? <Shipped setActiveTabNull={setActiveTabNull} {...activeItem} />
+                    ? <Shipped
+                        setActiveTabNull={setActiveTabNull}
+                        {...activeItem}
+                        orderNo={activeItem.orderId}
+                        orderDate={`${(new Date(activeItem.createdAt).getDate())}/${(new Date(activeItem.createdAt).getMonth())}/${(new Date(activeItem.createdAt).getFullYear() % 100)}`}
+                        orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                        paymentMethod={activeItem.address && activeItem.address.payment}
+                        status={activeItem.status}
+                        totalItems={activeItem.products && activeItem.products.length}
+                        cost={activeItem.grandTotal}
+                        mobileNo={activeItem.userPhoneNumber}
+                        name={activeItem.patientName}
+                        address={activeItem.address}
+                        updateActiveItem={updateActiveItem}
+                        products={activeItem.products}
+                    />
                     : null
             }
             {
                 activeTab === 'accepted' || activeTab === 'Accepted'
-                    ? <Accepted setActiveTabNull={setActiveTabNull} {...activeItem} />
+                    ? <Accepted
+                        setActiveTabNull={setActiveTabNull}
+                        {...activeItem}
+                        orderNo={activeItem.orderId}
+                        orderDate={`${(new Date(activeItem.createdAt).getDate())}/${(new Date(activeItem.createdAt).getMonth())}/${(new Date(activeItem.createdAt).getFullYear() % 100)}`}
+                        orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                        paymentMethod={activeItem.address && activeItem.address.payment}
+                        status={activeItem.status}
+                        totalItems={activeItem.products && activeItem.products.length}
+                        cost={activeItem.grandTotal}
+                        mobileNo={activeItem.userPhoneNumber}
+                        name={activeItem.patientName}
+                        address={activeItem.address}
+                        updateActiveItem={updateActiveItem}
+                        products={activeItem.products}
+                    />
                     : null
             }
             {
                 activeTab === 'pending' || activeTab === 'Pending'
-                    ? <Pending setActiveTabNull={setActiveTabNull} {...activeItem} />
+                    ? <Pending
+                        setActiveTabNull={setActiveTabNull}
+                        {...activeItem}
+                        orderNo={activeItem.orderId}
+                        orderDate={`${(new Date(activeItem.createdAt).getDate())}/${(new Date(activeItem.createdAt).getMonth())}/${(new Date(activeItem.createdAt).getFullYear() % 100)}`}
+                        orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                        paymentMethod={activeItem.address && activeItem.address.payment}
+                        status={activeItem.status}
+                        totalItems={activeItem.products && activeItem.products.length}
+                        cost={activeItem.grandTotal}
+                        mobileNo={activeItem.userPhoneNumber}
+                        name={activeItem.patientName}
+                        address={activeItem.address}
+                        updateActiveItem={updateActiveItem}
+                        products={activeItem.products}
+                    />
                     : null
             }
             {
                 (activeTab === 'collected' || activeTab === 'Collected') && businessType === 'pathology'
-                    ? <Collected setActiveTabNull={setActiveTabNull} {...activeItem} />
+                    ? <Collected
+                        setActiveTabNull={setActiveTabNull}
+                        {...activeItem}
+                        orderNo={activeItem.orderId}
+                        orderDate={`${(new Date(activeItem.createdAt).getDate())}/${(new Date(activeItem.createdAt).getMonth())}/${(new Date(activeItem.createdAt).getFull() % 100)}`}
+                        orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                        paymentMethod={activeItem.address && activeItem.address.payment}
+                        status={activeItem.status}
+                        totalItems={activeItem.products && activeItem.products.length}
+                        cost={activeItem.grandTotal}
+                        mobileNo={activeItem.userPhoneNumber}
+                        name={activeItem.patientName}
+                        address={activeItem.address}
+                        updateActiveItem={updateActiveItem}
+                        products={activeItem.products}
+                    />
                     : null
             }
         </div >

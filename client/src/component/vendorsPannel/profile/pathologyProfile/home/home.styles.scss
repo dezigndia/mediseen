@@ -22,7 +22,7 @@ $margin-top:15px;
 
         .testsAdded {
             height: 50%;
-            width: 50%;
+            width: Min(100%, 500px);
             background-color: white;
             box-shadow: 0 0 5px white;
             display: flex;

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AcceptTab = ({ setShowAcceptTab, setActiveTabNull }) => {
+const AcceptTab = ({ setShowAcceptTab, setActiveTabNull, updateActiveItem, products }) => {
     const staff = useSelector(state => state.currentVendor.staffs);
     const [collectionBoy, setCollectionBoy] = useState(null);
 
@@ -96,6 +96,7 @@ const AcceptTab = ({ setShowAcceptTab, setActiveTabNull }) => {
                     <button
                         className='greenButton'
                         onClick={(e) => {
+                            updateActiveItem({status:'accepted'});
                             setShowAcceptTab(false);
                             setActiveTabNull();//go back to orders page
                         }}

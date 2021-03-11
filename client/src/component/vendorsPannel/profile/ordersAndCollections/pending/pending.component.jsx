@@ -12,7 +12,7 @@ import DeclineTab from '../declineTab/declineTab.component';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost }) => {
+const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem, products }) => {
     const [showAcceptTab, setShowAcceptTab] = useState(false);
     const [showDeclineTab, setShowDeclineTab] = useState(false);
     const businessType = useSelector(state => state.currentVendor.businessType);
@@ -27,24 +27,24 @@ const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             <hr />
             <TotalCostDetails {...{ totalItems, cost }} />
             <hr />
-            <CustomerDetails />
+            <CustomerDetails {...{ name, mobileNo, address }} />
             <div className="vendorPopupButtons">
                 <button className='whiteButton' onClick={(e) => setShowDeclineTab(true)}>Decline</button>
                 <button className='greenButton' onClick={(e) => setShowAcceptTab(true)}>Accept</button>
             </div>
             {
                 showAcceptTab && businessType === 'pharmacy'
-                    ? <AcceptTabDelivery {...{ setShowAcceptTab, setActiveTabNull }} />
+                    ? <AcceptTabDelivery {...{ setShowAcceptTab, setActiveTabNull, updateActiveItem, products }} />
                     : null
             }
             {
                 showAcceptTab && businessType === 'pathology'
-                    ? <AcceptTabCollection {...{ setShowAcceptTab, setActiveTabNull }} />
+                    ? <AcceptTabCollection {...{ setShowAcceptTab, setActiveTabNull, updateActiveItem, products }} />
                     : null
             }
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem }} />
                     : null
             }
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import './totalCostDetails.styles.scss';
 
 //importing icon
@@ -8,6 +9,8 @@ import { BiRupee } from 'react-icons/bi';
 import Icon from '../../../../reusableComponent/icon/icon.component';
 
 const TotalCostDetails = ({ totalItems, cost }) => {
+    const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
+    
     return (
         <div className="vendorTotalCostDetails">
             <div className="vendorPopupTotalItems">
@@ -17,7 +20,7 @@ const TotalCostDetails = ({ totalItems, cost }) => {
                         <BiRupee />
                     </Icon>
                     <p>
-                        {cost}.00
+                        {cost}
                     </p>
                 </div>
             </div>
@@ -28,7 +31,7 @@ const TotalCostDetails = ({ totalItems, cost }) => {
                         <BiRupee />
                     </Icon>
                     <p>
-                        40.00
+                        {deliveryDetails && deliveryDetails.deliveryCharges}
                     </p>
                 </div>
             </div>
@@ -39,7 +42,7 @@ const TotalCostDetails = ({ totalItems, cost }) => {
                         <BiRupee />
                     </Icon>
                     <p>
-                        {cost + 40}.00
+                        {cost + (deliveryDetails && deliveryDetails.deliveryCharges)}
                     </p>
                 </div>
             </div>
