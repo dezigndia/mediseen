@@ -60,12 +60,12 @@ const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMeth
             </div>
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem, name, mobileNo, address }} />
                     : null
             }
             {
                 showDeliverCollectionTab && businessType === 'pharmacy'
-                    ? <Delivery {...{ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem }} />
+                    ? <Delivery {...{ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem, cost }} />
                     : null
             }
             {

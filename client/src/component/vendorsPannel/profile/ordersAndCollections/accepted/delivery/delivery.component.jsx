@@ -20,10 +20,11 @@ const useStyles = makeStyles((theme) => ({
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem }) => {
+const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem, cost }) => {
     const [deliveryBoy, setDeliveryBoy] = useState(null);
     const staff = useSelector(state => state.currentVendor.staffs);
     const businessType = useSelector(state => state.currentVendor.businessType);
+    const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
 
     const handleChange = (event) => {
         setDeliveryBoy(event.target.value);
@@ -89,7 +90,7 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveI
                         <p>Grand total:</p>
                     </div>
                     <div>
-                        {300}
+                        {cost + (deliveryDetails && deliveryDetails.deliveryCharges)}
                     </div>
                 </div>
                 <div className="vendorPopupAcceptedDeliveryActions">

@@ -13,7 +13,7 @@ const height = window.innerHeight - (window.innerHeight / 100) * 20;
 const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem }) => {
     const [showDeliverTab, setShowDeliverTab] = useState(false);
     const [showDeclineTab, setShowDeclineTab] = useState(false);
- 
+
     return (
         <div className="shippedOrders" style={{ '--height': `${height}px` }}>
             <OrderDetails {...{ orderNo, orderDate, orderTime, paymentMethod, status }} />
@@ -36,7 +36,7 @@ const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             }
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, cost, orderNo, updateActiveItem }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, cost, orderNo, updateActiveItem, name, mobileNo, address }} />
                     : null
             }
         </div>

@@ -48,7 +48,7 @@ const Orders = () => {
     //const classes = useStyles();
     const [orderList, setOrderList] = useState([]);
     const [status, setStatus] = useState('All');
-    const [switchStatus, setSwitchStatus] = useState(true); //toggle switch
+    const [switchStatus, setSwitchStatus] = useState(false); //toggle switch
     const [showOrderStats, setShowOrderStats] = useState(false);// todays and total sale popup
     const [activeTab, setActiveTab] = useState(null);  //shipped accepted pending collected
     const [activeItem, setActiveItem] = useState(null); // details of the oreders card which is clicked
@@ -64,8 +64,8 @@ const Orders = () => {
             })
             .then(res => {
                 setOrderList(prevState => {
-                    let arr = prevState;
-                    arr[activeItem.index] = res.data.payload;
+                    let arr = [...prevState];
+                    arr[activeItem.index].status = updateObject.status;
                     return [...arr];
                 })
             })
@@ -128,19 +128,28 @@ const Orders = () => {
                     </div>
                 </div>
             </div>
-            <div style={{ textAlign: 'left', position: 'relative', left: '-10px' }}>
+            {/*<div style={{ textAlign: 'left', position: 'relative', left: '-10px' }}>
                 <Switch
                     checked={switchStatus}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox', 'title': 'tun off booking for one day' }}
                     onChange={toggleSwitch}
+                    color='black'
                 />
-            </div>
+                </div>*/}
             <div className='vendorsOrderHeader' >
-                <div>
-                    <Icon iconColor='rgb(133, 133, 133)' onClick={toggleOrderStats}>
-                        <FaChartBar />
-                    </Icon>
+                <div style={{ display: 'flex', alignItems: 'center', paddingTop: '5px' }}>
+                    <Switch
+                        checked={switchStatus}
+                        name="checkedA"
+                        inputProps={{ 'aria-label': 'secondary checkbox', 'title': 'tun off booking for one day' }}
+                        onChange={toggleSwitch}
+                    />
+                    <div>
+                        <Icon iconColor='rgb(133, 133, 133)' onClick={toggleOrderStats}>
+                            <FaChartBar />
+                        </Icon>
+                    </div>
                 </div>
                 <select
                     labelId="demo-simple-select-label"
@@ -167,52 +176,68 @@ const Orders = () => {
             </div>
             <div className="vendorsOrdersListContainer">
                 {
-                    orderList
-                        .filter(item => (status.toLowerCase() === 'all' || item.status.toLowerCase() === status.toLowerCase()) ? true : false)
-                        .map((item, index) => {
-                            let date = new Date(item.createdAt);
-                            return (
-                                <div className="orderListItem" key={index} onClick={(e) => { setActiveItem({ ...item, index }); setActiveTab(item.status); }}>
-                                    <div className="orderNo">
-                                        Order No.  {item.orderId}
-                                    </div>
-                                    <div className="orderDateTime">
-                                        <div className="orderDate">
-                                            {date.getDate()}/
+                    orderList.length > 0
+                        ? orderList
+                            .filter(item => (status.toLowerCase() === 'all' || item.status.toLowerCase() === status.toLowerCase()) ? true : false)
+                            .map((item, index) => {
+                                let date = new Date(item.createdAt);
+                                return (
+                                    <div className="orderListItem" key={index} onClick={(e) => { setActiveItem({ ...item, index }); setActiveTab(item.status); }}>
+                                        <div className="orderNo">
+                                            Order No.  {item.orderId}
+                                        </div>
+                                        <div className="orderDateTime">
+                                            <div className="orderDate">
+                                                {date.getDate()}/
                                         {date.getMonth()}/
                                         {date.getFullYear() % 100}
+                                            </div>
+                                            <div className="orderTime">
+                                                {date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                                            </div>
                                         </div>
-                                        <div className="orderTime">
-                                            {date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                                        <div className="orderTotalItems">
+                                            <p>Total Items: {item.products && item.products.length}</p>
                                         </div>
-                                    </div>
-                                    <div className="orderTotalItems">
-                                        <p>Total Items: {item.products && item.products.length}</p>
-                                    </div>
-                                    <div className="orderCost">
-                                        <Icon noRippleEffect size='20px'>
-                                            <BiRupee />
-                                        </Icon>
-                                        <p>{item.grandTotal}</p>
-                                    </div>
-                                    <div className="orderPaymentMethod">
-                                        {item.address && item.address.payment}
-                                    </div>
-                                    <div className={`orderStatus ${item.status}`}>
-                                        {item.status}
-                                    </div>
-                                    <div className="orderDetails">
-                                        <p>Details</p>
-                                        <div>
-                                            <Icon noRippleEffect>
-                                                <MdChevronRight size='20px' />
+                                        <div className="orderCost">
+                                            <Icon noRippleEffect size='20px'>
+                                                <BiRupee />
                                             </Icon>
+                                            <p>{item.grandTotal}</p>
                                         </div>
+                                        <div className="orderPaymentMethod">
+                                            {item.address && item.address.payment}
+                                        </div>
+                                        <div className={`orderStatus ${item.status}`}>
+                                            {item.status}
+                                        </div>
+                                        <div className="orderDetails">
+                                            <p>Details</p>
+                                            <div>
+                                                <Icon noRippleEffect>
+                                                    <MdChevronRight size='20px' />
+                                                </Icon>
+                                            </div>
+                                        </div>
+                                        <div className='horizontalRule' />
                                     </div>
-                                    <div className='horizontalRule' />
-                                </div>
-                            )
-                        })
+                                )
+                            })
+                        : <p
+                            style={{
+                                border: '1px solid #ccc',
+                                padding: '20px',
+                                width: '300px',
+                                'font-weight': 'bold',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%,-50%)',
+                                'font-size':'2em',
+                                color:'rgba(0,0,0,.6)'
+                            }}>
+                            No Orders
+                        </p>
                 }
             </div>
             {

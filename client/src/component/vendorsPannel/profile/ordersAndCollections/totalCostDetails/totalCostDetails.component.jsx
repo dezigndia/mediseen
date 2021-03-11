@@ -10,7 +10,8 @@ import Icon from '../../../../reusableComponent/icon/icon.component';
 
 const TotalCostDetails = ({ totalItems, cost }) => {
     const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
-    
+    const collectionDetails = useSelector(state => state.currentVendor);
+
     return (
         <div className="vendorTotalCostDetails">
             <div className="vendorPopupTotalItems">

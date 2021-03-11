@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import './declineTab.styles.scss';
 
 import Radio from '@material-ui/core/Radio';
@@ -17,9 +18,12 @@ import { BiRupee } from 'react-icons/bi';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem }) => {
+const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem, name, mobileNo, address }) => {
     const [value, setValue] = React.useState('Order items are not available');
+    const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
+    const collectionDetails = useSelector(state => state.currentVendor);
 
+    //radio buttons
     const handleChange = (event) => {
         setValue(event.target.value);
     };
@@ -32,7 +36,7 @@ const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost, update
                     <p>Order No. {orderNo}</p>
                 </div>
                 <hr />
-                <CustomerDetails small />
+                <CustomerDetails small {...{ name, mobileNo, address }} />
                 <div className='vendorPopupGrandTotalCost'>
                     <div>
                         <p>Grand Total</p>
@@ -44,7 +48,7 @@ const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost, update
                             </Icon>
                         </div>
                         <div>
-                            <p>{cost}</p>
+                            <p>{cost + (deliveryDetails && deliveryDetails.deliveryCharges)}</p>
                         </div>
                     </div>
                 </div>

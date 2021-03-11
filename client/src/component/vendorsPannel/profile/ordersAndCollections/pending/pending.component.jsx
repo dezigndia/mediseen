@@ -44,7 +44,7 @@ const Pending = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             }
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem, name, mobileNo, address }} />
                     : null
             }
         </div>
