@@ -9,6 +9,7 @@ router.get("/find/all", testController.getAllTests)
 router.get("/find/business", authenticate(), testController.getTestsByBusiness)
 router.put("/update/:id", authenticate(), testController.updateTestByID)
 router.get("/find/id/:id", testController.getTestById)
+router.post("/find/bulk", testController.getBulkTestsById)
 
 module.exports = router
 

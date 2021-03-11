@@ -73,6 +73,16 @@ class TestController {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error fetching test")
         }
     })
+    getBulkTestsById = expressAsyncHandler(async (req, res) => {
+        const { ids } = req.body
+        const data = await testService.getBulkTestsById(ids)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Error fetching tests")
+        }
+    })
 }
 
 module.exports = TestController

@@ -51,5 +51,8 @@ class TestService {
         if (!test) new AppError(StatusCodes.NOT_FOUND, "No test found with given Id")
         else return test
     })
+    getBulkTestsById = expressAsyncHandler(async ids => {
+        return await Test.find({ _id: { $in: ids } })
+    })
 }
 module.exports = TestService
