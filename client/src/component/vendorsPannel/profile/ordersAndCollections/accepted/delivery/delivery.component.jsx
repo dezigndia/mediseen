@@ -20,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull }) => {
+const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem }) => {
     const [deliveryBoy, setDeliveryBoy] = useState(null);
     const staff = useSelector(state => state.currentVendor.staffs);
+    const businessType = useSelector(state => state.currentVendor.businessType);
 
     const handleChange = (event) => {
         setDeliveryBoy(event.target.value);
@@ -38,11 +39,25 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull }) => {
                 </div>
                 <div className='vendorPopupAcceptedDeliveryBoyAssignment'>
                     <div>
-                        <p>Assign collection agent</p>
+                        <p>
+                            Assign
+                            {
+                                businessType === 'pathology'
+                                    ? <> collecion </>
+                                    : <> delivery </>
+                            }
+                            agent
+                        </p>
                     </div>
                     <div>
                         <FormControl className={classes.formControl}>
-                            <InputLabel id="demo-simple-Deliver-label">Collecion Boy</InputLabel>
+                            <InputLabel id="demo-simple-Deliver-label">
+                                {
+                                    businessType === 'pathology'
+                                        ? <>Collecion Boy</>
+                                        : <>Delivery Boy</>
+                                }
+                            </InputLabel>
                             <Select
                                 labelId="assign-delivery-boy"
                                 id="assign-delivery-boy"
@@ -89,6 +104,7 @@ const Delivery = ({ setShowDeliverCollectionTab, setActiveTabNull }) => {
                     <button
                         className='greenButton'
                         onClick={(e) => {
+                            updateActiveItem({ status: 'shipped' });
                             setShowDeliverCollectionTab(false);
                             setActiveTabNull();//go back to orders page
                         }}

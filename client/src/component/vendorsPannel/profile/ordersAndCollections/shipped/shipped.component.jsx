@@ -10,9 +10,10 @@ import Delivered from './delivered/delivered.component';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost }) => {
+const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem }) => {
     const [showDeliverTab, setShowDeliverTab] = useState(false);
     const [showDeclineTab, setShowDeclineTab] = useState(false);
+ 
     return (
         <div className="shippedOrders" style={{ '--height': `${height}px` }}>
             <OrderDetails {...{ orderNo, orderDate, orderTime, paymentMethod, status }} />
@@ -23,19 +24,19 @@ const Shipped = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMetho
             <hr />
             <TotalCostDetails {...{ totalItems, cost }} />
             <hr />
-            <CustomerDetails />
+            <CustomerDetails {...{ name, mobileNo, address }} />
             <div className="vendorPannelShippedActions">
                 <button className='whiteButton' onClick={(e) => setShowDeclineTab(true)}>Decline</button>
                 <button className='greenButton' onClick={(e) => setShowDeliverTab(true)}>Deliver</button>
             </div>
             {
                 showDeliverTab
-                    ? <Delivered {...{ setShowDeliverTab, setActiveTabNull, cost, orderNo }} />
+                    ? <Delivered {...{ setShowDeliverTab, setActiveTabNull, cost, orderNo, updateActiveItem }} />
                     : null
             }
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, cost, orderNo }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, cost, orderNo, updateActiveItem }} />
                     : null
             }
         </div>

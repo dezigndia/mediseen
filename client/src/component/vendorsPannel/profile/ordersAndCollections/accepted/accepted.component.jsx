@@ -20,7 +20,7 @@ const data = [
     { name: 'multi vitamin', pack: 10, mrp: 30, total: 300 }
 ]
 
-const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost }) => {
+const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem }) => {
     const [showDeliverCollectionTab, setShowDeliverCollectionTab] = useState(false);
     const [showDeclineTab, setShowDeclineTab] = useState(false);
     const businessType = useSelector(state => state.currentVendor.businessType);
@@ -50,7 +50,7 @@ const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMeth
             <hr />
             <TotalCostDetails {...{ totalItems, cost }} />
             <hr />
-            <CustomerDetails />
+            <CustomerDetails {...{ name, mobileNo, address }} />
             <div className="vendorPopupAcceptedActions">
                 <button className='whiteButton' onClick={(e) => setShowDeclineTab(true)}>Decline</button>
                 <button className='greenButton' onClick={(e) => setShowDeliverCollectionTab(true)}>
@@ -60,17 +60,17 @@ const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMeth
             </div>
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost }} />
+                    ? <DeclineTab {...{ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem }} />
                     : null
             }
             {
                 showDeliverCollectionTab && businessType === 'pharmacy'
-                    ? <Delivery {...{ setShowDeliverCollectionTab, setActiveTabNull }} />
+                    ? <Delivery {...{ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem }} />
                     : null
             }
             {
                 showDeliverCollectionTab && businessType === 'pathology'
-                    ? <Collection {...{ setShowDeliverCollectionTab, setActiveTabNull }} />
+                    ? <Collection {...{ setShowDeliverCollectionTab, setActiveTabNull, updateActiveItem, cost }} />
                     : null
             }
         </div>

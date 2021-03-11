@@ -17,7 +17,7 @@ import { BiRupee } from 'react-icons/bi';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost }) => {
+const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost, updateActiveItem }) => {
     const [value, setValue] = React.useState('Order items are not available');
 
     const handleChange = (event) => {
@@ -87,6 +87,7 @@ const DeclineTab = ({ setShowDeclineTab, setActiveTabNull, orderNo, cost }) => {
                     <button
                         className='redButton'
                         onClick={(e) => {
+                            updateActiveItem({ status: 'cancelled' });
                             e.stopPropagation();
                             setShowDeclineTab(false);
                             setActiveTabNull();//go back to orders page

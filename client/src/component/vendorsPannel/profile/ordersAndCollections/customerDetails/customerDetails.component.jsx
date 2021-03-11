@@ -10,7 +10,7 @@ import { IoLogoWhatsapp } from 'react-icons/io';
 //importing reusable components
 import Icon from '../../../../reusableComponent/icon/icon.component';
 
-const Customerdetails = ({ orderId, small }) => {
+const Customerdetails = ({ name, mobileNo, address, small }) => {
     const hidden = useMemo(() => ({ display: small ? 'none' : 'flex' }), [small]);
     return (
         <div className="orderCustomerDetails">
@@ -19,15 +19,15 @@ const Customerdetails = ({ orderId, small }) => {
                     <p>Customer Detail</p>
                 </div>
                 <div>
-                    <p>Eat Delivery Timing: 23min</p>
+                    <p>Est Delivery Timing: 23min</p>
                 </div>
             </div>
             <div className={`vendorPopupNamePhoneChat ${small ? 'justifyFlexStart' : null}`}>
                 <div className="vendorPopupCustomerName">
-                    <p>Sunjoy Ghosh</p>
+                    <p>{name}</p>
                 </div>
                 <div className="vendorPopupCustomerPhone">
-                    <p>+919928735840</p>
+                    <p>{mobileNo}</p>
                 </div>
                 <div className="vendorPopupCustomerChat" style={hidden}>
                     <Icon iconColor={green} size='25px'>
@@ -37,10 +37,10 @@ const Customerdetails = ({ orderId, small }) => {
             </div>
             <div className="vendorPopupCustomerAddress">
                 <div className="vendorPopupCustomerHomeAddress">
-                    <p>Lal Gate, Talwar Line , Quater no. 261/1, Dehradun</p>
+                    <p>{address && address.area}, {address && address.city}, {address && address.state}, {address && address.country}</p>
                 </div>
                 <div className="vendorPopupCustomerPincode">
-                    <p>Pincode: 248003</p>
+                    <p>Pincode: {address && address.pincode}</p>
                 </div>
             </div>
         </div>

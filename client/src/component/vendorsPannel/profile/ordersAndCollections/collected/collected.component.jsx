@@ -15,7 +15,7 @@ import { ImAttachment } from 'react-icons/im';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const Collected = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost }) => {
+const Collected = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMethod, status, totalItems, cost, name, mobileNo, address, updateActiveItem }) => {
     const [showDeclineTab, setShowDeclineTab] = useState(false);
     return (
         <div className="collectedOrders" style={{ '--height': `${height}px` }}>
@@ -36,14 +36,19 @@ const Collected = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMet
             <hr />
             <TotalCostDetails {...{ totalItems, cost }} />
             <hr />
-            <CustomerDetails />
+            <CustomerDetails {...{ name, mobileNo, address }} />
             <div className="vendorPopupButtons">
                 <button className='whiteButton' onClick={(e) => setShowDeclineTab(true)}>Refund</button>
-                <button className='greenButton' onClick={(e) => setActiveTabNull()}>Deliver</button>
+                <button className='greenButton' onClick={(e) => {
+                    updateActiveItem({ status: 'collected' })
+                    setActiveTabNull()
+                }}>
+                    Collect
+                </button>
             </div>
             {
                 showDeclineTab
-                    ? <DeclineTab {...{ setActiveTabNull, setShowDeclineTab }} />
+                    ? <DeclineTab {...{ setActiveTabNull, setShowDeclineTab, updateActiveItem, orderNo, cost }} />
                     : null
             }
         </div>

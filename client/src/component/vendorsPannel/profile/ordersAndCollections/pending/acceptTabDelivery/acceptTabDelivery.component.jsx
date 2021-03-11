@@ -3,7 +3,7 @@ import './acceptTabDelivery.styles.scss';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const AcceptTabDelivery = ({ setShowAcceptTab, setActiveTabNull }) => {
+const AcceptTabDelivery = ({ setShowAcceptTab, setActiveTabNull, updateActiveItem }) => {
     return (
         <div className="vendorPopupPendingAcceptTabContainer" style={{ '--height': `${height}px` }}>
             <div className="vendorPopupPendingAcceptTab">
@@ -26,6 +26,7 @@ const AcceptTabDelivery = ({ setShowAcceptTab, setActiveTabNull }) => {
                         className='greenButton'
                         onClick={(e) => {
                             e.stopPropagation();
+                            updateActiveItem({ status: 'accepted' });
                             setShowAcceptTab(false); //closes this tab
                             setActiveTabNull(); //get back to orders page
                         }}

@@ -9,8 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
-const VendorQR = ({ showVendorQRTab, goBackToOrdersPage }) => {
-    const [value, setValue] = useState('Rs. 300 UPI received');
+const VendorQR = ({ showVendorQRTab, goBackToOrdersPage, cost, updateActiveItem }) => {
+    const [value, setValue] = useState(`Rs. ${cost} UPI received`);
     const businessName = useSelector(state => state.currentVendor.businessName);
 
     const handleChange = (event) => {
@@ -40,14 +40,14 @@ const VendorQR = ({ showVendorQRTab, goBackToOrdersPage }) => {
                     <FormControl component="fieldset">
                         <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
                             <FormControlLabel
-                                value={`Rs. 300 UPI received`}
+                                value={`Rs. ${cost} UPI received`}
                                 control={<Radio />}
-                                label={`Rs. 300 UPI received`}
+                                label={`Rs. ${cost} UPI received`}
                             />
                             <FormControlLabel
-                                value={`Rs. 300 Cash received`}
+                                value={`Rs. ${cost} Cash received`}
                                 control={<Radio />}
-                                label={`Rs. 300 Cash received`}
+                                label={`Rs. ${cost} Cash received`}
                             />
                         </RadioGroup>
                     </FormControl>
@@ -64,6 +64,7 @@ const VendorQR = ({ showVendorQRTab, goBackToOrdersPage }) => {
                     <button
                         className='greenButton'
                         onClick={(e) => {
+                            updateActiveItem({ status: 'delivered' });
                             showVendorQRTab(false);
                             goBackToOrdersPage();//getting back to order page
                         }}

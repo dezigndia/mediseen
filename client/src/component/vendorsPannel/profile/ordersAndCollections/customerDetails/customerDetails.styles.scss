@@ -25,12 +25,12 @@
     }
 
     .vendorPopupCustomerAddress {
-        flex-wrap: wrap;
+        display: block;
         text-align: left;
         color: rgb(133, 133, 133);
 
         &>div {
-            margin: 2px 0;
+            margin: 5px 0;
         }
     }
 }
