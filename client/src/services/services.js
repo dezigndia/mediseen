@@ -42,7 +42,7 @@ export const ADD_BULK_PRODUCTS = `${server}api/product/create/batch`;
 export const GET_BOLK_PRODUCTS = `${server}api`;
 export const ADD_BULK_TEST = `${server}api/test/create/batch`;
 export const GET_BULK_PRODUCTS = `${server}api/product/find/bulk`;
-export const GET_BULK_TESTS = `${server}api/tests/find/bulk`;
+export const GET_BULK_TESTS = `${server}api/test/find/bulk`;
 export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
 export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
 

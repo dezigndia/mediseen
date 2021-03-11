@@ -10,7 +10,8 @@ import Icon from '../../../../reusableComponent/icon/icon.component';
 
 const TotalCostDetails = ({ totalItems, cost }) => {
     const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
-    const collectionDetails = useSelector(state => state.currentVendor);
+    const collectionDetails = useSelector(state => state.currentVendor.collections);
+    const businessType = useSelector(state => state.currentVendor.businessType);
 
     return (
         <div className="vendorTotalCostDetails">
@@ -31,9 +32,15 @@ const TotalCostDetails = ({ totalItems, cost }) => {
                     <Icon>
                         <BiRupee />
                     </Icon>
-                    <p>
-                        {deliveryDetails && deliveryDetails.deliveryCharges}
-                    </p>
+                    {
+                        businessType === 'pharmacy'
+                            ? <p>
+                                {deliveryDetails && deliveryDetails.deliveryCharges}
+                            </p>
+                            : <p>
+                                {collectionDetails && collectionDetails.collectionChargesPerVisit}
+                            </p>
+                    }
                 </div>
             </div>
             <div className="vendorPopupTotalCharges">
@@ -42,9 +49,15 @@ const TotalCostDetails = ({ totalItems, cost }) => {
                     <Icon>
                         <BiRupee />
                     </Icon>
-                    <p>
-                        {cost + (deliveryDetails && deliveryDetails.deliveryCharges)}
-                    </p>
+                    {
+                        businessType === 'pharmacy'
+                            ? <p>
+                                {cost + (deliveryDetails && deliveryDetails.deliveryCharges)}
+                            </p>
+                            : <p>
+                                {cost + (collectionDetails && collectionDetails.collectionChargesPerVisit)}
+                            </p>
+                    }
                 </div>
             </div>
         </div>

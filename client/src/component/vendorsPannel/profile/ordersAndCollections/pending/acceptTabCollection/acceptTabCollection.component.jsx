@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 import './acceptTabCollection.styles.scss';
 import { Switch, FormControl, InputLabel, Select, makeStyles, MenuItem } from '@material-ui/core';
 
 //importing reusable components
 import InputWithIcon from '../../../../../reusableComponent/InputwithIcon/inputWithIcon.component';
+
+//importing services
+import { GET_BULK_TESTS } from '../../../../../../services/services';
 
 const height = window.innerHeight - (window.innerHeight / 100) * 20;
 
@@ -25,7 +29,26 @@ const useStyles = makeStyles((theme) => ({
 
 const AcceptTab = ({ setShowAcceptTab, setActiveTabNull, updateActiveItem, products }) => {
     const staff = useSelector(state => state.currentVendor.staffs);
-    const [collectionBoy, setCollectionBoy] = useState(null);
+    const auth_token = useSelector(state => state.token);
+    const [collectionBoy, setCollectionBoy] = useState(staff[0].name);
+    const [testsList, setTestLists] = useState([]);
+
+    useEffect(() => {
+        const productId = products.map(item => item.productId);
+        axios
+            .post(GET_BULK_TESTS, { ids: productId }, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                setTestLists(res.data.payload)
+            })
+            .catch(err => {
+                console.log(err);
+                alert('unable to fetch products list');
+            });
+    }, [products])
 
     const handleChange = (event) => {
         setCollectionBoy(event.target.value);
@@ -42,17 +65,25 @@ const AcceptTab = ({ setShowAcceptTab, setActiveTabNull, updateActiveItem, produ
                 <div className="vendorPopupPendingAcceptTabItemList">
                     <div className="vendorPopupPendingAcceptTabItemListHeaders">
                         <div>Name</div>
-                        <div>Pack</div>
-                        <div>MRP</div>
+                        <div>Qty</div>
+                        <div>Price</div>
                         <div>Total</div>
                     </div>
                     {
-                        data.map((item, index) => (
+                        testsList.map((item, index) => (
                             <div className="vendorPopupPendingAcceptTabItemListItem" key={index}>
                                 <div>{item.name}</div>
-                                <div>{item.pack}</div>
-                                <div>{item.mrp}</div>
-                                <div>{item.total}</div>
+                                <div>{products[index].qty}</div>
+                                <div>
+                                    {
+                                        item.hasDiscount
+                                            ? <>
+                                                <strike style={{ color: '#ccc', marginRight: '5px' }}>{item.mrp}</strike>{item.sellingPrice}
+                                            </>
+                                            : <>item.sellingPrice</>
+                                    }
+                                </div>
+                                <div>{products[index].qty * item.sellingPrice}</div>
                             </div>
                         ))
                     }
@@ -96,7 +127,7 @@ const AcceptTab = ({ setShowAcceptTab, setActiveTabNull, updateActiveItem, produ
                     <button
                         className='greenButton'
                         onClick={(e) => {
-                            updateActiveItem({status:'accepted'});
+                            updateActiveItem({ status: 'accepted', assignedCollectionPerson: collectionBoy });
                             setShowAcceptTab(false);
                             setActiveTabNull();//go back to orders page
                         }}

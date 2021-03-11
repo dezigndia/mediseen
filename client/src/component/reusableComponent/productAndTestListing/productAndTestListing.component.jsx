@@ -59,9 +59,13 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
     return (
         <div className={`vendorTestAndProductListItem ${businessType === 'pathology' ? 'flexDisplay' : null} ${quantity === 0 ? 'outOfStock' : null}`} title={category}>
             <div className="vendorTestAndProductListItemHeader">
-                <div className="vendorTestAndProductListItemHeaderCount">
-                    {qty}KG
-                </div>
+                {
+                    businessType === 'pharmacy' && (
+                        <div className="vendorTestAndProductListItemHeaderCount">
+                            {qty}KG
+                        </div>
+                    )
+                }
                 {
                     businessType === 'pathology' && fastingRequired
                         ? <div className="vendorTestAndProductListItemHeaderLabel">
@@ -102,7 +106,7 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
             <div className="vendorTestAndProductListItemMain">
                 <img src={image} alt='product' />
             </div>
-            <div className="vendorTestAndProductListFooter">
+            <div className="vendorTestAndProductListFooter" >
                 <div className="vendorTestAndProductListItemName">
                     {name}
                 </div>

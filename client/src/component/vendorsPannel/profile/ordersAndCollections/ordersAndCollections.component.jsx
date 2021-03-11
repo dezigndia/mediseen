@@ -315,7 +315,7 @@ const Orders = () => {
                         setActiveTabNull={setActiveTabNull}
                         {...activeItem}
                         orderNo={activeItem.orderId}
-                        orderDate={`${(new Date(activeItem.createdAt).getDate())}/${(new Date(activeItem.createdAt).getMonth())}/${(new Date(activeItem.createdAt).getFull() % 100)}`}
+                        orderDate={`${(new Date(activeItem.createdAt).getDate())}/${(new Date(activeItem.createdAt).getMonth())}/${(new Date(activeItem.createdAt).getFullYear() % 100)}`}
                         orderTime={(new Date(activeItem.createdAt)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                         paymentMethod={activeItem.address && activeItem.address.payment}
                         status={activeItem.status}

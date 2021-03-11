@@ -12,7 +12,9 @@ const height = window.innerHeight - (window.innerHeight / 100) * 20;
 const VendorQR = ({ showVendorQRTab, goBackToOrdersPage, cost, updateActiveItem }) => {
     const businessName = useSelector(state => state.currentVendor.businessName);
     const deliveryDetails = useSelector(state => state.currentVendor.deliveryDetails);
-    const [value, setValue] = useState(`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`);
+    const collectionDetails = useSelector(state => state.currentVendor.collections);
+    const businessType = useSelector(state => state.currentVendor.businessType);
+    const [value, setValue] = useState(`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges) || (collectionDetails && collectionDetails.collectionChargesPerVisit)} UPI received`);
 
     const handleChange = (event) => {
         setValue(event.target.value);
@@ -40,16 +42,37 @@ const VendorQR = ({ showVendorQRTab, goBackToOrdersPage, cost, updateActiveItem 
                 <div className="vendorPopupAcceptedDeliveryPaymentMethod">
                     <FormControl component="fieldset">
                         <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                            <FormControlLabel
-                                value={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`}
-                                control={<Radio />}
-                                label={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`}
-                            />
-                            <FormControlLabel
-                                value={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} Cash received`}
-                                control={<Radio />}
-                                label={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} Cash received`}
-                            />
+                            {
+                                businessType === 'pharmacy'
+                                    ? (
+                                        <>
+                                            <FormControlLabel
+                                                value={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`}
+                                                control={<Radio />}
+                                                label={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} UPI received`}
+                                            />
+                                            <FormControlLabel
+                                                value={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} Cash received`}
+                                                control={<Radio />}
+                                                label={`Rs. ${cost + (deliveryDetails && deliveryDetails.deliveryCharges)} Cash received`}
+                                            />
+                                        </>
+                                    )
+                                    : (
+                                        <>
+                                            <FormControlLabel
+                                                value={`Rs. ${cost + (collectionDetails && collectionDetails.collectionChargesPerVisit)} UPI received`}
+                                                control={<Radio />}
+                                                label={`Rs. ${cost + (collectionDetails && collectionDetails.collectionChargesPerVisit)} UPI received`}
+                                            />
+                                            <FormControlLabel
+                                                value={`Rs. ${cost + (collectionDetails && collectionDetails.collectionChargesPerVisit)} Cash received`}
+                                                control={<Radio />}
+                                                label={`Rs. ${cost + (collectionDetails && collectionDetails.collectionChargesPerVisit)} Cash received`}
+                                            />
+                                        </>
+                                    )
+                            }
                         </RadioGroup>
                     </FormControl>
                 </div>
@@ -65,7 +88,7 @@ const VendorQR = ({ showVendorQRTab, goBackToOrdersPage, cost, updateActiveItem 
                     <button
                         className='greenButton'
                         onClick={(e) => {
-                            updateActiveItem({ status: 'delivered' });
+                            updateActiveItem({ status: `${businessType === 'pharmacy' ? 'delivered' : 'collected'}` });
                             showVendorQRTab(false);
                             goBackToOrdersPage();//getting back to order page
                         }}
