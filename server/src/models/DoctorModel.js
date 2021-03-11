@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const clinicSchema = require("./Schemas/clinicSchema")
 const commonSchema = require("./Schemas/commonSchema")
 const paymentSchema = require("./Schemas/paymentSchema")
+const workSchema = require("./Schemas/workTimings")
 
 const doctorSchema = new mongoose.Schema(
     {
@@ -20,6 +21,9 @@ const doctorSchema = new mongoose.Schema(
         },
         payment: {
             type: paymentSchema,
+        },
+        workingHours: {
+            type: workSchema,
         },
     },
     { timestamps: true }
