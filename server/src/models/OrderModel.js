@@ -93,6 +93,12 @@ const orderSchema = new mongoose.Schema(
             enum: ["pending", "accepted", "shipped", "delivered", "cancelled", "others"],
             default: "pending",
         },
+        assignedDeliveryPerson: {
+            type: String,
+        },
+        assignedCollectionPerson: {
+            type: String,
+        },
     },
     { timestamps: true }
 )
