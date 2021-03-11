@@ -36,7 +36,6 @@ class BusinessService {
                 }
             }
         } else {
-    
             throw new AppError(StatusCodes.BAD_REQUEST, "Validation error, phone must be specified")
         }
     })
@@ -46,6 +45,7 @@ class BusinessService {
     })
     getAllBusiness = expressAsyncHandler(
         async (limit, skip, category, specialist, area, search) => {
+            console.log("inside get all business")
             let filter = {}
             if (area) {
                 filter.area = getRegex(area)

@@ -14,6 +14,8 @@ const Pathology = require("../models/PathologyModel")
 const Hospital = require("../models/HospitalModel")
 const Pharmarcy = require("../models/PharmacyModel")
 const Doctor = require("../models/DoctorModel")
+const BusinessService = require("../services/business/business.service")
+const { getTotalSalesByBusiness } = require("../utils/helpers")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -176,7 +178,7 @@ const getUsers = expressAsyncHandler(async (req, res) => {
 const loginAdmin = expressAsyncHandler(async (req, res) => {
     const email = req.body.email
     const password = req.body.password
-
+    // console.log(email, password, req.body)
     const admin = await Admin.findOne({ email: email })
     if (admin) {
         bcrypt.compare(password, admin.password, function (err, result) {
@@ -188,7 +190,7 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
                     },
                     config.has("jwt.secret") ? config.get("jwt.secret") : null,
                     {
-                        expiresIn: "1h",
+                        expiresIn: "24h",
                     }
                 )
 
@@ -208,9 +210,33 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
             }
         })
     } else {
-        res.status(StatusCodes.NOT_FOUND).json({
+        res.status(StatusCodes.NOT_ACCEPTABLE).json({
             message: "Auth Failed",
         })
+    }
+})
+
+const getBusinessList = expressAsyncHandler(async (req, res) => {
+    const { limit, skip, category, specialist, area, search } = req.query
+
+    console.log(limit, skip, req.query)
+    const data = await BusinessService.getAllBusiness(
+        limit,
+        skip,
+        category,
+        specialist,
+        area,
+        search,
+        true
+    )
+
+    if (data) {
+        data.forEach(each => {
+            getTotalSalesByBusiness(each.businessPhoneNumber, each.businessType)
+        })
+        return res.status(StatusCodes.OK).json({ status: true, payload: data })
+    } else {
+        throw new AppError(StatusCodes.NOT_FOUND, "Businesss List not found.")
     }
 })
 
@@ -222,5 +248,6 @@ module.exports = {
     getProducts,
     getUsers,
     getTotalUsers,
+    getBusinessList,
     getTotalBusinesses,
 }

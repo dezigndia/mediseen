@@ -27,6 +27,7 @@ function isSuperAdmin() {
 function isAdmin() {
     return async (req, res, next) => {
         try {
+            console.log("inside is admin")
             const admin = await getAdminFromToken(req)
 
             if (admin) next()
