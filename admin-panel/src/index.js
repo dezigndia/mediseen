@@ -29,6 +29,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
+import Signin from "views/Signin";
+import { isLoggedIn } from "services/services";
 
 ReactDOM.render(
   <ThemeContextWrapper>
@@ -37,7 +39,11 @@ ReactDOM.render(
         <Switch>
           <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
           <Route path="/rtl" render={(props) => <RTLLayout {...props} />} />
-          <Redirect from="/" to="/admin/dashboard" />
+          <Route path="/signin" component={Signin} />
+          <Redirect
+            from="/"
+            to={isLoggedIn() ? "/admin/dashboard" : "/signin"}
+          />
         </Switch>
       </BrowserRouter>
     </BackgroundColorWrapper>
