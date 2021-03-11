@@ -47,7 +47,7 @@ export default function DashboardTableCard({ data = {} }) {
                 width: "20%",
               }}
             >
-              today 8 orders
+              today {data.orderToday} orders
             </Grid>
           </Grid>
           <Grid container justify="space-between">
@@ -74,8 +74,8 @@ export default function DashboardTableCard({ data = {} }) {
           alignItems="flex-end"
           alignContent="flex-end"
         >
-          <Grid item>Rs. 2000</Grid>
-          <Grid item>210 orders</Grid>
+          <Grid item>Rs. {data.sales}</Grid>
+          <Grid item>{data.totalCount} orders</Grid>
         </Grid>
       </Grid>
     </Card>

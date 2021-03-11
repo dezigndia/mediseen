@@ -7,6 +7,7 @@ const {
     getUsers,
     getTotalUsers,
     getTotalBusinesses,
+    getBusinessList,
 } = require("../controllers/adminController")
 const { isSuperAdmin, isAdmin } = require("../utils/adminHelper")
 const BusinessController = require("../controllers/businessController")
@@ -21,7 +22,7 @@ router.post("/remove-admin", isSuperAdmin(), removeAdmin)
 router.get("/get-admins", isSuperAdmin(), getAdmins)
 router.get("/get-products", isAdmin(), getProducts)
 router.get("/get-users", isAdmin(), getUsers)
-router.get("/get-businesses", isAdmin(), bc.getBusinessList)
+router.get("/get-businesses", isAdmin(), getBusinessList)
 router.get("/get-total-users", isAdmin(), getTotalUsers)
 router.get("/get-total-businesses", isAdmin(), getTotalBusinesses)
 router.get("/get-appointments", isAdmin(), ac.getAppointments)

@@ -15,7 +15,7 @@ const Hospital = require("../models/HospitalModel")
 const Pharmarcy = require("../models/PharmacyModel")
 const Doctor = require("../models/DoctorModel")
 const BusinessService = require("../services/business/business.service")
-const { getTotalSalesByBusiness } = require("../utils/helpers")
+const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../utils/helpers")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -216,25 +216,40 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
     }
 })
 
+const bs = new BusinessService()
+
 const getBusinessList = expressAsyncHandler(async (req, res) => {
     const { limit, skip, category, specialist, area, search } = req.query
 
-    console.log(limit, skip, req.query)
-    const data = await BusinessService.getAllBusiness(
-        limit,
-        skip,
-        category,
-        specialist,
-        area,
-        search,
-        true
-    )
-
+    let data = await bs.getAllBusiness(limit, skip, category, specialist, area, search, true)
+    let reqData = []
     if (data) {
-        data.forEach(each => {
-            getTotalSalesByBusiness(each.businessPhoneNumber, each.businessType)
+        Promise.all(
+            data.map(async (each, i) => {
+                // let call = async () => {
+                //     return new Promise(next => {
+                console.log(
+                    Object.keys(each._doc),
+                    each.collections ? each.collections.collectionChargesPerVisit : 0
+                )
+                let ans = await getTotalSalesByBusiness(
+                    each.phone,
+                    each.type,
+                    each._doc.collections && each._doc.collections.collectionChargesPerVisit
+                        ? each._doc.collections.collectionChargesPerVisit
+                        : 0
+                )
+                let oToday = {
+                    orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+                }
+                console.log(oToday, "oToday")
+                reqData.push({ ...data[i]._doc, ...ans, ...oToday })
+                // console.log(reqData[i])
+            })
+        ).then(req => {
+            return res.status(StatusCodes.OK).json({ status: true, payload: reqData })
         })
-        return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        // return res.status(StatusCodes.OK).json({ status: true, payload: data })
     } else {
         throw new AppError(StatusCodes.NOT_FOUND, "Businesss List not found.")
     }
