@@ -10,6 +10,9 @@ const appointmentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        doctor: {
+            type: String,
+        },
         address: {
             city: {
                 type: String,
