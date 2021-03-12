@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PaginationTiles({ tileNo }) {
+export default function PaginationTiles({ tileNo, totalTiles = 0 }) {
   const classes = useStyles();
 
   return (
@@ -36,6 +36,7 @@ export default function PaginationTiles({ tileNo }) {
         onChange={(e, page) => {
           tileNo(page);
         }}
+        count={totalTiles}
       />
     </div>
   );

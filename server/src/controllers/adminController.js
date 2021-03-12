@@ -7,7 +7,7 @@ const saltRounds = 10
 const config = require("config")
 const { isSuperAdmin } = require("../utils/adminHelper")
 const { errorMessage, adminNotFound } = require("../utils/constants")
-const { getConditions } = require("../services/admin/admin.service")
+const { getConditions, getSortingConditions } = require("../services/admin/admin.service")
 const Product = require("../models/ProductModel")
 const User = require("../models/UserModel")
 const Pathology = require("../models/PathologyModel")
@@ -16,6 +16,7 @@ const Pharmarcy = require("../models/PharmacyModel")
 const Doctor = require("../models/DoctorModel")
 const BusinessService = require("../services/business/business.service")
 const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../utils/helpers")
+const Order = require("../models/OrderModel")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -40,7 +41,7 @@ const addAdmin = expressAsyncHandler(async (req, res) => {
 
 const removeAdmin = expressAsyncHandler(async (req, res) => {
     const { emails } = req.body
-    console.log(req.body)
+    // console.log(req.body)
     let resReq
     emails.forEach(async email => {
         resReq = await Admin.deleteOne({ email: email, isSuperAdmin: false })
@@ -49,7 +50,7 @@ const removeAdmin = expressAsyncHandler(async (req, res) => {
         }
     })
 
-    console.log(resReq)
+    // console.log(resReq)
     res.status(StatusCodes.OK).json({ message: "Deleted successfully!" })
 })
 
@@ -121,6 +122,25 @@ const getProducts = expressAsyncHandler(async (req, res) => {
         let conditions = getConditions(req)
         const data = await Product.find(conditions).limit(limit).skip(skip)
         const totalCount = await Product.countDocuments(conditions)
+
+        res.status(StatusCodes.OK).json({
+            data: data,
+            totalCount: totalCount,
+        })
+    }
+})
+const getOrders = expressAsyncHandler(async (req, res) => {
+    let { skip, limit } = req.query
+    skip = skip - "0"
+    limit = limit - "0"
+    if (skip === null || limit === null) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    } else {
+        let conditions = getConditions(req)
+        let sortby = await getSortingConditions(req)
+        // console.log(sortby)
+        const data = await Order.find(conditions).limit(limit).sort(sortby).skip(skip)
+        const totalCount = await Order.countDocuments(conditions)
 
         res.status(StatusCodes.OK).json({
             data: data,
@@ -228,10 +248,6 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
             data.map(async (each, i) => {
                 // let call = async () => {
                 //     return new Promise(next => {
-                console.log(
-                    Object.keys(each._doc),
-                    each.collections ? each.collections.collectionChargesPerVisit : 0
-                )
                 let ans = await getTotalSalesByBusiness(
                     each.phone,
                     each.type,
@@ -242,7 +258,6 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
                 let oToday = {
                     orderToday: await getTodaysOrderByPhoneNumber(each.phone),
                 }
-                console.log(oToday, "oToday")
                 reqData.push({ ...data[i]._doc, ...ans, ...oToday })
                 // console.log(reqData[i])
             })
@@ -265,4 +280,5 @@ module.exports = {
     getTotalUsers,
     getBusinessList,
     getTotalBusinesses,
+    getOrders,
 }

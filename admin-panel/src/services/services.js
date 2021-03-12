@@ -5,12 +5,8 @@ import { testurl } from "variables/constants";
 export const fetchCall = async (type, body = null, queryParams = null) => {
   let data;
   const jwt = JSON.parse(localStorage.getItem("userData"));
-  console.log(jwt);
   const { method, endpoint } = endPointsArray[type];
-  console.log(
-    "links",
-    `${testurl + endpoint + queryParams ? "/" + queryParams : ""}`
-  );
+
   try {
     const response = await fetch(
       `${testurl + endpoint}${queryParams ? "?" + queryParams : ""}`,
@@ -56,3 +52,8 @@ export const removeEmptyFromObject = (obj) => {
 export const convertBodyToQueryParams = (body) => {
   return new URLSearchParams(body).toString();
 };
+
+export function readableDate(date) {
+  let d = new Date(date);
+  return d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
+}

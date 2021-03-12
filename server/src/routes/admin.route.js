@@ -8,6 +8,7 @@ const {
     getTotalUsers,
     getTotalBusinesses,
     getBusinessList,
+    getOrders,
 } = require("../controllers/adminController")
 const { isSuperAdmin, isAdmin } = require("../utils/adminHelper")
 const BusinessController = require("../controllers/businessController")
@@ -27,5 +28,6 @@ router.get("/get-total-users", isAdmin(), getTotalUsers)
 router.get("/get-total-businesses", isAdmin(), getTotalBusinesses)
 router.get("/get-appointments", isAdmin(), ac.getAppointments)
 router.get("/get-appointment-per-business", isAdmin(), ac.getAppointmentbyBuisness)
+router.get("/get-orders", isAdmin(), getOrders)
 
 module.exports = router

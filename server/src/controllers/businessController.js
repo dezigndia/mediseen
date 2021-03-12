@@ -9,7 +9,6 @@ class BusinessController {
     getBusinessList = expressAsyncHandler(async (req, res) => {
         const { limit, skip, category, specialist, area, search } = req.query
 
-        console.log(limit, skip, req.query)
         const data = await businessService.getAllBusiness(
             limit,
             skip,

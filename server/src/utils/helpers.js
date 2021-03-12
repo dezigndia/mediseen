@@ -5,6 +5,30 @@ const Order = require("../models/OrderModel")
 async function getTotalSalesByBusiness(phoneNumber, businessType, price = 0) {
     let sales = 0,
         totalCount = 0
+    if (businessType === "doctor" || businessType === "hospital") {
+        let data = await Appointment.aggregate([
+            {
+                $match: {
+                    businessPhoneNumber: phoneNumber,
+                },
+            },
+            {
+                $project: {
+                    grandTotal: 1,
+                    _id: 0,
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    sum: {
+                        $sum: "$grandTotal",
+                    },
+                },
+            },
+        ])
+        console.log(data)
+    }
     // let data = await Appointment.aggregate()
     if (businessType === "pharmacy") {
         let data = await Order.find({ businessPhoneNumber: phoneNumber })
