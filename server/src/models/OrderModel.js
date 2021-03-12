@@ -45,8 +45,6 @@ const orderSchema = new mongoose.Schema(
                     qty: { type: Number, required: true },
                 },
             ],
-            validate: [arrayLimit, "{PATH} must be of length 1"],
-            required: true,
             _id: false,
         },
         totalItems: {
