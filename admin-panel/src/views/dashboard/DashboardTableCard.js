@@ -56,7 +56,7 @@ export default function DashboardTableCard({ data = {} }) {
               <span className={classes.active}>
                 {data.isActive ? "Active" : "Not Active"}
               </span>{" "}
-              akjak{" "}
+              {/* akjak{" "} */}
               <span className={classes.verified}>
                 {data.isVerified ? "Verified" : "Not Verified"}
               </span>

@@ -21,21 +21,24 @@ const Order = require("../models/OrderModel")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
     const email = req.body.email
-    const password = req.body.password
+    const phoneNumber = req.body.phoneNumber
+    const departments = req.body.departments
     Admin.findOne({ email: email }).then(admin => {
         if (admin) {
             return res.status(StatusCodes.NOT_ACCEPTABLE).json({ message: "Already exists" })
         }
-        bcrypt.hash(password, saltRounds).then(hashedPassword => {
-            const admin = new Admin({
-                email,
-                password: hashedPassword,
-                name,
-            })
-            admin.save().then(admin => {
-                res.json({ message: "saved successfully" })
-            })
+        // bcrypt.hash(password, saltRounds).then(hashedPassword => {
+        const adminNew = new Admin({
+            email,
+            // password: hashedPassword,
+            name,
+            departments,
+            phoneNumber,
         })
+        adminNew.save().then(admin => {
+            res.status(StatusCodes.OK).json({ message: "saved successfully" })
+        })
+        // })
     })
 })
 
@@ -100,6 +103,10 @@ const getAdmins = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = await getConditions(req)
+        conditions = {
+            ...conditions,
+            isSuperAdmin: false,
+        }
         let data = await Admin.find(conditions).limit(limit).skip(skip)
         const totalCount = await Admin.countDocuments(conditions)
         data.forEach((each, i) => {

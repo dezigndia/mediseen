@@ -10,7 +10,7 @@ function isSuperAdmin() {
     return async (req, res, next) => {
         try {
             const admin = await getAdminFromToken(req)
-
+            console.log(admin)
             if (admin && admin.isSuperAdmin) next()
             else
                 res.status(StatusCodes.UNAUTHORIZED).json({

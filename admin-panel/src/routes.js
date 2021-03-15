@@ -28,6 +28,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import Dashboard from "views/dashboard/Dashboard";
 import Orders from "views/Orders";
+import UserProfile from "views/UserProfile";
 
 var routes = [
   {
@@ -62,14 +63,6 @@ var routes = [
   //     component: Notifications,
   //     layout: "/admin",
   //   },
-  // {
-  // 	path: "/user-profile",
-  // 	name: "User Profile",
-  // 	rtlName: "ملف تعريفي للمستخدم",
-  // 	icon: "tim-icons icon-single-02",
-  // 	component: UserProfile,
-  // 	layout: "/admin",
-  // },
   // {
   // 	path: "/tables",
   // 	name: "Table List",

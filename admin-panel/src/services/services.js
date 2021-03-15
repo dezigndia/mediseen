@@ -22,7 +22,7 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
     );
 
     if (!response.ok) {
-      data = { success: false, errCode: response.status };
+      data = { success: false, data: await response.json() };
     } else {
       data = { success: true, data: await response.json() };
     }

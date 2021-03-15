@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function OrdersContent() {
+export default function UsersManagerContent() {
   const classes = useStyles();
   const [rows, setrows] = useState([]);
   const [page, setpage] = useState(1);
@@ -28,8 +28,6 @@ export default function OrdersContent() {
   const [filter, setfilter] = useState({
     limit: 10,
     skip: 0,
-    asc: null,
-    sortBy: "createdAt",
   });
 
   async function getData(page = 1) {
@@ -37,7 +35,7 @@ export default function OrdersContent() {
     body.skip = body.limit * (page - 1);
     body = removeEmptyFromObject(body);
     let reqBody = convertBodyToQueryParams(body);
-    let reqData = await fetchCall("get_orders", undefined, reqBody);
+    let reqData = await fetchCall("get_admins", undefined, reqBody);
     if (reqData && reqData.success) {
       console.log(reqData);
       setrows(reqData.data.data);
@@ -51,7 +49,7 @@ export default function OrdersContent() {
   }, [filter]);
   return (
     <TableContainer component={Paper}>
-      <span>Orders</span>
+      <span>Users</span>
       <PaginationTiles
         tileNo={(tile) => {
           setpage(tile);
@@ -59,66 +57,31 @@ export default function OrdersContent() {
         }}
         totalTiles={Math.floor(totalCount / filter.limit) + 1}
       />
-      <span
-        onClick={() => {
-          if (filter.asc === 1) {
-            setfilter((state) => ({
-              ...state,
-              asc: -1,
-            }));
-          } else if (filter.asc === -1) {
-            setfilter((state) => ({
-              ...state,
-              asc: null,
-            }));
-          } else {
-            setfilter((state) => ({
-              ...state,
-              asc: 1,
-            }));
-          }
-        }}
-      >
-        Created At: {filter.asc}
-      </span>
 
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Order No.</TableCell>
-            <TableCell align="left">CUSTOMER</TableCell>
-            <TableCell align="left">BUSINESS</TableCell>
-            <TableCell align="left">
-              DATE{" "}
-              {filter.asc === 1 ? (
-                <ExpandLess />
-              ) : filter.asc === -1 ? (
-                <ExpandMore />
-              ) : (
-                ""
-              )}
-            </TableCell>
-            <TableCell align="center">AMOUNT</TableCell>
-            <TableCell align="center">STATUS</TableCell>
-            <TableCell align="right">PINCODE</TableCell>
-            {/* <TableCell align="right">&nbsp;</TableCell> */}
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="left">Departments</TableCell>
+            <TableCell align="left">ID</TableCell>
+            <TableCell align="right">&nbsp;</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.orderId}>
+            <TableRow key={row.email}>
               <TableCell component="th" scope="row">
-                {row.orderId}
+                {row.name}
               </TableCell>
-              <TableCell align="left">{row.patientName}</TableCell>
-              <TableCell align="left">{row.businessName}</TableCell>
-              <TableCell align="left">{readableDate(row.createdAt)}</TableCell>
-              <TableCell align="center">{row.grandTotal}</TableCell>
-              <TableCell align="center">{row.status}</TableCell>
-              <TableCell align="right">{row.address.pincode}</TableCell>
-              {/* <TableCell align="right">
+              <TableCell align="left">
+                {row.departments.map((each) => {
+                  return <>{each}, </>;
+                })}
+              </TableCell>
+              <TableCell align="left">{row.email}</TableCell>
+              <TableCell align="right">
                 <MoreVert />
-              </TableCell> */}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
