@@ -15,10 +15,8 @@ const useStyles = makeStyles({
 	},
 })
 
-const ItemTable = () => {
+const ItemTable = ({ cart }) => {
 	const classes = useStyles()
-
-	const cart = useSelector((state) => state.cart)
 
 	return (
 		<TableContainer component={Paper}>

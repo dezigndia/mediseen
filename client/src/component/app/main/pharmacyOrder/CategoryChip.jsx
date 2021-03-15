@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
 		borderRadius: "20px",
 		minWidth: "6rem",
 		width: "auto",
+		textTransform: "capitalize",
 	},
 	menuItemActive: {
 		backgroundColor: "#20E0B9",

@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const PharmAddAddress = () => {
+const LabAddAddress = () => {
 	const classes = useStyles()
 
 	const cart = useSelector((state) => state.cart)
@@ -220,4 +220,4 @@ const PharmAddAddress = () => {
 	)
 }
 
-export default PharmAddAddress
+export default LabAddAddress

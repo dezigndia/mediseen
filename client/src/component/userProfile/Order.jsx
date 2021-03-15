@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Grid, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import ItemTable from "./ItemTable"
@@ -6,12 +6,14 @@ import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import Business from "./Business"
 import BusinessHeader from "./BusinessHeader"
+import clsx from "clsx"
+import { useParams } from "react-router-dom"
+import fetchCall from "../../fetchCall/fetchCall"
 
 const useStyles = makeStyles(() => ({
 	container: {
-		padding: "1rem 0.5rem",
+		padding: "1rem 1rem",
 		height: "auto",
-		overflowY: "scroll",
 	},
 	payment: {
 		color: "red",
@@ -30,10 +32,31 @@ const useStyles = makeStyles(() => ({
 		width: "8rem",
 		fontSize: "1.2rem",
 	},
+	padding: {
+		paddingRight: "1rem",
+	},
 }))
 
 const Order = () => {
 	const classes = useStyles()
+	const { id } = useParams()
+	let token = useSelector((state) => state.token.token)
+	token = token
+		? token
+		: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwM2YzOTg1NTFkOTQ1MzFmMTEzMzM0YSIsImRlZmF1bHQiOltdLCJwaG9uZSI6Iis5MTg5MTA3MTkxNDciLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwidXBkYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwiX192IjowLCJpYXQiOjE2MTUxMTcwODB9.gg2XoDzt9twPmWZ1esrrNaiMhdTRdLiMTuoqcrvzgGo"
+
+	const [order, setOrder] = useState({})
+
+	useEffect(() => {
+		const fetchOrder = async () => {
+			const data = await fetchCall(`order/id/${id}`, "GET", token).then(
+				(res) => res.data.payload
+			)
+			setOrder(data)
+			console.log(data)
+		}
+		fetchOrder()
+	}, [])
 
 	return (
 		<Grid container spacing={2}>
@@ -43,7 +66,7 @@ const Order = () => {
 			<Grid container className={classes.container} item xs={12}>
 				<Grid
 					item
-					className={classes.bold}
+					className={clsx(classes.bold, classes.padding)}
 					xs={6}
 					style={{ textAlign: "left" }}
 				>
@@ -81,7 +104,7 @@ const Order = () => {
 			</Grid>
 			<div className={classes.divider}></div>
 			<Grid item>
-				<ItemTable />
+				<ItemTable cart={order && order.products} />
 			</Grid>
 			<Grid container item>
 				<Grid style={{ textAlign: "left", color: "gray" }} xs={6} item>

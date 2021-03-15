@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { Grid, Button } from "@material-ui/core"
-import Test from "./Test"
 import clsx from "clsx"
 import { Link, Redirect, useLocation } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
@@ -8,7 +7,6 @@ import { makeStyles } from "@material-ui/core/styles"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import { emptyCartProduct } from "../../../../store/cart/cartActions"
 import fetchCallFile from "../../../../fetchCall/fetchCallFile"
-import moment from "moment"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -41,7 +39,7 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-const LabBook = () => {
+const DoctorBook = () => {
 	const tests = useSelector((state) => state.lab.tests)
 	const classes = useStyles()
 
@@ -50,7 +48,8 @@ const LabBook = () => {
 	const type = query.get("order")
 
 	const image = useSelector((state) => state.prescription.image)
-	const user = useSelector((state) => state.login)
+	const patient = useSelector((state) => state.patient)
+	const timing = useSelector((state) => state.timing)
 	const dispatch = useDispatch()
 	const [payment, setPayment] = useState(1)
 	const cart = useSelector((state) => state.cart)
@@ -60,14 +59,12 @@ const LabBook = () => {
 
 	const products = cart.map((prod) => {
 		return {
-			productId: prod.item._id,
+			productId: prod.item.id,
 			qty: prod.qty,
 		}
 	})
 
 	const business = useSelector((state) => state.currentStore)
-	const phoneNo = useSelector((state) => state.user.phoneNo)
-	const patient = useSelector((state) => state.patient) || user
 
 	const totalCost = 0
 
@@ -76,51 +73,17 @@ const LabBook = () => {
 		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwNDg2NGVlYzEwYWU4YzI4ZWMzM2Y5MSIsInBob25lIjoiKzkxODkxMDcxOTE0NyIsImFkZHJlc3MiOltdLCJjcmVhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJ1cGRhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJfX3YiOjAsImlhdCI6MTYxNTM1NzE2Nn0.9CEx3xpRyG-J4dUtxUVBrRN8Eg7UOZ7zjaFTehhRBBw"
 
 	const handleBook = async () => {
-		const img = await fetch(image)
-			.then((res) => res.blob())
-			.then((blob) => {
-				const file = new File([blob], "File name", { type: "image/jpeg" })
-				return file
-			})
-		let form = new FormData()
-		form.append("file", img)
-		const res = await fetchCallFile("blob/upload", "POST", token, form)
-		const link = res.data.payload
-		let body
-		if (type === "pres") {
-			body = {
-				patient: {
-					firstName: patient.name.split(" ")[0],
-					lastName: patient.name.split(" ")[0],
-					mobileNumber: patient.phone,
-				},
-				date: `${Date.now()}`,
-				mobileNumber: phoneNo || "8910719147",
-				address,
-				image_url: link.location,
-				businessType: business.type,
-				businessName: business.businessName,
-				businessPhoneNumber: business.phone,
-			}
-		} else {
-			body = {
-				patientName: "Yash Sharma",
-				mobileNumber: "89089898686989",
-				patient: {
-					firstName: patient.name.split(" ")[0],
-					lastName: patient.name.split(" ")[0],
-					mobileNumber: patient.phone,
-				},
-				date: `${Date.now()}`,
-				products,
-				grandTotal: totalCost,
-				address,
-				businessType: business.type,
-				businessName: business.businessName,
-				businessPhoneNumber: business.phone,
-			}
+		let body = {
+			patientName: patient.name,
+			mobileNumber: patient.num,
+			userPhoneNumber: "787989089898989",
+			timings: { from: timing.timing },
+			date: Date.now(),
+			businessType: business.type,
+			businessName: business.businessName,
+			businessPhoneNumber: business.phone,
 		}
-		const data = await fetchCall("order", "POST", token, body)
+		const data = await fetchCall("appointment", "POST", token, body)
 		console.log(data)
 		if (data.sucess === true) {
 			setPlaced(true)
@@ -134,7 +97,7 @@ const LabBook = () => {
 
 	return (
 		<Grid container className={classes.container} spacing={6}>
-			<Grid container item>
+			{/* <Grid container item>
 				{tests.map((test) => {
 					return (
 						<Grid item xs={12}>
@@ -147,7 +110,7 @@ const LabBook = () => {
 						</Grid>
 					)
 				})}
-			</Grid>
+			</Grid> */}
 			<Grid item xs={12}>
 				<h3 style={{ textAlign: "center", width: "100%" }}>Confirm Booking</h3>
 			</Grid>
@@ -187,7 +150,7 @@ const LabBook = () => {
 					item
 					xs={6}
 				>
-					{moment(Date.now()).format("MMM Do YYYY")}
+					{timing.date} {timing.timing}
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -200,7 +163,7 @@ const LabBook = () => {
 					item
 					xs={6}
 				>
-					{address.area}, {address.pincode}
+					{business.area}, {business.pincode}
 				</Grid>
 			</Grid>
 			<Grid container direction="column" item spacing={3}>
@@ -224,4 +187,4 @@ const LabBook = () => {
 	)
 }
 
-export default LabBook
+export default DoctorBook

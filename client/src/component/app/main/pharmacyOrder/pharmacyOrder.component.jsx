@@ -6,10 +6,10 @@ import InfoCard from "./InfoCard"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
 import Button from "@material-ui/core/Button"
 import clsx from "clsx"
-import hand from "./Hand.jpg"
 import { Link, useParams } from "react-router-dom"
 import fetchCall from "../../../../fetchCall/fetchCall"
-
+import { addCurrentStore } from "../../../../store/currentStore/currentStoreAction"
+import CategoryChip from "./CategoryChip"
 import { makeStyles } from "@material-ui/core/styles"
 import ProductCard from "./ProductCard"
 import UploadPres from "./UploadPres"
@@ -62,6 +62,7 @@ const PharmacyOrder = () => {
 	const classes = useStyles()
 
 	const cart = useSelector((state) => state.cart)
+	const store = useSelector((state) => state.currentStore)
 
 	const [upload, setUpload] = useState(false)
 	const [file, setFile] = useState({})
@@ -70,6 +71,14 @@ const PharmacyOrder = () => {
 	const [products, setProducts] = useState()
 	const [categoryList, setCategoryList] = useState()
 	const { pharmId } = useParams()
+
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		if (pharmacy) {
+			dispatch(addCurrentStore({ ...pharmacy }))
+		}
+	}, [pharmacy])
 
 	useEffect(() => {
 		const fetchPharm = async () => {
@@ -146,7 +155,7 @@ const PharmacyOrder = () => {
 					}}
 				>
 					<UploadPres
-						name="Rajam Medical Store"
+						name={store.businessName}
 						setUpload={(value) => setUpload(value)}
 						setFile={(files) => setFile(files)}
 					/>
@@ -157,7 +166,7 @@ const PharmacyOrder = () => {
 					<h2>To {pharmacy && pharmacy.businessName}</h2>
 				</Grid>
 				<Grid item container spacing={0} justify="center">
-					{categoryList &&
+					{/* {categoryList &&
 						categoryList.map((category) => (
 							<Grid
 								onClick={() => setActive(`${category}`)}
@@ -170,7 +179,15 @@ const PharmacyOrder = () => {
 							>
 								{category}
 							</Grid>
-						))}
+						))} */}
+					<div className={classes.slider}>
+						{categoryList &&
+							categoryList.map((item) => (
+								<div onClick={() => setActive(item)}>
+									<CategoryChip name={item} active={active} />
+								</div>
+							))}
+					</div>
 				</Grid>
 			</Grid>
 			<Grid container item className={classes.slider}>

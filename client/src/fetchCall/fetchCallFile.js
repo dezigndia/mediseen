@@ -1,19 +1,13 @@
-const fetchCall = async (endpoint, method, jwt, body, type) => {
+const fetchCallFile = async (endpoint, method, jwt, body) => {
 	let data
 	const response = await fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, {
 		method: `${method}`,
 		headers: {
 			Accept: "application/json",
-			"Content-Type":
-				type === "file"
-					? "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
-					: "application/json",
 			Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
 		},
-		body: body && type === "file" ? body : JSON.stringify(body),
+		body: body,
 	})
-
-	console.log(response)
 
 	if (!response.ok) {
 		data = { sucess: false, errCode: response.status }
@@ -24,4 +18,4 @@ const fetchCall = async (endpoint, method, jwt, body, type) => {
 	return data
 }
 
-export default fetchCall
+export default fetchCallFile

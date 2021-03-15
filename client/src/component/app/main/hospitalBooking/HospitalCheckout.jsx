@@ -7,11 +7,11 @@ import {
 	Button,
 	Paper,
 	InputBase,
+	Avatar,
 } from "@material-ui/core"
 import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
-import Test from "./Test"
-import Address from "./Address"
+import Address from "../pharmacyOrder/Address"
 import { useSelector, useDispatch } from "react-redux"
 import clsx from "clsx"
 import { Link, Redirect, useLocation } from "react-router-dom"
@@ -105,18 +105,23 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		minWidth: "12rem",
 	},
+	paper2: {
+		minWidth: "95vw",
+		padding: "1rem",
+		background: "#F9F9F9",
+	},
 }))
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-const LabConfirm = () => {
+const HospitalCheckout = () => {
 	const classes = useStyles()
-	const user = useSelector((state) => state.user)
+
 	const query = useQuery()
 
-	const type = query.get("order")
+	const ind = query.get("ind")
 
 	const [otp, setOtp] = useState(false)
 
@@ -127,13 +132,13 @@ const LabConfirm = () => {
 	const [name, setName] = useState("")
 	const [num, setNumber] = useState("")
 
-	const lab = useSelector((state) => state.currentStore)
-	const [selected, setSelected] = useState(null)
-	const dispatch = useDispatch()
-
 	const [payment, setPayment] = useState(1)
 
-	const tests = useSelector((state) => state.lab.tests)
+	console.log(otpSuccess)
+
+	const hos = useSelector((state) => state.currentStore)
+	const [selected, setSelected] = useState(null)
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		const body = {
@@ -187,7 +192,7 @@ const LabConfirm = () => {
 			className={classes.container}
 			spacing={2}
 		>
-			<Grid container item>
+			{/* <Grid container item>
 				{tests.map((test) => {
 					return (
 						<Grid item xs={12}>
@@ -200,7 +205,7 @@ const LabConfirm = () => {
 						</Grid>
 					)
 				})}
-			</Grid>
+			</Grid> */}
 			<Grid item xs={12}>
 				<h3 style={{ textAlign: "center", width: "100%" }}>Confirm Details</h3>
 			</Grid>
@@ -219,10 +224,10 @@ const LabConfirm = () => {
 				<Paper component="form" elevation={3} className={classes.paper}>
 					<InputBase
 						className={classes.input}
-						placeholder="Patient's Phone Number"
-						inputProps={{ "aria-label": "search google maps" }}
 						value={num}
 						onChange={(e) => setNumber(e.target.value)}
+						placeholder="Patient's Phone Number"
+						inputProps={{ "aria-label": "search google maps" }}
 					/>
 				</Paper>
 			</Grid>
@@ -259,27 +264,27 @@ const LabConfirm = () => {
 					</Grid>
 				</Grid>
 			)}
-			<Grid item container alignItems="center">
-				<Grid
+			<Grid item container alignItems="center" spacing={4}>
+				{/* <Grid
 					style={{ textAlign: "left" }}
 					className={classes.bold}
 					item
 					xs={6}
 				>
 					Delivery Address
-				</Grid>
-				<Grid container item xs={6} alignItems="center">
+				</Grid> */}
+				{/* <Grid container item xs={6} alignItems="center">
 					<Grid item className={classes.bold} style={{ fontSize: "1.2rem" }}>
 						Add New
 					</Grid>
 					<Grid item>
-						<Link to="/home/labOrder/add-address">
+						<Link to="/home/pharmacyOrder/add-address">
 							<AddIcon style={{ fontSize: "3rem" }} />
 						</Link>
 					</Grid>
-				</Grid>
-				<Grid spacing={2} container item direction="column">
-					{/* {address.map((addr, ind) => (
+				</Grid> */}
+				{/* <Grid spacing={2} container item direction="column">
+					{address.map((addr, ind) => (
 						<Grid item>
 							<Address
 								setSelected={(value) => setSelected(value)}
@@ -289,18 +294,49 @@ const LabConfirm = () => {
 								checked={selected === ind ? true : false}
 							/>
 						</Grid>
-					))} */}
-					{user.address.map((addr, ind) => (
-						<Grid item>
-							<Address
-								setSelected={(value) => setSelected(value)}
-								ad1={addr.name}
-								ad2={`${addr.area}, ${addr.pincode}`}
-								ind={ind}
-								checked={selected === ind ? true : false}
-							/>
-						</Grid>
 					))}
+				</Grid> */}
+				<Grid container item xs={12}>
+					<Paper elevation={2} className={classes.paper2}>
+						<Grid alignItems="center" container item xs={12}>
+							<Grid item xs={4}>
+								<Avatar src={hos.doctors[ind].photo} />
+							</Grid>
+							<Grid item xs={4}>
+								<h4>{hos.doctors[ind].name}</h4>
+							</Grid>
+							<Grid item xs={4}>
+								<h4
+									style={{
+										backgroundColor: "#5C4DB1",
+										borderRadius: "10px",
+										width: "50%",
+										margin: "auto",
+										color: "white",
+										padding: "0.2rem 0",
+									}}
+								>
+									{hos.doctors[ind].fee}
+								</h4>
+							</Grid>
+						</Grid>
+					</Paper>
+				</Grid>
+				<Grid container item xs={12}>
+					<Paper elevation={2} className={classes.paper2}>
+						<Grid container item xs={12}>
+							<Grid item xs={4}>
+								<Avatar src={hos.photo} />
+							</Grid>
+							<Grid item xs={4}>
+								<h4>{hos.businessName}</h4>
+							</Grid>
+							<Grid item xs={4}>
+								<h4>{hos.area}</h4>
+								{hos.pincode}
+							</Grid>
+						</Grid>
+					</Paper>
 				</Grid>
 			</Grid>
 
@@ -334,10 +370,12 @@ const LabConfirm = () => {
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>
-				<Link to={`book?${type === "pres" ? "order=pres" : ""}`}>
+				<Link to={`book?ind=${ind}`}>
 					<Button
 						onClick={() => dispatch(addLabAddress(address[selected]))}
 						className={classes.btn}
+						disabled={otpSuccess}
+						style={{ backgroundColor: otpSuccess ? "#1DE8B6" : "grey" }}
 					>
 						BOOK
 					</Button>
@@ -347,4 +385,4 @@ const LabConfirm = () => {
 	)
 }
 
-export default LabConfirm
+export default HospitalCheckout

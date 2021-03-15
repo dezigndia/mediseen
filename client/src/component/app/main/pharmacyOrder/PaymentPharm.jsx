@@ -14,6 +14,7 @@ import Address from "./Address.jsx"
 import { Link, Redirect, useLocation } from "react-router-dom"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import { emptyCartProduct } from "../../../../store/cart/cartActions"
+import fetchCallFile from "../../../../fetchCall/fetchCallFile.js"
 
 const address = [
 	{
@@ -89,23 +90,30 @@ const PaymentPharm = () => {
 
 	const [payment, setPayment] = useState(1)
 
-	const token = useSelector((state) => state.token.token)
+	const token =
+		useSelector((state) => state.token.token) ||
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwNDg2NGVlYzEwYWU4YzI4ZWMzM2Y5MSIsInBob25lIjoiKzkxODkxMDcxOTE0NyIsImFkZHJlc3MiOltdLCJjcmVhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJ1cGRhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJfX3YiOjAsImlhdCI6MTYxNTM1NzE2Nn0.9CEx3xpRyG-J4dUtxUVBrRN8Eg7UOZ7zjaFTehhRBBw"
+
+	const business = useSelector((state) => state.currentStore)
 
 	const cart = useSelector((state) => state.cart)
 
 	const products = cart.map((prod) => {
 		return {
-			productId: prod.item.id,
+			productId: prod.item._id,
 			qty: prod.qty,
 		}
 	})
+	const user = useSelector((state) => state.user)
+
+	console.log(products)
 
 	const dispatch = useDispatch()
 
 	let totalCost = 0
 
 	cart.map((item) => {
-		totalCost = item.item.sellingPrice + totalCost
+		totalCost = item.item.sellingPrice * item.qty + totalCost
 	})
 
 	const [selected, setSelected] = useState(null)
@@ -124,20 +132,25 @@ const PaymentPharm = () => {
 		let form = new FormData()
 		form.append("file", img)
 
-		const res = await fetchCall("blob/upload", "POST", token, form, "file")
+		const res = await fetchCallFile("blob/upload", "POST", token, form, "file")
+
+		console.log(res)
 
 		const link = res.data.payload
 
 		let body
 		if (type === "pres") {
 			body = {
-				userId: "57668688w9e89",
+				userId: "603f398551d94531f113334a",
 				patientName: "Yash Sharma",
 				mobileNumber: "89089898686989",
 				userPhoneNumber: "787989089898989",
-				date: `${Date.now()}`,
+				date: Date.now(),
 				address: address[selected],
-				image_url: link,
+				image_url: link.location,
+				businessType: business.type,
+				businessName: business.businessName,
+				businessPhoneNumber: business.phone,
 			}
 		} else {
 			body = {
@@ -145,10 +158,13 @@ const PaymentPharm = () => {
 				patientName: "Yash Sharma",
 				mobileNumber: "8910719147",
 				userPhoneNumber: "8910719147",
-				date: `${Date.now()}`,
+				date: Date.now(),
 				products,
 				grandTotal: totalCost,
 				address: address[selected],
+				businessType: business.type,
+				businessName: business.businessName,
+				businessPhoneNumber: business.phone,
 			}
 		}
 
@@ -236,7 +252,7 @@ const PaymentPharm = () => {
 					style={{ textAlign: "left" }}
 					item
 				>
-					Sunjoy Ghosh
+					{user.name ? user.name : "Yash Sharma"}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -244,7 +260,7 @@ const PaymentPharm = () => {
 					style={{ textAlign: "right" }}
 					item
 				>
-					+91 8997767998908
+					{user.phone}
 				</Grid>
 			</Grid>
 			<Grid item container alignItems="center">
@@ -267,12 +283,12 @@ const PaymentPharm = () => {
 					</Grid>
 				</Grid>
 				<Grid spacing={2} container item direction="column">
-					{address.map((addr, ind) => (
+					{user.address.map((addr, ind) => (
 						<Grid item>
 							<Address
 								setSelected={(value) => setSelected(value)}
-								ad1={addr.area}
-								ad2={`${addr.city}, ${addr.pincode}`}
+								ad1={addr.name}
+								ad2={`${addr.area}, ${addr.pincode}`}
 								ind={ind}
 								checked={selected === ind ? true : false}
 							/>

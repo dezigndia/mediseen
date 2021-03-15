@@ -34,6 +34,8 @@ const PharmOrderConfirm = () => {
 	const [confirm, setConfirm] = useState("")
 
 	const image = useSelector((state) => state.prescription.image)
+	const user = useSelector((state) => state.login)
+	const store = useSelector((state) => state.currentStore)
 
 	return (
 		<Grid
@@ -47,7 +49,7 @@ const PharmOrderConfirm = () => {
 					<h3>Patient's Name :</h3>
 				</Grid>
 				<Grid item xs={6}>
-					<h3>Seth Meyers</h3>
+					<h3>{user.userName || "Yash Sharma"}</h3>
 				</Grid>
 			</Grid>
 			<Grid item container xs={12}>
@@ -55,7 +57,7 @@ const PharmOrderConfirm = () => {
 					<h3>Mobile Number : </h3>
 				</Grid>
 				<Grid item xs={6}>
-					<h3>9876543210</h3>
+					<h3>{user.phoneNo || "8910719147"}</h3>
 				</Grid>
 			</Grid>
 			<Grid item container xs={12}>
@@ -87,9 +89,9 @@ const PharmOrderConfirm = () => {
 					}}
 				>
 					<ConfirmOrder
-						address="71/A belgachia Road."
-						distance="2.5 km"
-						name="Rajam Medical Store"
+						address={store.area}
+						// distance="2.5 km"
+						name={store.businessName}
 					/>
 				</SwipeableDrawer>
 			</Grid>

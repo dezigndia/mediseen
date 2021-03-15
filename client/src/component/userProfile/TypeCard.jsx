@@ -105,7 +105,7 @@ const TypeCard = ({ type, orders }) => {
 				{orders && orders.length > 0 ? (
 					orders.map((order) => (
 						<Grid item xs={12}>
-							<TypeRow order={returnOrder()} />
+							<TypeRow order={order} orderType={returnOrder()} />
 						</Grid>
 					))
 				) : (

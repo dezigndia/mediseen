@@ -44,7 +44,8 @@ const InfoCard = ({
 	distance,
 	start,
 	eos,
-	address,
+	area,
+	pincode,
 	image,
 	degree,
 	specialist,
@@ -80,18 +81,16 @@ const InfoCard = ({
 								src={image}
 							/>
 						</Grid>
-						<Grid item>
-							<h4>{degree}</h4>
-							<h4>{specialist}</h4>
-						</Grid>
-						<Grid item xs={2}></Grid>
-					</Grid>
-					<Grid container item alignItems="center" spacing={2}>
 						<Grid item container xs={8}>
 							<Grid item justify="flex-end" xs={12}>
-								<h3>{address}</h3>
+								<h3>{area}</h3>
+							</Grid>
+							<Grid item justify="flex-end" xs={12}>
+								<h3>{pincode}</h3>
 							</Grid>
 						</Grid>
+					</Grid>
+					<Grid container item alignItems="center" spacing={2}>
 						{/* <Grid item container alignItems="flex-end" xs={4}>
 							<Grid item>
 								<h3>Verifed</h3>

@@ -22,12 +22,13 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Available = ({
-	image = "https://cdn.britannica.com/s:690x388,c:crop/12/130512-004-AD0A7CA4/campus-Riverside-Ottawa-The-Hospital-Ont.jpg",
-	name = "Prakahs Hospital",
-	address = "71/A, belgachia road",
+	image = "https://thumbs.dreamstime.com/z/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg",
+	name,
+	specialist = "MBBS",
 	morning,
 	evening,
-	clinic,
+	doctor,
+	ind,
 }) => {
 	const classes = useStyles()
 
@@ -41,10 +42,10 @@ const Available = ({
 				</Grid>
 				<Grid container direction="column" item xs={6}>
 					<Grid item>
-						<h4>{name}</h4>
+						<h4>{name ? name : doctor.name}</h4>
 					</Grid>
 					<Grid item>
-						<h5 style={{ color: "gray" }}>{address}</h5>
+						<h5 style={{ color: "gray" }}>{specialist}</h5>
 					</Grid>
 				</Grid>
 				{morning ? (
@@ -81,7 +82,7 @@ const Available = ({
 			{open ? (
 				<Grid container item xs={12}>
 					<Grid item xs={12}>
-						<TimeTable clinic={clinic.workingHours} />
+						<TimeTable ind={ind} clinic={doctor.workingHours} />
 					</Grid>
 				</Grid>
 			) : null}
