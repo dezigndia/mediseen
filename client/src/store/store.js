@@ -39,9 +39,6 @@ const rootReducer = combineReducers({
 	cart,
 	timing,
 	lab,
-	currentStore,
-	user,
-	patient,
 })
 
 const store = createStore(

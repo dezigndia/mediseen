@@ -11,10 +11,10 @@ export const USER_VERIFY_OTP = `${server}api/user/user-verify-otp`
 
 // returns a url for retreiving search result
 export const SEARCH_BUSINESS = (category, query, filter) => {
-	let searchQuery = query !== "" ? `&search=${query}` : "" //search value
-	let locationQuery = filter.location ? `&city=${filter.value}` : "" //location
-	let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : "" //speciality
-	let categoryQuery = category !== "All" ? `&category=${category}` : "" //category
+	let searchQuery = query !== "" ? `&search=${query}` : ""
+	let locationQuery = filter.location ? `&city=${filter.value}` : ""
+	let specialityQuery = filter.speciality ? `&speciality=${filter.value}` : ""
+	let categoryQuery = category !== "All" ? `&category=${category}` : ""
 	let url = `${server}api/business?${searchQuery}${locationQuery}${specialityQuery}${categoryQuery}`
 	return url
 }
@@ -31,6 +31,7 @@ export const UPDATE_REGISTERED_USER = `${server}api/business/update`
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`
 
 //adding products and tests
+
 //export const ADD_TEST_AND_PRODUCTS = `${server}api/product/create`;
 //export const GET_TEST_AND_PRODUCTS = `${server}api/product/find/business`;
 export const ADD_TESTS = `${server}api/test/create`
@@ -64,6 +65,9 @@ export const updateAppointmentByID = (id) =>
 export const UPLOAD_FILE = `${server}api/blob/upload`
 
 //orders details
+
 export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`
 
 export const FILE_UPLOAD = `${server}api/blob/upload/`
+
+export const GET_ORDERS_BY_BUSINESS = `${server}api/order/all/business`
