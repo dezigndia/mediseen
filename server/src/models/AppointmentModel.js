@@ -16,23 +16,18 @@ const appointmentSchema = new mongoose.Schema(
         address: {
             city: {
                 type: String,
-                required: true,
             },
             state: {
                 type: String,
-                required: true,
             },
             country: {
                 type: String,
-                required: true,
             },
             pincode: {
                 type: Number,
-                required: true,
             },
             area: {
                 type: String,
-                required: true,
             },
         },
         createdBy: {
