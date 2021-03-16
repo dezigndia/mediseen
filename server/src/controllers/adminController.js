@@ -17,6 +17,7 @@ const Doctor = require("../models/DoctorModel")
 const BusinessService = require("../services/business/business.service")
 const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../utils/helpers")
 const Order = require("../models/OrderModel")
+const { getRegex } = require("../utils/getRegex")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -163,10 +164,44 @@ const getUsers = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = getConditions(req)
-        let data = await User.find(conditions).limit(limit).skip(skip)
+        var pincode = new RegExp("^(" + req.query.pincode + ")")
+
+        let data = await User.aggregate([
+            {
+                $lookup: {
+                    from: "orders",
+                    localField: "phone",
+                    foreignField: "userPhoneNumber",
+                    as: "order_details",
+                },
+            },
+            // {
+            //     $match: {
+            //         address: {
+            //             $elemMatch: {
+            //                 pincode: { $regexMatch: pincode },
+            //             },
+            //         },
+            //     },
+            // },
+            { $limit: limit },
+            { $skip: skip },
+        ])
+        // .find(conditions)
+        // .limit(limit)
+        // .skip(skip)
         const totalCount = await User.countDocuments(conditions)
         data.forEach((each, i) => {
             data[i].password = undefined
+            data[i].createdAt = undefined
+            data[i].phone = undefined
+            data[i].photos = undefined
+            data[i].updatedAt = undefined
+            data[i].totalCost = 0
+            data[i].order_details.forEach(order => {
+                data[i].totalCost += order.grandTotal || 0
+                console.log(order.grandTotal)
+            })
         })
         res.status(StatusCodes.OK).json({
             data: data,
