@@ -11,4 +11,6 @@ router.get("/id/:id", authenticate(), ac.getAppointmentbyId)
 router.put("/update/:id", authenticate(), ac.updateAppointmentbyId)
 router.get("/business/patients", authenticate(), ac.getPatients)
 
+router.get("/business/booked/time/:phone", ac.getBookedSlots)
+
 module.exports = router

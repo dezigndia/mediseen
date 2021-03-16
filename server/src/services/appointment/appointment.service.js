@@ -91,6 +91,17 @@ class AppointmentService {
         })
         return patients
     })
+
+    getBookedSlots = expressAsyncHandler(async (phone, date) => {
+        let data = await Appointment.find({ businessPhoneNumber: phone }, "date timings")
+        return data.filter(obj => {
+            return (
+                new Date(obj.date).getDate() === new Date(+date).getDate() &&
+                new Date(obj.date).getMonth() === new Date(+date).getMonth() &&
+                new Date(obj.date).getFullYear() === new Date(+date).getFullYear()
+            )
+        })
+    })
 }
 
 module.exports = AppointmentService

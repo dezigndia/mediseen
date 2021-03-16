@@ -127,6 +127,17 @@ class AppointmentController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
+    getBookedSlots = expressAsyncHandler(async (req, res) => {
+        const { phone } = req.params
+        const { date } = req.query
+        const data = await appointmentService.getBookedSlots(phone, date)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
 }
 
 module.exports = AppointmentController
