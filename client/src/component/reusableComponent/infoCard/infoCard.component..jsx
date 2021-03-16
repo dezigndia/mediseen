@@ -23,7 +23,6 @@ import Icon from "../icon/icon.component"
 //importing jss
 import { green } from "../../../assets/globalJSS"
 
-<<<<<<< HEAD
 const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large }) => {
     const {
         _id,
@@ -40,33 +39,6 @@ const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, 
         //isActive,
         specialist
     } = data;
-=======
-const InfoCard = ({
-	data,
-	history,
-	stars = 5,
-	closeBy = "10pm",
-	distance = 3.3,
-	small,
-	selectData,
-	large,
-}) => {
-	const {
-		_id,
-		firstName,
-		lastName,
-		businessName,
-		type,
-		photo,
-		area,
-		city,
-		state,
-		pincode,
-		isVerified,
-		//isActive,
-		specialist,
-	} = data
->>>>>>> 81142b45b1888b1fa8bda688cb20bfa93d2cb033
 
 	const gotoPage = (e) => {
 		selectData(data)
@@ -81,7 +53,6 @@ const InfoCard = ({
 		}
 	}
 
-<<<<<<< HEAD
     const share = (e) => {
         e.stopPropagation();
         e.cancellable = true;
@@ -185,113 +156,7 @@ const InfoCard = ({
             </div>
         </div>
     );
-=======
-	const share = (e) => {
-		e.stopPropagation()
-		e.cancellable = true
-		if (navigator.share) {
-			navigator
-				.share({
-					title: "WebShare API Demo",
-					url: "https://codepen.io/ayoisaiah/pen/YbNazJ",
-				})
-				.then(() => {
-					console.log("Thanks for sharing!")
-				})
-				.catch(() => {
-					alert("something went wrong")
-				})
-		} else {
-			alert("share permission not granted")
-		}
-	}
->>>>>>> 81142b45b1888b1fa8bda688cb20bfa93d2cb033
 
-	return (
-		<div
-			className={`searchResultCard ${small ? "small" : null} ${
-				large ? "large" : null
-			}`}
-			id={_id}
-			onClick={gotoPage}
-		>
-			<div className="name">
-				<p>{businessName}</p>
-			</div>
-			<div className="avatar">
-				<img
-					src={
-						photo
-							? photo
-							: "https://medcitynews.com/uploads/2019/04/GettyImages-938657906.jpg"
-					}
-					className="avatarImage"
-					alt={`profile pic of ${firstName + lastName}`}
-				/>
-			</div>
-			<div className="address">
-				<p>{area}</p>
-				<p>{city}</p>
-				<p>
-					{state},{" " + pincode}
-				</p>
-			</div>
-			<div className="isVarified">
-				{isVerified ? <img src={logo} alt="verified" /> : null}
-			</div>
-			{/* <div className="stars">
-				<IconContext.Provider value={{ className: "starIcons" }}>
-					{(() => {
-						let starIcons = []
-						for (let i = 0; i < stars; i++) {
-							starIcons.push(<RiStarSFill key={i} />)
-						}
-						return starIcons
-					})()}
-				</IconContext.Provider>
-			</div> */}
-			{/* <div className="distance">
-				<IconContext.Provider value={{ className: "distanceIcon" }}>
-					<MdLocationOn />
-				</IconContext.Provider>
-				<p>{distance}</p>
-			</div> */}
-			<div className="closeBy">
-				<p>close by {closeBy}</p>
-			</div>
-			<div className="type">
-				<div className="typeOption option1">
-					<p>Online Consulting</p>
-					<IconContext.Provider value={{ className: "typeOptionIcon" }}>
-						<GrAdd />
-					</IconContext.Provider>
-				</div>
-				<div className="typeOption option2">
-					<p>Online Appointment</p>
-					<IconContext.Provider value={{ className: "typeOptionIcon" }}>
-						<BsCalendarFill />
-					</IconContext.Provider>
-				</div>
-				<div className="typeOption option3">
-					<p>COD/UPI</p>
-					<IconContext.Provider value={{ className: "typeOptionIcon" }}>
-						<RiWalletFill />
-					</IconContext.Provider>
-				</div>
-			</div>
-			<div className="bio">{specialist}</div>
-			<div className="location">pune</div>
-			<div className="previewPersonalWebsite">
-				<p>Preview Of Personal Website</p>
-				<p>www.mediseen.in/{businessName}</p>
-			</div>
-			<div className="share">
-				<Icon iconColor={green} size="40px" onClick={share}>
-					<IoLogoWhatsapp />
-				</Icon>
-			</div>
-		</div>
-	)
 }
 
 const mapDispatchToProps = (dispatch) => ({
