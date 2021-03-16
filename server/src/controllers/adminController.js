@@ -7,38 +7,45 @@ const saltRounds = 10
 const config = require("config")
 const { isSuperAdmin } = require("../utils/adminHelper")
 const { errorMessage, adminNotFound } = require("../utils/constants")
-const { getConditions } = require("../services/admin/admin.service")
+const { getConditions, getSortingConditions } = require("../services/admin/admin.service")
 const Product = require("../models/ProductModel")
 const User = require("../models/UserModel")
 const Pathology = require("../models/PathologyModel")
 const Hospital = require("../models/HospitalModel")
 const Pharmarcy = require("../models/PharmacyModel")
 const Doctor = require("../models/DoctorModel")
+const BusinessService = require("../services/business/business.service")
+const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../utils/helpers")
+const Order = require("../models/OrderModel")
+const { getRegex } = require("../utils/getRegex")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
     const email = req.body.email
-    const password = req.body.password
+    const phoneNumber = req.body.phoneNumber
+    const departments = req.body.departments
     Admin.findOne({ email: email }).then(admin => {
         if (admin) {
             return res.status(StatusCodes.NOT_ACCEPTABLE).json({ message: "Already exists" })
         }
-        bcrypt.hash(password, saltRounds).then(hashedPassword => {
-            const admin = new Admin({
-                email,
-                password: hashedPassword,
-                name,
-            })
-            admin.save().then(admin => {
-                res.json({ message: "saved successfully" })
-            })
+        // bcrypt.hash(password, saltRounds).then(hashedPassword => {
+        const adminNew = new Admin({
+            email,
+            // password: hashedPassword,
+            name,
+            departments,
+            phoneNumber,
         })
+        adminNew.save().then(admin => {
+            res.status(StatusCodes.OK).json({ message: "saved successfully" })
+        })
+        // })
     })
 })
 
 const removeAdmin = expressAsyncHandler(async (req, res) => {
     const { emails } = req.body
-    console.log(req.body)
+    // console.log(req.body)
     let resReq
     emails.forEach(async email => {
         resReq = await Admin.deleteOne({ email: email, isSuperAdmin: false })
@@ -47,7 +54,7 @@ const removeAdmin = expressAsyncHandler(async (req, res) => {
         }
     })
 
-    console.log(resReq)
+    // console.log(resReq)
     res.status(StatusCodes.OK).json({ message: "Deleted successfully!" })
 })
 
@@ -97,6 +104,10 @@ const getAdmins = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = await getConditions(req)
+        conditions = {
+            ...conditions,
+            isSuperAdmin: false,
+        }
         let data = await Admin.find(conditions).limit(limit).skip(skip)
         const totalCount = await Admin.countDocuments(conditions)
         data.forEach((each, i) => {
@@ -126,6 +137,25 @@ const getProducts = expressAsyncHandler(async (req, res) => {
         })
     }
 })
+const getOrders = expressAsyncHandler(async (req, res) => {
+    let { skip, limit } = req.query
+    skip = skip - "0"
+    limit = limit - "0"
+    if (skip === null || limit === null) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    } else {
+        let conditions = getConditions(req)
+        let sortby = await getSortingConditions(req)
+        // console.log(sortby)
+        const data = await Order.find(conditions).limit(limit).sort(sortby).skip(skip)
+        const totalCount = await Order.countDocuments(conditions)
+
+        res.status(StatusCodes.OK).json({
+            data: data,
+            totalCount: totalCount,
+        })
+    }
+})
 const getUsers = expressAsyncHandler(async (req, res) => {
     let { skip, limit } = req.query
     skip = skip - "0"
@@ -134,10 +164,44 @@ const getUsers = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = getConditions(req)
-        let data = await User.find(conditions).limit(limit).skip(skip)
+        var pincode = new RegExp("^(" + req.query.pincode + ")")
+
+        let data = await User.aggregate([
+            {
+                $lookup: {
+                    from: "orders",
+                    localField: "phone",
+                    foreignField: "userPhoneNumber",
+                    as: "order_details",
+                },
+            },
+            // {
+            //     $match: {
+            //         address: {
+            //             $elemMatch: {
+            //                 pincode: { $regexMatch: pincode },
+            //             },
+            //         },
+            //     },
+            // },
+            { $limit: limit },
+            { $skip: skip },
+        ])
+        // .find(conditions)
+        // .limit(limit)
+        // .skip(skip)
         const totalCount = await User.countDocuments(conditions)
         data.forEach((each, i) => {
             data[i].password = undefined
+            data[i].createdAt = undefined
+            data[i].phone = undefined
+            data[i].photos = undefined
+            data[i].updatedAt = undefined
+            data[i].totalCost = 0
+            data[i].order_details.forEach(order => {
+                data[i].totalCost += order.grandTotal || 0
+                console.log(order.grandTotal)
+            })
         })
         res.status(StatusCodes.OK).json({
             data: data,
@@ -176,7 +240,7 @@ const getUsers = expressAsyncHandler(async (req, res) => {
 const loginAdmin = expressAsyncHandler(async (req, res) => {
     const email = req.body.email
     const password = req.body.password
-
+    // console.log(email, password, req.body)
     const admin = await Admin.findOne({ email: email })
     if (admin) {
         bcrypt.compare(password, admin.password, function (err, result) {
@@ -188,7 +252,7 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
                     },
                     config.has("jwt.secret") ? config.get("jwt.secret") : null,
                     {
-                        expiresIn: "1h",
+                        expiresIn: "24h",
                     }
                 )
 
@@ -208,9 +272,43 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
             }
         })
     } else {
-        res.status(StatusCodes.NOT_FOUND).json({
+        res.status(StatusCodes.NOT_ACCEPTABLE).json({
             message: "Auth Failed",
         })
+    }
+})
+
+const bs = new BusinessService()
+
+const getBusinessList = expressAsyncHandler(async (req, res) => {
+    const { limit, skip, category, specialist, area, search } = req.query
+
+    let data = await bs.getAllBusiness(limit, skip, category, specialist, area, search, true)
+    let reqData = []
+    if (data) {
+        Promise.all(
+            data.map(async (each, i) => {
+                // let call = async () => {
+                //     return new Promise(next => {
+                let ans = await getTotalSalesByBusiness(
+                    each.phone,
+                    each.type,
+                    each._doc.collections && each._doc.collections.collectionChargesPerVisit
+                        ? each._doc.collections.collectionChargesPerVisit
+                        : 0
+                )
+                let oToday = {
+                    orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+                }
+                reqData.push({ ...data[i]._doc, ...ans, ...oToday })
+                // console.log(reqData[i])
+            })
+        ).then(req => {
+            return res.status(StatusCodes.OK).json({ status: true, payload: reqData })
+        })
+        // return res.status(StatusCodes.OK).json({ status: true, payload: data })
+    } else {
+        throw new AppError(StatusCodes.NOT_FOUND, "Businesss List not found.")
     }
 })
 
@@ -222,5 +320,7 @@ module.exports = {
     getProducts,
     getUsers,
     getTotalUsers,
+    getBusinessList,
     getTotalBusinesses,
+    getOrders,
 }

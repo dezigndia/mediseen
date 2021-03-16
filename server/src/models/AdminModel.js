@@ -15,6 +15,13 @@ const adminSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        departments: {
+            type: Array,
+            default: [],
+        },
+        phoneNumber: {
+            type: String,
+        },
     },
     { timestamps: true }
 )

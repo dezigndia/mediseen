@@ -15,7 +15,14 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import { Checkbox, FormControlLabel } from "@material-ui/core";
+import {
+  CollectionsOutlined,
+  ExpandLess,
+  ExpandMore,
+  MoreVert,
+} from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -31,177 +38,252 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { fetchCall } from "services/services";
+import UsersManagerContent from "./users-manager/UsersTable";
 
 function UserProfile() {
+  const [openForm, setopenForm] = useState(false);
+  const [state, setstate] = useState({
+    name: "",
+    phoneNumber: "",
+    email: "",
+    departments: [],
+  });
+
+  const [errors, seterrors] = useState({
+    name: null,
+    phoneNumber: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
+  });
+
+  function onChange(e) {
+    resetErrors();
+    if (e.target.name === "departments") {
+      if (state["departments"].indexOf(e.target.value) >= 0) {
+        let req = state["departments"].filter(
+          (each) => each !== e.target.value
+        );
+        setstate((state) => ({
+          ...state,
+          departments: req,
+        }));
+      } else {
+        setstate((state) => ({
+          ...state,
+          departments: [...state["departments"], e.target.value],
+        }));
+      }
+    } else
+      setstate((state) => ({
+        ...state,
+        [e.target.name]: e.target.value,
+      }));
+  }
+
+  async function onSave() {
+    if (validForm()) {
+      let body = {
+        name: state.name.trim(),
+        // password: state.password.trim(),
+        email: state.email.trim(),
+        phoneNumber: state.phoneNumber,
+        departments: state.departments,
+      };
+
+      body.departments.sort();
+
+      const data = await fetchCall("add_admin", body);
+      console.log(data);
+      if (data.success) {
+        console.log("success saving admin");
+      } else {
+        console.log("no success");
+      }
+    }
+  }
+
+  function validForm() {
+    if (state.name.trim() === "") {
+      seterrors((state) => ({
+        ...state,
+        name: "Enter name!",
+      }));
+      return false;
+    } else if (state.email.trim() === "") {
+      seterrors((state) => ({
+        ...state,
+        email: "Enter email!",
+      }));
+      return false;
+    } else if (state.phoneNumber.trim() === "") {
+      seterrors((state) => ({
+        ...state,
+        phoneNumber: "Enter phone number!",
+      }));
+      return false;
+    }
+    // else if (state.password.trim() === "") {
+    //   seterrors((state) => ({
+    //     ...state,
+    //     password: "Enter password!",
+    //   }));
+    //   return false;
+    // } else if (state.confirmPassword.trim() === "") {
+    //   seterrors((state) => ({
+    //     ...state,
+    //     confirmPassword: "Enter confirm password!",
+    //   }));
+    //   return false;
+    // } else if (state.password !== state.confirmPassword) {
+    //   seterrors((state) => ({
+    //     ...state,
+    //     confirmPassword: "Confirm password and password do not match!",
+    //   }));
+    //   return false;
+    // }
+    return true;
+  }
+
+  function resetErrors() {
+    seterrors((state) => ({
+      ...state,
+      name: null,
+      phoneNumber: null,
+      email: null,
+      password: null,
+      confirmPassword: null,
+    }));
+  }
+
   return (
     <>
       <div className="content">
         <Row>
           <Col md="8">
             <Card>
-              <CardHeader>
-                <h5 className="title">Edit Profile</h5>
+              <CardHeader
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+                onClick={() => setopenForm(!openForm)}
+              >
+                <h3 className="title">Add Member</h3>
+                <h3>{!openForm ? <ExpandMore /> : <ExpandLess />} </h3>
               </CardHeader>
-              <CardBody>
-                <Form>
-                  <Row>
-                    <Col className="pr-md-1" md="5">
+              {openForm && (
+                <CardBody>
+                  <Form>
+                    <Col className="pr-md-1" md="12">
                       <FormGroup>
-                        <label>Company (disabled)</label>
+                        <label>Name</label>
                         <Input
-                          defaultValue="Creative Code Inc."
-                          disabled
-                          placeholder="Company"
+                          placeholder="Name of member"
                           type="text"
+                          name="name"
+                          onChange={(e) => onChange(e)}
+                          value={state.name}
                         />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-md-1" md="3">
-                      <FormGroup>
-                        <label>Username</label>
+                        <label>Email</label>
                         <Input
-                          defaultValue="michael23"
-                          placeholder="Username"
+                          placeholder="Email of member"
                           type="text"
+                          onChange={(e) => onChange(e)}
+                          name="email"
+                          value={state.email}
                         />
                       </FormGroup>
                     </Col>
-                    <Col className="pl-md-1" md="4">
+                    <Col className="pr-md-1" md="12">
                       <FormGroup>
-                        <label htmlFor="exampleInputEmail1">
-                          Email address
-                        </label>
-                        <Input placeholder="mike@email.com" type="email" />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="6">
-                      <FormGroup>
-                        <label>First Name</label>
+                        <label>Mobile Number</label>
                         <Input
-                          defaultValue="Mike"
-                          placeholder="Company"
+                          placeholder="Mobile number of member"
                           type="text"
+                          name="phoneNumber"
+                          onChange={(e) => onChange(e)}
+                          value={state.phoneNumber}
                         />
                       </FormGroup>
                     </Col>
-                    <Col className="pl-md-1" md="6">
+                    <Col className="pr-md-1" md="12">
+                      <label>Departments Access</label>
                       <FormGroup>
-                        <label>Last Name</label>
-                        <Input
-                          defaultValue="Andrew"
-                          placeholder="Last Name"
-                          type="text"
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={state.departments.indexOf("Search") >= 0}
+                              onChange={(e) => onChange(e)}
+                              name="departments"
+                              color="primary"
+                              value="Search"
+                            />
+                          }
+                          label="Search"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={state.departments.indexOf("Orders") >= 0}
+                              onChange={(e) => onChange(e)}
+                              name="departments"
+                              color="primary"
+                              value="Orders"
+                            />
+                          }
+                          label="Orders"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={state.departments.indexOf("List") >= 0}
+                              onChange={(e) => onChange(e)}
+                              name="departments"
+                              color="primary"
+                              value="List"
+                            />
+                          }
+                          label="List"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={
+                                state.departments.indexOf("Support") >= 0
+                              }
+                              onChange={(e) => onChange(e)}
+                              name="departments"
+                              color="primary"
+                              value="Support"
+                            />
+                          }
+                          label="Support"
                         />
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <FormGroup>
-                        <label>Address</label>
-                        <Input
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                          placeholder="Home Address"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-md-1" md="4">
-                      <FormGroup>
-                        <label>City</label>
-                        <Input
-                          defaultValue="Mike"
-                          placeholder="City"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="px-md-1" md="4">
-                      <FormGroup>
-                        <label>Country</label>
-                        <Input
-                          defaultValue="Andrew"
-                          placeholder="Country"
-                          type="text"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pl-md-1" md="4">
-                      <FormGroup>
-                        <label>Postal Code</label>
-                        <Input placeholder="ZIP Code" type="number" />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="8">
-                      <FormGroup>
-                        <label>About Me</label>
-                        <Input
-                          cols="80"
-                          defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                            that two seat Lambo."
-                          placeholder="Here can be your description"
-                          rows="4"
-                          type="textarea"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Form>
-              </CardBody>
-              <CardFooter>
-                <Button className="btn-fill" color="primary" type="submit">
-                  Save
-                </Button>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col md="4">
-            <Card className="card-user">
-              <CardBody>
-                <CardText />
-                <div className="author">
-                  <div className="block block-one" />
-                  <div className="block block-two" />
-                  <div className="block block-three" />
-                  <div className="block block-four" />
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <img
-                      alt="..."
-                      className="avatar"
-                      src={require("assets/img/emilyz.jpg").default}
-                    />
-                    <h5 className="title">Mike Andrew</h5>
-                  </a>
-                  <p className="description">Ceo/Co-Founder</p>
-                </div>
-                <div className="card-description">
-                  Do not be scared of the truth because we need to restart the
-                  human foundation in truth And I love you like Kanye loves
-                  Kanye I love Rick Owens’ bed design but the back is...
-                </div>
-              </CardBody>
-              <CardFooter>
-                <div className="button-container">
-                  <Button className="btn-icon btn-round" color="facebook">
-                    <i className="fab fa-facebook" />
+                  </Form>
+                </CardBody>
+              )}
+              {openForm && (
+                <CardFooter>
+                  <Button
+                    className="btn-fill"
+                    color="primary"
+                    onClick={() => {
+                      onSave();
+                    }}
+                  >
+                    Save
                   </Button>
-                  <Button className="btn-icon btn-round" color="twitter">
-                    <i className="fab fa-twitter" />
-                  </Button>
-                  <Button className="btn-icon btn-round" color="google">
-                    <i className="fab fa-google-plus" />
-                  </Button>
-                </div>
-              </CardFooter>
+                </CardFooter>
+              )}
             </Card>
           </Col>
         </Row>
+        <UsersManagerContent />
       </div>
     </>
   );

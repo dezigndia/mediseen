@@ -4092,7 +4092,7 @@ input[type="button"].btn-block {
 	~ .custom-control-label::before {
 	border-color: #e14eca;
 	background-color: #e14eca;
-	box-shadow: ;
+	/* box-shadow: ; */
 }
 
 .custom-checkbox
@@ -11508,7 +11508,7 @@ a.text-darker:focus {
 	display: inline-block;
 	font: normal normal normal 1em/1 "Nucleo";
 	vertical-align: middle;
-	speak: none;
+	/* speak: none; */
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	font-size: 1rem;
@@ -13610,7 +13610,7 @@ fieldset[disabled] .btn-link.active {
 }
 .footer .nav {
 	display: inline-block;
-	float: left;
+	/* float: left; */
 	margin-bottom: 0;
 	padding-left: 30px;
 	list-style: none;

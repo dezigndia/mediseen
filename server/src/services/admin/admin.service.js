@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const config = require("config")
 const User = require("../../models/UserModel")
 const Admin = require("../../models/AdminModel")
+const { StatusCodes } = require("http-status-codes")
 
 function exactMatch(val) {
     if (val === "businessType") return true
@@ -14,10 +15,10 @@ function getConditions(req) {
     let body = req.query
 
     Object.keys(body).forEach(each => {
-        if (each === "skip" || each === "limit") return
+        if (each === "skip" || each === "limit" || each === "sortBy" || each === "asc") return
         else if (each.indexOf("MIN_PRICE") >= 0) {
             //send in payload:{sellingPrice_MIN_PRICE}
-            console.log(each.slice(0, each.length - 10))
+            // console.log(each.slice(0, each.length - 10))
             if (!conditions[each.slice(0, each.length - 10)])
                 conditions[each.slice(0, each.length - 10)] = {}
             conditions[each.slice(0, each.length - 10)]["$gte"] = body[each] - "0"
@@ -35,35 +36,45 @@ function getConditions(req) {
 
     // Movie.find({ year: { $gte: 1980, $lte: 1989 } })
 
-    console.log(conditions)
+    console.log(conditions, "conditions")
 
     return conditions
 }
 
 async function getSortingConditions(req) {
     let { sortBy, asc } = req.query
-    let ans = {}
-    ans[sortBy] = asc
+    if (sortBy && asc) {
+        // console.log(sortBy, asc)
+        let ans = {}
+        ans[sortBy] = parseInt(asc)
+        console.log(ans, "sort cond")
+        return ans
+    }
 
-    return ans
+    return ""
 }
 
-async function getAdminFromToken(req) {
-    const header = req.headers["authorization"]
-    if (!header) {
-        return null
-    }
-    const token = header
-    if (!token) {
-        return null
-    }
+async function getAdminFromToken(req, res) {
+    try {
+        const header = req.headers["authorization"]
+        if (!header) {
+            return null
+        }
+        const token = header
+        if (!token) {
+            return null
+        }
 
-    const { id } = jwt.verify(token, config.has("jwt.secret") ? config.get("jwt.secret") : null, {
-        expiresIn: "1h",
-    })
-    let user = await Admin.findById(id)
-    user.password = null
-    return user
+        const data = jwt.verify(token, config.has("jwt.secret") ? config.get("jwt.secret") : null, {
+            expiresIn: "24h",
+        })
+        // const { id } = data
+        let user = await Admin.findById(data.id)
+        user.password = null
+        return user
+    } catch (e) {
+        res.status(StatusCodes.REQUEST_TIMEOUT).json({ messgae: "Login Again!" })
+    }
 }
 
 module.exports = {
