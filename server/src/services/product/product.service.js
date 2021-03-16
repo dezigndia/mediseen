@@ -49,7 +49,7 @@ class ProductService {
     })
 
     getProductById = expressAsyncHandler(async id => {
-        const product = await Product.findOne(id)
+        const product = await Product.findById(id)
         if (!product) new AppError(StatusCodes.NOT_FOUND, "No Product found with given Id")
         else return product
     })
