@@ -50,8 +50,8 @@ const AddTimings = (props) => {
             workingHours: timing
         }
 
-        let errors = VALIDATE(data);
-        console.log(errors);
+        let errors = {};//VALIDATE(data);
+       
         if (Object.keys(errors).length === 0) {
             axios
             .put(UPDATE_REGISTERED_USER, data, {

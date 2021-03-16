@@ -3,6 +3,18 @@ import Radio from '@material-ui/core/Radio';
 import TimeKeeper from 'react-timekeeper';
 import './addDayAndTime.styles.scss';
 
+const convertToTimeStamp = (time) => {
+    if (time !== '') {
+        let hours = time.split(':')[0];
+        let min = time.split(':')[1].split(' ')[0];
+        let timestamp=new Date();
+        timestamp.setHours(hours);
+        timestamp.setMinutes(min);
+        return timestamp.getTime();
+    }
+    return '';
+}
+
 const AddDayAndTime = ({ day, setTimings, error }) => {
     const [isSelected, setIsSelected] = useState(false);
     const [morningFrom, setMorningFrom] = useState('');
@@ -17,28 +29,25 @@ const AddDayAndTime = ({ day, setTimings, error }) => {
     const eveningToRef = useRef();
 
     useEffect(() => {
+
         setTimings({
             day,
             timings: {
                 isSelected: isSelected,
                 morning: {
-                    from: morningFrom,
-                    to: morningTo
+                    from: convertToTimeStamp(morningFrom),
+                    to: convertToTimeStamp(morningTo)
                 },
                 evening: {
-                    from: eveningFrom,
-                    to: eveningTo
+                    from: convertToTimeStamp(eveningFrom),
+                    to:convertToTimeStamp(eveningTo)
                 }
             }
         });
     }, [day, morningFrom, morningTo, eveningFrom, eveningTo, isSelected]);
 
-    useEffect(() => {
-
-    }, [error]);
-
     const setTime = (Time) => {
-        console.log(Time);
+
         switch (showTimeKeeper) {
             case 'morningFrom':
                 setMorningFrom(Time.formatted12);

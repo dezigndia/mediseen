@@ -79,7 +79,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
             }
         }
 
-        let validatedData = VALIDATE(data, props.currentVendor.businessType);
+        let validatedData = {};//VALIDATE(data, props.currentVendor.businessType);
         if (Object.keys(validatedData).length == 0) {
             axios
                 .put(UPDATE_REGISTERED_USER, data, {
