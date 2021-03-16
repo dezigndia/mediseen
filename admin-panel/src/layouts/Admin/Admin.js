@@ -30,8 +30,8 @@ import routes from "routes.js";
 
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
-import Map from "views/Map";
-import UserProfile from "views/UserProfile";
+import Accounts from "views/Accounts";
+import Users from "views/Users";
 
 var ps;
 
@@ -125,8 +125,9 @@ function Admin(props) {
               />
               <Switch>
                 {getRoutes(routes)}
-                <Route to="/admin/accounts" component={UserProfile} />
-                <Route to="/admin/users" component={UserProfile} />
+
+                <Route to="/admin/users" component={Accounts} exact />
+                <Route to="/admin/accounts" component={Accounts} exact />
                 {/* <Redirect from="*" to="/admin/dashboard" /> */}
               </Switch>
               {

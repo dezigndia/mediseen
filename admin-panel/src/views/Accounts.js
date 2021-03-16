@@ -39,9 +39,9 @@ import {
   Col,
 } from "reactstrap";
 import { fetchCall } from "services/services";
-import UsersManagerContent from "./users-manager/UsersTable";
+import AccountsContent from "./accounts/AccountsContent";
 
-function UserProfile() {
+function Accounts() {
   const [openForm, setopenForm] = useState(false);
   const [state, setstate] = useState({
     name: "",
@@ -283,10 +283,10 @@ function UserProfile() {
             </Card>
           </Col>
         </Row>
-        <UsersManagerContent />
+        <AccountsContent />
       </div>
     </>
   );
 }
 
-export default UserProfile;
+export default Accounts;

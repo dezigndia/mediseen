@@ -18,17 +18,12 @@
 import Icons from "views/Icons.js";
 import Map from "views/Map.js";
 import Notifications from "views/Notifications.js";
-// import Rtl from "views/Rtl.js"
-// import TableList from "views/TableList.js"
-// import Typography from "views/Typography.js"
-// import UserProfile from "views/UserProfile.js"
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import HomeIcon from "@material-ui/icons/Home";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import Dashboard from "views/dashboard/Dashboard";
 import Orders from "views/Orders";
-import UserProfile from "views/UserProfile";
 
 var routes = [
   {

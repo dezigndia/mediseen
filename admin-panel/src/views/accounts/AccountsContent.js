@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UsersManagerContent() {
+export default function AccountsContent() {
   const classes = useStyles();
   const [rows, setrows] = useState([]);
   const [page, setpage] = useState(1);
@@ -49,7 +49,7 @@ export default function UsersManagerContent() {
   }, [filter]);
   return (
     <TableContainer component={Paper}>
-      <span>Users</span>
+      <span>Accounts</span>
       <PaginationTiles
         tileNo={(tile) => {
           setpage(tile);
@@ -64,7 +64,6 @@ export default function UsersManagerContent() {
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Departments</TableCell>
             <TableCell align="left">ID</TableCell>
-            <TableCell align="right">&nbsp;</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -74,14 +73,14 @@ export default function UsersManagerContent() {
                 {row.name}
               </TableCell>
               <TableCell align="left">
-                {row.departments.map((each) => {
-                  return <>{each}, </>;
-                })}
+                {row &&
+                  row.departments &&
+                  row.departments.length > 0 &&
+                  row.departments.map((each) => {
+                    return <>{each}, </>;
+                  })}
               </TableCell>
               <TableCell align="left">{row.email}</TableCell>
-              <TableCell align="right">
-                <MoreVert />
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
