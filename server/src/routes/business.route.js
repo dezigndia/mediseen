@@ -14,4 +14,6 @@ router.get("/details/", authenticate(), bc.getBusinessDetails) // find business 
 router.put("/update/", authenticate(), bc.updateBusiness) // update my business with token
 router.delete("/delete/", authenticate(), bc.deleteBusiness) // delete business with token
 
+router.put("/accept/hospital/:hosPh/doctor/:docId", authenticate(), bc.acceptDoctor)
+
 module.exports = router

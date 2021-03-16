@@ -94,6 +94,17 @@ class BusinessController {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
         }
     })
+    acceptDoctor = expressAsyncHandler(async (req, res) => {
+        try {
+            const { hosPh, docId } = req.params
+            await businessService.acceptDoctor(hosPh, docId)
+            return res
+                .status(StatusCodes.OK)
+                .json({ status: true, payload: "Accepeted Invitation" })
+        } catch (err) {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
+        }
+    })
 }
 
 module.exports = BusinessController

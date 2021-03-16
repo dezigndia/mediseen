@@ -162,5 +162,11 @@ class BusinessService {
     deleteBusiness = expressAsyncHandler(async phoneNumber => {
         await Doctor.deleteOne({ phone: phoneNumber })
     })
+    acceptDoctor = expressAsyncHandler(async (phoneNumber, docId) => {
+        await Hospital.updateOne(
+            { phone: phoneNumber, "doctors._id": docId },
+            { $set: { "doctors.$.isActive": true } }
+        )
+    })
 }
 module.exports = BusinessService
