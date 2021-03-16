@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import { emptyCartProduct } from "../../../../store/cart/cartActions"
+import fetchCallFile from "../../../../fetchCall/fetchCallFile"
+import moment from "moment"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -48,6 +50,7 @@ const LabBook = () => {
 	const type = query.get("order")
 
 	const image = useSelector((state) => state.prescription.image)
+	const user = useSelector((state) => state.login)
 	const dispatch = useDispatch()
 	const [payment, setPayment] = useState(1)
 	const cart = useSelector((state) => state.cart)
@@ -57,14 +60,20 @@ const LabBook = () => {
 
 	const products = cart.map((prod) => {
 		return {
-			productId: prod.item.id,
+			productId: prod.item._id,
 			qty: prod.qty,
 		}
 	})
 
+	const business = useSelector((state) => state.currentStore)
+	const phoneNo = useSelector((state) => state.user.phoneNo)
+	const patient = useSelector((state) => state.patient) || user
+
 	const totalCost = 0
 
-	const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsImRlZmF1bHQiOltdLCJfaWQiOiI2MDJlMDUxNzVmN2IxYjFlMWY0Y2QzMDkiLCJwaG9uZSI6Iis5MTgxNDY2MDI3OTYiLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xOFQwNjoxMTozNS44OTZaIiwiX192IjowLCJpYXQiOjE2MTM2MjkxMDd9.GGI3wV58RlxvhYzejS_mhUXuxA5QSbQ2ZmD7rot3qE4`
+	const token =
+		useSelector((state) => state.token.token) ||
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwNDg2NGVlYzEwYWU4YzI4ZWMzM2Y5MSIsInBob25lIjoiKzkxODkxMDcxOTE0NyIsImFkZHJlc3MiOltdLCJjcmVhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJ1cGRhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJfX3YiOjAsImlhdCI6MTYxNTM1NzE2Nn0.9CEx3xpRyG-J4dUtxUVBrRN8Eg7UOZ7zjaFTehhRBBw"
 
 	const handleBook = async () => {
 		const img = await fetch(image)
@@ -75,29 +84,40 @@ const LabBook = () => {
 			})
 		let form = new FormData()
 		form.append("file", img)
-		const res = await fetchCall("blob/upload", "POST", token, form, "file")
+		const res = await fetchCallFile("blob/upload", "POST", token, form)
 		const link = res.data.payload
 		let body
 		if (type === "pres") {
 			body = {
-				userId: "57668688w9e89",
-				patientName: "Yash Sharma",
-				mobileNumber: "89089898686989",
-				userPhoneNumber: "787989089898989",
+				patient: {
+					firstName: patient.name.split(" ")[0],
+					lastName: patient.name.split(" ")[0],
+					mobileNumber: patient.phone,
+				},
 				date: `${Date.now()}`,
+				mobileNumber: phoneNo || "8910719147",
 				address,
-				image_url: link,
+				image_url: link.location,
+				businessType: business.type,
+				businessName: business.businessName,
+				businessPhoneNumber: business.phone,
 			}
 		} else {
 			body = {
-				userId: "57668688w9e89",
 				patientName: "Yash Sharma",
 				mobileNumber: "89089898686989",
-				userPhoneNumber: "787989089898989",
+				patient: {
+					firstName: patient.name.split(" ")[0],
+					lastName: patient.name.split(" ")[0],
+					mobileNumber: patient.phone,
+				},
 				date: `${Date.now()}`,
 				products,
 				grandTotal: totalCost,
 				address,
+				businessType: business.type,
+				businessName: business.businessName,
+				businessPhoneNumber: business.phone,
 			}
 		}
 		const data = await fetchCall("order", "POST", token, body)
@@ -141,7 +161,7 @@ const LabBook = () => {
 					item
 					xs={6}
 				>
-					Seth Meyers
+					{patient.name}
 				</Grid>
 			</Grid>
 			<Grid container item alignItems="flex-start">
@@ -154,7 +174,7 @@ const LabBook = () => {
 					item
 					xs={6}
 				>
-					8910719124
+					{patient.num}
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -167,7 +187,7 @@ const LabBook = () => {
 					item
 					xs={6}
 				>
-					25.02.2021
+					{moment(Date.now()).format("MMM Do YYYY")}
 				</Grid>
 			</Grid>
 			<Grid container item>

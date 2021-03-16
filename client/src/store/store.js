@@ -18,6 +18,9 @@ import cart from "./cart/cartReducer"
 import timing from "./book-timing/timingReducer"
 import lab from "./lab/labReducer"
 import myProductAndTestReducer from "./myProductsAndTests/myProductsAndTestReducer"
+import currentStore from "./currentStore/currentStoreReducer"
+import user from "./user/userReducer"
+import patient from "./patient/patientReducer"
 
 const rootReducer = combineReducers({
 	location: locationReducer,

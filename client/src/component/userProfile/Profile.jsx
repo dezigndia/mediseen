@@ -3,7 +3,7 @@ import clsx from "clsx"
 import Header from "./Header"
 import { Grid, Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import TypeCard from "./TypeCard"
 import ContactManager from "./ContactManager"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
@@ -11,6 +11,7 @@ import FacebookIcon from "@material-ui/icons/Facebook"
 import TwitterIcon from "@material-ui/icons/Twitter"
 import YouTubeIcon from "@material-ui/icons/YouTube"
 import fetchCall from "../../fetchCall/fetchCall"
+import { addUser } from "../../store/user/userAction"
 
 const useStyles = makeStyles((theme) => ({
 	fontGrey: {
@@ -40,14 +41,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Profile = () => {
+const Profile = ({ history }) => {
 	const classes = useStyles()
 
 	let token = useSelector((state) => state.token.token)
+	const dispatch = useDispatch()
 
 	const [appointments, setAppointments] = useState([])
 	const [orders, setOrders] = useState([])
-	const [user, setUser] = useState({})
+	const [pres, setPres] = useState([])
+
+	const user = useSelector((state) => state.user)
 
 	token = token
 		? token
@@ -62,12 +66,26 @@ const Profile = () => {
 			setOrders(data)
 		}
 
+		const fetchPres = async () => {
+			const data = await fetchCall(
+				"/order/all?isPrescription=true",
+				"GET",
+				token
+			).then((res) => {
+				console.log(res, "pres")
+				return res.data.payload
+			})
+
+			setPres(data)
+		}
+
 		const fetchAppoint = async () => {
 			const data = await fetchCall("appointment/user", "GET", token).then(
 				(res) => res.data.payload
 			)
 
 			setAppointments(data)
+			console.log(data)
 		}
 
 		const getUserInfo = async () => {
@@ -77,21 +95,24 @@ const Profile = () => {
 
 			console.log(data, "user")
 
-			setUser(data)
+			dispatch(addUser(data))
 		}
 
 		fetchOrders()
 		fetchAppoint()
 		getUserInfo()
+		fetchPres()
 	}, [])
 
 	return (
 		<Grid container direction="column">
 			<Grid item>
 				<Header
-					image={user.photos && user.photos[4]}
+					image={user.photo && user.photo}
 					name={user && user.phone}
-					address={user.address && user.address[0]}
+					address={`${user.address && user.address[0].area}, ${
+						user.address && user.address[0].pincode
+					}`}
 				/>
 			</Grid>
 			<Grid
@@ -108,7 +129,7 @@ const Profile = () => {
 					<TypeCard orders={appointments} type="My Apointments" />
 				</Grid>
 				<Grid item>
-					<TypeCard orders={appointments} type="Prescriptions" />
+					<TypeCard orders={pres} type="Prescriptions" />
 				</Grid>
 				<Grid item>
 					<TypeCard orders={orders} type="Orders" />

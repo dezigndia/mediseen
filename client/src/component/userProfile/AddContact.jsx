@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button, Grid, Paper } from "@material-ui/core"
 import { useSpring, animated } from "react-spring/web.cjs"
 import PropTypes from "prop-types"
@@ -68,30 +68,50 @@ Fade.propTypes = {
 	onExited: PropTypes.func,
 }
 
-const AddContact = ({ open, setOpen }) => {
+const AddContact = ({ open, setOpen, address, ind }) => {
 	const classes = useStyles()
 	let token = useSelector((state) => state.token.token)
+
+	let userAddress = useSelector((state) => state.user.address)
+
+	console.log(address)
 
 	const [name, setName] = useState("")
 	const [mobile, setMobile] = useState("")
 	const [add, setAdd] = useState("")
 	const [pincode, setPincode] = useState(0)
 
+	useEffect(() => {
+		if (address) {
+			setName(address.name)
+			setMobile(address.number)
+			setPincode(address.pincode)
+			setAdd(address.area)
+		}
+	}, [])
+
 	token = token
 		? token
 		: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwM2YzOTg1NTFkOTQ1MzFmMTEzMzM0YSIsImRlZmF1bHQiOltdLCJwaG9uZSI6Iis5MTg5MTA3MTkxNDciLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwidXBkYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwiX192IjowLCJpYXQiOjE2MTUxMTcwODB9.gg2XoDzt9twPmWZ1esrrNaiMhdTRdLiMTuoqcrvzgGo"
 
 	const handleSubmit = async () => {
-		const address = [
+		const addr = [
 			{
 				name,
-				mobile,
+				number: mobile,
 				area: add,
 				pincode,
 			},
 		]
+		if (userAddress.length > 0) {
+			userAddress[ind] = addr
+		} else {
+			userAddress = [...addr]
+		}
 
-		const data = await fetchCall("user", "PUT", token, address)
+		const body = { address: userAddress }
+
+		const data = await fetchCall("user", "PUT", token, body)
 
 		if (data.status) {
 			setOpen(false)
@@ -120,6 +140,7 @@ const AddContact = ({ open, setOpen }) => {
 						<Grid item xs={12}>
 							<Paper component="form" elevation={3} className={classes.search}>
 								<InputBase
+									value={name}
 									onChange={(e) => setName(e.target.value)}
 									className={classes.input}
 									placeholder="Name"
@@ -132,6 +153,7 @@ const AddContact = ({ open, setOpen }) => {
 									onChange={(e) => setMobile(e.target.value)}
 									className={classes.input}
 									placeholder="Mobile"
+									value={mobile}
 								/>
 							</Paper>
 						</Grid>
@@ -141,6 +163,7 @@ const AddContact = ({ open, setOpen }) => {
 									onChange={(e) => setAdd(e.target.value)}
 									className={classes.input}
 									placeholder="Address"
+									value={add}
 								/>
 							</Paper>
 						</Grid>
@@ -150,6 +173,7 @@ const AddContact = ({ open, setOpen }) => {
 									onChange={(e) => setPincode(e.target.value)}
 									className={classes.input}
 									placeholder="Pincode"
+									value={pincode}
 								/>
 							</Paper>
 						</Grid>

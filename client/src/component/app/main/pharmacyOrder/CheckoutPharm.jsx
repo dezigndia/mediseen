@@ -34,6 +34,7 @@ const CheckoutPharm = () => {
 	const classes = useStyles()
 
 	const cart = useSelector((state) => state.cart)
+	const user = useSelector((state) => state.user)
 
 	let totalItem = 0
 
@@ -42,7 +43,7 @@ const CheckoutPharm = () => {
 	const deliveryCharge = 0
 
 	cart.map((item) => {
-		totalCost = item.item.sellingPrice + totalCost
+		totalCost = item.item.sellingPrice * item.qty + totalCost
 		totalItem = item.qty + totalItem
 	})
 
@@ -146,7 +147,7 @@ const CheckoutPharm = () => {
 					item
 					xs={6}
 				>
-					Sunjoy Ghosh
+					{user.name ? user.name : "Yash Sharma"}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -154,7 +155,7 @@ const CheckoutPharm = () => {
 					style={{ textAlign: "right", padding: "0.5rem 0" }}
 					xs={6}
 				>
-					+91 976976868328
+					{user.phone}
 				</Grid>
 			</Grid>
 			<Grid container spacing={3}>

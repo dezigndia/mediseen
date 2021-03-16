@@ -2,7 +2,7 @@ import { Grid, Paper } from "@material-ui/core"
 import React from "react"
 import wp from "../../../../assets/icons/whatsapp.svg"
 import pin from "../../../../assets/icons/pin.svg"
-//import ReactStars from "react-stars"
+import ReactStars from "react-stars"
 import MotorcycleIcon from "@material-ui/icons/Motorcycle"
 
 import { makeStyles } from "@material-ui/core/styles"

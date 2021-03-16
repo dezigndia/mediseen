@@ -1,9 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { Grid, TextField, Button } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/core/styles"
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import fetchCall from "../../../../fetchCall/fetchCall"
+import { addUser } from "../../../../store/user/userAction"
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -30,6 +33,60 @@ const useStyles = makeStyles(() => ({
 
 const PharmAddAddress = () => {
 	const classes = useStyles()
+
+	const cart = useSelector((state) => state.cart)
+
+	const products = cart.map((prod) => {
+		return {
+			productId: prod.item._id,
+			qty: prod.qty,
+		}
+	})
+	const user = useSelector((state) => state.user)
+
+	console.log(products)
+
+	const dispatch = useDispatch()
+
+	let totalCost = 0
+
+	cart.map((item) => {
+		totalCost = item.item.sellingPrice * item.qty + totalCost
+	})
+	const [red, setRed] = useState(false)
+	const [name, setName] = useState("")
+	const [num, setNum] = useState("")
+	const [add, setAdd] = useState("")
+	const [pincode, setPincode] = useState("")
+
+	const token =
+		useSelector((state) => state.token.token) ||
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwNDg2NGVlYzEwYWU4YzI4ZWMzM2Y5MSIsInBob25lIjoiKzkxODkxMDcxOTE0NyIsImFkZHJlc3MiOltdLCJjcmVhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJ1cGRhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJfX3YiOjAsImlhdCI6MTYxNTM1NzE2Nn0.9CEx3xpRyG-J4dUtxUVBrRN8Eg7UOZ7zjaFTehhRBBw"
+
+	const handleSubmit = async () => {
+		let address = user.address
+
+		address = [...address, { name, number: num, pincode, area: add }]
+
+		const body = {
+			address,
+		}
+
+		const data = await fetchCall("user", "PUT", token, body)
+
+		if (data.sucess) {
+			const user = await fetchCall("user/get/info", "GET", token).then(
+				(res) => res.data.payload
+			)
+
+			dispatch(addUser(user))
+			setRed(true)
+		}
+	}
+
+	if (red) {
+		return <Redirect to="/home/pharmacyOrder/payment" />
+	}
 
 	return (
 		<Grid
@@ -82,7 +139,7 @@ const PharmAddAddress = () => {
 					style={{ textAlign: "right" }}
 					xs={6}
 				>
-					Rs. 430
+					Rs. {totalCost}
 				</Grid>
 			</Grid>
 			<div className={classes.divider}></div>
@@ -91,59 +148,72 @@ const PharmAddAddress = () => {
 			</Grid>
 			<Grid container item>
 				<Grid item style={{ textAlign: "left" }} xs={6}>
-					<h3>Sujoy Ghosh</h3>
+					<h3>{user.name ? user.name : "Yash Sharma"}</h3>
 				</Grid>
 				<Grid item style={{ textAlign: "right" }} xs={6}>
-					<h3>8988997098787</h3>
+					<h3>{user.phone}</h3>
 				</Grid>
 			</Grid>
 			<Grid container item spacing={2}>
+				{/* <Grid item xs={12}>
+					<TextField
+						id="outlined-basic"
+						label="Delivery Address"
+						variant="outlined"
+						fullWidth={true}
+					/>
+				</Grid> */}
+				<Grid item xs={6}>
+					<TextField
+						id="outlined-basic"
+						label="Address Name"
+						variant="outlined"
+						fullWidth={true}
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</Grid>
+				<Grid item xs={6}>
+					<TextField
+						id="outlined-basic"
+						label="Phone Number"
+						variant="outlined"
+						fullWidth={true}
+						value={num}
+						onChange={(e) => setNum(e.target.value)}
+					/>
+				</Grid>
+				<Grid item xs={6}>
+					<TextField
+						id="outlined-basic"
+						label="Address"
+						variant="outlined"
+						fullWidth={true}
+						value={add}
+						onChange={(e) => setAdd(e.target.value)}
+					/>
+				</Grid>
+				<Grid item xs={6}>
+					<TextField
+						id="outlined-basic"
+						label="Pincode"
+						variant="outlined"
+						fullWidth={true}
+						value={pincode}
+						onChange={(e) => setPincode(e.target.value)}
+					/>
+				</Grid>
 				<Grid item xs={12}>
-					<TextField
-						id="outlined-basic"
-						label="Delivery Address"
-						variant="outlined"
-						fullWidth={true}
-					/>
-				</Grid>
-				<Grid item xs={6}>
-					<TextField
-						id="outlined-basic"
-						label="Delivery Address"
-						variant="outlined"
-						fullWidth={true}
-					/>
-				</Grid>
-				<Grid item xs={6}>
-					<TextField
-						id="outlined-basic"
-						label="Delivery Address"
-						variant="outlined"
-						fullWidth={true}
-					/>
-				</Grid>
-				<Grid item xs={6}>
-					<TextField
-						id="outlined-basic"
-						label="Delivery Address"
-						variant="outlined"
-						fullWidth={true}
-					/>
-				</Grid>
-				<Grid item xs={6}>
-					<TextField
-						id="outlined-basic"
-						label="Delivery Address"
-						variant="outlined"
-						fullWidth={true}
-					/>
-				</Grid>
-				<Grid item xs={12}>
-					<Link to="/home/pharmacyOrder/payment">
-						<Button className={classes.btn} variant="contained" color="primary">
-							Back
-						</Button>
-					</Link>
+					{/* <Link to="/home/pharmacyOrder/payment"> */}
+					<Button
+						onClick={handleSubmit}
+						className={classes.btn}
+						variant="contained"
+						color="primary"
+					>
+						Done
+					</Button>
+					{/* </Link> */}
 				</Grid>
 			</Grid>
 		</Grid>

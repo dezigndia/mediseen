@@ -1,11 +1,7 @@
 import React, { useState } from "react"
 import { Grid, Avatar, Paper } from "@material-ui/core"
-import Table from "@material-ui/core/Table"
-import TableBody from "@material-ui/core/TableBody"
-import TableCell from "@material-ui/core/TableCell"
-import TableContainer from "@material-ui/core/TableContainer"
-import TableHead from "@material-ui/core/TableHead"
-import TableRow from "./TableRow"
+
+import TimeTable from "./TimeTable"
 
 import { makeStyles } from "@material-ui/core/styles"
 
@@ -36,8 +32,6 @@ const Available = ({
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
-
-	console.log(clinic)
 
 	return (
 		<Paper elevation={3} className={classes.paper}>
@@ -77,14 +71,20 @@ const Available = ({
 						<h5
 							style={{ width: "100%", textAlign: "right" }}
 							className={classes.time}
-							onClick={() => setOpen(true)}
+							onClick={() => setOpen((prev) => !prev)}
 						>
 							View All Timings
 						</h5>
 					</Grid>
 				)}
-				<Grid container item></Grid>
 			</Grid>
+			{open ? (
+				<Grid container item xs={12}>
+					<Grid item xs={12}>
+						<TimeTable clinic={clinic.workingHours} />
+					</Grid>
+				</Grid>
+			) : null}
 		</Paper>
 	)
 }

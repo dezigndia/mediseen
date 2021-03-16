@@ -2,6 +2,7 @@ import { Divider, Grid } from "@material-ui/core"
 import React from "react"
 
 import { makeStyles } from "@material-ui/core/styles"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 	fontPurple: {
@@ -13,8 +14,24 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const TypeRow = ({ order }) => {
+const TypeRow = ({ orderType, order }) => {
 	const classes = useStyles()
+
+	const date = new Date(order.createdAt)
+
+	const returnOrder = () => {
+		switch (orderType) {
+			case "Book Again":
+				return "apointment"
+			case "Prescription":
+				return "pres"
+			case "Re-Order":
+				return "order"
+			default:
+				break
+		}
+	}
+
 	return (
 		<Grid
 			container
@@ -24,14 +41,16 @@ const TypeRow = ({ order }) => {
 		>
 			<Grid item alignItems="center" container spacing={4}>
 				<Grid item xs={5}>
-					<h2 style={{ fontSize: "1.4rem" }}>Dr. Praksh</h2>
+					<h2 style={{ fontSize: "1.4rem" }}>{order.businessName}</h2>
 				</Grid>
 				<Grid item xs={3}>
-					<h5>06.08.2021</h5>
-					<h5>ABSUH878</h5>
+					<h5>{date.toLocaleDateString("en-US")}</h5>
+					{/* <h5></h5> */}
 				</Grid>
 				<Grid item xs={4}>
-					<h4 className={classes.fontPurple}>{order}</h4>
+					<Link to={`/user-profile/${returnOrder()}/${order._id}`}>
+						<h4 className={classes.fontPurple}>{orderType}</h4>
+					</Link>
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>

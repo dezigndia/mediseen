@@ -1,10 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import BusinessIcon from "@material-ui/icons/Business"
 import { Divider, Grid, Paper } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import AddContact from "./AddContact"
 import { useSelector } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
+import fetchCall from "../../fetchCall/fetchCall"
 
 const useStyles = makeStyles((theme) => ({
 	fontGrey: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Row = ({ address }) => {
+const Row = ({ address, index, setActive }) => {
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
@@ -44,8 +45,8 @@ const Row = ({ address }) => {
 				<Grid item xs={3}>
 					<h4>{address.name}</h4>
 				</Grid>
-				<Grid item xs={3}>
-					{address.phone}
+				<Grid style={{ fontWeight: "bold" }} item xs={3}>
+					{address.number}
 				</Grid>
 				<Grid item xs={3}>
 					<h4 onClick={() => setOpen(true)} className={classes.fontPurple}>
@@ -53,13 +54,20 @@ const Row = ({ address }) => {
 					</h4>
 				</Grid>
 				<Grid item xs={3}>
-					<h4 className={classes.fontPurple}>Delete</h4>
+					<h4 onClick={() => setActive(index)} className={classes.fontPurple}>
+						Delete
+					</h4>
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>
 				<Divider />
 			</Grid>
-			<AddContact open={open} setOpen={(value) => setOpen(value)} />
+			<AddContact
+				open={open}
+				address={address}
+				setOpen={(value) => setOpen(value)}
+				ind={index}
+			/>
 		</Grid>
 	)
 }
@@ -69,9 +77,31 @@ const ContactManager = ({ address }) => {
 
 	console.log(address)
 
-	let token = useSelector((state) => state.token.token)
+	let token =
+		useSelector((state) => state.token.token) ||
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwM2YzOTg1NTFkOTQ1MzFmMTEzMzM0YSIsImRlZmF1bHQiOltdLCJwaG9uZSI6Iis5MTg5MTA3MTkxNDciLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwidXBkYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwiX192IjowLCJpYXQiOjE2MTUxMTcwODB9.gg2XoDzt9twPmWZ1esrrNaiMhdTRdLiMTuoqcrvzgGo"
 
 	const [open, setOpen] = useState(false)
+
+	const [active, setActive] = useState(null)
+
+	console.log(active)
+
+	useEffect(() => {
+		const updateAddress = async () => {
+			const addressToDel = address[active]
+
+			address = address.filter((add) => add._id !== addressToDel._id)
+			const body = {
+				address,
+			}
+			const data = await fetchCall("user", "PUT", token, body)
+			console.log(data)
+		}
+		if (active !== null) {
+			updateAddress()
+		}
+	}, [active])
 
 	return (
 		<Paper elevation={4} className={classes.container}>
@@ -116,11 +146,18 @@ const ContactManager = ({ address }) => {
 						<Row />
 					</Grid> */}
 					{address && address.length > 0 ? (
-						address.map((add) => (
-							<Grid item>
-								<Row address={add} />
-							</Grid>
-						))
+						address.map((add, ind) => {
+							console.log(add)
+							return (
+								<Grid item>
+									<Row
+										address={add}
+										index={ind}
+										setActive={(val) => setActive(val)}
+									/>
+								</Grid>
+							)
+						})
 					) : (
 						<Grid item>
 							<h4>No address record.</h4>

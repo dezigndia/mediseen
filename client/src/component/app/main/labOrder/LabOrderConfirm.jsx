@@ -35,6 +35,10 @@ const LabOrderConfirm = () => {
 
 	const image = useSelector((state) => state.prescription.image)
 
+	const user = useSelector((state) => state.user)
+	const patient = useSelector((state) => state.patient) || user
+	const pathology = useSelector((state) => state.currentStore)
+
 	return (
 		<Grid
 			container
@@ -47,7 +51,7 @@ const LabOrderConfirm = () => {
 					<h3>Patient's Name :</h3>
 				</Grid>
 				<Grid item xs={6}>
-					<h3>Seth Meyers</h3>
+					<h3>{user.name || "Yash Sharma"}</h3>
 				</Grid>
 			</Grid>
 			<Grid item container xs={12}>
@@ -55,7 +59,7 @@ const LabOrderConfirm = () => {
 					<h3>Mobile Number : </h3>
 				</Grid>
 				<Grid item xs={6}>
-					<h3>9876543210</h3>
+					<h3>{user.phone}</h3>
 				</Grid>
 			</Grid>
 			<Grid item container xs={12}>
@@ -87,9 +91,9 @@ const LabOrderConfirm = () => {
 					}}
 				>
 					<ConfirmOrder
-						address="71/A belgachia Road."
+						address={pathology.area + pathology.pincode}
 						distance="2.5 km"
-						name="Rajam Medical Store"
+						name={pathology.businessName}
 					/>
 				</SwipeableDrawer>
 			</Grid>

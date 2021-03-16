@@ -67,7 +67,7 @@ const Store = () => {
 		}
 		const fetchProduct = async () => {
 			const data = await fetchCall(
-				`product/find/all?ownerId=${labId}`,
+				`test/find/all?ownerId=${labId}`,
 				"GET"
 			).then((res) => res.data.payload)
 
@@ -149,7 +149,7 @@ const Store = () => {
 										qty={product.qty}
 										cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
 										sellingPrice={product.sellingPrice}
-										businessType="pathology"
+										businessType="pharmacy"
 										product={product}
 									/>
 								)

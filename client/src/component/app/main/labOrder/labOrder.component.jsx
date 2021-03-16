@@ -11,7 +11,7 @@ import ProductCard from "./ProductCard"
 import hand from "./Hand.jpg"
 import { useSelector, useDispatch } from "react-redux"
 import Checkout from "../pharmacyOrder/Checkout"
-
+import { addCurrentStore } from "../../../../store/currentStore/currentStoreAction"
 import fetchCall from "../../../../fetchCall/fetchCall"
 
 const useStyles = makeStyles(() => ({
@@ -51,7 +51,7 @@ const PharmacyOrder = () => {
 
 	const [lab, setLab] = useState()
 	const cart = useSelector((state) => state.cart)
-
+	const dispatch = useDispatch()
 	const [upload, setUpload] = useState(false)
 	const [file, setFile] = useState({})
 	const [active, setActive] = useState()
@@ -60,17 +60,25 @@ const PharmacyOrder = () => {
 	const { labId } = useParams()
 
 	useEffect(() => {
+		if (lab) {
+			dispatch(addCurrentStore({ ...lab }))
+		}
+	}, [lab])
+
+	useEffect(() => {
 		const fetchLab = async () => {
-			const data = await fetchCall(`pharmacy/${labId}`, "GET").then(
+			const data = await fetchCall(`pathology/${labId}`, "GET").then(
 				(res) => res.data.payload
 			)
 			setLab(data)
 		}
 		const fetchProduct = async () => {
 			const data = await fetchCall(
-				`product/find/all?ownerId=${labId}`,
+				`test/find/all?ownerId=${labId}`,
 				"GET"
 			).then((res) => res.data.payload)
+
+			console.log(data)
 
 			setProducts(data)
 			let list = data.map((prod) => prod.category)
@@ -81,6 +89,8 @@ const PharmacyOrder = () => {
 		fetchLab()
 		fetchProduct()
 	}, [])
+
+	console.log(products)
 
 	return (
 		<Grid

@@ -19,12 +19,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const BusinessHeader = ({
-	name = "Raju Store",
-	address = "71/a, Belgachia Road",
-	stars,
-}) => {
+const BusinessHeader = ({ name, address = "71/a, Belgachia Road", stars }) => {
 	const classes = useStyles()
+
+	console.log(name)
 
 	return (
 		<div className={classes.header}>

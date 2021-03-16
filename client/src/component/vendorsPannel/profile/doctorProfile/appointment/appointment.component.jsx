@@ -1,76 +1,107 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import './appointment.styles.scss';
+import React, { useState, useEffect, useCallback, useReducer } from "react"
+import { useSelector } from "react-redux"
+import axios from "axios"
+import "./appointment.styles.scss"
 
 //importing reusable components
-import DatePicker from '../../../../reusableComponent/datePicker/datePicker.component';
+import DatePicker from "../../../../reusableComponent/datePicker/datePicker.component"
 
 //importing custom components
-import TimeSlots from '../../TimeSlots/timeSlots.component';
-import BookAppointment from '../../bookAppointment/bookAppointment.component';
+import TimeSlots from "../../TimeSlots/timeSlots.component"
+import BookAppointment from "../../bookAppointment/bookAppointment.component"
 
 //importing services
-import { getAppointmentByBusiness, updateAppointmentByID } from '../../../../../services/services';
+import {
+	getAppointmentByBusiness,
+	updateAppointmentByID,
+} from "../../../../../services/services"
 
+const days = [
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturdy",
+]
 
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturdy'];
-
-const SHOW_APPOINTMENTS = 'showAppointments';
-const ISSUE_NEW_APPOINTMENT = 'issueNewAppointments';
+const SHOW_APPOINTMENTS = "showAppointments"
+const ISSUE_NEW_APPOINTMENT = "issueNewAppointments"
 
 const convertToDateObject = (hrs, min) => {
-    let date = new Date();
-    date.setHours(hrs);
-    date.setMinutes(min);
-    date.setSeconds(0);
-    return date;
+	let date = new Date()
+	date.setHours(hrs)
+	date.setMinutes(min)
+	date.setSeconds(0)
+	return date
 }
 
-const makeAppointmentSlotsArray = (slotArr, startTime, endTime, suffix, hospitalName) => {
-    //var temp = startTime;
-    var start_time = convertToDateObject(startTime.split(':')[0], startTime.split(':')[1].split(' ')[0]);
-    var end_time = convertToDateObject(endTime.split(':')[0], endTime.split(':')[1].split(' ')[0]);
+const makeAppointmentSlotsArray = (
+	slotArr,
+	startTime,
+	endTime,
+	suffix,
+	hospitalName
+) => {
+	//var temp = startTime;
+	var start_time = convertToDateObject(
+		startTime.split(":")[0],
+		startTime.split(":")[1].split(" ")[0]
+	)
+	var end_time = convertToDateObject(
+		endTime.split(":")[0],
+		endTime.split(":")[1].split(" ")[0]
+	)
 
-    var temp_time = start_time; //eg 6:00 am
+	var temp_time = start_time //eg 6:00 am
 
-    //pushing to the array in the interval of 30 minutes
-    while (temp_time < end_time) {
-        let next_temp_time = new Date(temp_time.getTime() + 30 * 60 * 1000);//added 30 minutes , fix this
-        slotArr.push({
-            from: `${temp_time.getHours()}:${temp_time.getMinutes() <= 9 ? `0${temp_time.getMinutes()}` : temp_time.getMinutes()} ${suffix}`,
-            to: `${next_temp_time.getHours()}:${next_temp_time.getMinutes() <= 9 ? `0${next_temp_time.getMinutes()}` : next_temp_time.getMinutes()} ${suffix}`,
-            hospitalName
-        });
-        temp_time = next_temp_time;
-    }
+	//pushing to the array in the interval of 30 minutes
+	while (temp_time < end_time) {
+		let next_temp_time = new Date(temp_time.getTime() + 30 * 60 * 1000) //added 30 minutes , fix this
+		slotArr.push({
+			from: `${temp_time.getHours()}:${
+				temp_time.getMinutes() <= 9
+					? `0${temp_time.getMinutes()}`
+					: temp_time.getMinutes()
+			} ${suffix}`,
+			to: `${next_temp_time.getHours()}:${
+				next_temp_time.getMinutes() <= 9
+					? `0${next_temp_time.getMinutes()}`
+					: next_temp_time.getMinutes()
+			} ${suffix}`,
+			hospitalName,
+		})
+		temp_time = next_temp_time
+	}
 }
 
 var isPresent = (arr, item) => {
-    let return_data = { present: false };
+	let return_data = { present: false }
 
-    //checking for latest entry
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i].timings.from.replace(' ', '') === item.from.replace(' ', '') && arr[i].timings.to.replace(' ', '') === item.to.replace(' ', '')) {
-            return_data = { present: true, index: i, isCancelled: arr[i].isCancelled };
-        }
-    }
+	//checking for latest entry
+	for (let i = 0; i < arr.length; i++) {
+		if (
+			arr[i].timings.from.replace(" ", "") === item.from.replace(" ", "") &&
+			arr[i].timings.to.replace(" ", "") === item.to.replace(" ", "")
+		) {
+			return_data = { present: true, index: i, isCancelled: arr[i].isCancelled }
+		}
+	}
 
-    return return_data;
+	return return_data
 }
 
 const convertToTimeStamp = (selectedDate) => {
-    //function to convert selected date in timeStamp
-    let date = new Date();
-    date.setDate(selectedDate.date);
-    date.setMonth(selectedDate.month);
-    date.setFullYear(selectedDate.year);
-    return date.getTime();
+	//function to convert selected date in timeStamp
+	let date = new Date()
+	date.setDate(selectedDate.date)
+	date.setMonth(selectedDate.month)
+	date.setFullYear(selectedDate.year)
+	return date.getTime()
 }
 
-
 /****************************************** Component ***************************************** */
-
 
 const Appointments = () => {
 

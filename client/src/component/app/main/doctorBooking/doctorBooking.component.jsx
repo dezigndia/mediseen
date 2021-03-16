@@ -55,14 +55,18 @@
 import { Grid } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
 import InfoCard from "./InfoCard"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import moment from "moment"
 import Available from "./Available"
+import { addCurrentStore } from "../../../../store/currentStore/currentStoreAction"
 
 const currentDate = new Date()
 
-const day = moment().format("dddd")
+// const day = moment().format("dddd")
+
+const day = "Monday"
 
 const time = currentDate.getHours()
 
@@ -70,6 +74,8 @@ const DoctorBooking = () => {
 	const { id } = useParams()
 
 	console.log(time)
+
+	const dispatch = useDispatch()
 
 	const [doc, setDoc] = useState({})
 
@@ -81,7 +87,7 @@ const DoctorBooking = () => {
 				(res) => res.data.payload
 			)
 			setDoc(data)
-			console.log(data)
+			dispatch(addCurrentStore(data))
 		}
 		fetchDoc()
 	}, [])
@@ -89,9 +95,8 @@ const DoctorBooking = () => {
 	useEffect(() => {
 		if (doc.clinic) {
 			const avail = doc.clinic.map((clin) => {
-				return clin.workingHours[day]
+				return { hours: clin.workingHours[`${day}`], clinic: clin }
 			})
-
 			setAvailable(avail)
 		}
 	}, [doc])
@@ -104,7 +109,7 @@ const DoctorBooking = () => {
 			justify="center"
 			alignItems="center"
 			direction="column"
-			style={{ padding: "0.5rem" }}
+			style={{ padding: "0.5rem", height: "auto", marginBottom: "5rem" }}
 			spacing={5}
 		>
 			<Grid item>
@@ -125,14 +130,25 @@ const DoctorBooking = () => {
 						<Grid item>
 							<h3>Available Today</h3>
 						</Grid>
-						<Grid item xs={12}>
-							<Available
-								name="Prakahs Hospital"
-								address="71/A, belgachia road"
-								morning="8am-10am"
-								evening="7pm-9pm"
-							/>
-						</Grid>
+						{isAvailable.map((item) => {
+							console.log(item)
+							return (
+								<Grid item xs={12}>
+									<Available
+										name={item.clinic.name}
+										address={item.clinic.address}
+										morning={
+											item.hours &&
+											`${item.hours.morning.from}-${item.hours.morning.to}`
+										}
+										evening={
+											item.hours &&
+											`${item.hours.evening.from}-${item.hours.evening.to}`
+										}
+									/>
+								</Grid>
+							)
+						})}
 					</>
 				) : null}
 			</Grid>

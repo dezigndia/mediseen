@@ -8,7 +8,7 @@ import {
 	Paper,
 	InputBase,
 } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import Test from "./Test"
 import Address from "./Address"
@@ -18,6 +18,7 @@ import { Link, Redirect, useLocation } from "react-router-dom"
 import AddIcon from "@material-ui/icons/Add"
 import { addLabAddress } from "../../../../store/lab/labActions"
 import fetchCall from "../../../../fetchCall/fetchCall"
+import { addPatient } from "../../../../store/patient/patientAction"
 
 // const tests = [
 // 	{
@@ -112,20 +113,72 @@ function useQuery() {
 
 const LabConfirm = () => {
 	const classes = useStyles()
-
+	const user = useSelector((state) => state.user)
 	const query = useQuery()
 
 	const type = query.get("order")
 
 	const [otp, setOtp] = useState(false)
 
+	const [otpSuccess, setOtpSuccess] = useState(false)
+
 	const [code, setCode] = useState("")
+
+	const [name, setName] = useState("")
+	const [num, setNumber] = useState("")
+
+	const lab = useSelector((state) => state.currentStore)
+	const [selected, setSelected] = useState(null)
+	const dispatch = useDispatch()
 
 	const [payment, setPayment] = useState(1)
 
 	const tests = useSelector((state) => state.lab.tests)
-	const [selected, setSelected] = useState(null)
-	const dispatch = useDispatch()
+
+	useEffect(() => {
+		const body = {
+			phoneNumber: `+91${num}`,
+			otp: code,
+		}
+
+		const patient = {
+			name,
+			num,
+		}
+
+		const verifyOtp = async () => {
+			const data = await fetchCall(
+				"user/general/otp/verify",
+				"POST",
+				null,
+				body
+			)
+
+			if (data.sucess) {
+				console.log("entered")
+				setOtpSuccess(true)
+				dispatch(addPatient(patient))
+			}
+		}
+
+		if (code.length === 4) {
+			verifyOtp()
+		}
+	}, [code])
+
+	const handleOtp = async () => {
+		const body = {
+			phoneNumber: `+91${num}`,
+		}
+
+		const data = await fetchCall("user/general/otp/get", "POST", null, body)
+
+		console.log(data.sucess)
+
+		if (data.success === true) {
+			setOtp(true)
+		}
+	}
 
 	return (
 		<Grid
@@ -157,6 +210,8 @@ const LabConfirm = () => {
 						className={classes.input}
 						placeholder="Patient's Name"
 						inputProps={{ "aria-label": "search google maps" }}
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 					/>
 				</Paper>
 			</Grid>
@@ -166,16 +221,20 @@ const LabConfirm = () => {
 						className={classes.input}
 						placeholder="Patient's Phone Number"
 						inputProps={{ "aria-label": "search google maps" }}
+						value={num}
+						onChange={(e) => setNumber(e.target.value)}
 					/>
 				</Paper>
 			</Grid>
 			{!otp ? (
 				<Grid item xs={12}>
 					<Button
-						onClick={() => setOtp(true)}
 						variant="contained"
 						color="primary"
-						onClick={() => setOtp(true)}
+						onClick={() => {
+							handleOtp()
+							setOtp(true)
+						}}
 					>
 						Send
 					</Button>
@@ -214,18 +273,29 @@ const LabConfirm = () => {
 						Add New
 					</Grid>
 					<Grid item>
-						<Link to="/home/pharmacyOrder/add-address">
+						<Link to="/home/labOrder/add-address">
 							<AddIcon style={{ fontSize: "3rem" }} />
 						</Link>
 					</Grid>
 				</Grid>
 				<Grid spacing={2} container item direction="column">
-					{address.map((addr, ind) => (
+					{/* {address.map((addr, ind) => (
 						<Grid item>
 							<Address
 								setSelected={(value) => setSelected(value)}
 								ad1={addr.area}
 								ad2={`${addr.city}, ${addr.pincode}`}
+								ind={ind}
+								checked={selected === ind ? true : false}
+							/>
+						</Grid>
+					))} */}
+					{user.address.map((addr, ind) => (
+						<Grid item>
+							<Address
+								setSelected={(value) => setSelected(value)}
+								ad1={addr.name}
+								ad2={`${addr.area}, ${addr.pincode}`}
 								ind={ind}
 								checked={selected === ind ? true : false}
 							/>

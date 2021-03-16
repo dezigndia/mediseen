@@ -8,9 +8,9 @@ import Profile from "./Profile"
 const UserProfile = () => {
 	return (
 		<Switch>
-			<Route path="/user-profile/pres" component={Prescription} />
-			<Route path="/user-profile/appointment" component={Appointment} />
-			<Route path="/user-profile/order" component={Order} />
+			<Route path="/user-profile/pres/:id" component={Prescription} />
+			<Route path="/user-profile/appointment/:id" component={Appointment} />
+			<Route path="/user-profile/order/:id" component={Order} />
 			<Route path="/" component={Profile} />
 		</Switch>
 	)

@@ -20,18 +20,44 @@ import PaymentPharm from "./pharmacyOrder/PaymentPharm"
 import CheckoutPharm from "./pharmacyOrder/CheckoutPharm"
 import PharmAddAddress from "./pharmacyOrder/PharmAddAddress"
 import LabOrderConfirm from "./labOrder/LabOrderConfirm"
+import LabAddAddress from "./labOrder/LabAddAddress"
 import LabAbout from "./labOrder/LabAbout"
 import LabBooking from "./labOrder/LabBooking"
 import LabBookTime from "./labOrder/LabBookTime"
 import LabConfirm from "./labOrder/LabConfirm"
 import LabBook from "./labOrder/LabBook"
 import LabSuccess from "./labOrder/LabSuccess"
+import DocTiming from "./doctorBooking/DocTiming"
+import DocCheckout from "./doctorBooking/DocCheckout"
+import DoctorBook from "./doctorBooking/DoctorBook"
+import DocSuccess from "./doctorBooking/DocSuccess"
+import HosTiming from "./hospitalBooking/HosTiming"
+import HospitalCheckout from "./hospitalBooking/HospitalCheckout"
+import HospitalBook from "./hospitalBooking/HospitalBook"
+import HosSuccess from "./hospitalBooking/HosSuccess"
 
 const main = ({ match }) => {
 	return (
 		<main className="appMain">
 			<Switch>
 				<Route exact path={`${match.url}/`} component={Home} />
+
+				<Route
+					path={`${match.url}/doctorBooking/doc-timing`}
+					component={DocTiming}
+				/>
+				<Route
+					path={`${match.url}/doctorBooking/checkout`}
+					component={DocCheckout}
+				/>
+				<Route
+					path={`${match.url}/doctorBooking/book`}
+					component={DoctorBook}
+				/>
+				<Route
+					path={`${match.url}/doctorBooking/success`}
+					component={DocSuccess}
+				/>
 				<Route
 					path={`${match.url}/doctorBooking/:id`}
 					component={DoctorBooking}
@@ -76,9 +102,26 @@ const main = ({ match }) => {
 					component={PharmacyOrder}
 				/>
 				<Route
+					path={`${match.url}/hospitalBooking/hos-timing`}
+					component={HosTiming}
+				/>
+				<Route
+					path={`${match.url}/hospitalBooking/book`}
+					component={HospitalBook}
+				/>
+				<Route
+					path={`${match.url}/hospitalBooking/success`}
+					component={HosSuccess}
+				/>
+				<Route
+					path={`${match.url}/hospitalBooking/checkout`}
+					component={HospitalCheckout}
+				/>
+				<Route
 					path={`${match.url}/hospitalBooking/:id`}
 					component={HospitalBooking}
 				/>
+
 				<Route
 					confirm
 					path={`${match.url}/labOrder/confirm`}
@@ -101,6 +144,11 @@ const main = ({ match }) => {
 				/>
 				<Route
 					confirm
+					path={`${match.url}/labOrder/add-address`}
+					component={LabAddAddress}
+				/>
+				<Route
+					confirm
 					path={`${match.url}/labOrder/checkout`}
 					component={LabConfirm}
 				/>
@@ -117,7 +165,6 @@ const main = ({ match }) => {
 					path={`${match.url}/bookOrder/:category/:subCategory`}
 					component={BookOrder}
 				/>
-				
 			</Switch>
 		</main>
 	)
