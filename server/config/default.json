@@ -2,11 +2,6 @@
     "database": {
         "URL": "mongodb+srv://yxsh:Qwerty12345@portfolio-apps.zrui0.mongodb.net/Mediseen?retryWrites=true&w=majority"
     },
-    "twilio": {
-        "id": "ACed090c5ef271df5784dd220a2f444754",
-        "auth": "a4fe626d5158c6665e6cdecf8f2a1cab",
-        "service": "VA5e9eb4ca6bdbb5e5ed1502f1c1c46c1f"
-    },
     "jwt": {
         "secret": "talhaAnjum"
     },
@@ -23,5 +18,6 @@
         "sizelimit": 300000000,
         "accessKeyId": "AKIAT6QKWO4WSSR2CUIV",
         "secretAccessKey": "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"
-    }
+    },
+    "mode": "DEFAULT"
 }

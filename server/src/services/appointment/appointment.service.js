@@ -7,23 +7,47 @@ class AppointmentService {
         return await Appointment.create(body)
     })
 
-    getAppointmentbyBuisness = expressAsyncHandler(async (limit, skip, buisnessPhoneNumber) => {
-        return await Appointment.find({ buisnessPhoneNumber: buisnessPhoneNumber })
-            .limit(parseInt(limit))
-            .skip(parseInt(skip))
-    })
-    getAppointmentbyUser = expressAsyncHandler(async (limit, skip, userPhoneNumber) => {
-        return await Appointment.find({ userPhoneNumber: userPhoneNumber })
-            .limit(parseInt(limit))
-            .skip(parseInt(skip))
-    })
+    getAppointmentbybusiness = expressAsyncHandler(
+        async (limit, skip, businessPhoneNumber, searchQuery) => {
+            delete searchQuery["limit"]
+            delete searchQuery["skip"]
+            let date
+            if (searchQuery.date) {
+                date = searchQuery.date
+                delete searchQuery["date"]
+            }
+            let data = await Appointment.find({
+                businessPhoneNumber: businessPhoneNumber,
+                ...searchQuery,
+            })
+                .limit(parseInt(limit))
+                .skip(parseInt(skip))
+            if (date) {
+                return data.filter(obj => {
+                    return (
+                        new Date(obj.date).getDate() === new Date(+date).getDate() &&
+                        new Date(obj.date).getMonth() === new Date(+date).getMonth() &&
+                        new Date(obj.date).getFullYear() === new Date(+date).getFullYear()
+                    )
+                })
+            }
+            return data
+        }
+    )
+    getAppointmentbyUser = expressAsyncHandler(
+        async (limit, skip, userPhoneNumber, searchQuery) => {
+            return await Appointment.find({ userPhoneNumber: userPhoneNumber, ...searchQuery })
+                .limit(parseInt(limit))
+                .skip(parseInt(skip))
+        }
+    )
 
     getAppointmentbyId = expressAsyncHandler(async id => {
         return await Appointment.findOne({ _id: id })
     })
     updateAppointmentbyId = expressAsyncHandler(async (id, newData) => {
         let appointment = {}
-        for (const [key, value] of Object.entries(payload)) {
+        for (const [key, value] of Object.entries(newData)) {
             appointment[`${key}`] = value
         }
         return await Appointment.findByIdAndUpdate(id, appointment)
@@ -56,6 +80,27 @@ class AppointmentService {
 
     getAppointmentByBusinessCount = expressAsyncHandler(async (req, res) => {
         return await Appointment.countDocuments(getConditions(req))
+    })
+    getPatients = expressAsyncHandler(async (limit, skip, businessPhoneNumber) => {
+        const data = await Appointment.find({ businessPhoneNumber }, "patient")
+            .limit(parseInt(limit))
+            .skip(parseInt(skip))
+        let patients = []
+        data.forEach(pat => {
+            patients.push(pat.patient)
+        })
+        return patients
+    })
+
+    getBookedSlots = expressAsyncHandler(async (phone, date) => {
+        let data = await Appointment.find({ businessPhoneNumber: phone }, "date timings")
+        return data.filter(obj => {
+            return (
+                new Date(obj.date).getDate() === new Date(+date).getDate() &&
+                new Date(obj.date).getMonth() === new Date(+date).getMonth() &&
+                new Date(obj.date).getFullYear() === new Date(+date).getFullYear()
+            )
+        })
     })
 }
 

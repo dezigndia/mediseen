@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-
+const autoIncrement = require("mongoose-auto-increment")
 module.exports = uri => {
     mongoose
         .connect(uri, {
@@ -7,7 +7,8 @@ module.exports = uri => {
             useUnifiedTopology: true,
             useCreateIndex: true,
         })
-        .then(() => {
+        .then(conn => {
+            autoIncrement.initialize(conn)
             console.log("Connected To Database.")
         })
         .catch(err => {

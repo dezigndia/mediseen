@@ -5,6 +5,7 @@ const Hospital = require("../models/HospitalModel")
 const Pathology = require("../models/PathologyModel")
 const Pharmarcy = require("../models/PharmacyModel")
 const User = require("../models/UserModel")
+const config = require("config")
 
 function authenticate() {
     return async (req, res, next) => {
@@ -24,7 +25,10 @@ function authenticate() {
         }
 
         try {
-            const user = await jwt.verify(token, process.env.JWT_SECRET)
+            const user = await jwt.verify(
+                token,
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             if (!user) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
                     success: false,
@@ -79,3 +83,4 @@ function authenticate() {
 }
 
 module.exports = { authenticate }
+

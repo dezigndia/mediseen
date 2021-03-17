@@ -27,8 +27,20 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "user",
         },
+        photos: {
+            type: [String],
+            default: [],
+        },
         address: [
             {
+                name: {
+                    type: String,
+                    required: true,
+                },
+                number: {
+                    type: String,
+                    required: true,
+                },
                 city: {
                     type: String,
                     required: true,
@@ -51,7 +63,6 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
-        default: [],
     },
     { timestamps: true }
 )

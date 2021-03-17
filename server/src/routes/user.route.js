@@ -11,7 +11,10 @@ router.get("/get/info", authenticate(), uc.getUser) //TODO need to add validatio
 // new
 router.post("/user-verify-otp", uc.verifyOtp) //TODO need to add validation
 router.post("/user-get-otp", uc.sendOTP) //TODO need to add validation
-router.get("/details", authenticate(), uc.getUserDetails) // find buisness by token
+router.get("/details", authenticate(), uc.getUserDetails) // find business by token
 router.put("/", authenticate(), uc.updateUser)
+
+router.post("/general/otp/verify", uc.generalVerifyOtp)
+router.post("/general/otp/get", uc.generalSendOTP)
 
 module.exports = router

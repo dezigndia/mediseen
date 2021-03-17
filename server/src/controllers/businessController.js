@@ -2,16 +2,18 @@ const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
 const AppError = require("../utils/errorHandler")
 const jwt = require("jsonwebtoken")
+const config = require("config")
 const BusinessService = require("../services/business/business.service")
 const businessService = new BusinessService()
 
 class BusinessController {
     getBusinessList = expressAsyncHandler(async (req, res) => {
-        const { limit, skip, category, specialist, area, search } = req.query
+        const { limit, skip, category, specialist, area, search, city } = req.query
 
         const data = await businessService.getAllBusiness(
             limit,
             skip,
+            city,
             category,
             specialist,
             area,
@@ -24,18 +26,28 @@ class BusinessController {
             throw new AppError(StatusCodes.NOT_FOUND, "Businesss List not found.")
         }
     })
-    getBusinessCategory = expressAsyncHandler(async (req, res) => {
-        const categories = ["Pharmacy", "Pathology", "Hospital", "Doctor"]
-        res.status(StatusCodes.OK).json(categories)
-    })
+    getBusinessCount = expressAsyncHandler(async (req, res) => {
+        const { category, specialist, area, search, city } = req.query
 
+        const data = await businessService.getBusinessCount(
+            city,
+            category,
+            specialist,
+            area,
+            search
+        )
+        return res.status(StatusCodes.OK).json({ status: true, payload: data })
+    })
     createNewBusiness = expressAsyncHandler(async (req, res) => {
         const { category } = req.query
         const body = req.body
         const data = await businessService.createNewBusiness(category, body)
 
         if (data) {
-            const token = await jwt.sign(data.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(
+                data.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             return res.status(StatusCodes.OK).json({ status: true, payload: data, token: token })
         } else {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Busisness could'nt be added")
@@ -78,6 +90,17 @@ class BusinessController {
             return res
                 .status(StatusCodes.OK)
                 .json({ status: true, payload: "deleted successfully" })
+        } catch (err) {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
+        }
+    })
+    acceptDoctor = expressAsyncHandler(async (req, res) => {
+        try {
+            const { hosPh, docId } = req.params
+            await businessService.acceptDoctor(hosPh, docId)
+            return res
+                .status(StatusCodes.OK)
+                .json({ status: true, payload: "Accepeted Invitation" })
         } catch (err) {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
         }

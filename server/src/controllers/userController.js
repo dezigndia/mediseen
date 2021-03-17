@@ -32,6 +32,34 @@ class UserController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
+
+    generalVerifyOtp = expressAsyncHandler(async (req, res) => {
+        const { phoneNumber, otp } = req.body
+        if (!phoneNumber) {
+            throw new AppError(StatusCodes.BAD_REQUEST, "phoneNumber Missing")
+        }
+        const data = await userService.generalVerifyOtp(phoneNumber, otp)
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
+    generalSendOTP = expressAsyncHandler(async (req, res) => {
+        const { phoneNumber } = req.body
+        if (!phoneNumber) {
+            throw new AppError(StatusCodes.BAD_REQUEST, "Phone Number Missing")
+        }
+        const data = await userService.generalSendOTP(phoneNumber)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
+
+
     getUserDetails = expressAsyncHandler(async (req, res) => {
         const { phone } = res.locals.user
         const data = await userService.getUserDetails(phone)
@@ -43,7 +71,7 @@ class UserController {
     })
 
     updateUser = expressAsyncHandler(async (req, res) => {
-        const { phone } = req.locals.user
+        const { phone } = res.locals.user
 
         const data = await userService.updateUser(phone, req.body)
 

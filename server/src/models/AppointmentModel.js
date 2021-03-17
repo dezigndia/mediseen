@@ -4,25 +4,54 @@ const appointmentSchema = new mongoose.Schema(
     {
         userPhoneNumber: {
             type: String,
+            required: true,
         },
-        buisnessPhoneNumber: {
+        businessPhoneNumber: {
             type: String,
+            required: true,
+        },
+        doctor: {
+            type: String,
+        },
+        address: {
+            city: {
+                type: String,
+            },
+            state: {
+                type: String,
+            },
+            country: {
+                type: String,
+            },
+            pincode: {
+                type: Number,
+            },
+            area: {
+                type: String,
+            },
         },
         createdBy: {
             type: String,
+            required: true,
         },
         createdByType: {
             type: String,
+            required: true,
         },
-        buisnessType: {
+        businessType: {
             type: String,
+            required: true,
         },
-        buisnessName: {
+        businessName: {
             type: String,
+            required: true,
         },
         timings: {
             from: { type: String },
             to: { type: String },
+        },
+        date: {
+            type: Date,
         },
         isCancelled: {
             type: Boolean,
@@ -33,6 +62,10 @@ const appointmentSchema = new mongoose.Schema(
         },
         mobileNumber: {
             type: String,
+        },
+        accepted: {
+            type: Boolean,
+            default: false,
         },
         patient: {
             firstName: {

@@ -57,9 +57,9 @@ const commonSchema = {
     closeBy: {
         type: String,
     },
-    // image: {
-    //     type: String, //optional, only for Hospital etc
-    // },
+    photo: {
+        type: String,
+    },
     isVerified: {
         type: Boolean,
         default: false,

@@ -13,7 +13,7 @@ class AppointmentController {
         let bodydata = req.body
         user.type == "user"
             ? (bodydata.userPhoneNumber = user.phone)
-            : (bodydata.buisnessPhoneNumber = user.phone)
+            : (bodydata.businessPhoneNumber = user.phone)
 
         bodydata.createdBy = user.phone
         bodydata.createdByType = user.type
@@ -24,16 +24,22 @@ class AppointmentController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
-    getAppointmentbyBuisness = expressAsyncHandler(async (req, res) => {
+    getAppointmentbybusiness = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
         const { limit, skip } = req.query
+        const searchQuery = req.query
         if (!(user.type == "doctor" || user.type == "hospital")) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
                 error: "Unauthorized Access",
             })
         }
-        const data = await appointmentService.getAppointmentbyBuisness(limit, skip, user.phone)
+        const data = await appointmentService.getAppointmentbybusiness(
+            limit,
+            skip,
+            user.phone,
+            searchQuery
+        )
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
@@ -44,13 +50,19 @@ class AppointmentController {
     getAppointmentbyUser = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
         const { limit, skip } = req.query
+        const searchQuery = req.query
         if (user.type != "user") {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
                 error: "Unauthorized Access",
             })
         }
-        const data = await appointmentService.getAppointmentbyUser(limit, skip, user.phone)
+        const data = await appointmentService.getAppointmentbyUser(
+            limit,
+            skip,
+            user.phone,
+            searchQuery
+        )
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
@@ -104,6 +116,27 @@ class AppointmentController {
     getAppointmentbyBuisnessCount = expressAsyncHandler(async (req, res) => {
         let count = await appointmentService.getAppointmentByBusinessCount(req, res)
         res.status(StatusCodes.OK).json({ count: count })
+    })
+    getPatients = expressAsyncHandler(async (req, res) => {
+        const { user } = res.locals
+        const { limit, skip } = req.query
+        const data = await appointmentService.getPatients(limit, skip, user.phone)
+        if (data) {
+            return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
+    getBookedSlots = expressAsyncHandler(async (req, res) => {
+        const { phone } = req.params
+        const { date } = req.query
+        const data = await appointmentService.getBookedSlots(phone, date)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
     })
 }
 

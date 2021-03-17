@@ -18,11 +18,17 @@ class UserService {
         if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
         const user = await User.findOne({ phone: phoneNumber })
         if (user) {
-            const token = await jwt.sign(user.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(
+                user.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             return { auth_token: token, isRegistered: user ? true : false }
         } else {
             const user = await User.create({ phone: phoneNumber })
-            const token = await jwt.sign(user.toObject(), process.env.JWT_SECRET)
+            const token = await jwt.sign(
+                user.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
             return { auth_token: token, isRegistered: user ? true : false }
         }
     })
@@ -37,6 +43,29 @@ class UserService {
             }
         )
         return { data: data, isRegistered: user ? true : false }
+    })
+
+    generalVerifyOtp = expressAsyncHandler(async (phoneNumber, otp) => {
+        const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
+        const { data } = await axios(
+            `https://api.msg91.com/api/v5/otp/verify?mobile=${phoneNumber}&otp=${otp}&authkey=${authKey}`,
+            {
+                method: "POST",
+            }
+        )
+        if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
+        else return { data: data }
+    })
+    generalSendOTP = expressAsyncHandler(async mobileNumber => {
+        const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
+        const templateid = config.has("msg91.templateid") ? config.get("msg91.templateid") : null
+        const { data } = await axios(
+            `https://api.msg91.com/api/v5/otp?authkey=${authKey}&template_id=${templateid}&mobile=${mobileNumber}`,
+            {
+                method: "GET",
+            }
+        )
+        return { data: data }
     })
 
     getUserDetails = expressAsyncHandler(async phoneNumber => {
@@ -74,7 +103,7 @@ class UserService {
         for (const [key, value] of Object.entries(payload)) {
             newUser[`${key}`] = value
         }
-        return await User.findOneAndUpdate({ phone: phone }, newUser)
+        return await User.findOneAndUpdate({ phone: phone }, newUser, { new: true })
     })
 
     async deleteUser(id) {

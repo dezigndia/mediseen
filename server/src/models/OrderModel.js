@@ -1,45 +1,52 @@
 const mongoose = require("mongoose")
-
+const autoIncrement = require("mongoose-auto-increment")
 const orderSchema = new mongoose.Schema(
     {
-        userId: {
-            type: String,
+        orderId: {
+            type: Number,
         },
         patientName: {
             type: String,
         },
         mobileNumber: {
             type: String,
+            required: true,
         },
         userPhoneNumber: {
             type: String,
-        },
-        date: {
-            type: String,
-        },
-        time: {
-            type: String,
+            required: true,
         },
         image_url: {
             type: String,
         },
-        buisnessPhoneNumber: {
+        bill: {
             type: String,
+            default: "",
         },
-        buisnessType: {
+        businessName: {
             type: String,
+            required: true,
+        },
+        businessPhoneNumber: {
+            type: String,
+            required: true,
+        },
+        businessType: {
+            type: String,
+            required: true,
         },
         productType: {
             type: String,
         },
-        products: [
-            {
-                productId: String,
-            },
-            {
-                qty: Number,
-            },
-        ],
+        products: {
+            type: [
+                {
+                    productId: { type: String, required: true },
+                    qty: { type: Number, required: true },
+                },
+            ],
+            _id: false,
+        },
         totalItems: {
             type: Number,
         },
@@ -51,6 +58,10 @@ const orderSchema = new mongoose.Schema(
         },
         grandTotal: {
             type: Number,
+        },
+        isPrescription: {
+            type: Boolean,
+            default: false,
         },
         address: {
             city: {
@@ -80,10 +91,28 @@ const orderSchema = new mongoose.Schema(
             enum: ["pending", "accepted", "shipped", "delivered", "cancelled", "others"],
             default: "pending",
         },
+        assignedDeliveryPerson: {
+            type: String,
+        },
+        assignedCollectionPerson: {
+            type: String,
+        },
     },
     { timestamps: true }
 )
+autoIncrement.initialize(mongoose.connection)
+
+orderSchema.plugin(autoIncrement.plugin, {
+    model: "Order",
+    field: "orderId",
+    startAt: 1234,
+    incrementBy: 1,
+})
 
 const Order = mongoose.model("Order", orderSchema)
 
 module.exports = Order
+
+function arrayLimit(val) {
+    return val.length > 0
+}

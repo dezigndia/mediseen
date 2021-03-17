@@ -6,6 +6,7 @@ const { StatusCodes } = require("http-status-codes")
 const AppError = require("../../utils/errorHandler")
 const expressAsyncHandler = require("express-async-handler")
 const { getRegex, splitStringRegex } = require("../../utils/getRegex")
+const buisnessHelper = require("../../utils/buisnessHelper")
 
 class BusinessService {
     createNewBusiness = expressAsyncHandler(async (category, data) => {
@@ -44,8 +45,11 @@ class BusinessService {
         return await Doctor.findById(id)
     })
     getAllBusiness = expressAsyncHandler(
-        async (limit, skip, category, specialist, area, search) => {
+        async (limit, skip, city, category, specialist, area, search) => {
             let filter = {}
+            if (city) {
+                filter.area = getRegex(city)
+            }
             if (area) {
                 filter.area = getRegex(area)
             }
@@ -72,6 +76,36 @@ class BusinessService {
             }
         }
     )
+
+    getBusinessCount = expressAsyncHandler(async (city, category, specialist, area, search) => {
+        let filter = {}
+        if (city) {
+            filter.city = getRegex(city)
+        }
+        if (area) {
+            filter.area = getRegex(area)
+        }
+        if (specialist) {
+            filter.specialist = getRegex(specialist)
+        }
+        if (category) {
+            filter.type = getRegex(category)
+        }
+        if (search) {
+            const op = splitStringRegex(search)
+            const searchfirstName = op[0]
+            //FIXME fix type
+            const result = Doctor.find({
+                $or: [{ businessName: getRegex(search) }, { firstName: getRegex(searchfirstName) }],
+                $and: [filter],
+            })
+            return buisnessHelper.getBusinessCountByType(result)
+        } else {
+            //FIXME fix type
+            const data = await Doctor.find(filter)
+            return buisnessHelper.getBusinessCountByType(data)
+        }
+    })
 
     getBusinessByPhoneNumber = expressAsyncHandler(async (phoneNumber, category) => {
         switch (category) {
@@ -127,6 +161,12 @@ class BusinessService {
 
     deleteBusiness = expressAsyncHandler(async phoneNumber => {
         await Doctor.deleteOne({ phone: phoneNumber })
+    })
+    acceptDoctor = expressAsyncHandler(async (phoneNumber, docId) => {
+        await Hospital.updateOne(
+            { phone: phoneNumber, "doctors._id": docId },
+            { $set: { "doctors.$.isActive": true } }
+        )
     })
 }
 module.exports = BusinessService
