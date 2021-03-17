@@ -52,30 +52,36 @@ const DoctorAndHospitalRegistrationForm = (props) => {
 
         if (props.currentVendor.businessType === 'hospital') {
             data = {
-                doctors: {
-                    name: props.name,
-                    degree: props.degree,
-                    mobileNumber: props.phoneNumber,
-                    fee: props.fees,
-                    timePerSlot: props.timeSlot,
-                    feeCollect: props.feesCollectOnAccountOf.hospital ? 'hospital' : 'doctor',
-                    teleConsulting: props.teleConsulting,
-                    workingHours: timing
-                }
+                doctors: [
+                    {
+                        name: props.name,
+                        degree: props.degree,
+                        mobileNumber: props.phoneNumber,
+                        fee: props.fees,
+                        timePerSlot: props.timeSlot,
+                        feeCollect: props.feesCollectOnAccountOf.hospital ? 'hospital' : 'doctor',
+                        teleConsulting: props.teleConsulting,
+                        workingHours: timing
+                    },
+                    ...props.currentVendor.doctors
+                ]
             }
         }
         else if (props.currentVendor.businessType === 'doctor') {
             data = {
-                clinic: {
-                    name: props.name,
-                    contact: props.phoneNumber,
-                    address: props.address,
-                    fee: props.fees,
-                    timePerSlot: props.timeSlot,
-                    feeCollect: props.feesCollectOnAccountOf.hospital ? 'hospital' : 'doctor',
-                    teleConsulting: props.teleConsulting,
-                    workingHours: timing
-                }
+                clinic: [
+                    {
+                        name: props.name,
+                        contact: props.phoneNumber,
+                        address: props.address,
+                        fee: props.fees,
+                        timePerSlot: props.timeSlot,
+                        feeCollect: props.feesCollectOnAccountOf.hospital ? 'hospital' : 'doctor',
+                        teleConsulting: props.teleConsulting,
+                        workingHours: timing
+                    },
+                    ...props.currentVendor.clinic
+                ]
             }
         }
 

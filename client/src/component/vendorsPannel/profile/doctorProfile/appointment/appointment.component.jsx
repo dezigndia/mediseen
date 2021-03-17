@@ -314,9 +314,11 @@ const Appointments = () => {
 
             let morningShift = [], eveningShift = [];
 
-            time[0].workingHours !== undefined && time.forEach(item => {
-                makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient);
-                makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient);
+            time && time.forEach(item => {
+                if (item.workingHours !== undefined) {
+                    makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient);
+                    makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient);
+                }
             });
 
             setTimings(morningShift.concat(eveningShift));
