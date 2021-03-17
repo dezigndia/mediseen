@@ -16,6 +16,22 @@ const SetHospitalOrDoctor = ({ changeTab, goToSetPatient, bookAppointment, dispa
         });
     }, [setAvailableAppointmentTimings, appointmentSlots]);
 
+    const setTime = (e) => {
+        dispatch({
+            type: 'setTimings', payload: {
+                from: e.target.value.split('-')[0],
+                to: e.target.value.split('-')[1]
+            }
+        });
+        dispatch({
+            type: 'setTimeStampTimings',
+            payload: {
+                from: availableAppointmentTimings[e.target.selectedIndex].timeSlot.timeStampFrom,
+                to: availableAppointmentTimings[e.target.selectedIndex].timeSlot.timeStampTo
+            }
+        });
+    }
+
     return (
         <div className="setDoctorOrHospital">
             <div className="setDoctorOrHospitalForm">
@@ -41,10 +57,13 @@ const SetHospitalOrDoctor = ({ changeTab, goToSetPatient, bookAppointment, dispa
                 </div>
                 <div className='hospitalTime'>
                     <label htmlFor="hospital time">Hospital Time</label>
-                    <select value={`${bookAppointment.timings.from}-${bookAppointment.timings.to}`} onChange={(e) => dispatch({ type: 'setTimings', payload: { from: e.target.value.split('-')[0], to: e.target.value.split('-')[1] } })}>
+                    <select
+                        value={`${bookAppointment.timings.from}-${bookAppointment.timings.to}`}
+                        onChange={setTime}
+                    >
                         {
                             availableAppointmentTimings.length && availableAppointmentTimings.map((item, index) => {
-                                return <option key={index} value={`${item.timeSlot.from}-${item.timeSlot.to}`}>{item.timeSlot.from}-{item.timeSlot.to}</option>
+                                return <option key={index} id={index} value={`${item.timeSlot.from}-${item.timeSlot.to}`}>{item.timeSlot.from}-{item.timeSlot.to}</option>
                             })
                         }
                     </select>

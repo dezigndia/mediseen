@@ -38,6 +38,7 @@ const TimeSlots = ({ accepted, isBooked, name, phoneNo, timings, changeTab, _id,
                     : <div onClick={(e) => {
                         changeTab();
                         dispatch({ type: 'setTimings', payload: timings });
+                        dispatch({ type: 'setTimeStampTimings', payload: { from: timings.timeStampFrom, to: timings.timeStampTo } });
                     }}
                         className='appointmentTime'
                     >

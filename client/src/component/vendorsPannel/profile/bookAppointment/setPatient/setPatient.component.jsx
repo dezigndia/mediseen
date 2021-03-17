@@ -16,7 +16,6 @@ import { FiPlus } from 'react-icons/fi';
 import { MdModeEdit } from 'react-icons/md';
 
 const createTimeStamp = (selectedDate) => {
-    console.log(selectedDate);
     let date = new Date();
     date.setDate(selectedDate.date);
     date.setMonth(selectedDate.month);
@@ -28,14 +27,12 @@ const createTimeStamp = (selectedDate) => {
 const ifTimeSlotPresentInAppointmentSlots = (appointmentSlots, timeSlot) => {
 
     //function to check if timeslot selected by user is present in time slot
-    let ans = false;
     for (let i = 0; i < appointmentSlots.length; i++) {
-        if (appointmentSlots[i].timeSlot.from === timeSlot.from && appointmentSlots[i].timeSlot.to === timeSlot.to) {
-            ans = true;
-            break;
+        if (appointmentSlots[i].timeSlot.timeStampFrom === timeSlot.from && appointmentSlots[i].timeSlot.timeStampTo === timeSlot.to) {
+          return true;
         }
     }
-    return ans;
+    return false;
 }
 
 const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispatch, setAppointmentSlots, appointmentSlots }) => {
@@ -47,7 +44,7 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
         const data = {
             businessName: currentVendor.businessName,
             businessType: currentVendor.businessType,
-            timings: bookAppointment.timings,
+            timings:bookAppointment.timeStampTimings,
             notes: bookAppointment.notes,
             userPhoneNumber: currentVendor.phone,
             mobileNumber: bookAppointment.refMobileNumber,

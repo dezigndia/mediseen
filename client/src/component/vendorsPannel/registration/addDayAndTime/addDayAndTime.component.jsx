@@ -6,8 +6,9 @@ import './addDayAndTime.styles.scss';
 const convertToTimeStamp = (time) => {
     if (time !== '') {
         let hours = time.split(':')[0];
+        hours = time.split(':')[1].split(' ')[1] === 'am' ? hours : 12 + parseInt(hours);
         let min = time.split(':')[1].split(' ')[0];
-        let timestamp=new Date();
+        let timestamp = new Date();
         timestamp.setHours(hours);
         timestamp.setMinutes(min);
         return timestamp.getTime();
@@ -40,7 +41,7 @@ const AddDayAndTime = ({ day, setTimings, error }) => {
                 },
                 evening: {
                     from: convertToTimeStamp(eveningFrom),
-                    to:convertToTimeStamp(eveningTo)
+                    to: convertToTimeStamp(eveningTo)
                 }
             }
         });
