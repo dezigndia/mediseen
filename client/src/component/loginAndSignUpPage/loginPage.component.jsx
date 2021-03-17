@@ -29,6 +29,7 @@ import {
 
 //importing services
 import { USER_VERIFY_OTP } from "../../services/services"
+import { setItem } from "../../services/storage"
 
 const LoginPage = ({
 	history,
@@ -64,6 +65,7 @@ const LoginPage = ({
 				console.log(data)
 				if (data.status) {
 					dispatch(updateAccessToken(data.payload.auth_token))
+					setItem('auth_token', JSON.stringify(data.payload.auth_token))
 					console.log(data.payload.auth_token)
 					history.push("/allowAccess")
 				} else {
