@@ -13,17 +13,16 @@ import MenuForFilter from "./MenuForFilter";
 
 export default function DashboardContent() {
   const [page, setpage] = useState(1);
-  const [totalCount, setTotalCount] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
   const [filter, setfilter] = useState({
-    category: "",
+    type: "",
     area: "",
-    search: "",
-    specialist: null,
+    businessName: "",
     limit: 10,
     skip: 0,
     createdAt_MIN: null,
     createdAt_MAX: null,
-    active: true,
+    isActive: null,
   });
   const history = useHistory();
   const [data, setdata] = useState([]);
@@ -34,11 +33,12 @@ export default function DashboardContent() {
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall("get_businesses", undefined, reqBody);
     if (reqData && reqData.success) {
-      setdata(reqData.data.payload);
+      setdata(reqData.data.payload.reqData);
+      setTotalCount(reqData.data.payload.totalCount / filter.limit + 1);
     } else {
       console.log("Something went wrong", reqData);
-      localStorage.clear();
-      history.push("/signin");
+      // localStorage.clear();
+      // history.push("/signin");
     }
   }
 
@@ -62,7 +62,7 @@ export default function DashboardContent() {
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                category: e === "All Lists" ? "" : e,
+                type: e === "All Lists" ? "" : e,
               }));
             }}
           />
@@ -104,11 +104,13 @@ export default function DashboardContent() {
         </Grid>
         <Grid item>
           <MenuForFilter
-            data={["Active", "Inactive"]}
+            title="status"
+            data={["All", "Active", "InActive"]}
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                active: e === "Active",
+                isActive:
+                  e === "Active" ? true : e === "InActive" ? false : null,
               }));
             }}
           />
@@ -118,11 +120,11 @@ export default function DashboardContent() {
             onChange={(e) => {
               setfilter((state) => ({
                 ...state,
-                search: e.target.value,
+                businessName: e.target.value,
               }));
             }}
             placeholder="Search by name"
-            value={filter.search}
+            value={filter.businessName}
             classes={{ root: classes.input }}
           />
         </Grid>
@@ -135,7 +137,6 @@ export default function DashboardContent() {
       <PaginationTiles
         tileNo={(tile) => {
           setpage(tile);
-          console.log("here");
           getData(tile);
         }}
         totalTiles={totalCount}

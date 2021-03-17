@@ -13,10 +13,14 @@ import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { readableDate } from "services/services";
 import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
+  },
+  head: {
+    fontWeight: "700",
   },
 });
 
@@ -49,18 +53,24 @@ export default function AccountsContent() {
   }, [filter]);
   return (
     <TableContainer component={Paper}>
-      <span>Accounts</span>
-      <PaginationTiles
-        tileNo={(tile) => {
-          setpage(tile);
-          getData(tile);
-        }}
-        totalTiles={Math.floor(totalCount / filter.limit) + 1}
-      />
+      <Grid container>
+        <Grid item>
+          <span className="component-table-title">Accounts</span>
+        </Grid>
+        <Grid item>
+          <PaginationTiles
+            tileNo={(tile) => {
+              setpage(tile);
+              getData(tile);
+            }}
+            totalTiles={Math.floor(totalCount / filter.limit) + 1}
+          />
+        </Grid>
+      </Grid>
 
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
-          <TableRow>
+          <TableRow classes={{ head: classes.head }}>
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Departments</TableCell>
             <TableCell align="left">ID</TableCell>

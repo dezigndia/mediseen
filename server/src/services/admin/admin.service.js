@@ -28,6 +28,9 @@ function getConditions(req) {
                 conditions[each.slice(0, each.length - 4)] = {}
             conditions[each.slice(0, each.length - 4)]["$lte"] = body[each] - "0"
             return
+        } else if (each === "isActive") {
+            conditions[each] = body[each]
+            return
         }
 
         let reqEx = exactMatch(each) ? "^" + body[each] + "$" : new RegExp(body[each], "i")

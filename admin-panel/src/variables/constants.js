@@ -41,4 +41,8 @@ export const endPointsArray = {
     endpoint: "admin/get-total-businesses",
     method: "GET",
   },
+  get_products: {
+    endpoint: "admin/get-products",
+    method: "GET",
+  },
 };

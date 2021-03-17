@@ -6,6 +6,7 @@ class ProductService {
     createProduct = expressAsyncHandler(async (body, ownerId, businessName) => {
         let data = body
         data.ownerId = ownerId
+        data.businessName = businessName
         if (data.mrp - data.sellingPrice >= 0) {
             data.discount = ((data.mrp - data.sellingPrice) / data.mrp) * 100
             data.hasDiscount = true

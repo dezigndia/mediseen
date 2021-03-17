@@ -45,7 +45,7 @@ class BusinessService {
         return await Doctor.findById(id)
     })
     getAllBusiness = expressAsyncHandler(
-        async (limit, skip, city, category, specialist, area, search) => {
+        async (limit, skip, city, category, specialist, area, search, admin = false) => {
             let filter = {}
             if (city) {
                 filter.area = getRegex(city)
@@ -60,6 +60,7 @@ class BusinessService {
                 filter.type = getRegex(category)
             }
             if (search) {
+                console.log("herer", search)
                 const op = splitStringRegex(search)
                 const searchfirstName = op[0]
                 //FIXME fix type

@@ -14,7 +14,7 @@ import Pagination from "@material-ui/lab/Pagination";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
-      marginTop: theme.spacing(2),
+      // marginTop: theme.spacing(2),
     },
   },
   pagination: {
@@ -31,7 +31,7 @@ export default function PaginationTiles({ tileNo, totalTiles = 0 }) {
         // classes={{ root: classes.pagination }}
         className="pagination-custom"
         count={10}
-        shape="rounded"
+        shape="round"
         color="primary"
         onChange={(e, page) => {
           tileNo(page);

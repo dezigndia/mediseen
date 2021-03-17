@@ -19,6 +19,7 @@ import React from "react";
 
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import ProductsTable from "./products/ProductsTable";
 
 const MapWrapper = () => {
   const mapRef = React.useRef(null);
@@ -302,7 +303,7 @@ function Map() {
   return (
     <>
       <div className="content">
-        <Row>
+        {/* <Row>
           <Col md="12">
             <Card className="card-plain">
               <CardHeader>Google Maps</CardHeader>
@@ -317,7 +318,8 @@ function Map() {
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
+        <ProductsTable />
       </div>
     </>
   );

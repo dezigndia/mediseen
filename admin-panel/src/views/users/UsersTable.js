@@ -12,6 +12,7 @@ import { removeEmptyFromObject } from "services/services";
 import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
+import { Grid } from "@material-ui/core";
 
 export default function UsersTable() {
   const useStyles = makeStyles({
@@ -47,21 +48,27 @@ export default function UsersTable() {
   }, [filter]);
   return (
     <TableContainer component={Paper}>
-      <span>Users</span>
-      <PaginationTiles
-        tileNo={(tile) => {
-          setpage(tile);
-          getData(tile);
-        }}
-        totalTiles={Math.floor(totalCount / filter.limit) + 1}
-      />
+      <Grid container>
+        <Grid item>
+          <span className="component-table-title">Users</span>
+        </Grid>
+        <Grid item>
+          <PaginationTiles
+            tileNo={(tile) => {
+              setpage(tile);
+              getData(tile);
+            }}
+            totalTiles={Math.floor(totalCount / filter.limit) + 1}
+          />
+        </Grid>
+      </Grid>
 
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Departments</TableCell>
-            <TableCell align="left">ID</TableCell>
+            <TableCell align="left">PINCODE</TableCell>
+            <TableCell align="right">Orders</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,14 +78,11 @@ export default function UsersTable() {
                 {row.name}
               </TableCell>
               <TableCell align="left">
-                {row &&
-                  row.departments &&
-                  row.departments.length > 0 &&
-                  row.departments.map((each) => {
-                    return <>{each}, </>;
-                  })}
+                {row && row.address && row.address[0] && row.address[0].pincode
+                  ? row.address[0].pincode
+                  : "Not Available"}
               </TableCell>
-              <TableCell align="left">{row.email}</TableCell>
+              <TableCell align="right">Rs. {row.totalCost}</TableCell>
             </TableRow>
           ))}
         </TableBody>
