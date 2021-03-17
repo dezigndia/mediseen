@@ -1,8 +1,10 @@
 // import { PaginationTiles } from "components/CommonComponents/PaginationTiles";
 // import classes from "*.module.css";
 import { Grid, Input, makeStyles } from "@material-ui/core";
+import { HistoryTwoTone } from "@material-ui/icons";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { removeEmptyFromObject } from "services/services";
 import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
@@ -23,7 +25,7 @@ export default function DashboardContent() {
     createdAt_MAX: null,
     active: true,
   });
-
+  const history = useHistory();
   const [data, setdata] = useState([]);
   async function getData(page = 1) {
     let body = filter;
@@ -35,6 +37,8 @@ export default function DashboardContent() {
       setdata(reqData.data.payload);
     } else {
       console.log("Something went wrong", reqData);
+      localStorage.clear();
+      history.push("/signin");
     }
   }
 

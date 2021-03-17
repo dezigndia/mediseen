@@ -16,17 +16,17 @@ function getConditions(req) {
 
     Object.keys(body).forEach(each => {
         if (each === "skip" || each === "limit" || each === "sortBy" || each === "asc") return
-        else if (each.indexOf("MIN_PRICE") >= 0) {
+        else if (each.indexOf("_MIN") >= 0) {
             //send in payload:{sellingPrice_MIN_PRICE}
             // console.log(each.slice(0, each.length - 10))
-            if (!conditions[each.slice(0, each.length - 10)])
-                conditions[each.slice(0, each.length - 10)] = {}
-            conditions[each.slice(0, each.length - 10)]["$gte"] = body[each] - "0"
+            if (!conditions[each.slice(0, each.length - 4)])
+                conditions[each.slice(0, each.length - 4)] = {}
+            conditions[each.slice(0, each.length - 4)]["$gte"] = body[each] - "0"
             return
-        } else if (each.indexOf("MAX_PRICE") >= 0) {
-            if (!conditions[each.slice(0, each.length - 10)])
-                conditions[each.slice(0, each.length - 10)] = {}
-            conditions[each.slice(0, each.length - 10)]["$lte"] = body[each] - "0"
+        } else if (each.indexOf("_MAX") >= 0) {
+            if (!conditions[each.slice(0, each.length - 4)])
+                conditions[each.slice(0, each.length - 4)] = {}
+            conditions[each.slice(0, each.length - 4)]["$lte"] = body[each] - "0"
             return
         }
 

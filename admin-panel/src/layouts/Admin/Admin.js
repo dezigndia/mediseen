@@ -16,7 +16,13 @@
 
 */
 import React from "react";
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  Redirect,
+  useLocation,
+  BrowserRouter,
+} from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
@@ -123,6 +129,7 @@ function Admin(props) {
                 toggleSidebar={toggleSidebar}
                 sidebarOpened={sidebarOpened}
               />
+              {/* <BrowserRouter> */}
               <Switch>
                 {getRoutes(routes)}
 
@@ -130,6 +137,7 @@ function Admin(props) {
                 <Route to="/admin/accounts" component={Accounts} exact />
                 {/* <Redirect from="*" to="/admin/dashboard" /> */}
               </Switch>
+              {/* </BrowserRouter> */}
               {
                 // we don't want the Footer to be rendered on map page
                 location.pathname === "/admin/maps" ? null : <Footer fluid />

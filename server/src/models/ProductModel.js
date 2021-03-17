@@ -44,6 +44,9 @@ const productSchema = new mongoose.Schema({
     weight: {
         type: String,
     },
+    businessName: {
+        type: String,
+    },
 })
 
 const Product = mongoose.model("Product", productSchema)

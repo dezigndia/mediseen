@@ -115,7 +115,9 @@ export default function OrdersContent() {
               <TableCell align="left">{readableDate(row.createdAt)}</TableCell>
               <TableCell align="center">{row.grandTotal}</TableCell>
               <TableCell align="center">{row.status}</TableCell>
-              <TableCell align="right">{row.address.pincode}</TableCell>
+              <TableCell align="right">
+                {row.address ? row.address.pincode : ""}
+              </TableCell>
               {/* <TableCell align="right">
                 <MoreVert />
               </TableCell> */}

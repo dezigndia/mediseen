@@ -17,7 +17,6 @@ const Doctor = require("../models/DoctorModel")
 const BusinessService = require("../services/business/business.service")
 const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../utils/helpers")
 const Order = require("../models/OrderModel")
-const { getRegex } = require("../utils/getRegex")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -88,12 +87,17 @@ const getTotalUsers = expressAsyncHandler(async (req, res) => {
 // }
 
 const getTotalBusinesses = expressAsyncHandler(async (req, res) => {
-    return (
+    let data =
         (await Pathology.countDocuments({})) +
         (await Hospital.countDocuments({})) +
         (await Pharmarcy.countDocuments({})) +
         (await Doctor.countDocuments({}))
-    )
+
+    if (data) {
+        res.status(200).json(data)
+    } else {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    }
 })
 
 const getAdmins = expressAsyncHandler(async (req, res) => {
@@ -129,6 +133,7 @@ const getProducts = expressAsyncHandler(async (req, res) => {
     } else {
         let conditions = getConditions(req)
         const data = await Product.find(conditions).limit(limit).skip(skip)
+        console.log(data, "data")
         const totalCount = await Product.countDocuments(conditions)
 
         res.status(StatusCodes.OK).json({
@@ -164,7 +169,7 @@ const getUsers = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
         let conditions = getConditions(req)
-        var pincode = new RegExp("^(" + req.query.pincode + ")")
+        var pincode = req.query.pincode - "0"
 
         let data = await User.aggregate([
             {
@@ -175,33 +180,35 @@ const getUsers = expressAsyncHandler(async (req, res) => {
                     as: "order_details",
                 },
             },
-            // {
-            //     $match: {
-            //         address: {
-            //             $elemMatch: {
-            //                 pincode: { $regexMatch: pincode },
-            //             },
-            //         },
-            //     },
-            // },
+            {
+                $match: {
+                    address: {
+                        $elemMatch: {
+                            pincode: pincode,
+                        },
+                    },
+                },
+            },
             { $limit: limit },
             { $skip: skip },
+            {
+                $project: {
+                    address: 1,
+                    order_details: 1,
+                },
+            },
         ])
         // .find(conditions)
         // .limit(limit)
         // .skip(skip)
-        const totalCount = await User.countDocuments(conditions)
+        const totalCount = data.length
         data.forEach((each, i) => {
-            data[i].password = undefined
-            data[i].createdAt = undefined
-            data[i].phone = undefined
-            data[i].photos = undefined
-            data[i].updatedAt = undefined
             data[i].totalCost = 0
             data[i].order_details.forEach(order => {
                 data[i].totalCost += order.grandTotal || 0
                 console.log(order.grandTotal)
             })
+            data[i].order_details = undefined
         })
         res.status(StatusCodes.OK).json({
             data: data,

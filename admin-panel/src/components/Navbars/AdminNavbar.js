@@ -38,11 +38,13 @@ import {
   NavbarToggler,
   ModalHeader,
 } from "reactstrap";
+import { useHistory } from "react-router";
 
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
+  const history = useHistory();
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
@@ -148,7 +150,9 @@ function AdminNavbar(props) {
                   caret
                   color="default"
                   nav
-                  onClick={(e) => e.preventDefault()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
                 >
                   <div className="photo">
                     <img
@@ -157,7 +161,15 @@ function AdminNavbar(props) {
                     />
                   </div>
                   <b className="caret d-none d-lg-block d-xl-block" />
-                  <p className="d-lg-none">Log out</p>
+                  <p
+                    className="d-lg-none"
+                    // onClick={(e) => {
+                    //   localStorage.clear();
+                    //   history.push("/signin");
+                    // }}
+                  >
+                    Log out
+                  </p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
@@ -168,7 +180,15 @@ function AdminNavbar(props) {
                   </NavLink>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item">Log out</DropdownItem>
+                    <DropdownItem
+                      className="nav-item"
+                      onClick={(e) => {
+                        localStorage.clear();
+                        history.push("/signin");
+                      }}
+                    >
+                      Log out
+                    </DropdownItem>
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>

@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
@@ -55,50 +55,27 @@ import {
 } from "variables/charts.js";
 import TopCard from "./dashboard-card";
 import DashboardContent from "./DashboardContent";
+import { fetchCall } from "services/services";
 
 function Dashboard({}) {
-  const cardsData = [
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-    {
-      title: "Total Business",
-      content: "1233",
-    },
-  ];
+  const [cardsData, setcardsData] = useState([]);
+
+  async function totalBusinesses() {
+    let data = await fetchCall("get_total_businesses");
+
+    console.log(data);
+    if (data.success) {
+      setcardsData([
+        ...cardsData,
+        { title: "Total Businesses", content: data.data },
+      ]);
+    } else {
+      setcardsData([
+        ...cardsData,
+        { title: "Total Businesses", content: "Error" },
+      ]);
+    }
+  }
 
   const useStyles = makeStyles((theme) => ({
     content: {
@@ -112,6 +89,10 @@ function Dashboard({}) {
     },
   }));
   const classes = useStyles();
+
+  useEffect(() => {
+    totalBusinesses();
+  }, []);
   return (
     <>
       <div className="content">

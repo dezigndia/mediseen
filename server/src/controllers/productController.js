@@ -7,8 +7,8 @@ const productService = new ProductService()
 
 class ProductController {
     createProduct = expressAsyncHandler(async (req, res) => {
-        const { _id } = res.locals.user
-        const data = await productService.createProduct(req.body, _id)
+        const { _id, businessName } = res.locals.user
+        const data = await productService.createProduct(req.body, _id, businessName)
 
         if (data) {
             return res.status(StatusCodes.CREATED).json({ status: true, payload: data })

@@ -9,7 +9,7 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
 
   try {
     const response = await fetch(
-      `${baseUrl + endpoint}${queryParams ? "?" + queryParams : ""}`,
+      `${testurl + endpoint}${queryParams ? "?" + queryParams : ""}`,
       {
         method: method,
         headers: {

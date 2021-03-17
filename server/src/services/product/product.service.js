@@ -2,9 +2,10 @@ const Product = require("../../models/ProductModel")
 const expressAsyncHandler = require("express-async-handler")
 
 class ProductService {
-    createProduct = expressAsyncHandler(async (body, ownerId) => {
+    createProduct = expressAsyncHandler(async (body, ownerId, businessName) => {
         let data = body
         data.ownerId = ownerId
+        data.businessName = businessName
         return await Product.create(body)
     })
     createBatchProduct = expressAsyncHandler(async (body, ownerId) => {
