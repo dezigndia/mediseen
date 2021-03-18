@@ -7,7 +7,7 @@ const { default: axios } = require("axios")
 const config = require("config")
 
 class UserService {
-    verifyOtp = expressAsyncHandler(async (phoneNumber, otp) => {
+    verifyOtp = expressAsyncHandler(async (name, phoneNumber, otp) => {
         const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
         const { data } = await axios(
             `https://api.msg91.com/api/v5/otp/verify?mobile=${phoneNumber}&otp=${otp}&authkey=${authKey}`,
@@ -24,7 +24,7 @@ class UserService {
             )
             return { auth_token: token, isRegistered: user ? true : false }
         } else {
-            const user = await User.create({ phone: phoneNumber })
+            const user = await User.create({ phone: phoneNumber, name: name })
             const token = await jwt.sign(
                 user.toObject(),
                 config.has("jwt.secret") ? config.get("jwt.secret") : null
