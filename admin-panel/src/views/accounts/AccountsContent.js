@@ -13,7 +13,7 @@ import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { readableDate } from "services/services";
 import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons";
-import { Grid } from "@material-ui/core";
+import { Grid, Input } from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
@@ -21,6 +21,20 @@ const useStyles = makeStyles({
   },
   head: {
     fontWeight: "700",
+  },
+  sortDate: {
+    backgroundColor: "#2772f6",
+    padding: "5px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    color: "white",
+    margin: "0 0.5rem",
+  },
+  input: {
+    backgroundColor: "#2b69f5",
+    padding: "8px",
+    color: "white",
+    borderRadius: "10px",
   },
 });
 
@@ -32,8 +46,10 @@ export default function AccountsContent() {
   const [filter, setfilter] = useState({
     limit: 10,
     skip: 0,
+    phoneNumber: "",
+    name: "",
   });
-
+  const [filterOpen, setfilterOpen] = useState(false);
   async function getData(page = 1) {
     let body = filter;
     body.skip = body.limit * (page - 1);
@@ -53,19 +69,64 @@ export default function AccountsContent() {
   }, [filter]);
   return (
     <TableContainer component={Paper}>
-      <Grid container>
-        <Grid item>
-          <span className="component-table-title">Accounts</span>
+      <Grid container direction="column">
+        <Grid container justify="space-between">
+          <Grid item>
+            <span className="component-table-title">Accounts</span>
+          </Grid>
+          <Grid item>
+            <PaginationTiles
+              tileNo={(tile) => {
+                setpage(tile);
+                getData(tile);
+              }}
+              totalTiles={Math.floor(totalCount / filter.limit) + 1}
+            />
+          </Grid>
+
+          <Grid item>
+            <span
+              onClick={() => {
+                setfilterOpen(!filterOpen);
+              }}
+              className={classes.sortDate}
+            >
+              Filter
+            </span>
+          </Grid>
         </Grid>
-        <Grid item>
-          <PaginationTiles
-            tileNo={(tile) => {
-              setpage(tile);
-              getData(tile);
-            }}
-            totalTiles={Math.floor(totalCount / filter.limit) + 1}
-          />
-        </Grid>
+        {filterOpen && (
+          <Grid container>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    name: e.target.value,
+                  }));
+                }}
+                placeholder="Search by name"
+                value={filter.name}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    phoneNumber: e.target.value,
+                  }));
+                }}
+                placeholder="Search by phone number"
+                value={filter.phoneNumber}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
 
       <Table className={classes.table} aria-label="simple table">

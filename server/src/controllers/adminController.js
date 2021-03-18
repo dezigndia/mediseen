@@ -168,9 +168,18 @@ const getUsers = expressAsyncHandler(async (req, res) => {
     if (skip === null || limit === null) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
-        let conditions = getConditions(req)
-        // var pincode = req.query.pincode - "0"
+        let { name, pincode, phone } = req.query
 
+        let filter = {}
+        if (name) {
+            filter.name = new RegExp(name)
+        }
+        if (pincode) {
+            filter.pincode = pincode
+        }
+        if (phone) {
+            filter.phone = phone
+        }
         let data = await User.aggregate([
             {
                 $lookup: {
@@ -180,23 +189,15 @@ const getUsers = expressAsyncHandler(async (req, res) => {
                     as: "order_details",
                 },
             },
+            {
+                $match: filter,
+            },
             // {
-            //     $match: {
-            //         address: {
-            //             $elemMatch: {
-            //                 pincode: pincode,
-            //             },
-            //         },
+            //     $group: {
+            //         _id: 1,
+            //         myCount: { $sum: 1 },
             //     },
             // },
-            { $limit: limit },
-            { $skip: skip },
-            {
-                $project: {
-                    address: 1,
-                    order_details: 1,
-                },
-            },
         ])
         // .find(conditions)
         // .limit(limit)

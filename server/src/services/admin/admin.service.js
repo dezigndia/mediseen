@@ -5,7 +5,8 @@ const Admin = require("../../models/AdminModel")
 const { StatusCodes } = require("http-status-codes")
 
 function exactMatch(val) {
-    if (val === "businessType") return true
+    console.log(val, val.toLowerCase().indexOf("phone") >= 0)
+    if (val === "businessType" || val.toLowerCase().indexOf("phone") >= 0) return true
     return false
 }
 
@@ -16,28 +17,45 @@ function getConditions(req) {
 
     Object.keys(body).forEach(each => {
         if (each === "skip" || each === "limit" || each === "sortBy" || each === "asc") return
-        else if (each.indexOf("_MIN") >= 0) {
+        else if (each.indexOf("_DATE_MIN") >= 0) {
+            if (!conditions[each.slice(0, each.length - 9)])
+                conditions[each.slice(0, each.length - 9)] = {}
+            // console.log(body[each], each)
+            let arrayDate = body[each].split("-")
+            let dt = new Date(arrayDate[0], arrayDate[1] - 1, arrayDate[2])
+
+            conditions[each.slice(0, each.length - 9)]["$gte"] = dt
+        } else if (each.indexOf("_DATE_MAX") >= 0) {
+            if (!conditions[each.slice(0, each.length - 9)])
+                conditions[each.slice(0, each.length - 9)] = {}
+
+            let arrayDate = body[each].split("-")
+            let dt = new Date(arrayDate[0], arrayDate[1] - 1, arrayDate[2])
+
+            conditions[each.slice(0, each.length - 9)]["$lte"] = dt
+        } else if (each.indexOf("_MIN") >= 0) {
             //send in payload:{sellingPrice_MIN_PRICE}
             // console.log(each.slice(0, each.length - 10))
             if (!conditions[each.slice(0, each.length - 4)])
                 conditions[each.slice(0, each.length - 4)] = {}
             conditions[each.slice(0, each.length - 4)]["$gte"] = body[each] - "0"
-            return
         } else if (each.indexOf("_MAX") >= 0) {
             if (!conditions[each.slice(0, each.length - 4)])
                 conditions[each.slice(0, each.length - 4)] = {}
             conditions[each.slice(0, each.length - 4)]["$lte"] = body[each] - "0"
-            return
         } else if (each === "isActive") {
             conditions[each] = body[each]
-            return
+        } else {
+            try {
+                let reqEx = "/^" + body[each] + "/i"
+                conditions[each] = exactMatch(each)
+                    ? body[each]
+                    : { $regex: new RegExp(body[each], "i") }
+            } catch (e) {
+                console.log(e)
+            }
         }
-
-        let reqEx = exactMatch(each) ? "^" + body[each] + "$" : new RegExp(body[each], "i")
-        conditions[each] = { $regex: reqEx }
     })
-
-    // Movie.find({ year: { $gte: 1980, $lte: 1989 } })
 
     console.log(conditions, "conditions")
 

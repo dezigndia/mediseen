@@ -50,7 +50,12 @@ export const removeEmptyFromObject = (obj) => {
   return obj;
 };
 export const convertBodyToQueryParams = (body) => {
-  return new URLSearchParams(body).toString();
+  // console.log(body);
+  const searchParams = new URLSearchParams();
+  Object.keys(body).forEach((key) => searchParams.append(key, body[key]));
+  console.log(searchParams.toString());
+  // return new URLSearchParams(body).toString();
+  return searchParams.toString();
 };
 
 export function readableDate(date) {

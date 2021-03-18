@@ -1,6 +1,7 @@
 import { Card, Grid, makeStyles } from "@material-ui/core";
 import { ArrowDownward, ExpandMore, RoomOutlined } from "@material-ui/icons";
 import React from "react";
+import { readableDate } from "services/services";
 
 export default function DashboardTableCard({ data = {} }) {
   const useStyles = makeStyles((theme) => ({
@@ -67,7 +68,7 @@ export default function DashboardTableCard({ data = {} }) {
             </Grid>
           </Grid>
           <Grid container justify="space-between">
-            <Grid item>List 29/10/20</Grid>
+            <Grid item>List {readableDate(data.createdAt)}</Grid>
             <Grid item>
               <span className={classes.active}>
                 {data.isActive ? "Active" : "Not Active"}

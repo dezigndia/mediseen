@@ -20,8 +20,8 @@ export default function DashboardContent() {
     businessName: "",
     limit: 10,
     skip: 0,
-    createdAt_MIN: null,
-    createdAt_MAX: null,
+    createdAt_DATE_MIN: null,
+    createdAt_DATE_MAX: null,
     isActive: null,
   });
   const history = useHistory();
@@ -45,6 +45,8 @@ export default function DashboardContent() {
   const useStyles = makeStyles((theme) => ({
     input: {
       backgroundColor: "white",
+      padding: "8px",
+      borderRadius: "10px",
     },
   }));
   const classes = useStyles();
@@ -80,27 +82,28 @@ export default function DashboardContent() {
           />
         </Grid>
         <Grid item>
-          {/* <MenuForFilter
-          title="Date Lower"
-            data={["All Lists", "Pharmacy", "Doctor", "Hospital", "Pathology"]}
+          <MenuForFilter
+            title="Date Lower"
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                createdAt_MIN: e,
+                createdAt_DATE_MIN: e,
               }));
             }}
-          /> */}
+            type="date"
+          />
         </Grid>
         <Grid item>
-          {/* <MenuForFilter
-            data={["All Lists", "Pharmacy", "Doctor", "Hospital", "Pathology"]}
+          <MenuForFilter
+            title="date upper"
+            type="date"
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                createdAt_MAX: e,
+                createdAt_DATE_MAX: e,
               }));
             }}
-          /> */}
+          />
         </Grid>
         <Grid item>
           <MenuForFilter
@@ -115,7 +118,7 @@ export default function DashboardContent() {
             }}
           />
         </Grid>
-        <Grid item xs="auto">
+        <Grid item>
           <Input
             onChange={(e) => {
               setfilter((state) => ({
@@ -125,6 +128,7 @@ export default function DashboardContent() {
             }}
             placeholder="Search by name"
             value={filter.businessName}
+            disableUnderline
             classes={{ root: classes.input }}
           />
         </Grid>
