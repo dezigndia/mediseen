@@ -119,8 +119,8 @@ class AppointmentController {
     })
     getPatients = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
-        const { limit, skip } = req.query
-        const data = await appointmentService.getPatients(limit, skip, user.phone)
+        const { limit, skip, patient_name } = req.query
+        const data = await appointmentService.getPatients(limit, skip, user.phone, patient_name)
         if (data) {
             return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
         } else {
