@@ -1,11 +1,11 @@
 const Test = require("../../models/TestModel")
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
-
+var mongoose = require("mongoose")
 class TestService {
     createTest = expressAsyncHandler(async (body, ownerId) => {
         let data = body
-        data.ownerId = ownerId
+        data.ownerId = mongoose.Types.ObjectId(ownerId)
         if (data.mrp - data.sellingPrice >= 0) {
             data.discount = ((data.mrp - data.sellingPrice) / data.mrp) * 100
             data.hasDiscount = true
