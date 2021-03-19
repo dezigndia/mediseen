@@ -325,7 +325,7 @@ const Appointments = () => {
                                 appointmentSlots &&
                                     appointmentSlots.length > 0
                                     ? appointmentSlots
-                                        .filter(item => selectedDoctor === 'All' || item.timeSlot.doctorName === selectedDoctor)
+                                        .filter(item => selectedDoctor === 'All' || item.timeSlot.hospitalName === selectedDoctor)
                                         .map((item, index) =>
                                             <>
                                                 <TimeSlots

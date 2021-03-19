@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './setPatient.styles.scss';
 import axios from 'axios';
 import { Radio } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 //importing services
-import { createAppointment } from '../../../../../services/services';
+import { createAppointment, GET_ALL_PATIENTS } from '../../../../../services/services';
 
 //importing reusable components
 import InputWithIcon from '../../../../reusableComponent/InputwithIcon/inputWithIcon.component';
@@ -14,6 +14,7 @@ import Icon from '../../../../reusableComponent/icon/icon.component';
 //importing icon
 import { FiPlus } from 'react-icons/fi';
 import { MdModeEdit } from 'react-icons/md';
+import SearchSuggestion from './searchSuggestion/searchSuggestion.component';
 
 const createTimeStamp = (selectedDate) => {
     let date = new Date();
@@ -29,7 +30,7 @@ const ifTimeSlotPresentInAppointmentSlots = (appointmentSlots, timeSlot) => {
     //function to check if timeslot selected by user is present in time slot
     for (let i = 0; i < appointmentSlots.length; i++) {
         if (appointmentSlots[i].timeSlot.timeStampFrom === timeSlot.from && appointmentSlots[i].timeSlot.timeStampTo === timeSlot.to) {
-          return true;
+            return true;
         }
     }
     return false;
@@ -39,12 +40,40 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
 
     const auth_token = useSelector(state => state.token);
     const currentVendor = useSelector(state => state.currentVendor);
+    const [searchInput, setSearchInput] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get(GET_ALL_PATIENTS(searchInput), {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                setSearchResult(res.data.payload);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [searchInput]);
+
+    const setPatient = useCallback((patientInfo) => {
+        dispatch({ type: 'setPatientFirstName', payload: patientInfo.firstName });
+        dispatch({ type: 'setPatientLastName', payload: patientInfo.lastName });
+        dispatch({ type: 'setPatientMobileNo', payload: patientInfo.mobileNumber });
+        dispatch({ type: 'setGender', payload: patientInfo.gender });
+        dispatch({ type: 'setDob', payload: patientInfo.dob });
+        dispatch({ type: 'setAge', payload: patientInfo.age });
+        setSearchResult([]);
+        setSearchInput('');
+    }, [searchResult, setSearchResult]);
 
     const book = () => {
         const data = {
             businessName: currentVendor.businessName,
             businessType: currentVendor.businessType,
-            timings:bookAppointment.timeStampTimings,
+            timings: bookAppointment.timeStampTimings,
             notes: bookAppointment.notes,
             userPhoneNumber: currentVendor.phone,
             mobileNumber: bookAppointment.refMobileNumber,
@@ -54,9 +83,10 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
                 lastName: bookAppointment.patientLastName,
                 mobileNumber: bookAppointment.patientMobileNo,
                 gender: bookAppointment.gender,
-                dob: bookAppointment.gender,
+                dob: bookAppointment.dob,
                 paymentStatus: bookAppointment.paymentStatus,
-                videoConsulting: bookAppointment.videoConsulting
+                videoConsulting: bookAppointment.videoConsulting,
+                age: bookAppointment.age
             }
         };
 
@@ -112,7 +142,10 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
                 <div className="setPatientFormHeader">
                     <div className='searchPatient'>
                         <label htmlFor="search Patient">Search Patient</label>
-                        <InputWithIcon />
+                        <InputWithIcon value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+                        {
+                            searchInput !== '' && searchResult.length && <SearchSuggestion searchResult={searchResult} onClick={setPatient} />
+                        }
                     </div>
                     <div className='addPatient'>
                         <Icon>

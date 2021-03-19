@@ -61,6 +61,7 @@ export const getAppointmentByBusiness = `${server}api/appointment/business`;
 export const getAppointmentByCustomer = `${server}api/appointment/user`;
 export const getAppointmentById = (id) => `${server}api/appointment/id/${id}`;
 export const updateAppointmentByID = (id) => `${server}api/appointment/update/${id}`;
+export const GET_ALL_PATIENTS=(patient_name)=>`${server}api/appointment/business/patients?patient_name=${patient_name}`;
 
 //uploading files
 export const UPLOAD_FILE = `${server}api/blob/upload`;
