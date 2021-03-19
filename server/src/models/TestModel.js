@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const testSchema = new mongoose.Schema({
     ownerId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true,
     },
     image: {
@@ -48,6 +48,9 @@ const testSchema = new mongoose.Schema({
     },
     weight: {
         type: String, // in kgs
+    },
+    businessName: {
+        type: String,
     },
 })
 

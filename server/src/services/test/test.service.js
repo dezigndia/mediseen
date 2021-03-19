@@ -3,14 +3,15 @@ const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
 var mongoose = require("mongoose")
 class TestService {
-    createTest = expressAsyncHandler(async (body, ownerId) => {
+    createTest = expressAsyncHandler(async (body, ownerId, businessName) => {
         let data = body
-        data.ownerId = mongoose.Types.ObjectId(ownerId)
+        data.ownerId = ownerId
+        data.businessName = businessName
         if (data.mrp - data.sellingPrice >= 0) {
             data.discount = ((data.mrp - data.sellingPrice) / data.mrp) * 100
             data.hasDiscount = true
         }
-        return await Test.create(body)
+        return await Test.create(data)
     })
     createBatchTest = expressAsyncHandler(async (body, ownerId) => {
         let data = body.map(item => {
