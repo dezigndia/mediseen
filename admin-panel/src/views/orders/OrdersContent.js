@@ -12,11 +12,40 @@ import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { readableDate } from "services/services";
-import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons";
+import {
+  ArrowDropDown,
+  ArrowDropUp,
+  ExpandLess,
+  ExpandMore,
+  MoreVert,
+} from "@material-ui/icons";
+import { Grid, Input } from "@material-ui/core";
+import MenuForFilter from "views/dashboard/MenuForFilter";
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
+  },
+  tableContainer: {
+    padding: "1rem 1rem",
+    // backgroundColor: "rgb(30 30 45 / 19%)",
+  },
+  head: {
+    fontWeight: "600",
+  },
+  sortDate: {
+    backgroundColor: "#2772f6",
+    padding: "5px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    color: "white",
+    margin: "0 0.5rem",
+  },
+  input: {
+    backgroundColor: "#2b69f5",
+    padding: "8px",
+    color: "white",
+    borderRadius: "10px",
   },
 });
 
@@ -29,8 +58,14 @@ export default function OrdersContent() {
     limit: 10,
     skip: 0,
     asc: null,
+    grandTotal_MIN: "",
+    userPhoneNumber: "",
+    businessName: "",
+    grandTotal_MAX: "",
     sortBy: "createdAt",
+    status: null,
   });
+  const [filterOpen, setfilterOpen] = useState(false);
 
   async function getData(page = 1) {
     let body = filter;
@@ -50,45 +85,150 @@ export default function OrdersContent() {
     getData(page);
   }, [filter]);
   return (
-    <TableContainer component={Paper}>
-      <span>Orders</span>
-      <PaginationTiles
-        tileNo={(tile) => {
-          setpage(tile);
-          getData(tile);
-        }}
-        totalTiles={Math.floor(totalCount / filter.limit) + 1}
-      />
-      <span
-        onClick={() => {
-          if (filter.asc === 1) {
-            setfilter((state) => ({
-              ...state,
-              asc: -1,
-            }));
-          } else if (filter.asc === -1) {
-            setfilter((state) => ({
-              ...state,
-              asc: null,
-            }));
-          } else {
-            setfilter((state) => ({
-              ...state,
-              asc: 1,
-            }));
-          }
-        }}
-      >
-        Created At: {filter.asc}
-      </span>
+    <TableContainer
+      classes={{ root: classes.tableContainer }}
+      component={Paper}
+    >
+      <Grid container direction="column">
+        <Grid container justify="space-between">
+          <Grid item>
+            <span className="component-table-title">Orders</span>
+          </Grid>
+          <Grid item>
+            <PaginationTiles
+              tileNo={(tile) => {
+                setpage(tile);
+                getData(tile);
+              }}
+              totalTiles={Math.floor(totalCount / filter.limit) + 1}
+            />
+          </Grid>
 
+          <Grid item>
+            <span
+              onClick={() => {
+                setfilterOpen(!filterOpen);
+              }}
+              className={classes.sortDate}
+            >
+              Filter
+            </span>
+            <span
+              onClick={() => {
+                if (filter.asc === 1) {
+                  setfilter((state) => ({
+                    ...state,
+                    asc: -1,
+                  }));
+                } else if (filter.asc === -1) {
+                  setfilter((state) => ({
+                    ...state,
+                    asc: null,
+                  }));
+                } else {
+                  setfilter((state) => ({
+                    ...state,
+                    asc: 1,
+                  }));
+                }
+              }}
+              className={classes.sortDate}
+            >
+              Sort Datewise{" "}
+              {filter.asc === 1 ? (
+                <ArrowDropDown />
+              ) : filter.asc === -1 ? (
+                <ArrowDropUp />
+              ) : (
+                " "
+              )}
+            </span>
+          </Grid>
+        </Grid>
+        {filterOpen && (
+          <Grid container>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    businessName: e.target.value,
+                  }));
+                }}
+                placeholder="Search by business name"
+                value={filter.businessName}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    userPhoneNumber: e.target.value,
+                  }));
+                }}
+                placeholder="Search by customer phone number"
+                value={filter.userPhoneNumber}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    grandTotal_MAX: e.target.value,
+                  }));
+                }}
+                placeholder="Amount MAX"
+                value={filter.grandTotal_MAX}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    grandTotal_MIN: e.target.value,
+                  }));
+                }}
+                placeholder="Amount MIN"
+                value={filter.grandTotal_MIN}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+            <Grid item>
+              <MenuForFilter
+                title="status"
+                data={["All", "Cancelled", "Delivered", "Pending"]}
+                selected={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    status: e === "All" ? null : e,
+                  }));
+                }}
+              />
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
       <Table className={classes.table} aria-label="simple table">
-        <TableHead>
+        <TableHead classes={{ root: classes.head }}>
           <TableRow>
-            <TableCell>Order No.</TableCell>
-            <TableCell align="left">CUSTOMER</TableCell>
-            <TableCell align="left">BUSINESS</TableCell>
-            <TableCell align="left">
+            <TableCell classes={{ root: classes.head }}>Order No.</TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              CUSTOMER
+            </TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              BUSINESS
+            </TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
               DATE{" "}
               {filter.asc === 1 ? (
                 <ExpandLess />
@@ -98,9 +238,15 @@ export default function OrdersContent() {
                 ""
               )}
             </TableCell>
-            <TableCell align="center">AMOUNT</TableCell>
-            <TableCell align="center">STATUS</TableCell>
-            <TableCell align="right">PINCODE</TableCell>
+            <TableCell align="center" classes={{ root: classes.head }}>
+              AMOUNT
+            </TableCell>
+            <TableCell align="center" classes={{ root: classes.head }}>
+              STATUS
+            </TableCell>
+            <TableCell align="right" classes={{ root: classes.head }}>
+              PINCODE
+            </TableCell>
             {/* <TableCell align="right">&nbsp;</TableCell> */}
           </TableRow>
         </TableHead>

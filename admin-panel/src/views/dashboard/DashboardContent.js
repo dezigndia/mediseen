@@ -13,17 +13,16 @@ import MenuForFilter from "./MenuForFilter";
 
 export default function DashboardContent() {
   const [page, setpage] = useState(1);
-  const [totalCount, setTotalCount] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
   const [filter, setfilter] = useState({
-    category: "",
+    type: "",
     area: "",
-    search: "",
-    specialist: null,
+    businessName: "",
     limit: 10,
     skip: 0,
-    createdAt_MIN: null,
-    createdAt_MAX: null,
-    active: true,
+    createdAt_DATE_MIN: null,
+    createdAt_DATE_MAX: null,
+    isActive: null,
   });
   const history = useHistory();
   const [data, setdata] = useState([]);
@@ -34,17 +33,20 @@ export default function DashboardContent() {
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall("get_businesses", undefined, reqBody);
     if (reqData && reqData.success) {
-      setdata(reqData.data.payload);
+      setdata(reqData.data.payload.reqData);
+      setTotalCount(reqData.data.payload.totalCount / filter.limit + 1);
     } else {
       console.log("Something went wrong", reqData);
-      localStorage.clear();
-      history.push("/signin");
+      // localStorage.clear();
+      // history.push("/signin");
     }
   }
 
   const useStyles = makeStyles((theme) => ({
     input: {
       backgroundColor: "white",
+      padding: "8px",
+      borderRadius: "10px",
     },
   }));
   const classes = useStyles();
@@ -62,7 +64,7 @@ export default function DashboardContent() {
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                category: e === "All Lists" ? "" : e,
+                type: e === "All Lists" ? "" : e,
               }));
             }}
           />
@@ -80,49 +82,53 @@ export default function DashboardContent() {
           />
         </Grid>
         <Grid item>
-          {/* <MenuForFilter
-          title="Date Lower"
-            data={["All Lists", "Pharmacy", "Doctor", "Hospital", "Pathology"]}
+          <MenuForFilter
+            title="Date Lower"
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                createdAt_MIN: e,
+                createdAt_DATE_MIN: e,
               }));
             }}
-          /> */}
-        </Grid>
-        <Grid item>
-          {/* <MenuForFilter
-            data={["All Lists", "Pharmacy", "Doctor", "Hospital", "Pathology"]}
-            selected={(e) => {
-              setfilter((state) => ({
-                ...state,
-                createdAt_MAX: e,
-              }));
-            }}
-          /> */}
+            type="date"
+          />
         </Grid>
         <Grid item>
           <MenuForFilter
-            data={["Active", "Inactive"]}
+            title="date upper"
+            type="date"
             selected={(e) => {
               setfilter((state) => ({
                 ...state,
-                active: e === "Active",
+                createdAt_DATE_MAX: e,
               }));
             }}
           />
         </Grid>
-        <Grid item xs="auto">
+        <Grid item>
+          <MenuForFilter
+            title="status"
+            data={["All", "Active", "InActive"]}
+            selected={(e) => {
+              setfilter((state) => ({
+                ...state,
+                isActive:
+                  e === "Active" ? true : e === "InActive" ? false : null,
+              }));
+            }}
+          />
+        </Grid>
+        <Grid item>
           <Input
             onChange={(e) => {
               setfilter((state) => ({
                 ...state,
-                search: e.target.value,
+                businessName: e.target.value,
               }));
             }}
             placeholder="Search by name"
-            value={filter.search}
+            value={filter.businessName}
+            disableUnderline
             classes={{ root: classes.input }}
           />
         </Grid>
@@ -135,7 +141,6 @@ export default function DashboardContent() {
       <PaginationTiles
         tileNo={(tile) => {
           setpage(tile);
-          console.log("here");
           getData(tile);
         }}
         totalTiles={totalCount}

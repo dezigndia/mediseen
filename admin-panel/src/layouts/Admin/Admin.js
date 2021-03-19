@@ -133,7 +133,7 @@ function Admin(props) {
               <Switch>
                 {getRoutes(routes)}
 
-                <Route to="/admin/users" component={Accounts} exact />
+                <Route to="/admin/users" component={Users} exact />
                 <Route to="/admin/accounts" component={Accounts} exact />
                 {/* <Redirect from="*" to="/admin/dashboard" /> */}
               </Switch>

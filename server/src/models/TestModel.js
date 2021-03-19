@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const testSchema = new mongoose.Schema({
     ownerId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
     },
     image: {

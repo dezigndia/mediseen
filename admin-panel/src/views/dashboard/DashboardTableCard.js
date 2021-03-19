@@ -1,21 +1,38 @@
 import { Card, Grid, makeStyles } from "@material-ui/core";
 import { ArrowDownward, ExpandMore, RoomOutlined } from "@material-ui/icons";
 import React from "react";
+import { readableDate } from "services/services";
 
 export default function DashboardTableCard({ data = {} }) {
   const useStyles = makeStyles((theme) => ({
     location: {
       fontWeight: "500",
+      margin: "0.5rem 0rem 0.5rem -5px",
     },
     title: {
       fontSize: "1.2rem",
       fontWeight: "600",
     },
     active: {
-      backgroundColor: data.isActive ? "green" : "red",
+      backgroundColor: data.isActive ? "#6ec3ff" : "#ffbc6e",
+      padding: "2px 5px",
+      borderRadius: "5px",
     },
     verified: {
-      backgroundColor: data.isVerified ? "green" : "red",
+      backgroundColor: data.isVerified ? "#84e0be" : "#ff00008f",
+      padding: "2px 5px",
+      borderRadius: "5px",
+    },
+    sales: {
+      fontSize: "1.3rem",
+      fontWeight: "700",
+      color: "grey",
+    },
+    orders: {
+      backgroundColor: data.totalCount > 0 ? "#84e0be" : "#b8ba008a",
+      padding: "10px",
+      borderRadius: "5px",
+      fontWeight: "600",
     },
   }));
   const classes = useStyles();
@@ -47,11 +64,11 @@ export default function DashboardTableCard({ data = {} }) {
                 width: "20%",
               }}
             >
-              today {data.orderToday} orders
+              Today {data.orderToday} orders
             </Grid>
           </Grid>
           <Grid container justify="space-between">
-            <Grid item>List 29/10/20</Grid>
+            <Grid item>List {readableDate(data.createdAt)}</Grid>
             <Grid item>
               <span className={classes.active}>
                 {data.isActive ? "Active" : "Not Active"}
@@ -61,9 +78,7 @@ export default function DashboardTableCard({ data = {} }) {
                 {data.isVerified ? "Verified" : "Not Verified"}
               </span>
             </Grid>
-            <Grid item>
-              Details <ExpandMore />
-            </Grid>
+            <Grid item>{/* Details <ExpandMore /> */}</Grid>
           </Grid>
         </Grid>
         <Grid
@@ -74,8 +89,12 @@ export default function DashboardTableCard({ data = {} }) {
           alignItems="flex-end"
           alignContent="flex-end"
         >
-          <Grid item>Rs. {data.sales}</Grid>
-          <Grid item>{data.totalCount} orders</Grid>
+          <Grid item classes={{ root: classes.sales }}>
+            Rs. {data.sales}
+          </Grid>
+          <Grid item classes={{ root: classes.orders }}>
+            {data.totalCount} orders
+          </Grid>
         </Grid>
       </Grid>
     </Card>

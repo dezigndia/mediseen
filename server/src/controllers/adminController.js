@@ -168,9 +168,18 @@ const getUsers = expressAsyncHandler(async (req, res) => {
     if (skip === null || limit === null) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
     } else {
-        let conditions = getConditions(req)
-        var pincode = req.query.pincode - "0"
+        let { name, pincode, phone } = req.query
 
+        let filter = {}
+        if (name) {
+            filter.name = new RegExp(name)
+        }
+        if (pincode) {
+            filter.pincode = pincode
+        }
+        if (phone) {
+            filter.phone = phone
+        }
         let data = await User.aggregate([
             {
                 $lookup: {
@@ -181,22 +190,14 @@ const getUsers = expressAsyncHandler(async (req, res) => {
                 },
             },
             {
-                $match: {
-                    address: {
-                        $elemMatch: {
-                            pincode: pincode,
-                        },
-                    },
-                },
+                $match: filter,
             },
-            { $limit: limit },
-            { $skip: skip },
-            {
-                $project: {
-                    address: 1,
-                    order_details: 1,
-                },
-            },
+            // {
+            //     $group: {
+            //         _id: 1,
+            //         myCount: { $sum: 1 },
+            //     },
+            // },
         ])
         // .find(conditions)
         // .limit(limit)
@@ -206,7 +207,7 @@ const getUsers = expressAsyncHandler(async (req, res) => {
             data[i].totalCost = 0
             data[i].order_details.forEach(order => {
                 data[i].totalCost += order.grandTotal || 0
-                console.log(order.grandTotal)
+                // console.log(order.grandTotal)
             })
             data[i].order_details = undefined
         })
@@ -288,30 +289,37 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
 const bs = new BusinessService()
 
 const getBusinessList = expressAsyncHandler(async (req, res) => {
-    const { limit, skip, category, specialist, area, search } = req.query
-
-    let data = await bs.getAllBusiness(limit, skip, category, specialist, area, search, true)
+    const { limit, skip } = req.query
+    let conditions = await getConditions(req)
+    let sortCon = await getSortingConditions(req)
+    let data = await Doctor.find(conditions)
+        .sort(sortCon)
+        .limit(parseInt(limit))
+        .skip(parseInt(skip))
+    let totalCount = await Doctor.countDocuments(conditions)
+    // bs.getAllBusiness(limit, skip, category, specialist, area, search)
     let reqData = []
     if (data) {
-        Promise.all(
-            data.map(async (each, i) => {
-                // let call = async () => {
-                //     return new Promise(next => {
-                let ans = await getTotalSalesByBusiness(
-                    each.phone,
-                    each.type,
-                    each._doc.collections && each._doc.collections.collectionChargesPerVisit
-                        ? each._doc.collections.collectionChargesPerVisit
-                        : 0
-                )
-                let oToday = {
-                    orderToday: await getTodaysOrderByPhoneNumber(each.phone),
-                }
-                reqData.push({ ...data[i]._doc, ...ans, ...oToday })
-                // console.log(reqData[i])
-            })
-        ).then(req => {
-            return res.status(StatusCodes.OK).json({ status: true, payload: reqData })
+        let arr = data.map(async (each, i) => {
+            // let call = async () => {
+            //     return new Promise(next => {
+            let ans = await getTotalSalesByBusiness(
+                each.phone,
+                each.type,
+                each._doc.collections && each._doc.collections.collectionChargesPerVisit
+                    ? each._doc.collections.collectionChargesPerVisit
+                    : 0
+            )
+            let oToday = {
+                orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+            }
+            reqData.push({ ...data[i]._doc, ...ans, ...oToday })
+            // console.log(reqData[i])
+        })
+        Promise.all(arr).then(req => {
+            return res
+                .status(StatusCodes.OK)
+                .json({ status: true, payload: { reqData, totalCount } })
         })
         // return res.status(StatusCodes.OK).json({ status: true, payload: data })
     } else {

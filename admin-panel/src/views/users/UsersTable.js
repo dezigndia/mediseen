@@ -12,11 +12,26 @@ import { removeEmptyFromObject } from "services/services";
 import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
+import { Grid, Input } from "@material-ui/core";
 
 export default function UsersTable() {
   const useStyles = makeStyles({
     table: {
       minWidth: 650,
+    },
+    sortDate: {
+      backgroundColor: "#2772f6",
+      padding: "5px",
+      borderRadius: "5px",
+      cursor: "pointer",
+      color: "white",
+      margin: "0 0.5rem",
+    },
+    input: {
+      backgroundColor: "#2b69f5",
+      padding: "8px",
+      color: "white",
+      borderRadius: "10px",
     },
   });
   const classes = useStyles();
@@ -26,7 +41,11 @@ export default function UsersTable() {
   const [filter, setfilter] = useState({
     limit: 10,
     skip: 0,
+    phone: "",
+    name: "",
   });
+
+  const [filterOpen, setfilterOpen] = useState(false);
 
   async function getData(page = 1) {
     let body = filter;
@@ -47,21 +66,72 @@ export default function UsersTable() {
   }, [filter]);
   return (
     <TableContainer component={Paper}>
-      <span>Users</span>
-      <PaginationTiles
-        tileNo={(tile) => {
-          setpage(tile);
-          getData(tile);
-        }}
-        totalTiles={Math.floor(totalCount / filter.limit) + 1}
-      />
+      <Grid container direction="column">
+        <Grid container justify="space-between">
+          <Grid item>
+            <span className="component-table-title">Users</span>
+          </Grid>
+          <Grid item>
+            <PaginationTiles
+              tileNo={(tile) => {
+                setpage(tile);
+                getData(tile);
+              }}
+              totalTiles={Math.floor(totalCount / filter.limit) + 1}
+            />
+          </Grid>
+
+          <Grid item>
+            <span
+              onClick={() => {
+                setfilterOpen(!filterOpen);
+              }}
+              className={classes.sortDate}
+            >
+              Filter
+            </span>
+          </Grid>
+        </Grid>
+        {filterOpen && (
+          <Grid container>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    name: e.target.value,
+                  }));
+                }}
+                placeholder="Search by name"
+                value={filter.name}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+            <Grid item>
+              <Input
+                onChange={(e) => {
+                  setfilter((state) => ({
+                    ...state,
+                    phone: e.target.value,
+                  }));
+                }}
+                placeholder="Search by phone number"
+                value={filter.phone}
+                disableUnderline
+                classes={{ root: classes.input }}
+              />
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
 
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Departments</TableCell>
-            <TableCell align="left">ID</TableCell>
+            <TableCell align="left">PINCODE</TableCell>
+            <TableCell align="right">Orders</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,14 +141,11 @@ export default function UsersTable() {
                 {row.name}
               </TableCell>
               <TableCell align="left">
-                {row &&
-                  row.departments &&
-                  row.departments.length > 0 &&
-                  row.departments.map((each) => {
-                    return <>{each}, </>;
-                  })}
+                {row && row.address && row.address[0] && row.address[0].pincode
+                  ? row.address[0].pincode
+                  : "Not Available"}
               </TableCell>
-              <TableCell align="left">{row.email}</TableCell>
+              <TableCell align="right">Rs. {row.totalCost}</TableCell>
             </TableRow>
           ))}
         </TableBody>

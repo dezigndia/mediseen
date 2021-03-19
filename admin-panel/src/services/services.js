@@ -9,7 +9,7 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
 
   try {
     const response = await fetch(
-      `${testurl + endpoint}${queryParams ? "?" + queryParams : ""}`,
+      `${baseUrl + endpoint}${queryParams ? "?" + queryParams : ""}`,
       {
         method: method,
         headers: {
@@ -50,10 +50,15 @@ export const removeEmptyFromObject = (obj) => {
   return obj;
 };
 export const convertBodyToQueryParams = (body) => {
-  return new URLSearchParams(body).toString();
+  // console.log(body);
+  const searchParams = new URLSearchParams();
+  Object.keys(body).forEach((key) => searchParams.append(key, body[key]));
+  console.log(searchParams.toString());
+  // return new URLSearchParams(body).toString();
+  return searchParams.toString();
 };
 
 export function readableDate(date) {
   let d = new Date(date);
-  return d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
+  return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 }
