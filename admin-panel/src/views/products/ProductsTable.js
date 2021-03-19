@@ -15,7 +15,7 @@ import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { readableDate } from "services/services";
 import { Grid, Input } from "@material-ui/core";
 
-export default function ProductsTable() {
+export default function ProductsTable({ type = "get_products" }) {
   const useStyles = makeStyles({
     table: {
       minWidth: 650,
@@ -33,12 +33,21 @@ export default function ProductsTable() {
     },
     input: {
       backgroundColor: "#2b69f5",
-      padding: "8px",
+      padding: "2px 8px",
       color: "white",
       borderRadius: "10px",
-      margin: "0 1rem",
       fontSize: "0.8rem",
-      widt: "100%",
+      margin: "5px 5px 5px 0px",
+    },
+    filterContainer: {
+      backgroundColor: "#2772f630",
+      borderRadius: "5px",
+      padding: "1rem",
+      marginTop: "5px",
+    },
+    tableContainer: {
+      padding: "1rem 1rem",
+      // backgroundColor: "rgb(30 30 45 / 19%)",
     },
   });
   const classes = useStyles();
@@ -48,6 +57,11 @@ export default function ProductsTable() {
   const [filter, setfilter] = useState({
     limit: 10,
     skip: 0,
+    businessName: "",
+    mrp_MAX: "",
+    mrp_MIN: "",
+    sellingPrice_MAX: "",
+    sellingPrice_MIN: "",
   });
 
   const [filterOpen, setfilterOpen] = useState(false);
@@ -57,7 +71,7 @@ export default function ProductsTable() {
     body.skip = body.limit * (page - 1);
     body = removeEmptyFromObject(body);
     let reqBody = convertBodyToQueryParams(body);
-    let reqData = await fetchCall("get_products", undefined, reqBody);
+    let reqData = await fetchCall(type, undefined, reqBody);
     if (reqData && reqData.success) {
       console.log(reqData);
       setrows(reqData.data.data);
@@ -69,12 +83,30 @@ export default function ProductsTable() {
   useEffect(() => {
     getData(page);
   }, [filter]);
+  useEffect(() => {
+    setpage(1);
+    setfilter((state) => ({
+      ...state,
+      businessName: "",
+      mrp_MAX: "",
+      mrp_MIN: "",
+      sellingPrice_MAX: "",
+      sellingPrice_MIN: "",
+    }));
+  }, [type]);
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      classes={{ root: classes.tableContainer }}
+    >
       <Grid container direction="column">
         <Grid container justify="space-between">
           <Grid item>
-            <span className="component-table-title">Products</span>
+            <span className="component-table-title">
+              {type.toLowerCase().indexOf("products") >= 0
+                ? "Products List"
+                : "Tests List"}
+            </span>
           </Grid>
           <Grid item>
             <PaginationTiles
@@ -98,7 +130,11 @@ export default function ProductsTable() {
           </Grid>
         </Grid>
         {filterOpen && (
-          <Grid container>
+          <Grid
+            container
+            alignItems="center"
+            classes={{ root: classes.filterContainer }}
+          >
             <Grid item xs={4}>
               <Input
                 onChange={(e) => {

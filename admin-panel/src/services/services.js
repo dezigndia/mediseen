@@ -1,7 +1,7 @@
 import { baseUrl } from "variables/constants";
 import { endPointsArray } from "variables/constants";
 import { testurl } from "variables/constants";
-
+import AlertMessages from "../components/CommonComponents/AlertMessages";
 export const fetchCall = async (type, body = null, queryParams = null) => {
   let data;
   const jwt = JSON.parse(localStorage.getItem("userData"));
@@ -9,7 +9,7 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
 
   try {
     const response = await fetch(
-      `${baseUrl + endpoint}${queryParams ? "?" + queryParams : ""}`,
+      `${testurl + endpoint}${queryParams ? "?" + queryParams : ""}`,
       {
         method: method,
         headers: {

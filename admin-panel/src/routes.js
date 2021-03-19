@@ -24,6 +24,9 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import Dashboard from "views/dashboard/Dashboard";
 import Orders from "views/Orders";
+import Users from "views/Users";
+import Accounts from "views/Accounts";
+import { AccountBalance, Person } from "@material-ui/icons";
 
 var routes = [
   {
@@ -50,22 +53,30 @@ var routes = [
     component: Map,
     layout: "/admin",
   },
-  //   {
-  //     path: "/support",
-  //     name: "Support Center",
-  //     rtlName: "إخطارات",
-  //     icon: ChatBubbleIcon,
-  //     component: Notifications,
-  //     layout: "/admin",
-  //   },
   // {
-  // 	path: "/tables",
-  // 	name: "Table List",
-  // 	rtlName: "قائمة الجدول",
-  // 	icon: "tim-icons icon-puzzle-10",
-  // 	component: TableList,
-  // 	layout: "/admin",
+  //   path: "/support",
+  //   name: "Support Center",
+  //   rtlName: "إخطارات",
+  //   icon: ChatBubbleIcon,
+  //   component: Notifications,
+  //   layout: "/admin",
   // },
+  {
+    path: "/users",
+    name: "User Management",
+    rtlName: "قائمة الجدول",
+    icon: Person,
+    component: Users,
+    layout: "/admin",
+  },
+  {
+    path: "/accounts",
+    name: "Accounts",
+    rtlName: "قائمة الجدول",
+    icon: AccountBalance,
+    component: Accounts,
+    layout: "/admin",
+  },
   // {
   // 	path: "/typography",
   // 	name: "Typography",

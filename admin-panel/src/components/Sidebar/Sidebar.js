@@ -152,38 +152,6 @@ function Sidebar(props) {
                   </li>
                 );
               })}
-              <li className="active-pro">
-                <NavLink
-                  to="/admin/users"
-                  className="nav-link"
-                  activeClassName="active"
-                >
-                  <Grid container alignItems="flex-start" xs={12}>
-                    <Grid item xs={3}>
-                      <SvgIcon component={PersonIcon} />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <h5>User Management</h5>
-                    </Grid>
-                  </Grid>
-                </NavLink>
-              </li>
-              <li className="active-pro" style={{ bottom: "10%" }}>
-                <NavLink
-                  to="/admin/accounts"
-                  className="nav-link"
-                  activeClassName="active"
-                >
-                  <Grid container alignItems="flex-start" xs={12}>
-                    <Grid item xs={3}>
-                      <SvgIcon component={AccountBalanceIcon} />
-                    </Grid>
-                    <Grid alignContent="center" item xs={9}>
-                      <h5>Accounts</h5>
-                    </Grid>
-                  </Grid>
-                </NavLink>
-              </li>
             </Nav>
           </div>
         </div>

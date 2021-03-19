@@ -45,4 +45,18 @@ export const endPointsArray = {
     endpoint: "admin/get-products",
     method: "GET",
   },
+  get_tests: {
+    endpoint: "admin/get-tests",
+    method: "GET",
+  },
+};
+export const alert = {
+  success: "success",
+  warning: "warning",
+  error: "error",
+  info: "info",
+};
+
+export const alertMessages = {
+  unexpectedError: "Something went wrong, try again!",
 };
