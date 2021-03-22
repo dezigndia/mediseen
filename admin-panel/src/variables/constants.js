@@ -49,6 +49,14 @@ export const endPointsArray = {
     endpoint: "admin/get-tests",
     method: "GET",
   },
+  order_trend: {
+    endpoint: "admin/get-monthly-orders",
+    method: "GET",
+  },
+  weekly_appointment_trend: {
+    endpoint: "admin/get-weekly-appointment-trend",
+    method: "POST",
+  },
 };
 export const alert = {
   success: "success",

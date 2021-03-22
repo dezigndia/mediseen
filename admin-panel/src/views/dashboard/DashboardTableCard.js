@@ -39,7 +39,13 @@ export default function DashboardTableCard({ data = {} }) {
   // console.log(data, "data");
   return (
     <Card
-      style={{ width: "100%", margin: "10px", padding: "10px", marginLeft: 0 }}
+      style={{
+        width: "100%",
+        margin: "10px",
+        padding: "10px",
+        marginLeft: 0,
+        borderRadius: "20px",
+      }}
     >
       <Grid container direction="row">
         <Grid item xs={9} direction="column">

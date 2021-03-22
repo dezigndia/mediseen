@@ -35,6 +35,6 @@ router.get("/get-appointment-per-business", isAdmin(), ac.getAppointmentbybusine
 router.get("/get-orders", isAdmin(), getOrders)
 
 router.get("/get-monthly-orders", isAdmin(), getMonthlyOrderTrend)
-router.get("/get-weekly-appointment-trend", isAdmin(), getWeeklyAppointmentTrend)
+router.post("/get-weekly-appointment-trend", isAdmin(), getWeeklyAppointmentTrend)
 
 module.exports = router

@@ -30,7 +30,6 @@ const useStyles = makeStyles({
   input: {
     backgroundColor: "#2b69f5",
     padding: "2px 8px",
-    color: "white",
     borderRadius: "10px",
     fontSize: "0.8rem",
     margin: "5px 5px 5px 0px",
@@ -43,16 +42,14 @@ const useStyles = makeStyles({
   },
   tableContainer: {
     padding: "1rem 1rem",
-    backgroundColor: "#ffffff33",
   },
   head: {
     fontWeight: "700",
-    color: "#cdcfd4",
+    // color: "#cdcfd4",
   },
   tableRow: {
     paddingTop: "0.5rem",
     paddingBottom: "0.5rem",
-    color: "#cdcfd4",
   },
 });
 
@@ -93,12 +90,7 @@ export default function AccountsContent() {
       <Grid container direction="column">
         <Grid container justify="space-between">
           <Grid item>
-            <span
-              className="component-table-title"
-              style={{ color: "#cdcfd4" }}
-            >
-              Accounts
-            </span>
+            <span className="component-table-title">Accounts</span>
           </Grid>
           <Grid item>
             <PaginationTiles

@@ -378,18 +378,20 @@ const getMonthlyOrderTrend = expressAsyncHandler(async (req, res) => {
     }
 })
 const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
-    let { date } = req.query
-    let reqDate = getFirstOfWeek(date)
-    if (reqDate) {
+    let { date } = req.body
+    if (date) {
+        let reqDate = getFirstOfWeek(date)
+        console.log(reqDate, date)
+
         let data = await Appointment.aggregate([
-            {
-                $match: {
-                    createdAt: {
-                        $gte: reqDate,
-                        $lt: date,
-                    },
-                },
-            },
+            // {
+            //     $match: {
+            //         createdAt: {
+            //             $gte: reqDate,
+            //             $lt: date,
+            //         },
+            //     },
+            // },
             {
                 $group: {
                     _id: {

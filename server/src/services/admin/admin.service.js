@@ -100,7 +100,8 @@ async function getAdminFromToken(req, res) {
 
 function getFirstOfWeek(date) {
     let dateNew = new Date(date)
-    var day = date.getDay() || 7
+
+    var day = dateNew.getDay() || 7
     if (day !== 1) dateNew.setHours(-24 * (day - 1))
 
     dateNew.setHours(0)

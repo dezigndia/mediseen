@@ -36,7 +36,7 @@ export default function AlertMessages({
 
   useEffect(() => {
     setOpen(true);
-  }, [message, closingTime, type]);
+  }, [state]);
 
   return (
     <div className={classes.root}>
@@ -45,6 +45,7 @@ export default function AlertMessages({
           open={open}
           autoHideDuration={closingTime}
           onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
         >
           {type ? (
             <Alert onClose={handleClose} severity={type}>
