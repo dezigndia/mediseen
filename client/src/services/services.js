@@ -45,6 +45,8 @@ export const GET_BULK_PRODUCTS = `${server}api/product/find/bulk`;
 export const GET_BULK_TESTS = `${server}api/test/find/bulk`;
 export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
 export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
+export const GET_CATEGORIES=(type)=>`${server}api/category/type/${type}`;
+export const ADD_CATEGORIES=`${server}api/category`;
 
 //getting products or test categories
 export const GET_PRODUCTS_CATEGORY = `${server}api/pharmacy/product/categories`

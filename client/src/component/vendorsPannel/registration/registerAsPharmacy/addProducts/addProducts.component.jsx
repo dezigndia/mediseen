@@ -12,29 +12,45 @@ import { BiSearch } from 'react-icons/bi';
 import { AiOutlineCamera } from 'react-icons/ai';
 import { ImUpload3 } from 'react-icons/im';
 import { BiRupee } from 'react-icons/bi';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 //importing jss
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_PRODUCTS, UPLOAD_FILE } from '../../../../../services/services';
+import { ADD_PRODUCTS, UPLOAD_FILE, GET_CATEGORIES, ADD_CATEGORIES } from '../../../../../services/services';
 
 //importing actions
 import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
 
 //importing custom components
 import UploadedImagesPreview from '../../uploadedImagePreview/uploadedImagesPreview.component';
+import AddCategories from './addCategories/addCategories.component';
 
 const AddProducts = (props) => {
 
     const [category, setCategory] = useState([]);
     const [type, setType] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [showAddCategories, setShowAddCategories] = useState(false);
 
     useEffect(() => {
-        setCategory(['anti-biotic', 'anti-inflammatory', 'enzyme', 'tonic', 'anti-septic']);
+        axios
+            .get(GET_CATEGORIES('product-categories'), {
+                headers: {
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                    'Content-type': 'multipart/form-data'
+                }
+            })
+            .then(res => {
+                setCategory(res.data.payload.values);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        //setCategory(['anti-biotic', 'anti-inflammatory', 'enzyme', 'tonic', 'anti-septic']);
         setType(['liquid', 'tablet', 'injection', 'inhaler', 'cream']);
-    }, []);
+    }, [setCategory, setType, props.auth_token.accessToken, showAddCategories]);
 
     const initialState = {
         images: [],
@@ -223,9 +239,12 @@ const AddProducts = (props) => {
                             </select>
                         </div>
                     </div>
-                    {/*<div>
-                        add
-                    </div>*/}
+                    <div style={{ flexGrow: 1 }} onClick={e => setShowAddCategories(true)}>
+                        <Icon>
+                            <AiOutlinePlus size='.15px' />
+                        </Icon>
+                        <p style={{ fontSize: '.8em' }}>Categories</p>
+                    </div>
                 </div>
                 <div className="price flexInputContainer">
                     <div className="mrp addProductsAndTestInput rupeeInout">
@@ -325,6 +344,11 @@ const AddProducts = (props) => {
                     ? <div className="uploadingSpinner">
                         <div />
                     </div>
+                    : null
+            }
+            {
+                showAddCategories
+                    ? <AddCategories {...{ setShowAddCategories }} />
                     : null
             }
         </div >

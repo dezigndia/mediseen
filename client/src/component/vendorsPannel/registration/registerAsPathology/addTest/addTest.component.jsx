@@ -16,13 +16,14 @@ import { BiRupee } from 'react-icons/bi';
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TESTS, UPLOAD_FILE } from '../../../../../services/services';
+import { ADD_TESTS, UPLOAD_FILE, GET_CATEGORIES, ADD_CATEGORIES } from '../../../../../services/services';
 
 //importing actions
 import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
 
 //importing custom components
 import UploadedImagesPreview from '../../uploadedImagePreview/uploadedImagesPreview.component';
+import AddCategories from './addCategories/addCategories.component';
 
 //setShowAddtests is sent as prop from pathology profile
 
@@ -31,6 +32,23 @@ const AddTests = (props) => {
     const [category, setCategory] = useState(['Cytopathology', 'Dermapathology', 'Forensic Pathology', 'Histopathology', 'NeuroPathology']);
     const [type, setType] = useState(['x-ray', 'ct-scan', 'blood-test', 'urine-test', 'mri-scan']);
     const [uploading, setUploading] = useState(false);
+    const [showAddCategories, setShowAddCategories] = useState(false);
+
+    useEffect(()=>{
+        axios
+        .get(GET_CATEGORIES('product-categories'), {
+            headers: {
+                'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                'Content-type': 'multipart/form-data'
+            }
+        })
+        .then(res => {
+            setCategory(res.data.payload.values);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    },[setCategory, setType, props.auth_token.accessToken, showAddCategories]);
 
     const initialState = {
         image: [],
@@ -292,6 +310,11 @@ const AddTests = (props) => {
                     ? <div className="uploadingSpinner">
                         <div />
                     </div>
+                    : null
+            }
+            {
+                showAddCategories
+                    ? <AddCategories {...{ setShowAddCategories }} />
                     : null
             }
         </div >
