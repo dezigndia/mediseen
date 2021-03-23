@@ -53,19 +53,16 @@ const appointmentSchema = new mongoose.Schema(
         date: {
             type: Date,
         },
-        isCancelled: {
-            type: Boolean,
-            default: false,
+        status: {
+            type: String,
+            enum: ["pending", "confirmed", "paid", "completed","cancelled"],
+            default: "pending",
         },
         notes: {
             type: String,
         },
         mobileNumber: {
             type: String,
-        },
-        accepted: {
-            type: Boolean,
-            default: false,
         },
         patient: {
             firstName: {
