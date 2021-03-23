@@ -13,7 +13,11 @@ import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { readableDate } from "services/services";
-import { Grid, Input } from "@material-ui/core";
+import { Button, Grid, Input, Menu, MenuItem } from "@material-ui/core";
+import AlertMessages from "components/CommonComponents/AlertMessages";
+import { MoreVert } from "@material-ui/icons";
+import { alertMessages } from "variables/constants";
+import { alert } from "variables/constants";
 
 export default function ProductsTable({ type = "get_products" }) {
   const useStyles = makeStyles({
@@ -54,6 +58,8 @@ export default function ProductsTable({ type = "get_products" }) {
   const [rows, setrows] = useState([]);
   const [page, setpage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
   const [filter, setfilter] = useState({
     limit: 10,
     skip: 0,
@@ -65,6 +71,52 @@ export default function ProductsTable({ type = "get_products" }) {
   });
 
   const [filterOpen, setfilterOpen] = useState(false);
+  const [notify, setnotify] = useState({
+    message: null,
+    type: null,
+    change: false,
+  });
+  const [currentRow, setcurrentRow] = useState(-1);
+  const handleClick = (event, i) => {
+    setAnchorEl(event.currentTarget);
+    setcurrentRow(i);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const removeAccount = async () => {
+    if (currentRow >= 0) {
+      // console.log(currentRow, )
+      let body = {
+        prodId: type.indexOf("product") >= 0 ? rows[currentRow]._id : undefined,
+        testId: type.indexOf("test") >= 0 ? rows[currentRow]._id : undefined,
+      };
+      // console.log(body);
+      let data = await fetchCall("remove_product", body);
+      console.log(data);
+      if (data) {
+        setnotify((state) => ({
+          ...state,
+          message: data.data.message,
+          type: data.success ? alert.success : alert.error,
+          change: !state.change,
+        }));
+
+        if (data.success) {
+          getData(page);
+        }
+      } else
+        setnotify((state) => ({
+          ...state,
+          type: null,
+          message: alertMessages.unexpectedError,
+          change: !state.change,
+        }));
+      handleClose();
+    }
+  };
 
   async function getData(page = 1) {
     let body = filter;
@@ -80,6 +132,7 @@ export default function ProductsTable({ type = "get_products" }) {
       console.log("Something went wrong", reqData);
     }
   }
+
   useEffect(() => {
     getData(page);
   }, [filter]);
@@ -227,20 +280,43 @@ export default function ProductsTable({ type = "get_products" }) {
             <TableCell align="right" classes={{ root: classes.head }}>
               Selling Price
             </TableCell>
+            <TableCell align="right" classes={{ root: classes.head }}>
+              &nbsp;
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map((row, i) => (
             <TableRow key={row._id}>
               <TableCell align="left">{row.businessName}</TableCell>
               <TableCell align="left">{row.name}</TableCell>
               <TableCell align="left">{readableDate(row.updatedAt)}</TableCell>
               <TableCell align="center">Rs. {row.mrp}</TableCell>
               <TableCell align="right">Rs. {row.sellingPrice}</TableCell>
+              <TableCell align="right">
+                <Button
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={(e) => handleClick(e, i)}
+                >
+                  <MoreVert />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {/* <MenuItem onClick={handleClose}>Edit Account</MenuItem> */}
+        <MenuItem onClick={() => removeAccount()}>Remove</MenuItem>
+      </Menu>
+      <AlertMessages state={notify} />
     </TableContainer>
   );
 }

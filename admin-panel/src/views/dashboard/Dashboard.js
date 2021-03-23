@@ -66,14 +66,33 @@ function Dashboard({}) {
 
     console.log(data);
     if (data.success) {
-      setcardsData([
-        ...cardsData,
-        { title: "Total Businesses", content: data.data },
-      ]);
+      let cards = [...cardsData];
+      cards.push({ title: "Total Businesses", content: data.data });
+      setcardsData(cards);
     } else {
       setcardsData([
         ...cardsData,
         { title: "Total Businesses", content: "Error" },
+      ]);
+    }
+  }
+
+  async function newBusinessThisMonth() {
+    let data = await fetchCall("new_business_this_month");
+
+    // console.log(data);
+    if (data && data.success) {
+      let cards = [...cardsData];
+      cards.push({
+        title: "New Business This Month",
+        content: data.data.currentMonthCount,
+        increase: data.data.currentMonthCount > data.data.prevMonthCount,
+      });
+      setcardsData(cards);
+    } else {
+      setcardsData([
+        ...cardsData,
+        { title: "New BUsiness This Month", content: "Error" },
       ]);
     }
   }
@@ -93,7 +112,9 @@ function Dashboard({}) {
 
   useEffect(() => {
     totalBusinesses();
+    newBusinessThisMonth();
   }, []);
+  console.log(cardsData);
   return (
     <>
       <div className="content">

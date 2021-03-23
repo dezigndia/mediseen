@@ -15,7 +15,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { Checkbox, FormControlLabel } from "@material-ui/core";
+import {
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  makeStyles,
+  TextField,
+} from "@material-ui/core";
 import {
   CollectionsOutlined,
   ExpandLess,
@@ -103,9 +109,8 @@ function Accounts() {
       body.departments.sort();
 
       const data = await fetchCall("add_admin", body);
-      console.log(data);
+      // console.log(data);
       if (data.success) {
-        console.log("success saving admin");
         setnotify((state) => ({
           ...state,
           message: "Success saving account!",
@@ -113,7 +118,6 @@ function Accounts() {
           change: !state.change,
         }));
       } else {
-        console.log("no success");
         setnotify((state) => ({
           ...state,
           message: data.data.message,
@@ -121,56 +125,42 @@ function Accounts() {
           change: !state.change,
         }));
       }
-    } else {
-      setnotify((state) => ({
-        ...state,
-        message: "Invalid information, please enter correct information",
-        type: alert.error,
-        change: !state.change,
-      }));
     }
   }
 
   function validForm() {
+    let result = true;
     if (state.name.trim() === "") {
       seterrors((state) => ({
         ...state,
         name: "Enter name!",
       }));
-      return false;
-    } else if (state.email.trim() === "") {
+      result = false;
+    }
+    const re = /^[^\s@]+@[^\s@]+$/;
+    if (!re.test(String(state.email).toLowerCase())) {
       seterrors((state) => ({
         ...state,
-        email: "Enter email!",
+        email: "Enter correct email!",
       }));
-      return false;
-    } else if (state.phoneNumber.trim() === "") {
+      console.log("incorrecr email");
+      result = false;
+    }
+    // if (state.email.trim() === "") {
+    //   seterrors((state) => ({
+    //     ...state,
+    //     email: "Enter email!",
+    //   }));
+    //   result = false;
+    // }
+    if (state.phoneNumber.trim() === "") {
       seterrors((state) => ({
         ...state,
         phoneNumber: "Enter phone number!",
       }));
-      return false;
+      result = false;
     }
-    // else if (state.password.trim() === "") {
-    //   seterrors((state) => ({
-    //     ...state,
-    //     password: "Enter password!",
-    //   }));
-    //   return false;
-    // } else if (state.confirmPassword.trim() === "") {
-    //   seterrors((state) => ({
-    //     ...state,
-    //     confirmPassword: "Enter confirm password!",
-    //   }));
-    //   return false;
-    // } else if (state.password !== state.confirmPassword) {
-    //   seterrors((state) => ({
-    //     ...state,
-    //     confirmPassword: "Confirm password and password do not match!",
-    //   }));
-    //   return false;
-    // }
-    return true;
+    return result;
   }
 
   function resetErrors() {
@@ -179,10 +169,17 @@ function Accounts() {
       name: null,
       phoneNumber: null,
       email: null,
-      password: null,
-      confirmPassword: null,
     }));
   }
+
+  const useStyles = makeStyles((theme) => ({
+    input: {
+      color: "white !important",
+      paddingLeft: "5px",
+    },
+  }));
+
+  const classes = useStyles();
 
   return (
     <>
@@ -206,33 +203,71 @@ function Accounts() {
                   <Form>
                     <Col className="pr-md-1" md="12">
                       <FormGroup>
-                        <label>Name</label>
-                        <Input
+                        {/* <label>Name</label> */}
+                        <TextField
+                          id="standard-full-width"
+                          label="Name"
                           placeholder="Name of member"
                           type="text"
                           name="name"
                           onChange={(e) => onChange(e)}
                           value={state.name}
+                          error={errors.name && errors.name.length > 0}
+                          helperText={errors.name}
+                          // classes={{ root: classes.input }}
+                          InputProps={{
+                            className: classes.input,
+                          }}
+                          InputLabelProps={{
+                            style: { color: "rgb(255 255 255 / 81%)" },
+                          }}
+                          fullWidth
                         />
-                        <label>Email</label>
-                        <Input
+                      </FormGroup>
+                      <FormGroup>
+                        {/* <label>Email</label> */}
+                        <TextField
+                          id="standard-full-width"
+                          label="Email"
                           placeholder="Email of member"
                           type="text"
                           onChange={(e) => onChange(e)}
                           name="email"
                           value={state.email}
+                          error={errors.email && errors.email.length > 0}
+                          helperText={errors.email}
+                          InputProps={{
+                            className: classes.input,
+                          }}
+                          InputLabelProps={{
+                            style: { color: "rgb(255 255 255 / 81%)" },
+                          }}
+                          fullWidth
                         />
                       </FormGroup>
                     </Col>
                     <Col className="pr-md-1" md="12">
                       <FormGroup>
-                        <label>Mobile Number</label>
-                        <Input
+                        {/* <label>Mobile Number</label> */}
+                        <TextField
+                          id="standard-full-width"
+                          label="Mobile Number"
                           placeholder="Mobile number of member"
                           type="text"
                           name="phoneNumber"
                           onChange={(e) => onChange(e)}
                           value={state.phoneNumber}
+                          error={
+                            errors.phoneNumber && errors.phoneNumber.length > 0
+                          }
+                          helperText={errors.phoneNumber}
+                          InputProps={{
+                            className: classes.input,
+                          }}
+                          InputLabelProps={{
+                            style: { color: "rgb(255 255 255 / 81%)" },
+                          }}
+                          fullWidth
                         />
                       </FormGroup>
                     </Col>

@@ -13,7 +13,10 @@ import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { readableDate } from "services/services";
 import { ExpandLess, ExpandMore, MoreVert } from "@material-ui/icons";
-import { Grid, Input } from "@material-ui/core";
+import { Button, Grid, Input, Menu, MenuItem } from "@material-ui/core";
+import { alert } from "variables/constants";
+import AlertMessages from "components/CommonComponents/AlertMessages";
+import { alertMessages } from "variables/constants";
 
 const useStyles = makeStyles({
   table: {
@@ -65,6 +68,52 @@ export default function AccountsContent() {
     name: "",
   });
   const [filterOpen, setfilterOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [notify, setnotify] = useState({
+    message: null,
+    type: null,
+    change: false,
+  });
+  const [currentRow, setcurrentRow] = useState(-1);
+  const handleClick = (event, i) => {
+    setAnchorEl(event.currentTarget);
+    setcurrentRow(i);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const removeAccount = async () => {
+    if (currentRow >= 0) {
+      let body = {
+        emails: [rows[currentRow].email],
+      };
+      console.log(body);
+      let data = await fetchCall("remove_admin", body);
+      console.log(data);
+      if (data) {
+        setnotify((state) => ({
+          ...state,
+          message: data.data.message,
+          type: data.success ? alert.success : alert.error,
+          change: !state.change,
+        }));
+
+        if (data.success) {
+          getData(page);
+        }
+      } else
+        setnotify((state) => ({
+          ...state,
+          type: null,
+          message: alertMessages.unexpectedError,
+          change: !state.change,
+        }));
+      handleClose();
+    }
+  };
+
   async function getData(page = 1) {
     let body = filter;
     body.skip = body.limit * (page - 1);
@@ -76,7 +125,13 @@ export default function AccountsContent() {
       setrows(reqData.data.data);
       setTotalCount(reqData.data.totalCount);
     } else {
-      console.log("Something went wrong", reqData);
+      // console.log("Something went wrong", reqData);
+      setnotify((state) => ({
+        ...state,
+        message: alertMessages.unexpectedError,
+        type: null,
+        change: !state.change,
+      }));
     }
   }
   useEffect(() => {
@@ -163,10 +218,13 @@ export default function AccountsContent() {
             <TableCell align="left" classes={{ root: classes.head }}>
               ID
             </TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              &nbsp;
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map((row, i) => (
             <TableRow key={row.email}>
               <TableCell
                 classes={{ root: classes.tableRow }}
@@ -186,10 +244,30 @@ export default function AccountsContent() {
               <TableCell classes={{ root: classes.tableRow }} align="left">
                 {row.email}
               </TableCell>
+              <TableCell classes={{ root: classes.tableRow }} align="right">
+                <Button
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={(e) => handleClick(e, i)}
+                >
+                  <MoreVert />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {/* <MenuItem onClick={handleClose}>Edit Account</MenuItem> */}
+        <MenuItem onClick={() => removeAccount()}>Remove Account</MenuItem>
+      </Menu>
+      <AlertMessages state={notify} />
     </TableContainer>
   );
 }

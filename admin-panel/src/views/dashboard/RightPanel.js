@@ -101,7 +101,7 @@ export default function RightPanel() {
       width: "100%",
       backgroundColor: "white",
       borderRadius: "10px",
-      marginLeft: "5px",
+      marginLeft: "1rem",
       padding: "10px 5px",
       paddingLeft: "5px",
     },
