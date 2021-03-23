@@ -57,6 +57,14 @@ export const endPointsArray = {
     endpoint: "admin/get-weekly-appointment-trend",
     method: "POST",
   },
+  remove_product: {
+    endpoint: "admin/remove-product",
+    method: "POST",
+  },
+  new_business_this_month: {
+    endpoint: "admin/new-business-this-month",
+    method: "GET",
+  },
 };
 export const alert = {
   success: "success",
