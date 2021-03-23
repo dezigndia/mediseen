@@ -2,6 +2,7 @@
 // import classes from "*.module.css";
 import { Grid, Input, makeStyles } from "@material-ui/core";
 import { HistoryTwoTone } from "@material-ui/icons";
+import BarGraph from "components/CommonComponents/BarGraph";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -46,6 +47,7 @@ export default function DashboardContent() {
     input: {
       backgroundColor: "white",
       padding: "8px",
+      marginTop: "10px",
       borderRadius: "10px",
     },
   }));

@@ -7,7 +7,11 @@ const saltRounds = 10
 const config = require("config")
 const { isSuperAdmin } = require("../utils/adminHelper")
 const { errorMessage, adminNotFound } = require("../utils/constants")
-const { getConditions, getSortingConditions } = require("../services/admin/admin.service")
+const {
+    getConditions,
+    getSortingConditions,
+    getFirstOfWeek,
+} = require("../services/admin/admin.service")
 const Product = require("../models/ProductModel")
 const User = require("../models/UserModel")
 const Pathology = require("../models/PathologyModel")
@@ -17,6 +21,8 @@ const Doctor = require("../models/DoctorModel")
 const BusinessService = require("../services/business/business.service")
 const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../utils/helpers")
 const Order = require("../models/OrderModel")
+const Test = require("../models/TestModel")
+const Appointment = require("../models/AppointmentModel")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -133,7 +139,7 @@ const getProducts = expressAsyncHandler(async (req, res) => {
     } else {
         let conditions = getConditions(req)
         const data = await Product.find(conditions).limit(limit).skip(skip)
-        console.log(data, "data")
+        // console.log(data, "data")
         const totalCount = await Product.countDocuments(conditions)
 
         res.status(StatusCodes.OK).json({
@@ -142,6 +148,25 @@ const getProducts = expressAsyncHandler(async (req, res) => {
         })
     }
 })
+const getTests = expressAsyncHandler(async (req, res) => {
+    let { skip, limit } = req.query
+    skip = skip - "0"
+    limit = limit - "0"
+    if (skip === null || limit === null) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    } else {
+        let conditions = getConditions(req)
+        const data = await Test.find(conditions).limit(limit).skip(skip)
+        console.log(data, "data")
+        const totalCount = await Test.countDocuments(conditions)
+
+        res.status(StatusCodes.OK).json({
+            data: data,
+            totalCount: totalCount,
+        })
+    }
+})
+
 const getOrders = expressAsyncHandler(async (req, res) => {
     let { skip, limit } = req.query
     skip = skip - "0"
@@ -327,6 +352,62 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
     }
 })
 
+const getMonthlyOrderTrend = expressAsyncHandler(async (req, res) => {
+    let { year } = req.query
+
+    if (year) {
+        let data = await Order.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(year, 0, 1),
+                        $lt: new Date(year, 11, 1),
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: { month: { $month: "$createdAt" } },
+                    grandTotal: { $sum: "$grandTotal" },
+                },
+            },
+        ])
+        res.status(StatusCodes.OK).json({ data: data })
+    } else {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "send year" })
+    }
+})
+const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
+    let { date } = req.body
+    if (date) {
+        let reqDate = getFirstOfWeek(date)
+        console.log(reqDate, date)
+
+        let data = await Appointment.aggregate([
+            // {
+            //     $match: {
+            //         createdAt: {
+            //             $gte: reqDate,
+            //             $lt: date,
+            //         },
+            //     },
+            // },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                        day: { $dayOfMonth: "$createdAt" },
+                    },
+                    count: { $sum: 1 },
+                },
+            },
+        ])
+        res.status(StatusCodes.OK).json({ data: data })
+    } else {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "send date" })
+    }
+})
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -338,4 +419,7 @@ module.exports = {
     getBusinessList,
     getTotalBusinesses,
     getOrders,
+    getTests,
+    getMonthlyOrderTrend,
+    getWeeklyAppointmentTrend,
 }

@@ -56,6 +56,7 @@ import {
 import TopCard from "./dashboard-card";
 import DashboardContent from "./DashboardContent";
 import { fetchCall } from "services/services";
+import RightPanel from "./RightPanel";
 
 function Dashboard({}) {
   const [cardsData, setcardsData] = useState([]);
@@ -111,8 +112,13 @@ function Dashboard({}) {
           ))}
         </Grid>
         <span className={classes.searchHub}>Search Hub</span>
-        <Grid container>
-          <DashboardContent />
+        <Grid container direction="row" justify="space-between">
+          <Grid item xs={8}>
+            <DashboardContent />
+          </Grid>
+          <Grid item xs={4}>
+            <RightPanel />
+          </Grid>
         </Grid>
       </div>
     </>

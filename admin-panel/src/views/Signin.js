@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   withStyles,
@@ -15,6 +15,10 @@ import { Label } from "reactstrap";
 import { fetchCall } from "services/services";
 import { isLoggedIn } from "services/services";
 import { useHistory } from "react-router";
+import { notify } from "services/services";
+import { alert } from "variables/constants";
+import AlertMessages from "components/CommonComponents/AlertMessages";
+import { alertMessages } from "variables/constants";
 const styles = makeStyles((theme) => ({
   container: {
     width: "50%",
@@ -25,6 +29,10 @@ const styles = makeStyles((theme) => ({
 function Signin() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [notify, setnotify] = useState({
+    message: "",
+    type: null,
+  });
   const classes = styles();
   const history = useHistory();
   async function onsubmit() {
@@ -33,19 +41,27 @@ function Signin() {
       password,
     };
     let response = await fetchCall("admin_login", body);
-
+    console.log(response);
     if (response && response.success) {
       if (response.data && response.data.payload)
         localStorage.setItem(
           "userData",
           JSON.stringify({ token: response.data.payload.token })
         );
-      history.push("/");
-    } else {
-      localStorage.clear();
+      history.push("/admin/dashboard");
+    } else if (response && !response.success) {
+      setnotify({
+        message: response.data.message,
+        type: alert.error,
+      });
       console.log("login again!");
+    } else {
+      setnotify({
+        message: alertMessages.unexpectedError,
+      });
     }
   }
+
   return (
     <div
       style={{
@@ -112,6 +128,7 @@ function Signin() {
           </Button>
         </Grid>
       </div>
+      <AlertMessages state={notify} />
     </div>
   );
 }

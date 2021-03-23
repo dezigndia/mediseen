@@ -19,9 +19,6 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
-  head: {
-    fontWeight: "700",
-  },
   sortDate: {
     backgroundColor: "#2772f6",
     padding: "5px",
@@ -32,9 +29,27 @@ const useStyles = makeStyles({
   },
   input: {
     backgroundColor: "#2b69f5",
-    padding: "8px",
-    color: "white",
+    padding: "2px 8px",
     borderRadius: "10px",
+    fontSize: "0.8rem",
+    margin: "5px 5px 5px 0px",
+  },
+  filterContainer: {
+    backgroundColor: "#2772f630",
+    borderRadius: "5px",
+    padding: "1rem",
+    marginTop: "5px",
+  },
+  tableContainer: {
+    padding: "1rem 1rem",
+  },
+  head: {
+    fontWeight: "700",
+    // color: "#cdcfd4",
+  },
+  tableRow: {
+    paddingTop: "0.5rem",
+    paddingBottom: "0.5rem",
   },
 });
 
@@ -68,7 +83,10 @@ export default function AccountsContent() {
     getData(page);
   }, [filter]);
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      classes={{ root: classes.tableContainer }}
+      component={Paper}
+    >
       <Grid container direction="column">
         <Grid container justify="space-between">
           <Grid item>
@@ -96,7 +114,11 @@ export default function AccountsContent() {
           </Grid>
         </Grid>
         {filterOpen && (
-          <Grid container>
+          <Grid
+            container
+            alignItems="center"
+            classes={{ root: classes.filterContainer }}
+          >
             <Grid item>
               <Input
                 onChange={(e) => {
@@ -132,18 +154,28 @@ export default function AccountsContent() {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow classes={{ head: classes.head }}>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Departments</TableCell>
-            <TableCell align="left">ID</TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              Name
+            </TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              Departments
+            </TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              ID
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.email}>
-              <TableCell component="th" scope="row">
+              <TableCell
+                classes={{ root: classes.tableRow }}
+                component="th"
+                scope="row"
+              >
                 {row.name}
               </TableCell>
-              <TableCell align="left">
+              <TableCell classes={{ root: classes.tableRow }} align="left">
                 {row &&
                   row.departments &&
                   row.departments.length > 0 &&
@@ -151,7 +183,9 @@ export default function AccountsContent() {
                     return <>{each}, </>;
                   })}
               </TableCell>
-              <TableCell align="left">{row.email}</TableCell>
+              <TableCell classes={{ root: classes.tableRow }} align="left">
+                {row.email}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

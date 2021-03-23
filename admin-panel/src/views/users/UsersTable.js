@@ -29,9 +29,28 @@ export default function UsersTable() {
     },
     input: {
       backgroundColor: "#2b69f5",
-      padding: "8px",
+      padding: "2px 8px",
       color: "white",
       borderRadius: "10px",
+      fontSize: "0.8rem",
+      margin: "5px 5px 5px 0px",
+    },
+    filterContainer: {
+      backgroundColor: "#2772f630",
+      borderRadius: "5px",
+      padding: "1rem",
+      marginTop: "5px",
+    },
+    tableContainer: {
+      padding: "1rem 1rem",
+      // backgroundColor: "rgb(30 30 45 / 19%)",
+    },
+    head: {
+      fontWeight: "700",
+    },
+    tableRow: {
+      paddingTop: "0.5rem",
+      paddingBottom: "0.5rem",
     },
   });
   const classes = useStyles();
@@ -65,7 +84,10 @@ export default function UsersTable() {
     getData(page);
   }, [filter]);
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      classes={{ root: classes.tableContainer }}
+    >
       <Grid container direction="column">
         <Grid container justify="space-between">
           <Grid item>
@@ -93,7 +115,11 @@ export default function UsersTable() {
           </Grid>
         </Grid>
         {filterOpen && (
-          <Grid container>
+          <Grid
+            container
+            alignItems="center"
+            classes={{ root: classes.filterContainer }}
+          >
             <Grid item>
               <Input
                 onChange={(e) => {
@@ -129,23 +155,35 @@ export default function UsersTable() {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">PINCODE</TableCell>
-            <TableCell align="right">Orders</TableCell>
+            <TableCell align="left" classes={{ root: classes.head }}>
+              Name
+            </TableCell>
+            <TableCell align="center" classes={{ root: classes.head }}>
+              PINCODE
+            </TableCell>
+            <TableCell align="right" classes={{ root: classes.head }}>
+              Orders
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.email}>
-              <TableCell component="th" scope="row">
+              <TableCell
+                classes={{ root: classes.tableRow }}
+                component="th"
+                scope="row"
+              >
                 {row.name}
               </TableCell>
-              <TableCell align="left">
+              <TableCell classes={{ root: classes.tableRow }} align="center">
                 {row && row.address && row.address[0] && row.address[0].pincode
                   ? row.address[0].pincode
                   : "Not Available"}
               </TableCell>
-              <TableCell align="right">Rs. {row.totalCost}</TableCell>
+              <TableCell classes={{ root: classes.tableRow }} align="right">
+                Rs. {row.totalCost}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

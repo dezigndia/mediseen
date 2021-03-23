@@ -47,7 +47,7 @@ export default function MenuForFilter({
       fontWeight: "700",
     },
     dateCont: {
-      padding: "7px 5px",
+      padding: "0.5rem 5px 0.7rem 5px",
     },
   }));
   const classes = useStyles();
@@ -102,6 +102,7 @@ export default function MenuForFilter({
                     setstate(e.target.value);
                     selected(e.target.value);
                   }}
+                  style={{ border: "none" }}
                   required
                 />
                 {state && (

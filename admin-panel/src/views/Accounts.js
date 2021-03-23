@@ -22,6 +22,7 @@ import {
   ExpandMore,
   MoreVert,
 } from "@material-ui/icons";
+import AlertMessages from "components/CommonComponents/AlertMessages";
 import React, { useEffect, useState } from "react";
 
 // reactstrap components
@@ -39,6 +40,7 @@ import {
   Col,
 } from "reactstrap";
 import { fetchCall } from "services/services";
+import { alert } from "variables/constants";
 import AccountsContent from "./accounts/AccountsContent";
 
 function Accounts() {
@@ -48,6 +50,12 @@ function Accounts() {
     phoneNumber: "",
     email: "",
     departments: [],
+  });
+
+  const [notify, setnotify] = useState({
+    message: "",
+    type: null,
+    change: false,
   });
 
   const [errors, seterrors] = useState({
@@ -98,9 +106,28 @@ function Accounts() {
       console.log(data);
       if (data.success) {
         console.log("success saving admin");
+        setnotify((state) => ({
+          ...state,
+          message: "Success saving account!",
+          type: alert.success,
+          change: !state.change,
+        }));
       } else {
         console.log("no success");
+        setnotify((state) => ({
+          ...state,
+          message: data.data.message,
+          type: alert.error,
+          change: !state.change,
+        }));
       }
+    } else {
+      setnotify((state) => ({
+        ...state,
+        message: "Invalid information, please enter correct information",
+        type: alert.error,
+        change: !state.change,
+      }));
     }
   }
 
@@ -284,6 +311,7 @@ function Accounts() {
           </Col>
         </Row>
         <AccountsContent />
+        <AlertMessages state={notify} />
       </div>
     </>
   );

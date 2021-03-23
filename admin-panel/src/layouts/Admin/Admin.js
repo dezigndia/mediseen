@@ -117,8 +117,8 @@ function Admin(props) {
             <Sidebar
               routes={routes}
               logo={{
-                outterLink: "https://www.creative-tim.com/",
-                text: "Creative Tim",
+                outterLink: "",
+                text: "Mediseen",
                 imgSrc: logo,
               }}
               toggleSidebar={toggleSidebar}
@@ -132,10 +132,7 @@ function Admin(props) {
               {/* <BrowserRouter> */}
               <Switch>
                 {getRoutes(routes)}
-
-                <Route to="/admin/users" component={Users} exact />
-                <Route to="/admin/accounts" component={Accounts} exact />
-                {/* <Redirect from="*" to="/admin/dashboard" /> */}
+                <Redirect from="*" to="/admin/dashboard" />
               </Switch>
               {/* </BrowserRouter> */}
               {

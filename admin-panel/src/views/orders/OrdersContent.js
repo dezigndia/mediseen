@@ -43,9 +43,17 @@ const useStyles = makeStyles({
   },
   input: {
     backgroundColor: "#2b69f5",
-    padding: "8px",
+    padding: "2px 8px",
     color: "white",
     borderRadius: "10px",
+    fontSize: "0.8rem",
+    margin: "5px 5px 5px 0px",
+  },
+  filterContainer: {
+    backgroundColor: "#2772f630",
+    borderRadius: "5px",
+    padding: "1rem",
+    marginTop: "5px",
   },
 });
 
@@ -146,7 +154,11 @@ export default function OrdersContent() {
           </Grid>
         </Grid>
         {filterOpen && (
-          <Grid container>
+          <Grid
+            container
+            alignItems="center"
+            classes={{ root: classes.filterContainer }}
+          >
             <Grid item>
               <Input
                 onChange={(e) => {

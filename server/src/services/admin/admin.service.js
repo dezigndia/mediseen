@@ -98,8 +98,22 @@ async function getAdminFromToken(req, res) {
     }
 }
 
+function getFirstOfWeek(date) {
+    let dateNew = new Date(date)
+
+    var day = dateNew.getDay() || 7
+    if (day !== 1) dateNew.setHours(-24 * (day - 1))
+
+    dateNew.setHours(0)
+    dateNew.setMinutes(0)
+    dateNew.setSeconds(0)
+    dateNew.setMilliseconds(0)
+    return dateNew
+}
+
 module.exports = {
     getConditions,
     getAdminFromToken,
     getSortingConditions,
+    getFirstOfWeek,
 }
