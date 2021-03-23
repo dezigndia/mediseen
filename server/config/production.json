@@ -14,10 +14,10 @@
     },
     "aws": {
         "region": "ap-south-1",
-        "bucket": "bucket-mediseen",
+        "bucket": "mediseen",
         "sizelimit": 300000000,
-        "accessKeyId": "AKIAT6QKWO4WSSR2CUIV",
-        "secretAccessKey": "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"
+        "accessKeyId": "AKIASVUQZW256KXX3ONQ",
+        "secretAccessKey": "JjAD0GZlduB4w1OqwN/iAUWaJzBcOrxkvBZ6vher+BfeDC47r"
     },
     "mode": "PRODUCTION"
 }
