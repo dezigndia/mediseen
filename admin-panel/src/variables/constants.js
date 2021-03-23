@@ -1,4 +1,4 @@
-export const baseUrl = "http://13.126.113.214:5001/api/";
+export const baseUrl = "http://13.126.205.131:5001/api/";
 export const testurl = "http://localhost:5001/api/";
 export const endPointsArray = {
   get_businesses: {
@@ -63,6 +63,10 @@ export const endPointsArray = {
   },
   new_business_this_month: {
     endpoint: "admin/new-business-this-month",
+    method: "GET",
+  },
+  total_users: {
+    endpoint: "admin/get-total-patients",
     method: "GET",
   },
 };

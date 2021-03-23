@@ -12,6 +12,10 @@ const {
     getTests,
     getMonthlyOrderTrend,
     getWeeklyAppointmentTrend,
+    removeProduct,
+    getNewBusinessCount,
+    patientCount,
+    totalOAMonth,
 } = require("../controllers/adminController")
 const { isSuperAdmin, isAdmin } = require("../utils/adminHelper")
 const BusinessController = require("../controllers/businessController")
@@ -33,8 +37,13 @@ router.get("/get-total-businesses", isAdmin(), getTotalBusinesses)
 router.get("/get-appointments", isAdmin(), ac.getAppointments)
 router.get("/get-appointment-per-business", isAdmin(), ac.getAppointmentbybusiness)
 router.get("/get-orders", isAdmin(), getOrders)
+router.post("/remove-product", isAdmin(), removeProduct)
 
 router.get("/get-monthly-orders", isAdmin(), getMonthlyOrderTrend)
 router.post("/get-weekly-appointment-trend", isAdmin(), getWeeklyAppointmentTrend)
 
+// router.get("/active-business-month", isAdmin(), ) can't be done right now!
+router.get("/new-business-this-month", isAdmin(), getNewBusinessCount)
+router.get("/get-total-patients", isAdmin(), patientCount) // not tested properly as server is down right now!
+router.get("/get-total-oa-month", isAdmin(), totalOAMonth)
 module.exports = router

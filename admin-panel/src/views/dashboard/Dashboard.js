@@ -66,15 +66,17 @@ function Dashboard({}) {
 
     console.log(data);
     if (data.success) {
-      let cards = [...cardsData];
-      cards.push({ title: "Total Businesses", content: data.data });
-      setcardsData(cards);
+      let cards = { title: "Total Businesses", content: data.data };
+      setcardsData((state) => [...state, cards]);
+      console.log(cards, "cards");
     } else {
       setcardsData([
         ...cardsData,
         { title: "Total Businesses", content: "Error" },
       ]);
     }
+
+    newBusinessThisMonth();
   }
 
   async function newBusinessThisMonth() {
@@ -82,17 +84,57 @@ function Dashboard({}) {
 
     // console.log(data);
     if (data && data.success) {
-      let cards = [...cardsData];
-      cards.push({
+      let cards = {
         title: "New Business This Month",
         content: data.data.currentMonthCount,
         increase: data.data.currentMonthCount > data.data.prevMonthCount,
-      });
-      setcardsData(cards);
+      };
+      setcardsData((state) => [...state, cards]);
+      console.log(cards, "cards");
     } else {
-      setcardsData([
-        ...cardsData,
-        { title: "New BUsiness This Month", content: "Error" },
+      setcardsData((state) => [
+        ...state,
+        { title: "New Business This Month", content: "Error" },
+      ]);
+    }
+
+    getTotalPatients();
+  }
+
+  async function getTotalPatients() {
+    let data = await fetchCall("total_users");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Total Users",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+      console.log(cards, "cards");
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Total Users", content: "Error" },
+      ]);
+    }
+  }
+
+  async function getTotalOAMonth() {
+    let data = await fetchCall("total_OA_month");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Total O/A Month",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+      console.log(cards, "cards");
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Total O/A Month", content: "Error" },
       ]);
     }
   }
@@ -112,16 +154,15 @@ function Dashboard({}) {
 
   useEffect(() => {
     totalBusinesses();
-    newBusinessThisMonth();
   }, []);
-  console.log(cardsData);
+  // console.log(cardsData);
   return (
     <>
       <div className="content">
         <span style={{ margin: "1rem 0" }}>Quick Stats</span>
         <Grid container spacing={2}>
-          {cardsData.map((each) => (
-            <Grid item xs={2}>
+          {cardsData.map((each, i) => (
+            <Grid item xs={2} key={i}>
               <TopCard title={each.title}>
                 <Grid container>
                   <Grid item classes={{ root: classes.content }}>
