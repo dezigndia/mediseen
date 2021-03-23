@@ -55,7 +55,7 @@ const appointmentSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "confirmed", "paid", "completed","cancelled"],
+            enum: ["pending", "confirmed", "paid", "completed", "cancelled"],
             default: "pending",
         },
         notes: {
@@ -63,6 +63,12 @@ const appointmentSchema = new mongoose.Schema(
         },
         mobileNumber: {
             type: String,
+        },
+        mobileNumber: {
+            type: String,
+        },
+        grandTotal: {
+            type: Number,
         },
         patient: {
             firstName: {
