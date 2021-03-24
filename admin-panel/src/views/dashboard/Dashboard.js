@@ -62,20 +62,21 @@ function Dashboard({}) {
   const [cardsData, setcardsData] = useState([]);
 
   async function totalBusinesses() {
-    let data = await fetchCall("get_total_businesses");
+    try {
+      let data = await fetchCall("get_total_businesses");
 
-    console.log(data);
-    if (data.success) {
-      let cards = { title: "Total Businesses", content: data.data };
-      setcardsData((state) => [...state, cards]);
-      console.log(cards, "cards");
-    } else {
-      setcardsData([
-        ...cardsData,
-        { title: "Total Businesses", content: "Error" },
-      ]);
-    }
-
+      console.log(data);
+      if (data.success) {
+        let cards = { title: "Total Businesses", content: data.data };
+        setcardsData((state) => [...state, cards]);
+        console.log(cards, "cards");
+      } else {
+        setcardsData([
+          ...cardsData,
+          { title: "Total Businesses", content: "Error" },
+        ]);
+      }
+    } catch (e) {}
     newBusinessThisMonth();
   }
 

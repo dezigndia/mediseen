@@ -346,9 +346,10 @@ const getOrderTrend = expressAsyncHandler(async (req, res) => {
     let { date, type } = req.query
     let d = new Date(date)
     let year = d.getFullYear()
-
     let lowerDate = type === "monthly" ? new Date(year, 0, 1) : getFirstOfWeek(date)
     let upperDate = d
+    // console.log(lowerDate, upperDate, "date")
+
     if (year) {
         let data = await Order.aggregate([
             {
@@ -387,7 +388,7 @@ const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
                 $match: {
                     createdAt: {
                         $gte: reqDate,
-                        $lt: date,
+                        $lt: new Date(date),
                     },
                 },
             },

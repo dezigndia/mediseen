@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { makeStyles } from "@material-ui/core";
+import { AppBar, makeStyles, Tab, Tabs } from "@material-ui/core";
 import React, { useState } from "react";
 
 // reactstrap components
@@ -302,41 +302,48 @@ import ProductsTable from "./products/ProductsTable";
 
 function Map() {
   const [type, settype] = useState("get_products");
-
+  const [value, setValue] = React.useState(0);
   const useStyles = makeStyles((theme) => ({
     title: {
-      fontSize: "1rem",
+      fontSize: "0.7rem",
       // color: "white",
       fontWeight: "700",
       cursor: "pointer",
-      marginBottom: "1rem",
+    },
+    root: {
+      backgroundColor: "white",
+      color: "black",
+      fontWeight: "600",
+      borderRadius: "10px 10px 0px 0px",
     },
   }));
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    if (newValue === 1) {
+      settype("get_tests");
+    } else if (newValue === 0) {
+      settype("get_products");
+    }
+  };
   const classes = useStyles();
   return (
     <>
       <div className="content">
         <h2 className="title">Update List</h2>
-        <div>
-          <h4>View</h4>
-          <span
-            onClick={() => {
-              settype("get_products");
-            }}
-            className={classes.title}
-          >
-            Product List
-          </span>
-          <span>&nbsp; | &nbsp;</span>
-          <span
-            onClick={() => {
-              settype("get_tests");
-            }}
-            className={classes.title}
-          >
-            Test List
-          </span>
-        </div>
+        <AppBar position="static" classes={{ root: classes.root }}>
+          <Tabs value={value} onChange={handleChange} aria-label="simple tabs">
+            <Tab
+              label="Products"
+              classes={{ wrapper: classes.title }}
+              aria-controls="simple-tabpanel-1"
+            />
+            <Tab
+              classes={{ wrapper: classes.title }}
+              label="Tests"
+              aria-controls="simple-tabpanel-2"
+            />
+          </Tabs>
+        </AppBar>
         <ProductsTable type={type} />
       </div>
     </>

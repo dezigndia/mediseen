@@ -52,6 +52,7 @@ export default function ProductsTable({ type = "get_products" }) {
     tableContainer: {
       padding: "1rem 1rem",
       // backgroundColor: "rgb(30 30 45 / 19%)",
+      borderRadius: "0px 0px 10px 10px",
     },
   });
   const classes = useStyles();

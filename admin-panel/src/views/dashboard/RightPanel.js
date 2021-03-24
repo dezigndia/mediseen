@@ -19,26 +19,35 @@ export default function RightPanel() {
   const [total, settotal] = useState(0);
 
   const handleState = (event, value) => {
-    if (value) setstate(value);
+    if (value) {
+      setstate(value);
+      getOrderTrend(value);
+    }
   };
-  async function getOrderTrend() {
-    let d = new Date();
-    let year = d.getFullYear();
+  async function getOrderTrend(type = "monthly") {
+    let date = new Date();
     let body = {
-      year,
+      date,
+      type,
     };
     body = convertBodyToQueryParams(body);
     const data = await fetchCall("order_trend", undefined, body);
     try {
       if (data.success) {
         let reqData = [];
-        for (let i = 0; i < 12; i++) {
+        let length = type === "monthly" ? 12 : date.getDay();
+        for (let i = 0; i < length; i++) {
+          if (type === "weekly")
+            console.log(incrementDate(date, -1 * i).getDay(), "day of week");
+          let a = type === "weekly" ? incrementDate(date, -6 + i).getDay() : "";
           reqData.push({
             month: i + 1,
             grandTotal: 0,
           });
           data.data.data.forEach((each) => {
             if (each._id.month === reqData[i].month) {
+              reqData[i].grandTotal = each.grandTotal;
+            } else if (type === "weekly" && each._id.day === a) {
               reqData[i].grandTotal = each.grandTotal;
             }
           });
@@ -64,11 +73,13 @@ export default function RightPanel() {
     try {
       if (data.success) {
         let reqData = [];
-        for (let i = 0; i < 7; i++) {
-          let date = incrementDate(currentDate, -6 + i);
-          date = readableDate(date);
+        let length = date.getDay();
+        for (let i = 0; i < length; i++) {
+          let dateR = incrementDate(currentDate, -length + i + 1);
+          dateR = readableDate(dateR);
+          console.log(dateR, "date");
           reqData.push({
-            date: date,
+            date: dateR,
             count: 0,
             day: i + 1,
           });
@@ -89,19 +100,21 @@ export default function RightPanel() {
   }
 
   async function getRelativeAmounts() {
-    let data = await fetchCall("get_relative_amount");
-    let req = [];
-    if (data.success) {
-      Object.keys(data.data).forEach((each) => {
-        req.push({
-          name: each,
-          sales: data.data[each].sales,
+    try {
+      let data = await fetchCall("get_relative_amount");
+      let req = [];
+      if (data.success) {
+        Object.keys(data.data).forEach((each) => {
+          req.push({
+            name: each,
+            sales: data.data[each].sales,
+          });
         });
-      });
-      setrelativeAmount(req);
+        setrelativeAmount(req);
 
-      req.forEach((each) => settotal((state) => state + each.sales));
-    }
+        req.forEach((each) => settotal((state) => state + each.sales));
+      }
+    } catch (e) {}
   }
   useEffect(() => {
     getOrderTrend();
@@ -171,7 +184,7 @@ export default function RightPanel() {
           barDataKey="grandTotal"
         />
       )}
-      <div className={classes.title}>Appointment Trend</div>
+      <div className={classes.title}>Appointment Trend(Weekly)</div>
       {weeklyAppoinments && (
         <LineGraph
           data={weeklyAppoinments}
