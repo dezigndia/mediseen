@@ -33,7 +33,7 @@ export default function RightPanel() {
     body = convertBodyToQueryParams(body);
     const data = await fetchCall("order_trend", undefined, body);
     try {
-      if (data.success) {
+      if (data && data.success) {
         let reqData = [];
         let length = type === "monthly" ? 12 : date.getDay();
         for (let i = 0; i < length; i++) {
@@ -71,7 +71,7 @@ export default function RightPanel() {
     };
     const data = await fetchCall("weekly_appointment_trend", body);
     try {
-      if (data.success) {
+      if (data && data.success) {
         let reqData = [];
         let length = date.getDay();
         for (let i = 0; i < length; i++) {
@@ -103,7 +103,7 @@ export default function RightPanel() {
     try {
       let data = await fetchCall("get_relative_amount");
       let req = [];
-      if (data.success) {
+      if (data && data.success) {
         Object.keys(data.data).forEach((each) => {
           req.push({
             name: each,

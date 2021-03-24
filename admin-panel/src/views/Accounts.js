@@ -110,7 +110,7 @@ function Accounts() {
 
       const data = await fetchCall("add_admin", body);
       // console.log(data);
-      if (data.success) {
+      if (data && data.success) {
         setnotify((state) => ({
           ...state,
           message: "Success saving account!",
