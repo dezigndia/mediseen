@@ -2,6 +2,7 @@ import { Grid, makeStyles } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import BarGraph from "components/CommonComponents/BarGraph";
 import LineGraph from "components/CommonComponents/LineGraph";
+import PieGraph from "components/CommonComponents/PieGraph";
 
 import React, { useEffect, useState } from "react";
 import { readableDate } from "services/services";
@@ -11,8 +12,11 @@ import { fetchCall } from "services/services";
 export default function RightPanel() {
   const [monthlyOrders, setmonthlyOrders] = useState(null);
   const [weeklyAppoinments, setweeklyAppoinments] = useState(null);
+  const [relativeAmount, setrelativeAmount] = useState(null);
+
   const [currentDate, setcurrentDate] = useState(new Date());
   const [state, setstate] = useState("monthly");
+  const [total, settotal] = useState(0);
 
   const handleState = (event, value) => {
     if (value) setstate(value);
@@ -25,7 +29,6 @@ export default function RightPanel() {
     };
     body = convertBodyToQueryParams(body);
     const data = await fetchCall("order_trend", undefined, body);
-    // console.log(data);
     try {
       if (data.success) {
         let reqData = [];
@@ -50,7 +53,6 @@ export default function RightPanel() {
   function incrementDate(date, value) {
     let d = new Date(date);
     d.setDate(d.getDate() + value);
-    console.log(d);
     return d;
   }
   async function getWeeklyAppointmentTrend() {
@@ -79,16 +81,32 @@ export default function RightPanel() {
             }
           });
         }
-        console.log(reqData);
         setweeklyAppoinments(reqData);
       }
     } catch (e) {
       console.log(e);
     }
   }
+
+  async function getRelativeAmounts() {
+    let data = await fetchCall("get_relative_amount");
+    let req = [];
+    if (data.success) {
+      Object.keys(data.data).forEach((each) => {
+        req.push({
+          name: each,
+          sales: data.data[each].sales,
+        });
+      });
+      setrelativeAmount(req);
+
+      req.forEach((each) => settotal((state) => state + each.sales));
+    }
+  }
   useEffect(() => {
     getOrderTrend();
     getWeeklyAppointmentTrend();
+    getRelativeAmounts();
   }, []);
 
   const useStyles = makeStyles((theme) => ({
@@ -160,6 +178,11 @@ export default function RightPanel() {
           xAxisDataKey={"day"}
           barDataKey={"count"}
         />
+      )}
+
+      <div className={classes.title}>Total amount: {total}</div>
+      {relativeAmount && (
+        <PieGraph data={relativeAmount} nameKey={"name"} dataKey={"sales"} />
       )}
     </div>
   );

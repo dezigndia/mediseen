@@ -99,7 +99,10 @@ export default function DashboardTableCard({ data = {} }) {
             Rs. {data.sales}
           </Grid>
           <Grid item classes={{ root: classes.orders }}>
-            {data.totalCount} orders
+            {data.totalCount}{" "}
+            {data.type === "doctor" || data.type === "hospital"
+              ? "Appoinments"
+              : "Orders"}
           </Grid>
         </Grid>
       </Grid>

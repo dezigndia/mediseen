@@ -19,6 +19,18 @@ const useStyles = makeStyles((theme) => ({
   },
   pagination: {
     color: "white",
+    "& .MuiPaginationItem-root": {
+      backgroundColor: "rgb(29 29 43 / 80%)",
+      color: "white",
+      minWidth: "20px",
+      borderRadius: "10%",
+      height: "auto",
+      padding: "4px 5px",
+    },
+    "& .Mui-selected": {
+      backgroundColor: "#2c66f5",
+      color: "white",
+    },
   },
 }));
 
@@ -28,7 +40,7 @@ export default function PaginationTiles({ tileNo, totalTiles = 0 }) {
   return (
     <div className={classes.root}>
       <Pagination
-        // classes={{ root: classes.pagination }}
+        classes={{ root: classes.pagination }}
         className="pagination-custom"
         count={10}
         shape="round"

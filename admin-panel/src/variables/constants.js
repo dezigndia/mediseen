@@ -69,6 +69,14 @@ export const endPointsArray = {
     endpoint: "admin/get-total-patients",
     method: "GET",
   },
+  get_relative_amount: {
+    endpoint: "admin/get-relative-amounts",
+    method: "GET",
+  },
+  total_OA_month: {
+    endpoint: "admin/get-total-oa-month",
+    method: "GET",
+  },
 };
 export const alert = {
   success: "success",

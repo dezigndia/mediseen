@@ -5,7 +5,7 @@ const Admin = require("../../models/AdminModel")
 const { StatusCodes } = require("http-status-codes")
 
 function exactMatch(val) {
-    console.log(val, val.toLowerCase().indexOf("phone") >= 0)
+    // console.log(val, val.toLowerCase().indexOf("phone") >= 0)
     if (val === "businessType" || val.toLowerCase().indexOf("phone") >= 0) return true
     return false
 }
@@ -57,8 +57,6 @@ function getConditions(req) {
         }
     })
 
-    console.log(conditions, "conditions")
-
     return conditions
 }
 
@@ -68,7 +66,6 @@ async function getSortingConditions(req) {
         // console.log(sortBy, asc)
         let ans = {}
         ans[sortBy] = parseInt(asc)
-        console.log(ans, "sort cond")
         return ans
     }
 

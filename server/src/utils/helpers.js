@@ -2,16 +2,20 @@ const { countDocuments } = require("../models/AppointmentModel")
 const Appointment = require("../models/AppointmentModel")
 const Order = require("../models/OrderModel")
 const Doctor = require("../models/DoctorModel")
+const { FileSystemCredentials } = require("aws-sdk")
 
 async function getTotalSalesByBusiness(phoneNumber, businessType, price = 0) {
     let sales = 0,
         totalCount = 0
     if (businessType === "doctor" || businessType === "hospital") {
+        let filter = {}
+        if (phoneNumber) {
+            filter.businessPhoneNumber = phoneNumber
+        }
+        filter.businessType = businessType
         let data = await Appointment.aggregate([
             {
-                $match: {
-                    businessPhoneNumber: phoneNumber,
-                },
+                $match: filter,
             },
             {
                 $project: {
@@ -25,16 +29,23 @@ async function getTotalSalesByBusiness(phoneNumber, businessType, price = 0) {
                     sum: {
                         $sum: "$grandTotal",
                     },
+                    myCount: {
+                        $sum: 1,
+                    },
                 },
             },
         ])
-        console.log(data)
+        sales = data[0] ? data[0].sum : 0
+        totalCount = data[0] ? data[0].myCount : 0
     } else if (businessType === "pharmacy") {
+        let filter = {}
+        if (phoneNumber) {
+            filter.businessPhoneNumber = phoneNumber
+        }
+        filter.businessType = businessType
         let data = await Order.aggregate([
             {
-                $match: {
-                    businessPhoneNumber: phoneNumber,
-                },
+                $match: filter,
             },
             {
                 $project: {
@@ -52,11 +63,16 @@ async function getTotalSalesByBusiness(phoneNumber, businessType, price = 0) {
                 },
             },
         ])
-        sales = data[0].sum
-        totalCount = data[0].myCount
-        console.log("pharmacy sales", sales, totalCount, data)
+        sales = data[0] ? data[0].sum : 0
+        totalCount = data[0] ? data[0].myCount : 0
     } else if (businessType === "pathology") {
-        totalCount = await Order.countDocuments({ businessPhoneNumber: phoneNumber })
+        let filter = {}
+        if (phoneNumber) {
+            filter.businessPhoneNumber = phoneNumber
+        }
+        filter.businessType = businessType
+
+        totalCount = await Order.countDocuments(filter)
         sales += totalCount * price
     }
     // console.log(phoneNumber, businessType, price, { sales: sales, totalCount: totalCount })

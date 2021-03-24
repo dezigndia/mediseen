@@ -95,16 +95,12 @@ const getTotalUsers = expressAsyncHandler(async (req, res) => {
 
 const getTotalBusinesses = expressAsyncHandler(async (req, res) => {
     let data =
-        (await Pathology.countDocuments({})) +
-        (await Hospital.countDocuments({})) +
-        (await Pharmarcy.countDocuments({})) +
-        (await Doctor.countDocuments({}))
+        // (await Pathology.countDocuments({})) +
+        // (await Hospital.countDocuments({})) +
+        // (await Pharmarcy.countDocuments({})) +
+        await Doctor.countDocuments({})
 
-    if (data) {
-        res.status(200).json(data)
-    } else {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
-    }
+    res.status(StatusCodes.OK).json(data)
 })
 
 const getAdmins = expressAsyncHandler(async (req, res) => {
@@ -158,7 +154,7 @@ const getTests = expressAsyncHandler(async (req, res) => {
     } else {
         let conditions = getConditions(req)
         const data = await Test.find(conditions).limit(limit).skip(skip)
-        console.log(data, "data")
+        // console.log(data, "data")
         const totalCount = await Test.countDocuments(conditions)
 
         res.status(StatusCodes.OK).json({
@@ -243,7 +239,10 @@ const getUsers = expressAsyncHandler(async (req, res) => {
         // .limit(limit)
         // .skip(skip)
         console.log(data[0].totalCount, "users data")
-        const totalCount = data[0].totalCount[0].count
+        const totalCount =
+            data[0] && data[0].totalCount && data[0].totalCount[0] && data[0].totalCount[0].count
+                ? data[0].totalCount[0].count
+                : 0
         let dataReq = []
         data[0].result.forEach((each, i) => {
             dataReq.push(each)
@@ -252,7 +251,7 @@ const getUsers = expressAsyncHandler(async (req, res) => {
                 dataReq[i].totalCost += order.grandTotal || 0
                 // console.log(order.grandTotal)
             })
-            dataReq[i].order_details = undefined
+            // dataReq[i].order_details = undefined
         })
         res.status(StatusCodes.OK).json({
             data: dataReq,
@@ -343,22 +342,31 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
     }
 })
 
-const getMonthlyOrderTrend = expressAsyncHandler(async (req, res) => {
-    let { year } = req.query
+const getOrderTrend = expressAsyncHandler(async (req, res) => {
+    let { date, type } = req.query
+    let d = new Date(date)
+    let year = d.getFullYear()
 
+    let lowerDate = type === "monthly" ? new Date(year, 0, 1) : getFirstOfWeek(date)
+    let upperDate = d
     if (year) {
         let data = await Order.aggregate([
             {
                 $match: {
                     createdAt: {
-                        $gte: new Date(year, 0, 1),
-                        $lt: new Date(year, 11, 1),
+                        $gte: lowerDate,
+                        $lt: upperDate,
                     },
                 },
             },
             {
                 $group: {
-                    _id: { month: { $month: "$createdAt" } },
+                    _id: {
+                        month: { $month: "$createdAt" },
+                        day: {
+                            $dayOfMonth: "$createdAt",
+                        },
+                    },
                     grandTotal: { $sum: "$grandTotal" },
                 },
             },
@@ -372,17 +380,17 @@ const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
     let { date } = req.body
     if (date) {
         let reqDate = getFirstOfWeek(date)
-        console.log(reqDate, date)
+        // console.log(reqDate, date)
 
         let data = await Appointment.aggregate([
-            // {
-            //     $match: {
-            //         createdAt: {
-            //             $gte: reqDate,
-            //             $lt: date,
-            //         },
-            //     },
-            // },
+            {
+                $match: {
+                    createdAt: {
+                        $gte: reqDate,
+                        $lt: date,
+                    },
+                },
+            },
             {
                 $group: {
                     _id: {
@@ -400,11 +408,6 @@ const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
     }
 })
 
-// const activeBusinessThisMonth = expressAsyncHandler(async (req, res) => {
-//     let {month} = req.query
-
-//     let data = await Business.find({})
-// })
 const getNewBusinessCount = expressAsyncHandler(async (req, res) => {
     let date = new Date()
     date.setDate(1)
@@ -427,12 +430,10 @@ const getNewBusinessCount = expressAsyncHandler(async (req, res) => {
         },
     })
 
-    if (previousMonthCount >= 0 && currentMonthCount >= 0)
-        res.status(StatusCodes.OK).json({
-            currentMonthCount: currentMonthCount,
-            prevMonthCount: previousMonthCount,
-        })
-    else res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+    res.status(StatusCodes.OK).json({
+        currentMonthCount: currentMonthCount,
+        prevMonthCount: previousMonthCount,
+    })
 })
 
 const patientCount = expressAsyncHandler(async (req, res) => {
@@ -460,6 +461,15 @@ const totalOAMonth = expressAsyncHandler(async (req, res) => {
     })
     res.status(200).json({ count: count1 + count2 })
 })
+
+const totalRelativeAmount = expressAsyncHandler(async (req, res) => {
+    const pharmacySales = await getTotalSalesByBusiness(null, "pharmacy", null)
+    const hospitalSales = await getTotalSalesByBusiness(null, "hospital", null)
+    const doctorSales = await getTotalSalesByBusiness(null, "doctor", null)
+    const pathologySales = await getTotalSalesByBusiness(null, "pathology", null)
+
+    res.status(StatusCodes.OK).json({ pharmacySales, hospitalSales, doctorSales, pathologySales })
+})
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -472,10 +482,11 @@ module.exports = {
     getTotalBusinesses,
     getOrders,
     getTests,
-    getMonthlyOrderTrend,
+    getOrderTrend,
     getWeeklyAppointmentTrend,
     removeProduct,
     getNewBusinessCount,
     patientCount,
     totalOAMonth,
+    totalRelativeAmount,
 }

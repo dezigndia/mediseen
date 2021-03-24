@@ -117,6 +117,7 @@ function Accounts() {
           type: alert.success,
           change: !state.change,
         }));
+        resetForm();
       } else {
         setnotify((state) => ({
           ...state,
@@ -143,16 +144,15 @@ function Accounts() {
         ...state,
         email: "Enter correct email!",
       }));
-      console.log("incorrecr email");
       result = false;
     }
-    // if (state.email.trim() === "") {
-    //   seterrors((state) => ({
-    //     ...state,
-    //     email: "Enter email!",
-    //   }));
-    //   result = false;
-    // }
+    if (state.email.trim() === "") {
+      seterrors((state) => ({
+        ...state,
+        email: "Enter email!",
+      }));
+      result = false;
+    }
     if (state.phoneNumber.trim() === "") {
       seterrors((state) => ({
         ...state,
@@ -170,6 +170,16 @@ function Accounts() {
       phoneNumber: null,
       email: null,
     }));
+  }
+
+  function resetForm() {
+    setstate({
+      name: "",
+      phoneNumber: "",
+      email: "",
+      departments: [],
+    });
+    resetErrors();
   }
 
   const useStyles = makeStyles((theme) => ({
@@ -192,8 +202,14 @@ function Accounts() {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  cursor: "pointer",
                 }}
-                onClick={() => setopenForm(!openForm)}
+                onClick={() => {
+                  if (openForm) {
+                    resetErrors();
+                  }
+                  setopenForm(!openForm);
+                }}
               >
                 <h3 className="title">Add Member</h3>
                 <h3>{!openForm ? <ExpandMore /> : <ExpandLess />} </h3>

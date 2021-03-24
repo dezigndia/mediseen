@@ -27,6 +27,7 @@ export default function MenuForFilter({
       backgroundColor: "white",
       marginRight: "10px",
       borderRadius: "10px",
+      marginTop: "10px",
     },
     btn: {
       display: "flex",

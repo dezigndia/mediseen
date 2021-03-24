@@ -82,7 +82,6 @@ function Dashboard({}) {
   async function newBusinessThisMonth() {
     let data = await fetchCall("new_business_this_month");
 
-    // console.log(data);
     if (data && data.success) {
       let cards = {
         title: "New Business This Month",
@@ -90,7 +89,6 @@ function Dashboard({}) {
         increase: data.data.currentMonthCount > data.data.prevMonthCount,
       };
       setcardsData((state) => [...state, cards]);
-      console.log(cards, "cards");
     } else {
       setcardsData((state) => [
         ...state,
@@ -106,7 +104,7 @@ function Dashboard({}) {
 
     if (data && data.success) {
       let cards = {
-        title: "Total Users",
+        title: "Total Patients",
         content: data.data.count,
         increase: null,
       };
@@ -115,9 +113,11 @@ function Dashboard({}) {
     } else {
       setcardsData((state) => [
         ...state,
-        { title: "Total Users", content: "Error" },
+        { title: "Total Patients", content: "Error" },
       ]);
     }
+
+    getTotalOAMonth();
   }
 
   async function getTotalOAMonth() {
