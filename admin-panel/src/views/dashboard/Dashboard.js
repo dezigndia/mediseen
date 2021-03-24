@@ -65,8 +65,7 @@ function Dashboard({}) {
     try {
       let data = await fetchCall("get_total_businesses");
 
-      console.log(data);
-      if (data.success) {
+      if (data && data.success) {
         let cards = { title: "Total Businesses", content: data.data };
         setcardsData((state) => [...state, cards]);
         console.log(cards, "cards");
