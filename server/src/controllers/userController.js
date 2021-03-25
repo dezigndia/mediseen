@@ -8,11 +8,11 @@ const AppError = require("../utils/errorHandler")
 
 class UserController {
     verifyOtp = expressAsyncHandler(async (req, res) => {
-        const { phoneNumber, otp } = req.body
+        const { phoneNumber, otp, name } = req.body
         if (!phoneNumber) {
             throw new AppError(StatusCodes.BAD_REQUEST, "phoneNumber Missing")
         }
-        const data = await userService.verifyOtp(phoneNumber, otp)
+        const data = await userService.verifyOtp(name, phoneNumber, otp)
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
@@ -58,7 +58,6 @@ class UserController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
-
 
     getUserDetails = expressAsyncHandler(async (req, res) => {
         const { phone } = res.locals.user
