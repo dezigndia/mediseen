@@ -76,6 +76,9 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
             timings: bookAppointment.timeStampTimings,
             notes: bookAppointment.notes,
             userPhoneNumber: currentVendor.phone,
+            businessPhoneNumber: currentVendor.phoneNumber,
+            doctorId: currentVendor.businessType === 'hospital' ? bookAppointment.businessName.id : '',
+            clinicId: currentVendor.businessType === 'doctor' ? bookAppointment.businessName.id : '',
             mobileNumber: bookAppointment.refMobileNumber,
             date: createTimeStamp(bookAppointment.date),
             patient: {

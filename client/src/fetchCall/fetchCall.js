@@ -1,6 +1,6 @@
 const fetchCall = async (endpoint, method, jwt, body, type) => {
 	let data
-	const response = await fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, {
+	const response = await fetch(`http://13.126.205.131:5001/${endpoint}`, {
 		method: `${method}`,
 		headers: {
 			Accept: "application/json",

@@ -81,7 +81,7 @@ var isPresent = (arr, item) => {
             &&
             ((new Date(arr[i].timings.to).toString()) === (new Date(item.timeStampTo)).toString())
         ) {
-            return_data = { present: true, index: i, isCancelled: arr[i].isCancelled }
+            return_data = { present: true, index: i, isCancelled: arr[i].status === 'cancelled' }
         }
     }
 
@@ -105,7 +105,7 @@ const Appointments = () => {
     const [tab, setTab] = useState(SHOW_APPOINTMENTS);
     const [timings, setTimings] = useState([]);
     const [appointmentSlots, setAppointmentSlots] = useState(null);
-    const [selectedHospital, setSelectedHospital] = useState('All');
+    const [selectedHospital, setSelectedHospital] = useState({ name: 'All', id: null });
 
     //memoized function used i useEffect
 
@@ -120,7 +120,7 @@ const Appointments = () => {
         //id of appointment
         //in which time slot appointment is booked
         axios
-            .put(updateAppointmentByID(id), { isCancelled: true }, {
+            .put(updateAppointmentByID(id), { status: 'cancelled' }, {
                 headers: {
                     'Authorization': `Beared ${auth_token.accessToken}`
                 }
@@ -146,7 +146,7 @@ const Appointments = () => {
 
     const acceptAppointment = (id, timings) => {
         axios
-            .put(updateAppointmentByID(id), { accepted: true }, {
+            .put(updateAppointmentByID(id), { status: 'confirmed' }, {
                 headers: {
                     'Authorization': `Beared ${auth_token.accessToken}`
                 }
@@ -201,7 +201,7 @@ const Appointments = () => {
                 return { ...state, date: action.payload }
             case 'clear':
                 return {
-                    businessName: '',
+                    businessName: { name: '', id: '' },
                     date: '',
                     refMobileNumber: '',
                     timings: '',
@@ -220,7 +220,7 @@ const Appointments = () => {
                 return state;
         }
     }, {
-        businessName: '',
+        businessName: { name: '', id: '' },
         date: '',
         refMobileNumber: '',
         timings: '',
@@ -237,76 +237,16 @@ const Appointments = () => {
     });
 
     useEffect(() => {
-        //effect for setting date for appointment booking form
+        //effect for setting date for appointment booking form and selecting doctor and hospital
         //month ranges from [0,11]
         dispatch({ type: 'setDate', payload: selectedDate });
     }, [selectedDate]);
 
-    /*useEffect(() => {
-        //effect for making all appointment timeslot array
+    // //effect to set business name for appointbooking reducer
+    useEffect(()=>{
+        dispatch({type:'setBusinessName',payload:selectedHospital})
+    },[selectedHospital]);
 
-        if (hospitalList) {
-            let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            let time = hospitalList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name }));
-
-            let morningShift = [], eveningShift = [];
-
-            time[0].workingHours !== undefined && time.forEach(item => {
-                makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, 'am', item.hospitalName);
-                makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, 'pm', item.hospitalName);
-            });
-            setTimings(morningShift.concat(eveningShift));
-            let Timings = morningShift.concat(eveningShift), appSlots = [];
-
-            if (Timings.length != 0) {
-                axios
-                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
-                        headers: {
-                            'Authorization': `Bearer ${auth_token.accessToken}`
-                        }
-                    })
-                    .then(res => {
-                        let data = Timings.map(item => {
-                            //checking if a particulat timeslot is present in fetched appointment time slot  
-                            let isDataPresent = isPresent(res.data.payload, item);
-                            //isDataPresent = {present:true,index} if true
-                            //isdataPresent = {present:false} if false
-
-                            //index is the index at which data is present in fetched array
-
-                            //returned data will be saved in appointment slots
-                            if (isDataPresent.present) {
-                                return {
-                                    timeSlot: item,
-                                    isBooked: !isDataPresent.isCancelled,
-                                    customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
-                                    phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
-                                    _id: res.data.payload[isDataPresent.index]._id,
-                                    accepted: res.data.payload[isDataPresent.index].accepted
-                                }
-                            }
-                            else {
-                                return {
-                                    timeSlot: item,
-                                    isBooked: false,
-                                    customerName: '',
-                                    phoneNo: ''
-                                }
-                            }
-                        });
-
-                        setAppointmentSlots(data);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        alert('unable to fetch appointments');
-                    });
-            }
-            else {
-                setAppointmentSlots([]);
-            }
-        }
-    }, [hospitalList, setTimings, selectedDate.year, selectedDate.month, selectedDate.date, selectedDate, setAppointmentSlots]);*/
     useEffect(() => {
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
@@ -327,7 +267,7 @@ const Appointments = () => {
 
             if (Timings.length != 0) {
                 axios
-                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
+                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}`, {
                         headers: {
                             'Authorization': `Bearer ${auth_token.accessToken}`
                         }
@@ -350,7 +290,7 @@ const Appointments = () => {
                                     customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
                                     _id: res.data.payload[isDataPresent.index]._id,
-                                    accepted: res.data.payload[isDataPresent.index].accepted
+                                    accepted: res.data.payload[isDataPresent.index].status === 'confirmed'
                                 }
                             }
                             else {
@@ -395,10 +335,10 @@ const Appointments = () => {
                         ?
                         <>
                             <div className='hospitalList'>
-                                <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}>
+                                <select value={selectedHospital.name} onChange={(e) => setSelectedHospital({ name: e.target.value, id: hospitalList[e.target.selectedIndex - 1]?._id })}>
                                     <option value='All'>All</option>
                                     {
-                                        hospitalList.map((item, index) => <option key={index} value={item.name}>{item.name}</option>)
+                                        hospitalList.map((item, index) => <option key={index} id={item._id} value={item.name}>{item.name}</option>)
                                     }
                                 </select>
                             </div>
@@ -406,7 +346,7 @@ const Appointments = () => {
                                 appointmentSlots &&
                                     appointmentSlots.length > 0
                                     ? appointmentSlots
-                                        .filter(item => selectedHospital === 'All' || item.timeSlot.hospitalName === selectedHospital)
+                                        .filter(item => selectedHospital.name === 'All' || item.timeSlot.hospitalName === selectedHospital.name)
                                         .map((item, index) =>
                                             <>
                                                 <TimeSlots

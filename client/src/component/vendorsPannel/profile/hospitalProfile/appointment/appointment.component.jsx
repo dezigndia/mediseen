@@ -70,7 +70,7 @@ var isPresent = (arr, item) => {
             &&
             ((new Date(arr[i].timings.to).toString()) === (new Date(item.timeStampTo)).toString())
         ) {
-            return_data = { present: true, index: i, isCancelled: arr[i].isCancelled }
+            return_data = { present: true, index: i, isCancelled: arr[i].status==='cancelled' }
         }
     }
 
@@ -94,7 +94,7 @@ const Appointments = () => {
     const [tab, setTab] = useState(SHOW_APPOINTMENTS);
     const [timings, setTimings] = useState([]);
     const [appointmentSlots, setAppointmentSlots] = useState(null);
-    const [selectedDoctor, setSelectedDoctor] = useState('All');
+    const [selectedDoctor, setSelectedDoctor] = useState({ name: 'All', id: null });
 
     //timings is array for storing all available time slots on a particular day
     //appointSlots is array for storing info necessary to render timeSlots
@@ -105,7 +105,7 @@ const Appointments = () => {
 
     const deleteAppointment = (id, timings) => {
         axios
-            .put(updateAppointmentByID(id), { isCancelled: true }, {
+            .put(updateAppointmentByID(id), { status: 'cancelled' }, {
                 headers: {
                     'Authorization': `Beared ${auth_token.accessToken}`
                 }
@@ -130,7 +130,7 @@ const Appointments = () => {
 
     const acceptAppointment = (id, timings) => {
         axios
-            .put(updateAppointmentByID(id), { accepted: true }, {
+            .put(updateAppointmentByID(id), { status: 'confirmed' }, {
                 headers: {
                     'Authorization': `Beared ${auth_token.accessToken}`
                 }
@@ -184,7 +184,7 @@ const Appointments = () => {
                 return { ...state, date: action.payload }
             case 'clear':
                 return {
-                    businessName: '',
+                    businessName:{ name: '', id: '' },
                     refMobileNumber: '',
                     timings: '',
                     timeStampTimings: '',
@@ -203,7 +203,7 @@ const Appointments = () => {
                 return state;
         }
     }, {
-        businessName: '',
+        businessName: { name: '', id: '' },
         refMobileNumber: '',
         timings: '',
         notes: '',
@@ -224,6 +224,12 @@ const Appointments = () => {
         //month ranges from [0,11]
         dispatch({ type: 'setDate', payload: selectedDate });
     }, [selectedDate]);
+
+
+    //effect to set business name for appointbooking reducer
+    useEffect(()=>{
+        dispatch({type:'setBusinessName',payload:selectedDoctor})
+    },[selectedDoctor]);
 
     useEffect(() => {
         //effect for making all appointment timeslot array
@@ -247,7 +253,7 @@ const Appointments = () => {
 
             if (Timings.length != 0) {
                 axios
-                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}&isCancelled=false`, {
+                    .get(`${getAppointmentByBusiness}?date=${convertToTimeStamp(selectedDate)}`, {
                         headers: {
                             'Authorization': `Bearer ${auth_token.accessToken}`
                         }
@@ -269,7 +275,7 @@ const Appointments = () => {
                                     customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
                                     _id: res.data.payload[isDataPresent.index]._id,
-                                    accepted: res.data.payload[isDataPresent.index].accepted
+                                    accepted: res.data.payload[isDataPresent.index].status==='confirmed'
                                 }
                             }
                             else {
@@ -313,7 +319,7 @@ const Appointments = () => {
                     tab === SHOW_APPOINTMENTS
                         ?
                         <>
-                            <div className='hospitalList' value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)}>
+                            <div className='hospitalList' value={selectedDoctor.name} onChange={(e) => setSelectedDoctor({ name: e.target.value, id: doctorsList[e.target.selectedIndex - 1]?._id })}>
                                 <select>
                                     <option value='All'>All</option>
                                     {
@@ -325,7 +331,7 @@ const Appointments = () => {
                                 appointmentSlots &&
                                     appointmentSlots.length > 0
                                     ? appointmentSlots
-                                        .filter(item => selectedDoctor === 'All' || item.timeSlot.hospitalName === selectedDoctor)
+                                        .filter(item => selectedDoctor.name === 'All' || item.timeSlot.hospitalName === selectedDoctor.name)
                                         .map((item, index) =>
                                             <>
                                                 <TimeSlots

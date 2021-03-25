@@ -96,13 +96,13 @@ const Home = ({ history, match }) => {
 
 	useEffect(() => {
 		const getUserInfo = async () => {
-			const data = await fetchCall("user/get/info", "GET", token).then(
-				(res) => res.data.payload
+			const res = await fetchCall("user/get/info", "GET", token).catch(
+				(err) => err
 			)
 
-			console.log(data, "user")
+			console.log(res.data.payload, "user")
 
-			dispatch(addUser(data))
+			dispatch(addUser(res.data.payload))
 		}
 
 		getUserInfo()
