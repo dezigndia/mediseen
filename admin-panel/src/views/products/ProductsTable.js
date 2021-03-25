@@ -19,7 +19,10 @@ import { MoreVert } from "@material-ui/icons";
 import { alertMessages } from "variables/constants";
 import { alert } from "variables/constants";
 
-export default function ProductsTable({ type = "get_products" }) {
+export default function ProductsTable({
+  type = "get_products",
+  access = null,
+}) {
   const useStyles = makeStyles({
     table: {
       minWidth: 650,
@@ -125,10 +128,17 @@ export default function ProductsTable({ type = "get_products" }) {
     body = removeEmptyFromObject(body);
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall(type, undefined, reqBody);
-    if (reqData && reqData.success) {
-      console.log(reqData);
-      setrows(reqData.data.data);
-      setTotalCount(reqData.data.totalCount / filter.limit + 1);
+    if (reqData) {
+      if (reqData.success) {
+        console.log(reqData);
+        setrows(reqData.data.data);
+        setTotalCount(reqData.data.totalCount / filter.limit + 1);
+      } else if (reqData.errCode === 401) {
+        if (access) {
+          access(false);
+          return;
+        }
+      }
     } else {
       console.log("Something went wrong", reqData);
     }

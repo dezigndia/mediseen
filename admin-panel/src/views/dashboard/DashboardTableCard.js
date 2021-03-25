@@ -1,9 +1,19 @@
 import { Card, Grid, makeStyles } from "@material-ui/core";
 import { ArrowDownward, ExpandMore, RoomOutlined } from "@material-ui/icons";
-import React from "react";
+import AlertMessages from "components/CommonComponents/AlertMessages";
+import React, { useState } from "react";
+import { fetchCall } from "services/services";
 import { readableDate } from "services/services";
+import { alertMessages } from "variables/constants";
+import { alert } from "variables/constants";
 
 export default function DashboardTableCard({ data = {} }) {
+  const [active, setActive] = useState(data ? data.isActive : false);
+  const [notify, setnotify] = useState({
+    message: "",
+    type: null,
+    change: false,
+  });
   const useStyles = makeStyles((theme) => ({
     location: {
       fontWeight: "500",
@@ -14,9 +24,12 @@ export default function DashboardTableCard({ data = {} }) {
       fontWeight: "600",
     },
     active: {
-      backgroundColor: data.isActive ? "#6ec3ff" : "#ffbc6e",
+      backgroundColor: active ? "#6ec3ff" : "#ffbc6e",
       padding: "2px 5px",
       borderRadius: "5px",
+      "&:hover": {
+        cursor: "pointer",
+      },
     },
     verified: {
       backgroundColor: data.isVerified ? "#84e0be" : "#ff00008f",
@@ -36,6 +49,39 @@ export default function DashboardTableCard({ data = {} }) {
     },
   }));
   const classes = useStyles();
+
+  async function updateStatus() {
+    try {
+      let body = {
+        id: data._id.id,
+        status: !active,
+      };
+      let reqData = await fetchCall("update_business_status", body);
+      if (reqData && reqData.success) {
+        setActive((state) => !state);
+        // Window.alert("Success!");
+        setnotify((state) => ({
+          message: "Updated successfully",
+          type: alert.success,
+          change: !state.change,
+        }));
+      } else {
+        // alert("Something went wrong");
+        setnotify((state) => ({
+          message: alertMessages.unexpectedError,
+          type: alert.error,
+          change: !state.change,
+        }));
+      }
+    } catch (e) {
+      setnotify((state) => ({
+        message: alertMessages.unexpectedError,
+        type: alert.error,
+        change: !state.change,
+      }));
+      console.log(e);
+    }
+  }
   // console.log(data, "data");
   return (
     <Card
@@ -76,8 +122,8 @@ export default function DashboardTableCard({ data = {} }) {
           <Grid container justify="space-between">
             <Grid item>List {readableDate(data.createdAt)}</Grid>
             <Grid item>
-              <span className={classes.active}>
-                {data.isActive ? "Active" : "Not Active"}
+              <span className={classes.active} onClick={() => updateStatus()}>
+                {active ? "Active" : "Not Active"}
               </span>{" "}
               {/* akjak{" "} */}
               <span className={classes.verified}>
@@ -106,6 +152,7 @@ export default function DashboardTableCard({ data = {} }) {
           </Grid>
         </Grid>
       </Grid>
+      <AlertMessages state={notify} />
     </Card>
   );
 }

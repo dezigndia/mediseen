@@ -22,6 +22,10 @@ const adminSchema = new mongoose.Schema(
         phoneNumber: {
             type: String,
         },
+        active: {
+            type: Boolean,
+            default: true,
+        },
     },
     { timestamps: true }
 )

@@ -77,6 +77,10 @@ export const endPointsArray = {
     endpoint: "admin/get-total-oa-month",
     method: "GET",
   },
+  update_business_status: {
+    endpoint: "admin/update-business-status",
+    method: "PUT",
+  },
 };
 export const alert = {
   success: "success",

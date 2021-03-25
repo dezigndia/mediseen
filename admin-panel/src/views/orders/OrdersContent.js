@@ -74,17 +74,22 @@ export default function OrdersContent() {
     status: null,
   });
   const [filterOpen, setfilterOpen] = useState(false);
-
+  const [show, setshow] = useState(true);
   async function getData(page = 1) {
     let body = filter;
     body.skip = body.limit * (page - 1);
     body = removeEmptyFromObject(body);
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall("get_orders", undefined, reqBody);
-    if (reqData && reqData.success) {
-      console.log(reqData);
-      setrows(reqData.data.data);
-      setTotalCount(reqData.data.totalCount);
+    if (reqData) {
+      if (reqData.success) {
+        console.log(reqData);
+        setrows(reqData.data.data);
+        setTotalCount(reqData.data.totalCount);
+      } else if (reqData.errCode === 401) {
+        setshow(false);
+        return;
+      }
     } else {
       console.log("Something went wrong", reqData);
     }
@@ -93,196 +98,206 @@ export default function OrdersContent() {
     getData(page);
   }, [filter]);
   return (
-    <TableContainer
-      classes={{ root: classes.tableContainer }}
-      component={Paper}
-    >
-      <Grid container direction="column">
-        <Grid container justify="space-between">
-          <Grid item>
-            <span className="component-table-title">Orders</span>
-          </Grid>
-          <Grid item>
-            <PaginationTiles
-              tileNo={(tile) => {
-                setpage(tile);
-                getData(tile);
-              }}
-              totalTiles={Math.floor(totalCount / filter.limit) + 1}
-            />
-          </Grid>
+    <div>
+      {show ? (
+        <TableContainer
+          classes={{ root: classes.tableContainer }}
+          component={Paper}
+        >
+          <Grid container direction="column">
+            <Grid container justify="space-between">
+              <Grid item>
+                <span className="component-table-title">Orders</span>
+              </Grid>
+              <Grid item>
+                <PaginationTiles
+                  tileNo={(tile) => {
+                    setpage(tile);
+                    getData(tile);
+                  }}
+                  totalTiles={Math.floor(totalCount / filter.limit) + 1}
+                />
+              </Grid>
 
-          <Grid item>
-            <span
-              onClick={() => {
-                setfilterOpen(!filterOpen);
-              }}
-              className={classes.sortDate}
-            >
-              Filter
-            </span>
-            <span
-              onClick={() => {
-                if (filter.asc === 1) {
-                  setfilter((state) => ({
-                    ...state,
-                    asc: -1,
-                  }));
-                } else if (filter.asc === -1) {
-                  setfilter((state) => ({
-                    ...state,
-                    asc: null,
-                  }));
-                } else {
-                  setfilter((state) => ({
-                    ...state,
-                    asc: 1,
-                  }));
-                }
-              }}
-              className={classes.sortDate}
-            >
-              Sort Datewise{" "}
-              {filter.asc === 1 ? (
-                <ArrowDropDown />
-              ) : filter.asc === -1 ? (
-                <ArrowDropUp />
-              ) : (
-                " "
-              )}
-            </span>
+              <Grid item>
+                <span
+                  onClick={() => {
+                    setfilterOpen(!filterOpen);
+                  }}
+                  className={classes.sortDate}
+                >
+                  Filter
+                </span>
+                <span
+                  onClick={() => {
+                    if (filter.asc === 1) {
+                      setfilter((state) => ({
+                        ...state,
+                        asc: -1,
+                      }));
+                    } else if (filter.asc === -1) {
+                      setfilter((state) => ({
+                        ...state,
+                        asc: null,
+                      }));
+                    } else {
+                      setfilter((state) => ({
+                        ...state,
+                        asc: 1,
+                      }));
+                    }
+                  }}
+                  className={classes.sortDate}
+                >
+                  Sort Datewise{" "}
+                  {filter.asc === 1 ? (
+                    <ArrowDropDown />
+                  ) : filter.asc === -1 ? (
+                    <ArrowDropUp />
+                  ) : (
+                    " "
+                  )}
+                </span>
+              </Grid>
+            </Grid>
+            {filterOpen && (
+              <Grid
+                container
+                alignItems="center"
+                classes={{ root: classes.filterContainer }}
+              >
+                <Grid item>
+                  <Input
+                    onChange={(e) => {
+                      setfilter((state) => ({
+                        ...state,
+                        businessName: e.target.value,
+                      }));
+                    }}
+                    placeholder="Search by business name"
+                    value={filter.businessName}
+                    disableUnderline
+                    classes={{ root: classes.input }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Input
+                    onChange={(e) => {
+                      setfilter((state) => ({
+                        ...state,
+                        userPhoneNumber: e.target.value,
+                      }));
+                    }}
+                    placeholder="Search by customer phone number"
+                    value={filter.userPhoneNumber}
+                    disableUnderline
+                    classes={{ root: classes.input }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Input
+                    onChange={(e) => {
+                      setfilter((state) => ({
+                        ...state,
+                        grandTotal_MAX: e.target.value,
+                      }));
+                    }}
+                    placeholder="Amount MAX"
+                    value={filter.grandTotal_MAX}
+                    disableUnderline
+                    classes={{ root: classes.input }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Input
+                    onChange={(e) => {
+                      setfilter((state) => ({
+                        ...state,
+                        grandTotal_MIN: e.target.value,
+                      }));
+                    }}
+                    placeholder="Amount MIN"
+                    value={filter.grandTotal_MIN}
+                    disableUnderline
+                    classes={{ root: classes.input }}
+                  />
+                </Grid>
+                <Grid item>
+                  <MenuForFilter
+                    title="status"
+                    data={["All", "Cancelled", "Delivered", "Pending"]}
+                    selected={(e) => {
+                      setfilter((state) => ({
+                        ...state,
+                        status: e === "All" ? null : e,
+                      }));
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            )}
           </Grid>
-        </Grid>
-        {filterOpen && (
-          <Grid
-            container
-            alignItems="center"
-            classes={{ root: classes.filterContainer }}
-          >
-            <Grid item>
-              <Input
-                onChange={(e) => {
-                  setfilter((state) => ({
-                    ...state,
-                    businessName: e.target.value,
-                  }));
-                }}
-                placeholder="Search by business name"
-                value={filter.businessName}
-                disableUnderline
-                classes={{ root: classes.input }}
-              />
-            </Grid>
-            <Grid item>
-              <Input
-                onChange={(e) => {
-                  setfilter((state) => ({
-                    ...state,
-                    userPhoneNumber: e.target.value,
-                  }));
-                }}
-                placeholder="Search by customer phone number"
-                value={filter.userPhoneNumber}
-                disableUnderline
-                classes={{ root: classes.input }}
-              />
-            </Grid>
-            <Grid item>
-              <Input
-                onChange={(e) => {
-                  setfilter((state) => ({
-                    ...state,
-                    grandTotal_MAX: e.target.value,
-                  }));
-                }}
-                placeholder="Amount MAX"
-                value={filter.grandTotal_MAX}
-                disableUnderline
-                classes={{ root: classes.input }}
-              />
-            </Grid>
-            <Grid item>
-              <Input
-                onChange={(e) => {
-                  setfilter((state) => ({
-                    ...state,
-                    grandTotal_MIN: e.target.value,
-                  }));
-                }}
-                placeholder="Amount MIN"
-                value={filter.grandTotal_MIN}
-                disableUnderline
-                classes={{ root: classes.input }}
-              />
-            </Grid>
-            <Grid item>
-              <MenuForFilter
-                title="status"
-                data={["All", "Cancelled", "Delivered", "Pending"]}
-                selected={(e) => {
-                  setfilter((state) => ({
-                    ...state,
-                    status: e === "All" ? null : e,
-                  }));
-                }}
-              />
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead classes={{ root: classes.head }}>
-          <TableRow>
-            <TableCell classes={{ root: classes.head }}>Order No.</TableCell>
-            <TableCell align="left" classes={{ root: classes.head }}>
-              CUSTOMER
-            </TableCell>
-            <TableCell align="left" classes={{ root: classes.head }}>
-              BUSINESS
-            </TableCell>
-            <TableCell align="left" classes={{ root: classes.head }}>
-              DATE{" "}
-              {filter.asc === 1 ? (
-                <ExpandLess />
-              ) : filter.asc === -1 ? (
-                <ExpandMore />
-              ) : (
-                ""
-              )}
-            </TableCell>
-            <TableCell align="center" classes={{ root: classes.head }}>
-              AMOUNT
-            </TableCell>
-            <TableCell align="center" classes={{ root: classes.head }}>
-              STATUS
-            </TableCell>
-            <TableCell align="right" classes={{ root: classes.head }}>
-              PINCODE
-            </TableCell>
-            {/* <TableCell align="right">&nbsp;</TableCell> */}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.orderId}>
-              <TableCell component="th" scope="row">
-                {row.orderId}
-              </TableCell>
-              <TableCell align="left">{row.patientName}</TableCell>
-              <TableCell align="left">{row.businessName}</TableCell>
-              <TableCell align="left">{readableDate(row.createdAt)}</TableCell>
-              <TableCell align="center">{row.grandTotal}</TableCell>
-              <TableCell align="center">{row.status}</TableCell>
-              <TableCell align="right">
-                {row.address ? row.address.pincode : ""}
-              </TableCell>
-              {/* <TableCell align="right">
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead classes={{ root: classes.head }}>
+              <TableRow>
+                <TableCell classes={{ root: classes.head }}>
+                  Order No.
+                </TableCell>
+                <TableCell align="left" classes={{ root: classes.head }}>
+                  CUSTOMER
+                </TableCell>
+                <TableCell align="left" classes={{ root: classes.head }}>
+                  BUSINESS
+                </TableCell>
+                <TableCell align="left" classes={{ root: classes.head }}>
+                  DATE{" "}
+                  {filter.asc === 1 ? (
+                    <ExpandLess />
+                  ) : filter.asc === -1 ? (
+                    <ExpandMore />
+                  ) : (
+                    ""
+                  )}
+                </TableCell>
+                <TableCell align="center" classes={{ root: classes.head }}>
+                  AMOUNT
+                </TableCell>
+                <TableCell align="center" classes={{ root: classes.head }}>
+                  STATUS
+                </TableCell>
+                <TableCell align="right" classes={{ root: classes.head }}>
+                  PINCODE
+                </TableCell>
+                {/* <TableCell align="right">&nbsp;</TableCell> */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.orderId}>
+                  <TableCell component="th" scope="row">
+                    {row.orderId}
+                  </TableCell>
+                  <TableCell align="left">{row.patientName}</TableCell>
+                  <TableCell align="left">{row.businessName}</TableCell>
+                  <TableCell align="left">
+                    {readableDate(row.createdAt)}
+                  </TableCell>
+                  <TableCell align="center">{row.grandTotal}</TableCell>
+                  <TableCell align="center">{row.status}</TableCell>
+                  <TableCell align="right">
+                    {row.address ? row.address.pincode : ""}
+                  </TableCell>
+                  {/* <TableCell align="right">
                 <MoreVert />
               </TableCell> */}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        "Unauthorized access"
+      )}
+    </div>
   );
 }

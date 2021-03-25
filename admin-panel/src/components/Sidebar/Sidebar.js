@@ -129,7 +129,8 @@ function Sidebar(props) {
                 return (
                   <li
                     className={
-                      activeRoute(prop.path) + (prop.pro ? " active-pro" : "")
+                      activeRoute(prop.layout + prop.path) +
+                      (prop.pro ? " active-pro" : "")
                     }
                     key={key}
                   >
@@ -145,7 +146,9 @@ function Sidebar(props) {
                           <SvgIcon component={prop.icon}></SvgIcon>
                         </Grid>
                         <Grid item xs={9}>
-                          <h5>{rtlActive ? prop.rtlName : prop.name}</h5>
+                          <h5 className={activeRoute(prop.layout + prop.path)}>
+                            {rtlActive ? prop.rtlName : prop.name}
+                          </h5>
                         </Grid>
                       </Grid>
                     </NavLink>

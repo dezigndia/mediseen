@@ -60,15 +60,20 @@ import RightPanel from "./RightPanel";
 
 function Dashboard({}) {
   const [cardsData, setcardsData] = useState([]);
-
+  const [show, setshow] = useState(true);
   async function totalBusinesses() {
     try {
       let data = await fetchCall("get_total_businesses");
-
-      if (data && data.success) {
-        let cards = { title: "Total Businesses", content: data.data };
-        setcardsData((state) => [...state, cards]);
-        console.log(cards, "cards");
+      console.log("data", data);
+      if (data) {
+        if (data.success) {
+          let cards = { title: "Total Businesses", content: data.data };
+          setcardsData((state) => [...state, cards]);
+          console.log(cards, "cards");
+        } else if (data.errCode === 401) {
+          setshow(false);
+          return;
+        }
       } else {
         setcardsData([
           ...cardsData,
@@ -158,31 +163,35 @@ function Dashboard({}) {
   // console.log(cardsData);
   return (
     <>
-      <div className="content">
-        <span style={{ margin: "1rem 0" }}>Quick Stats</span>
-        <Grid container spacing={2}>
-          {cardsData.map((each, i) => (
-            <Grid item xs={2} key={i}>
-              <TopCard title={each.title}>
-                <Grid container>
-                  <Grid item classes={{ root: classes.content }}>
-                    {each.content}
+      {show ? (
+        <div className="content">
+          <span style={{ margin: "1rem 0" }}>Quick Stats</span>
+          <Grid container spacing={2}>
+            {cardsData.map((each, i) => (
+              <Grid item xs={2} key={i}>
+                <TopCard title={each.title}>
+                  <Grid container>
+                    <Grid item classes={{ root: classes.content }}>
+                      {each.content}
+                    </Grid>
                   </Grid>
-                </Grid>
-              </TopCard>
+                </TopCard>
+              </Grid>
+            ))}
+          </Grid>
+          <span className={classes.searchHub}>Search Hub</span>
+          <Grid container direction="row" justify="space-between">
+            <Grid item xs={8}>
+              <DashboardContent />
             </Grid>
-          ))}
-        </Grid>
-        <span className={classes.searchHub}>Search Hub</span>
-        <Grid container direction="row" justify="space-between">
-          <Grid item xs={8}>
-            <DashboardContent />
+            <Grid item xs={4}>
+              <RightPanel />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <RightPanel />
-          </Grid>
-        </Grid>
-      </div>
+        </div>
+      ) : (
+        <div className="content">Unauthorized access</div>
+      )}
     </>
   );
 }

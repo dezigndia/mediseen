@@ -303,6 +303,7 @@ import ProductsTable from "./products/ProductsTable";
 function Map() {
   const [type, settype] = useState("get_products");
   const [value, setValue] = React.useState(0);
+  const [show, setshow] = useState(true);
   const useStyles = makeStyles((theme) => ({
     title: {
       fontSize: "0.7rem",
@@ -328,24 +329,37 @@ function Map() {
   const classes = useStyles();
   return (
     <>
-      <div className="content">
-        <h2 className="title">Update List</h2>
-        <AppBar position="static" classes={{ root: classes.root }}>
-          <Tabs value={value} onChange={handleChange} aria-label="simple tabs">
-            <Tab
-              label="Products"
-              classes={{ wrapper: classes.title }}
-              aria-controls="simple-tabpanel-1"
-            />
-            <Tab
-              classes={{ wrapper: classes.title }}
-              label="Tests"
-              aria-controls="simple-tabpanel-2"
-            />
-          </Tabs>
-        </AppBar>
-        <ProductsTable type={type} />
-      </div>
+      {show ? (
+        <div className="content">
+          <h2 className="title">Update List</h2>
+          <AppBar position="static" classes={{ root: classes.root }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="simple tabs"
+            >
+              <Tab
+                label="Products"
+                classes={{ wrapper: classes.title }}
+                aria-controls="simple-tabpanel-1"
+              />
+              <Tab
+                classes={{ wrapper: classes.title }}
+                label="Tests"
+                aria-controls="simple-tabpanel-2"
+              />
+            </Tabs>
+          </AppBar>
+          <ProductsTable
+            type={type}
+            access={(status) => {
+              setshow(false);
+            }}
+          />
+        </div>
+      ) : (
+        <div className="content">Unauthorized access</div>
+      )}
     </>
   );
 }

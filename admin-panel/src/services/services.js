@@ -19,9 +19,13 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
         body: body ? JSON.stringify(body) : undefined,
       }
     );
-
+    console.log(response, "response");
     if (!response.ok) {
-      data = { success: false, data: await response.json() };
+      data = {
+        success: false,
+        data: await response.json(),
+        errCode: response.status,
+      };
     } else {
       data = { success: true, data: await response.json() };
     }

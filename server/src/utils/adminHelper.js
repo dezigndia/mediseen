@@ -10,7 +10,7 @@ function isSuperAdmin() {
     return async (req, res, next) => {
         try {
             const admin = await getAdminFromToken(req)
-            if (admin && admin.isSuperAdmin) next()
+            if (admin && admin.isSuperAdmin && admin.active) next()
             else
                 res.status(StatusCodes.UNAUTHORIZED).json({
                     message: unauthorizedAccess,
@@ -22,12 +22,17 @@ function isSuperAdmin() {
     }
 }
 
-function isAdmin() {
+function isAdmin(access) {
     return async (req, res, next) => {
         try {
             const admin = await getAdminFromToken(req, res)
-
-            if (admin) next()
+            console.log(access)
+            if (
+                admin &&
+                admin.active &&
+                (admin.isSuperAdmin || admin.departments.indexOf(access) >= 0 || !access)
+            )
+                next()
             else
                 res.status(StatusCodes.UNAUTHORIZED).json({
                     message: unauthorizedAccess,

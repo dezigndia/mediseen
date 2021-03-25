@@ -54,8 +54,11 @@ const removeAdmin = expressAsyncHandler(async (req, res) => {
     if (emails && emails.length > 0) {
         let resReq
         emails.forEach(async email => {
-            resReq = await Admin.deleteOne({ email: email, isSuperAdmin: false })
-            if (!resReq.ok) {
+            resReq = await Admin.findOneAndUpdate(
+                { email: email, isSuperAdmin: false },
+                { active: false }
+            )
+            if (!resReq) {
                 res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
             }
         })
@@ -114,6 +117,7 @@ const getAdmins = expressAsyncHandler(async (req, res) => {
         conditions = {
             ...conditions,
             isSuperAdmin: false,
+            active: true,
         }
         let data = await Admin.find(conditions).limit(limit).skip(skip)
         const totalCount = await Admin.countDocuments(conditions)
@@ -318,17 +322,19 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
         let arr = data.map(async (each, i) => {
             // let call = async () => {
             //     return new Promise(next => {
-            let ans = await getTotalSalesByBusiness(
-                each.phone,
-                each.type,
-                each._doc.collections && each._doc.collections.collectionChargesPerVisit
-                    ? each._doc.collections.collectionChargesPerVisit
-                    : 0
-            )
-            let oToday = {
-                orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+            if (each.phone) {
+                let ans = await getTotalSalesByBusiness(
+                    each.phone,
+                    each.type,
+                    each._doc.collections && each._doc.collections.collectionChargesPerVisit
+                        ? each._doc.collections.collectionChargesPerVisit
+                        : 0
+                )
+                let oToday = {
+                    orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+                }
+                reqData.push({ ...data[i]._doc, ...ans, ...oToday })
             }
-            reqData.push({ ...data[i]._doc, ...ans, ...oToday })
             // console.log(reqData[i])
         })
         Promise.all(arr).then(req => {
@@ -471,6 +477,18 @@ const totalRelativeAmount = expressAsyncHandler(async (req, res) => {
 
     res.status(StatusCodes.OK).json({ pharmacySales, hospitalSales, doctorSales, pathologySales })
 })
+
+const updateBusinessStatus = expressAsyncHandler(async (req, res) => {
+    let { id, status } = req.body
+
+    // let data = await Doctor.updateOne({})
+    var query = { id: id }
+
+    // let data = await Doctor.find(query)
+    let data = await Doctor.findOneAndUpdate(query, { $set: { isActive: status } })
+
+    return res.status(200).json({ message: "Updated successfully" })
+})
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -490,4 +508,5 @@ module.exports = {
     patientCount,
     totalOAMonth,
     totalRelativeAmount,
+    updateBusinessStatus,
 }
