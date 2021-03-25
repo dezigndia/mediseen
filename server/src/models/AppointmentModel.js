@@ -7,10 +7,16 @@ const appointmentSchema = new mongoose.Schema(
             required: true,
         },
         businessPhoneNumber: {
+            // hospital/doctor
             type: String,
             required: true,
         },
-        doctor: {
+        doctorId: {
+            // if hospital doctorid
+            type: String,
+        },
+        clinicId: {
+            //if doctor clinicId
             type: String,
         },
         address: {
