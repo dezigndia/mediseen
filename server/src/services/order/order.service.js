@@ -1,8 +1,20 @@
 const Order = require("../../models/OrderModel")
 const expressAsyncHandler = require("express-async-handler")
+const ProductService = require("../product/product.service")
 
+const productService = new ProductService()
 class OrderService {
     createOrder = expressAsyncHandler(async body => {
+        const sums = await Promise.all(
+            body.products.map(async p => {
+                const prod = await productService.getProductById(p.productId)
+                return prod.sellingPrice * p.qty
+            })
+        )
+        var total = sums.reduce(function (a, b) {
+            return a + b
+        }, 0)
+        body.grandTotal = total
         return Order.create(body)
     })
     getAllMyUserOrders = expressAsyncHandler(async (limit, skip, userPhoneNumber, searchQuery) => {

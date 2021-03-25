@@ -8,7 +8,7 @@ const orderService = new OrderService()
 class OrderController {
     createOrder = expressAsyncHandler(async (req, res) => {
         const { user } = res.locals
-        let bodydata = req.body
+        let bodydata = req.body;
         bodydata.userPhoneNumber = user.phone
         if (bodydata.img_url) {
             bodydata.isPrescription = true
