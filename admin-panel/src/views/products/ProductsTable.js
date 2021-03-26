@@ -165,13 +165,13 @@ export default function ProductsTable({
     >
       <Grid container direction="column">
         <Grid container justify="space-between">
-          <Grid item>
+          {/* <Grid item>
             <span className="component-table-title">
               {type.toLowerCase().indexOf("products") >= 0
                 ? "Products List"
                 : "Tests List"}
             </span>
-          </Grid>
+          </Grid> */}
           <Grid item>
             <PaginationTiles
               tileNo={(tile) => {

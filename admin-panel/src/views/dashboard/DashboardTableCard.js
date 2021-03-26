@@ -116,7 +116,10 @@ export default function DashboardTableCard({ data = {} }) {
                 width: "20%",
               }}
             >
-              Today {data.orderToday} orders
+              Today {data.orderToday}{" "}
+              {data.type === "doctor" || data.type === "hospital"
+                ? "Appoinments"
+                : "Orders"}
             </Grid>
           </Grid>
           <Grid container justify="space-between">

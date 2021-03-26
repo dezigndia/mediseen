@@ -169,7 +169,7 @@ function Dashboard({}) {
           <Grid container spacing={2}>
             {cardsData.map((each, i) => (
               <Grid item xs={2} key={i}>
-                <TopCard title={each.title}>
+                <TopCard title={each.title} increase={each.increase}>
                   <Grid container>
                     <Grid item classes={{ root: classes.content }}>
                       {each.content}

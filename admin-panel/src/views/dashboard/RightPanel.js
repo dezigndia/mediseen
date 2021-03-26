@@ -42,13 +42,13 @@ export default function RightPanel() {
           let a = type === "weekly" ? incrementDate(date, -6 + i).getDay() : "";
           reqData.push({
             month: i + 1,
-            grandTotal: 0,
+            Sales: 0,
           });
           data.data.data.forEach((each) => {
             if (each._id.month === reqData[i].month) {
-              reqData[i].grandTotal = each.grandTotal;
+              reqData[i].Sales = each.grandTotal;
             } else if (type === "weekly" && each._id.day === a) {
-              reqData[i].grandTotal = each.grandTotal;
+              reqData[i].Sales = each.grandTotal;
             }
           });
         }
@@ -77,10 +77,9 @@ export default function RightPanel() {
         for (let i = 0; i < length; i++) {
           let dateR = incrementDate(currentDate, -length + i + 1);
           dateR = readableDate(dateR);
-          console.log(dateR, "date");
           reqData.push({
             date: dateR,
-            count: 0,
+            Count: 0,
             day: i + 1,
           });
           data.data.data.map((eachReq) => {
@@ -88,7 +87,7 @@ export default function RightPanel() {
               reqData[i].date ===
               `${eachReq._id.day}/${eachReq._id.month}/${eachReq._id.year}`
             ) {
-              reqData[i].count = eachReq.count;
+              reqData[i].Count = eachReq.count;
             }
           });
         }
@@ -106,7 +105,16 @@ export default function RightPanel() {
       if (data && data.success) {
         Object.keys(data.data).forEach((each) => {
           req.push({
-            name: each,
+            name:
+              each === "pathologySales"
+                ? "Pathology"
+                : each === "hospitalSales"
+                ? "Hospital"
+                : each === "pharmacySales"
+                ? "Pharmacy"
+                : each === "doctorSales"
+                ? "Doctor"
+                : "",
             sales: data.data[each].sales,
           });
         });
@@ -181,7 +189,7 @@ export default function RightPanel() {
         <BarGraph
           data={monthlyOrders}
           xAxisDataKey="month"
-          barDataKey="grandTotal"
+          barDataKey="Sales"
         />
       )}
       <div className={classes.title}>Appointment Trend(Weekly)</div>
@@ -189,7 +197,7 @@ export default function RightPanel() {
         <LineGraph
           data={weeklyAppoinments}
           xAxisDataKey={"day"}
-          barDataKey={"count"}
+          barDataKey={"Count"}
         />
       )}
 

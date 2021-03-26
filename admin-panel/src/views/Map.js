@@ -306,9 +306,8 @@ function Map() {
   const [show, setshow] = useState(true);
   const useStyles = makeStyles((theme) => ({
     title: {
-      fontSize: "0.7rem",
-      // color: "white",
-      fontWeight: "700",
+      fontSize: "1.3rem",
+      fontWeight: "600",
       cursor: "pointer",
     },
     root: {
@@ -316,6 +315,12 @@ function Map() {
       color: "black",
       fontWeight: "600",
       borderRadius: "10px 10px 0px 0px",
+    },
+    indicator: {
+      backgroundColor: "transparent",
+    },
+    appBar: {
+      backgroundColor: "transparent",
     },
   }));
   const handleChange = (event, newValue) => {
@@ -331,21 +336,28 @@ function Map() {
     <>
       {show ? (
         <div className="content">
-          <h2 className="title">Update List</h2>
-          <AppBar position="static" classes={{ root: classes.root }}>
+          {/* <h2 className="title">Update List</h2> */}
+          <AppBar position="static" classes={{ root: classes.appBar }}>
             <Tabs
               value={value}
               onChange={handleChange}
               aria-label="simple tabs"
+              classes={{ indicator: classes.indicator }}
             >
               <Tab
-                label="Products"
-                classes={{ wrapper: classes.title }}
+                label="Products List"
+                classes={{
+                  wrapper: classes.title,
+                  root: value === 0 ? classes.root : undefined,
+                }}
                 aria-controls="simple-tabpanel-1"
               />
               <Tab
-                classes={{ wrapper: classes.title }}
-                label="Tests"
+                classes={{
+                  wrapper: classes.title,
+                  root: value === 1 ? classes.root : undefined,
+                }}
+                label="Tests List"
                 aria-controls="simple-tabpanel-2"
               />
             </Tabs>

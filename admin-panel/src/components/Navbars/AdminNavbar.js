@@ -116,15 +116,7 @@ function AdminNavbar(props) {
                     />
                   </div>
                   <b className="caret d-none d-lg-block d-xl-block" />
-                  <p
-                    className="d-lg-none"
-                    // onClick={(e) => {
-                    //   localStorage.clear();
-                    //   history.push("/signin");
-                    // }}
-                  >
-                    Log out
-                  </p>
+                  <p className="d-lg-none">Settings</p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">

@@ -11,6 +11,7 @@ import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
 import DashboardTableCard from "./DashboardTableCard";
 import MenuForFilter from "./MenuForFilter";
+import _ from "lodash";
 
 export default function DashboardContent() {
   const [page, setpage] = useState(1);
@@ -34,7 +35,7 @@ export default function DashboardContent() {
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall("get_businesses", undefined, reqBody);
     if (reqData && reqData.success) {
-      setdata(reqData.data.payload.reqData);
+      setdata(_.sortBy(reqData.data.payload.reqData, "businessName"));
       setTotalCount(reqData.data.payload.totalCount / filter.limit + 1);
     } else {
       console.log("Something went wrong", reqData);
