@@ -26,7 +26,6 @@ function isAdmin(access) {
     return async (req, res, next) => {
         try {
             const admin = await getAdminFromToken(req, res)
-            console.log(access)
             if (
                 admin &&
                 admin.active &&

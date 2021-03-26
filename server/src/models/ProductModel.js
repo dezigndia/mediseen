@@ -56,6 +56,10 @@ const productSchema = new mongoose.Schema(
         businessName: {
             type: String,
         },
+        isActive: {
+            type: Boolean,
+            default: true,
+        },
     },
     { timestamps: true }
 )

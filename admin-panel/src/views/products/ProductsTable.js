@@ -96,6 +96,7 @@ export default function ProductsTable({
       let body = {
         prodId: type.indexOf("product") >= 0 ? rows[currentRow]._id : undefined,
         testId: type.indexOf("test") >= 0 ? rows[currentRow]._id : undefined,
+        status: !rows[currentRow].isActive,
       };
       // console.log(body);
       let data = await fetchCall("remove_product", body);
@@ -291,6 +292,9 @@ export default function ProductsTable({
             <TableCell align="right" classes={{ root: classes.head }}>
               Selling Price
             </TableCell>
+            <TableCell align="center" classes={{ root: classes.head }}>
+              Status
+            </TableCell>
             <TableCell align="right" classes={{ root: classes.head }}>
               &nbsp;
             </TableCell>
@@ -304,6 +308,10 @@ export default function ProductsTable({
               <TableCell align="left">{readableDate(row.updatedAt)}</TableCell>
               <TableCell align="center">Rs. {row.mrp}</TableCell>
               <TableCell align="right">Rs. {row.sellingPrice}</TableCell>
+              <TableCell align="center">
+                {row.isActive ? "Active" : "Inactive"}
+              </TableCell>
+
               <TableCell align="right">
                 <Button
                   aria-controls="simple-menu"
@@ -325,7 +333,7 @@ export default function ProductsTable({
         onClose={handleClose}
       >
         {/* <MenuItem onClick={handleClose}>Edit Account</MenuItem> */}
-        <MenuItem onClick={() => removeAccount()}>Remove</MenuItem>
+        <MenuItem onClick={() => removeAccount()}>Toggle status</MenuItem>
       </Menu>
       <AlertMessages state={notify} />
     </TableContainer>

@@ -50,6 +50,7 @@ export default function DashboardContent() {
       padding: "8px",
       marginTop: "10px",
       borderRadius: "10px",
+      marginRight: "10px",
     },
   }));
   const classes = useStyles();
@@ -68,18 +69,6 @@ export default function DashboardContent() {
               setfilter((state) => ({
                 ...state,
                 type: e === "All Lists" ? "" : e,
-              }));
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <MenuForFilter
-            title="City"
-            data={["All Lists", "Delhi", "Mumbai", "Kharar"]}
-            selected={(e) => {
-              setfilter((state) => ({
-                ...state,
-                area: e === "All Lists" ? "" : e,
               }));
             }}
           />
@@ -119,6 +108,20 @@ export default function DashboardContent() {
                   e === "Active" ? true : e === "InActive" ? false : null,
               }));
             }}
+          />
+        </Grid>
+        <Grid item>
+          <Input
+            onChange={(e) => {
+              setfilter((state) => ({
+                ...state,
+                area: e.target.value,
+              }));
+            }}
+            placeholder="Search by area"
+            value={filter.area}
+            disableUnderline
+            classes={{ root: classes.input }}
           />
         </Grid>
         <Grid item>

@@ -222,7 +222,7 @@ export default function OrdersContent() {
                     classes={{ root: classes.input }}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item style={{ marginTop: "-10px" }}>
                   <MenuForFilter
                     title="status"
                     data={["All", "Cancelled", "Delivered", "Pending"]}

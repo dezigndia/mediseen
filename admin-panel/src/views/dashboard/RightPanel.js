@@ -201,7 +201,7 @@ export default function RightPanel() {
         />
       )}
 
-      <div className={classes.title}>Total amount: {total}</div>
+      <div className={classes.title}>Total amount: Rs. {total}</div>
       {relativeAmount && (
         <PieGraph data={relativeAmount} nameKey={"name"} dataKey={"sales"} />
       )}

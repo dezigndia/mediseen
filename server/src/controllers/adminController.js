@@ -71,21 +71,22 @@ const removeAdmin = expressAsyncHandler(async (req, res) => {
 })
 
 const removeProduct = expressAsyncHandler(async (req, res) => {
-    const { prodId, testId } = req.body
-    // console.log(req.body)
+    let { prodId, testId, status } = req.body
+    status = status || false
+    console.log(prodId, testId, status)
     if (prodId) {
-        let resReq = await Product.deleteOne({ _id: prodId })
-        if (!resReq.ok) {
-            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        let resReq = await Product.findOneAndUpdate({ _id: prodId }, { isActive: status })
+        if (resReq) {
+            res.status(StatusCodes.OK).json({ message: "Product status updated successfully!" })
         } else {
-            res.status(StatusCodes.OK).json({ message: "Product deleted successfully!" })
+            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
         }
     } else if (testId) {
-        let resReq = await Test.deleteOne({ _id: testId })
-        if (!resReq.ok) {
-            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        let resReq = await Test.findOneAndUpdate({ _id: testId }, { isActive: status })
+        if (resReq) {
+            res.status(StatusCodes.OK).json({ message: "Test status updated successfully!" })
         } else {
-            res.status(StatusCodes.OK).json({ message: "Test deleted successfully!" })
+            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
         }
     } else {
         res.status(StatusCodes.BAD_REQUEST).json({ message: "Id not sent!" })
@@ -270,34 +271,40 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
     // console.log(email, password, req.body)
     const admin = await Admin.findOne({ email: email })
     if (admin) {
-        bcrypt.compare(password, admin.password, function (err, result) {
-            if (result) {
-                // Passwords match
-                var token = jwt.sign(
-                    {
-                        id: admin._id,
-                    },
-                    config.has("jwt.secret") ? config.get("jwt.secret") : null,
-                    {
-                        expiresIn: "24h",
+        if (admin.password) {
+            bcrypt.compare(password, admin.password, function (err, result) {
+                if (result) {
+                    // Passwords match
+                    var token = jwt.sign(
+                        {
+                            id: admin._id,
+                        },
+                        config.has("jwt.secret") ? config.get("jwt.secret") : null,
+                        {
+                            expiresIn: "24h",
+                        }
+                    )
+
+                    const payload = {
+                        token,
+                        isAdmin: admin.isSuperAdmin,
+                        email: admin.email,
+                        name: admin.name,
                     }
-                )
 
-                const payload = {
-                    token,
-                    isAdmin: admin.isSuperAdmin,
-                    email: admin.email,
-                    name: admin.name,
+                    res.status(StatusCodes.OK).send({ status: "success", payload })
+                } else {
+                    // Passwords don't match
+                    res.status(StatusCodes.UNAUTHORIZED).json({
+                        message: "Password don't match",
+                    })
                 }
-
-                res.status(StatusCodes.OK).send({ status: "success", payload })
-            } else {
-                // Passwords don't match
-                res.status(StatusCodes.UNAUTHORIZED).json({
-                    message: "Password don't match",
-                })
-            }
-        })
+            })
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({
+                message: "Password for this email does not exist, contact admin",
+            })
+        }
     } else {
         res.status(StatusCodes.NOT_ACCEPTABLE).json({
             message: "Auth Failed",
