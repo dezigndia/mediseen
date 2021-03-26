@@ -37,8 +37,6 @@ export default function RightPanel() {
         let reqData = [];
         let length = type === "monthly" ? 12 : date.getDay();
         for (let i = 0; i < length; i++) {
-          if (type === "weekly")
-            console.log(incrementDate(date, -1 * i).getDay(), "day of week");
           let a = type === "weekly" ? incrementDate(date, -6 + i).getDay() : "";
           reqData.push({
             month: i + 1,

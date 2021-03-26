@@ -73,11 +73,10 @@ export default function UsersTable() {
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall("get_users", undefined, reqBody);
     if (reqData && reqData.success) {
-      console.log(reqData);
       setrows(reqData.data.data);
       setTotalCount(reqData.data.totalCount);
     } else {
-      console.log("Something went wrong", reqData);
+      // console.log("Something went wrong", reqData);
     }
   }
   useEffect(() => {

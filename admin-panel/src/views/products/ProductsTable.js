@@ -100,7 +100,6 @@ export default function ProductsTable({
       };
       // console.log(body);
       let data = await fetchCall("remove_product", body);
-      console.log(data);
       if (data) {
         setnotify((state) => ({
           ...state,
@@ -131,7 +130,6 @@ export default function ProductsTable({
     let reqData = await fetchCall(type, undefined, reqBody);
     if (reqData) {
       if (reqData.success) {
-        console.log(reqData);
         setrows(reqData.data.data);
         setTotalCount(reqData.data.totalCount / filter.limit + 1);
       } else if (reqData.errCode === 401) {
@@ -141,7 +139,7 @@ export default function ProductsTable({
         }
       }
     } else {
-      console.log("Something went wrong", reqData);
+      // console.log("Something went wrong", reqData);
     }
   }
 

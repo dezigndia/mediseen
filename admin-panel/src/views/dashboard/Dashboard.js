@@ -64,12 +64,10 @@ function Dashboard({}) {
   async function totalBusinesses() {
     try {
       let data = await fetchCall("get_total_businesses");
-      console.log("data", data);
       if (data) {
         if (data.success) {
           let cards = { title: "Total Businesses", content: data.data };
           setcardsData((state) => [...state, cards]);
-          console.log(cards, "cards");
         } else if (data.errCode === 401) {
           setshow(false);
           return;
@@ -114,7 +112,6 @@ function Dashboard({}) {
         increase: null,
       };
       setcardsData((state) => [...state, cards]);
-      console.log(cards, "cards");
     } else {
       setcardsData((state) => [
         ...state,
@@ -135,7 +132,6 @@ function Dashboard({}) {
         increase: null,
       };
       setcardsData((state) => [...state, cards]);
-      console.log(cards, "cards");
     } else {
       setcardsData((state) => [
         ...state,
@@ -160,7 +156,7 @@ function Dashboard({}) {
   useEffect(() => {
     totalBusinesses();
   }, []);
-  // console.log(cardsData);
+
   return (
     <>
       {show ? (

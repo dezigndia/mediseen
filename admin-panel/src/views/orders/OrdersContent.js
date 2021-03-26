@@ -83,7 +83,6 @@ export default function OrdersContent() {
     let reqData = await fetchCall("get_orders", undefined, reqBody);
     if (reqData) {
       if (reqData.success) {
-        console.log(reqData);
         setrows(reqData.data.data);
         setTotalCount(reqData.data.totalCount);
       } else if (reqData.errCode === 401) {
@@ -91,7 +90,7 @@ export default function OrdersContent() {
         return;
       }
     } else {
-      console.log("Something went wrong", reqData);
+      // console.log("Something went wrong", reqData);
     }
   }
   useEffect(() => {

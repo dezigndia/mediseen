@@ -41,7 +41,6 @@ function Signin() {
       password,
     };
     let response = await fetchCall("admin_login", body);
-    console.log(response);
     if (response && response.success) {
       if (response.data && response.data.payload)
         localStorage.setItem(
@@ -54,7 +53,6 @@ function Signin() {
         message: response.data.message,
         type: alert.error,
       });
-      console.log("login again!");
     } else {
       setnotify({
         message: alertMessages.unexpectedError,

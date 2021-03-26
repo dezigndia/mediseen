@@ -90,9 +90,7 @@ export default function AccountsContent({ access = null }) {
       let body = {
         emails: [rows[currentRow].email],
       };
-      console.log(body);
       let data = await fetchCall("remove_admin", body);
-      console.log(data);
       if (data) {
         setnotify((state) => ({
           ...state,
@@ -123,7 +121,6 @@ export default function AccountsContent({ access = null }) {
     let reqData = await fetchCall("get_admins", undefined, reqBody);
     if (reqData) {
       if (reqData.success) {
-        console.log(reqData);
         setrows(reqData.data.data);
         setTotalCount(reqData.data.totalCount);
       } else if (reqData.errCode === 401) {

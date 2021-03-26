@@ -38,7 +38,6 @@ export default function DashboardContent() {
       setdata(_.sortBy(reqData.data.payload.reqData, "businessName"));
       setTotalCount(reqData.data.payload.totalCount / filter.limit + 1);
     } else {
-      console.log("Something went wrong", reqData);
       // localStorage.clear();
       // history.push("/signin");
     }
@@ -55,7 +54,6 @@ export default function DashboardContent() {
   }));
   const classes = useStyles();
   useEffect(() => {
-    console.log("calling");
     getData(page);
   }, [filter]);
   return (
