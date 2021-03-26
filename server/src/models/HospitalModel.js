@@ -6,6 +6,10 @@ const staffSchema = require("./Schemas/staffSchema")
 const workSchema = require("./Schemas/workTimings")
 
 const doctorSchema = new mongoose.Schema({
+    doctorId: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
@@ -13,7 +17,6 @@ const doctorSchema = new mongoose.Schema({
     degree: {
         type: String,
     },
-
     mobileNumber: {
         type: String,
     },
@@ -48,6 +51,7 @@ const hospitalSchema = new mongoose.Schema(
         doctors: {
             type: [doctorSchema],
             default: [],
+            _id: false,
         },
         payment: {
             type: paymentSchema,

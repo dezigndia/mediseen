@@ -4,7 +4,8 @@ const { getConditions, getSortingConditions } = require("../services/admin/admin
 const AppointmentService = require("../services/appointment/appointment.service")
 const { errorMessage } = require("../utils/constants")
 const AppError = require("../utils/errorHandler")
-
+const Doctor = require("../models/DoctorModel")
+const Hospital = require("../models/HospitalModel")
 const appointmentService = new AppointmentService()
 
 class AppointmentController {
@@ -17,6 +18,36 @@ class AppointmentController {
 
         bodydata.createdBy = user.phone
         bodydata.createdByType = user.type
+        switch (bodydata.businessType) {
+            case "doctor": {
+                const doctor = await Doctor.findOne({ phone: bodydata.userPhoneNumber })
+                console.log(doctor)
+                const clinic = doctor.clinic.find(c => c._id == bodydata.clinicId)
+                if (!clinic) {
+                    throw new AppError(StatusCodes.BAD_GATEWAY, "No clinic found")
+                } else {
+                    bodydata.grandTotal = clinic.fee
+                }
+                break
+            }
+            case "hospital": {
+                const hospital = await Hospital.findOne({ phone: bodydata.userPhoneNumber })
+                console.log(hospital)
+                const doctor = hospital.doctors.find(c => c.doctorId == bodydata.doctorId)
+                if (!doctor) {
+                    throw new AppError(StatusCodes.BAD_GATEWAY, "No doctor found")
+                } else {
+                    bodydata.grandTotal = doctor.fee
+                }
+                break
+            }
+            default: {
+                throw new AppError(
+                    StatusCodes.BAD_GATEWAY,
+                    "Business type must be doctor or hospital"
+                )
+            }
+        }
         const data = await appointmentService.createAppointment(bodydata)
         if (data) {
             return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
