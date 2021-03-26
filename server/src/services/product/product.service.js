@@ -30,7 +30,7 @@ class ProductService {
     })
 
     getAllProducts = expressAsyncHandler(async (limit, skip, ownerId) => {
-        let filter = {}
+        let filter = { isActive: true }
         if (ownerId) {
             filter.ownerId = ownerId
         }
@@ -38,7 +38,9 @@ class ProductService {
     })
 
     getProductsByBusiness = expressAsyncHandler(async (limit, skip, ownerId) => {
-        return await Product.find({ ownerId: ownerId }).limit(parseInt(limit)).skip(parseInt(skip))
+        return await Product.find({ ownerId: ownerId, isActive: true })
+            .limit(parseInt(limit))
+            .skip(parseInt(skip))
     })
     updateProductByID = expressAsyncHandler(async (id, payload) => {
         let newData = {}

@@ -30,14 +30,16 @@ class TestService {
     })
 
     getAllTests = expressAsyncHandler(async (limit, skip, ownerId) => {
-        let filter = {}
+        let filter = { isActive: true }
         if (ownerId) {
             filter.ownerId = ownerId
         }
         return await Test.find(filter).limit(parseInt(limit)).skip(parseInt(skip))
     })
     getTestsByBusiness = expressAsyncHandler(async (limit, skip, ownerId) => {
-        return await Test.find({ ownerId: ownerId }).limit(parseInt(limit)).skip(parseInt(skip))
+        return await Test.find({ ownerId: ownerId, isActive: true })
+            .limit(parseInt(limit))
+            .skip(parseInt(skip))
     })
     updateTestByID = expressAsyncHandler(async (id, payload) => {
         let newData = {}
@@ -48,7 +50,7 @@ class TestService {
         return await Test.findOneAndUpdate({ _id: id }, newData, { new: true })
     })
     getTestById = expressAsyncHandler(async id => {
-        const test = await Test.findOne(id)
+        const test = await Test.findById(id)
         if (!test) new AppError(StatusCodes.NOT_FOUND, "No test found with given Id")
         else return test
     })
