@@ -78,6 +78,17 @@ class OrderController {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
     })
+
+    getDetails = expressAsyncHandler(async (req, res) => {
+        const { businessPhoneNumber } = req.query
+        const data = await orderService.getDetailsByPhone(businessPhoneNumber)
+
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
+        }
+    })
 }
 
 module.exports = OrderController

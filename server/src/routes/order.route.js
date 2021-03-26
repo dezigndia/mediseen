@@ -9,5 +9,5 @@ router.get("/all", authenticate(), oc.getAllMyUserOrders)
 router.get("/all/business", authenticate(), oc.getAllMyBusinessOrders)
 router.get("/id/:id", authenticate(), oc.getOrderbyId)
 router.put("/update/:id", authenticate(), oc.updateOrderbyId)
-
+router.get("/get-details", authenticate(), oc.getDetails)
 module.exports = router

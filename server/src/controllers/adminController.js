@@ -323,15 +323,9 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
             // let call = async () => {
             //     return new Promise(next => {
             if (each.phone) {
-                let ans = await getTotalSalesByBusiness(
-                    each.phone,
-                    each.type,
-                    each._doc.collections && each._doc.collections.collectionChargesPerVisit
-                        ? each._doc.collections.collectionChargesPerVisit
-                        : 0
-                )
+                let ans = await getTotalSalesByBusiness(each.phone, each.type)
                 let oToday = {
-                    orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+                    orderToday: await getTodaysOrderByPhoneNumber(each.phone, each.type),
                 }
                 reqData.push({ ...data[i]._doc, ...ans, ...oToday })
             }

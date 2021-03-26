@@ -36,6 +36,7 @@ const useStyles = makeStyles({
     borderRadius: "10px",
     fontSize: "0.8rem",
     margin: "5px 5px 5px 0px",
+    color: "white",
   },
   filterContainer: {
     backgroundColor: "#2772f630",
