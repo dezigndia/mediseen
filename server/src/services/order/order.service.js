@@ -70,6 +70,7 @@ class OrderService {
         d.setHours(0, 0, 0, 0)
         let filter = {
             businessPhoneNumber,
+            status: "delivered",
         }
         let data = await Order.aggregate([
             {
