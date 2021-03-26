@@ -60,39 +60,86 @@ import RightPanel from "./RightPanel";
 
 function Dashboard({}) {
   const [cardsData, setcardsData] = useState([]);
-
+  const [show, setshow] = useState(true);
   async function totalBusinesses() {
-    let data = await fetchCall("get_total_businesses");
-
-    console.log(data);
-    if (data.success) {
-      let cards = [...cardsData];
-      cards.push({ title: "Total Businesses", content: data.data });
-      setcardsData(cards);
-    } else {
-      setcardsData([
-        ...cardsData,
-        { title: "Total Businesses", content: "Error" },
-      ]);
-    }
+    try {
+      let data = await fetchCall("get_total_businesses");
+      console.log("data", data);
+      if (data) {
+        if (data.success) {
+          let cards = { title: "Total Businesses", content: data.data };
+          setcardsData((state) => [...state, cards]);
+          console.log(cards, "cards");
+        } else if (data.errCode === 401) {
+          setshow(false);
+          return;
+        }
+      } else {
+        setcardsData([
+          ...cardsData,
+          { title: "Total Businesses", content: "Error" },
+        ]);
+      }
+    } catch (e) {}
+    newBusinessThisMonth();
   }
 
   async function newBusinessThisMonth() {
     let data = await fetchCall("new_business_this_month");
 
-    // console.log(data);
     if (data && data.success) {
-      let cards = [...cardsData];
-      cards.push({
+      let cards = {
         title: "New Business This Month",
         content: data.data.currentMonthCount,
         increase: data.data.currentMonthCount > data.data.prevMonthCount,
-      });
-      setcardsData(cards);
+      };
+      setcardsData((state) => [...state, cards]);
     } else {
-      setcardsData([
-        ...cardsData,
-        { title: "New BUsiness This Month", content: "Error" },
+      setcardsData((state) => [
+        ...state,
+        { title: "New Business This Month", content: "Error" },
+      ]);
+    }
+
+    getTotalPatients();
+  }
+
+  async function getTotalPatients() {
+    let data = await fetchCall("total_users");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Total Patients",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+      console.log(cards, "cards");
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Total Patients", content: "Error" },
+      ]);
+    }
+
+    getTotalOAMonth();
+  }
+
+  async function getTotalOAMonth() {
+    let data = await fetchCall("total_OA_month");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Total O/A Month",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+      console.log(cards, "cards");
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Total O/A Month", content: "Error" },
       ]);
     }
   }
@@ -112,36 +159,39 @@ function Dashboard({}) {
 
   useEffect(() => {
     totalBusinesses();
-    newBusinessThisMonth();
   }, []);
-  console.log(cardsData);
+  // console.log(cardsData);
   return (
     <>
-      <div className="content">
-        <span style={{ margin: "1rem 0" }}>Quick Stats</span>
-        <Grid container spacing={2}>
-          {cardsData.map((each) => (
-            <Grid item xs={2}>
-              <TopCard title={each.title}>
-                <Grid container>
-                  <Grid item classes={{ root: classes.content }}>
-                    {each.content}
+      {show ? (
+        <div className="content">
+          <span style={{ margin: "1rem 0" }}>Quick Stats</span>
+          <Grid container spacing={2}>
+            {cardsData.map((each, i) => (
+              <Grid item xs={2} key={i}>
+                <TopCard title={each.title} increase={each.increase}>
+                  <Grid container>
+                    <Grid item classes={{ root: classes.content }}>
+                      {each.content}
+                    </Grid>
                   </Grid>
-                </Grid>
-              </TopCard>
+                </TopCard>
+              </Grid>
+            ))}
+          </Grid>
+          <span className={classes.searchHub}>Search Hub</span>
+          <Grid container direction="row" justify="space-between">
+            <Grid item xs={8}>
+              <DashboardContent />
             </Grid>
-          ))}
-        </Grid>
-        <span className={classes.searchHub}>Search Hub</span>
-        <Grid container direction="row" justify="space-between">
-          <Grid item xs={8}>
-            <DashboardContent />
+            <Grid item xs={4}>
+              <RightPanel />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <RightPanel />
-          </Grid>
-        </Grid>
-      </div>
+        </div>
+      ) : (
+        <div className="content">Unauthorized access</div>
+      )}
     </>
   );
 }

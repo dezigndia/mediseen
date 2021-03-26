@@ -19,7 +19,10 @@ import { MoreVert } from "@material-ui/icons";
 import { alertMessages } from "variables/constants";
 import { alert } from "variables/constants";
 
-export default function ProductsTable({ type = "get_products" }) {
+export default function ProductsTable({
+  type = "get_products",
+  access = null,
+}) {
   const useStyles = makeStyles({
     table: {
       minWidth: 650,
@@ -52,6 +55,7 @@ export default function ProductsTable({ type = "get_products" }) {
     tableContainer: {
       padding: "1rem 1rem",
       // backgroundColor: "rgb(30 30 45 / 19%)",
+      borderRadius: "0px 0px 10px 10px",
     },
   });
   const classes = useStyles();
@@ -124,10 +128,17 @@ export default function ProductsTable({ type = "get_products" }) {
     body = removeEmptyFromObject(body);
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall(type, undefined, reqBody);
-    if (reqData && reqData.success) {
-      console.log(reqData);
-      setrows(reqData.data.data);
-      setTotalCount(reqData.data.totalCount / filter.limit + 1);
+    if (reqData) {
+      if (reqData.success) {
+        console.log(reqData);
+        setrows(reqData.data.data);
+        setTotalCount(reqData.data.totalCount / filter.limit + 1);
+      } else if (reqData.errCode === 401) {
+        if (access) {
+          access(false);
+          return;
+        }
+      }
     } else {
       console.log("Something went wrong", reqData);
     }
@@ -154,13 +165,13 @@ export default function ProductsTable({ type = "get_products" }) {
     >
       <Grid container direction="column">
         <Grid container justify="space-between">
-          <Grid item>
+          {/* <Grid item>
             <span className="component-table-title">
               {type.toLowerCase().indexOf("products") >= 0
                 ? "Products List"
                 : "Tests List"}
             </span>
-          </Grid>
+          </Grid> */}
           <Grid item>
             <PaginationTiles
               tileNo={(tile) => {

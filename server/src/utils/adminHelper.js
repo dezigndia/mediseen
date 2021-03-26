@@ -10,33 +10,34 @@ function isSuperAdmin() {
     return async (req, res, next) => {
         try {
             const admin = await getAdminFromToken(req)
-            console.log(admin)
-            if (admin && admin.isSuperAdmin) next()
+            if (admin && admin.isSuperAdmin && admin.active) next()
             else
                 res.status(StatusCodes.UNAUTHORIZED).json({
                     message: unauthorizedAccess,
                 })
         } catch (e) {
-            console.log(e)
             res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
         }
         // return res.status(StatusCodes.UNAUTHORIZED).json({ message: "done" })
     }
 }
 
-function isAdmin() {
+function isAdmin(access) {
     return async (req, res, next) => {
         try {
-            console.log("inside is admin")
             const admin = await getAdminFromToken(req, res)
-
-            if (admin) next()
+            console.log(access)
+            if (
+                admin &&
+                admin.active &&
+                (admin.isSuperAdmin || admin.departments.indexOf(access) >= 0 || !access)
+            )
+                next()
             else
                 res.status(StatusCodes.UNAUTHORIZED).json({
                     message: unauthorizedAccess,
                 })
         } catch (e) {
-            console.log(e)
             res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
         }
         // return res.status(StatusCodes.UNAUTHORIZED).json({ message: "done" })

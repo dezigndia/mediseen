@@ -51,59 +51,59 @@ const addAdmin = expressAsyncHandler(async (req, res) => {
 const removeAdmin = expressAsyncHandler(async (req, res) => {
     const { emails } = req.body
     // console.log(req.body)
-    let resReq
-    emails.forEach(async email => {
-        resReq = await Admin.deleteOne({ email: email, isSuperAdmin: false })
+    if (emails && emails.length > 0) {
+        let resReq
+        emails.forEach(async email => {
+            resReq = await Admin.findOneAndUpdate(
+                { email: email, isSuperAdmin: false },
+                { active: false }
+            )
+            if (!resReq) {
+                res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+            }
+        })
+
+        // console.log(resReq)
+        res.status(StatusCodes.OK).json({ message: "Account deleted successfully!" })
+    } else {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Emails not sent!" })
+    }
+})
+
+const removeProduct = expressAsyncHandler(async (req, res) => {
+    const { prodId, testId } = req.body
+    // console.log(req.body)
+    if (prodId) {
+        let resReq = await Product.deleteOne({ _id: prodId })
         if (!resReq.ok) {
             res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        } else {
+            res.status(StatusCodes.OK).json({ message: "Product deleted successfully!" })
         }
-    })
-
-    // console.log(resReq)
-    res.status(StatusCodes.OK).json({ message: "Deleted successfully!" })
+    } else if (testId) {
+        let resReq = await Test.deleteOne({ _id: testId })
+        if (!resReq.ok) {
+            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        } else {
+            res.status(StatusCodes.OK).json({ message: "Test deleted successfully!" })
+        }
+    } else {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Id not sent!" })
+    }
 })
 
 const getTotalUsers = expressAsyncHandler(async (req, res) => {
     return await User.countDocuments({})
 })
 
-// case "doctor": {
-//   return await Doctor.updateOne(
-//       { phone: phoneNumber, type: category },
-//       { $set: data }
-//   )
-// }
-// case "pharmacy": {
-//   return await Pharmacy.updateOne(
-//       { phone: phoneNumber, type: category },
-//       { $set: data }
-//   )
-// }
-// case "hospital": {
-//   return await Hospital.updateOne(
-//       { phone: phoneNumber, type: category },
-//       { $set: data }
-//   )
-// }
-// case "pathology": {
-//   return await Pathology.updateOne(
-//       { phone: phoneNumber, type: category },
-//       { $set: data }
-//   )
-// }
-
 const getTotalBusinesses = expressAsyncHandler(async (req, res) => {
     let data =
-        (await Pathology.countDocuments({})) +
-        (await Hospital.countDocuments({})) +
-        (await Pharmarcy.countDocuments({})) +
-        (await Doctor.countDocuments({}))
+        // (await Pathology.countDocuments({})) +
+        // (await Hospital.countDocuments({})) +
+        // (await Pharmarcy.countDocuments({})) +
+        await Doctor.countDocuments({})
 
-    if (data) {
-        res.status(200).json(data)
-    } else {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
-    }
+    res.status(StatusCodes.OK).json(data)
 })
 
 const getAdmins = expressAsyncHandler(async (req, res) => {
@@ -117,6 +117,7 @@ const getAdmins = expressAsyncHandler(async (req, res) => {
         conditions = {
             ...conditions,
             isSuperAdmin: false,
+            active: true,
         }
         let data = await Admin.find(conditions).limit(limit).skip(skip)
         const totalCount = await Admin.countDocuments(conditions)
@@ -157,7 +158,7 @@ const getTests = expressAsyncHandler(async (req, res) => {
     } else {
         let conditions = getConditions(req)
         const data = await Test.find(conditions).limit(limit).skip(skip)
-        console.log(data, "data")
+        // console.log(data, "data")
         const totalCount = await Test.countDocuments(conditions)
 
         res.status(StatusCodes.OK).json({
@@ -217,59 +218,52 @@ const getUsers = expressAsyncHandler(async (req, res) => {
             {
                 $match: filter,
             },
-            // {
-            //     $group: {
-            //         _id: 1,
-            //         myCount: { $sum: 1 },
-            //     },
-            // },
+            { $skip: skip },
+            { $limit: limit },
+            {
+                $project: {
+                    order_details: 1,
+                    name: 1,
+                    phone: 1,
+                    address: 1,
+                },
+            },
+            {
+                $facet: {
+                    result: [{ $skip: skip }, { $limit: limit }],
+                    totalCount: [
+                        {
+                            $count: "count",
+                        },
+                    ],
+                },
+            },
         ])
         // .find(conditions)
         // .limit(limit)
         // .skip(skip)
-        const totalCount = data.length
-        data.forEach((each, i) => {
-            data[i].totalCost = 0
-            data[i].order_details.forEach(order => {
-                data[i].totalCost += order.grandTotal || 0
+        console.log(data[0].totalCount, "users data")
+        const totalCount =
+            data[0] && data[0].totalCount && data[0].totalCount[0] && data[0].totalCount[0].count
+                ? data[0].totalCount[0].count
+                : 0
+        let dataReq = []
+        data[0].result.forEach((each, i) => {
+            dataReq.push(each)
+            dataReq[i].totalCost = 0
+            each.order_details.forEach(order => {
+                dataReq[i].totalCost += order.grandTotal || 0
                 // console.log(order.grandTotal)
             })
-            data[i].order_details = undefined
+            // dataReq[i].order_details = undefined
         })
         res.status(StatusCodes.OK).json({
-            data: data,
+            data: dataReq,
             totalCount: totalCount,
         })
     }
 })
 
-// const getInfo = expressAsyncHandler(async (req, res, next, type) => {
-//     let { skip, limit } = req.query
-//     skip = skip - "0"
-//     limit = limit - "0"
-//     if (skip === null || limit === null) {
-//         res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
-//     } else {
-//         let conditions = getConditions(req)
-//         let data
-//         let totalCount
-//         if (type === "product") {
-//             data = await Product.find(conditions).limit(limit).skip(skip)
-//             totalCount = await Product.countDocuments(conditions)
-//         } else if (type === "users") {
-//             data = await User.find(conditions).limit(limit).skip(skip)
-//             totalCount = await User.countDocuments(conditions)
-//         } else if (type === "admins") {
-//             data = await Product.find(conditions).limit(limit).skip(skip)
-//             totalCount = await Product.countDocuments(conditions)
-//         }
-
-//         res.status(StatusCodes.OK).json({
-//             data: data,
-//             totalCount: totalCount,
-//         })
-//     }
-// })
 const loginAdmin = expressAsyncHandler(async (req, res) => {
     const email = req.body.email
     const password = req.body.password
@@ -328,17 +322,13 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
         let arr = data.map(async (each, i) => {
             // let call = async () => {
             //     return new Promise(next => {
-            let ans = await getTotalSalesByBusiness(
-                each.phone,
-                each.type,
-                each._doc.collections && each._doc.collections.collectionChargesPerVisit
-                    ? each._doc.collections.collectionChargesPerVisit
-                    : 0
-            )
-            let oToday = {
-                orderToday: await getTodaysOrderByPhoneNumber(each.phone),
+            if (each.phone) {
+                let ans = await getTotalSalesByBusiness(each.phone, each.type)
+                let oToday = {
+                    orderToday: await getTodaysOrderByPhoneNumber(each.phone, each.type),
+                }
+                reqData.push({ ...data[i]._doc, ...ans, ...oToday })
             }
-            reqData.push({ ...data[i]._doc, ...ans, ...oToday })
             // console.log(reqData[i])
         })
         Promise.all(arr).then(req => {
@@ -352,22 +342,32 @@ const getBusinessList = expressAsyncHandler(async (req, res) => {
     }
 })
 
-const getMonthlyOrderTrend = expressAsyncHandler(async (req, res) => {
-    let { year } = req.query
+const getOrderTrend = expressAsyncHandler(async (req, res) => {
+    let { date, type } = req.query
+    let d = new Date(date)
+    let year = d.getFullYear()
+    let lowerDate = type === "monthly" ? new Date(year, 0, 1) : getFirstOfWeek(date)
+    let upperDate = d
+    // console.log(lowerDate, upperDate, "date")
 
     if (year) {
         let data = await Order.aggregate([
             {
                 $match: {
                     createdAt: {
-                        $gte: new Date(year, 0, 1),
-                        $lt: new Date(year, 11, 1),
+                        $gte: lowerDate,
+                        $lt: upperDate,
                     },
                 },
             },
             {
                 $group: {
-                    _id: { month: { $month: "$createdAt" } },
+                    _id: {
+                        month: { $month: "$createdAt" },
+                        day: {
+                            $dayOfMonth: "$createdAt",
+                        },
+                    },
                     grandTotal: { $sum: "$grandTotal" },
                 },
             },
@@ -381,17 +381,17 @@ const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
     let { date } = req.body
     if (date) {
         let reqDate = getFirstOfWeek(date)
-        console.log(reqDate, date)
+        // console.log(reqDate, date)
 
         let data = await Appointment.aggregate([
-            // {
-            //     $match: {
-            //         createdAt: {
-            //             $gte: reqDate,
-            //             $lt: date,
-            //         },
-            //     },
-            // },
+            {
+                $match: {
+                    createdAt: {
+                        $gte: reqDate,
+                        $lt: new Date(date),
+                    },
+                },
+            },
             {
                 $group: {
                     _id: {
@@ -408,6 +408,81 @@ const getWeeklyAppointmentTrend = expressAsyncHandler(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: "send date" })
     }
 })
+
+const getNewBusinessCount = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let currentMonthCount = await Doctor.countDocuments({
+        createdAt: {
+            $gte: date,
+        },
+    })
+    let previousDate = new Date(date)
+    previousDate.setDate(0)
+    previousDate.setDate(1)
+    let previousMonthCount = await Doctor.countDocuments({
+        createdAt: {
+            $gte: previousDate,
+            $lt: date,
+        },
+    })
+
+    res.status(StatusCodes.OK).json({
+        currentMonthCount: currentMonthCount,
+        prevMonthCount: previousMonthCount,
+    })
+})
+
+const patientCount = expressAsyncHandler(async (req, res) => {
+    let count1 = await Order.distinct("userPhoneNumber")
+    let count2 = await Appointment.distinct("userPhoneNumber")
+    res.status(200).json({ count: count1.length + count2.length })
+})
+const totalOAMonth = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+
+    let count1 = await Order.countDocuments({
+        createdAt: {
+            $gte: date,
+        },
+    })
+    let count2 = await Appointment.countDocuments({
+        createdAt: {
+            $gte: date,
+        },
+    })
+    res.status(200).json({ count: count1 + count2 })
+})
+
+const totalRelativeAmount = expressAsyncHandler(async (req, res) => {
+    const pharmacySales = await getTotalSalesByBusiness(null, "pharmacy", null)
+    const hospitalSales = await getTotalSalesByBusiness(null, "hospital", null)
+    const doctorSales = await getTotalSalesByBusiness(null, "doctor", null)
+    const pathologySales = await getTotalSalesByBusiness(null, "pathology", null)
+
+    res.status(StatusCodes.OK).json({ pharmacySales, hospitalSales, doctorSales, pathologySales })
+})
+
+const updateBusinessStatus = expressAsyncHandler(async (req, res) => {
+    let { id, status } = req.body
+
+    // let data = await Doctor.updateOne({})
+    var query = { id: id }
+
+    // let data = await Doctor.find(query)
+    let data = await Doctor.findOneAndUpdate(query, { $set: { isActive: status } })
+
+    return res.status(200).json({ message: "Updated successfully" })
+})
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -420,6 +495,12 @@ module.exports = {
     getTotalBusinesses,
     getOrders,
     getTests,
-    getMonthlyOrderTrend,
+    getOrderTrend,
     getWeeklyAppointmentTrend,
+    removeProduct,
+    getNewBusinessCount,
+    patientCount,
+    totalOAMonth,
+    totalRelativeAmount,
+    updateBusinessStatus,
 }

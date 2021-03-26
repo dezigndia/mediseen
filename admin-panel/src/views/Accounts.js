@@ -71,7 +71,7 @@ function Accounts() {
     password: null,
     confirmPassword: null,
   });
-
+  const [show, setshow] = useState(true);
   function onChange(e) {
     resetErrors();
     if (e.target.name === "departments") {
@@ -110,13 +110,14 @@ function Accounts() {
 
       const data = await fetchCall("add_admin", body);
       // console.log(data);
-      if (data.success) {
+      if (data && data.success) {
         setnotify((state) => ({
           ...state,
           message: "Success saving account!",
           type: alert.success,
           change: !state.change,
         }));
+        resetForm();
       } else {
         setnotify((state) => ({
           ...state,
@@ -143,16 +144,15 @@ function Accounts() {
         ...state,
         email: "Enter correct email!",
       }));
-      console.log("incorrecr email");
       result = false;
     }
-    // if (state.email.trim() === "") {
-    //   seterrors((state) => ({
-    //     ...state,
-    //     email: "Enter email!",
-    //   }));
-    //   result = false;
-    // }
+    if (state.email.trim() === "") {
+      seterrors((state) => ({
+        ...state,
+        email: "Enter email!",
+      }));
+      result = false;
+    }
     if (state.phoneNumber.trim() === "") {
       seterrors((state) => ({
         ...state,
@@ -172,6 +172,16 @@ function Accounts() {
     }));
   }
 
+  function resetForm() {
+    setstate({
+      name: "",
+      phoneNumber: "",
+      email: "",
+      departments: [],
+    });
+    resetErrors();
+  }
+
   const useStyles = makeStyles((theme) => ({
     input: {
       color: "white !important",
@@ -183,171 +193,190 @@ function Accounts() {
 
   return (
     <>
-      <div className="content">
-        <Row>
-          <Col md="8">
-            <Card>
-              <CardHeader
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-                onClick={() => setopenForm(!openForm)}
-              >
-                <h3 className="title">Add Member</h3>
-                <h3>{!openForm ? <ExpandMore /> : <ExpandLess />} </h3>
-              </CardHeader>
-              {openForm && (
-                <CardBody>
-                  <Form>
-                    <Col className="pr-md-1" md="12">
-                      <FormGroup>
-                        {/* <label>Name</label> */}
-                        <TextField
-                          id="standard-full-width"
-                          label="Name"
-                          placeholder="Name of member"
-                          type="text"
-                          name="name"
-                          onChange={(e) => onChange(e)}
-                          value={state.name}
-                          error={errors.name && errors.name.length > 0}
-                          helperText={errors.name}
-                          // classes={{ root: classes.input }}
-                          InputProps={{
-                            className: classes.input,
-                          }}
-                          InputLabelProps={{
-                            style: { color: "rgb(255 255 255 / 81%)" },
-                          }}
-                          fullWidth
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        {/* <label>Email</label> */}
-                        <TextField
-                          id="standard-full-width"
-                          label="Email"
-                          placeholder="Email of member"
-                          type="text"
-                          onChange={(e) => onChange(e)}
-                          name="email"
-                          value={state.email}
-                          error={errors.email && errors.email.length > 0}
-                          helperText={errors.email}
-                          InputProps={{
-                            className: classes.input,
-                          }}
-                          InputLabelProps={{
-                            style: { color: "rgb(255 255 255 / 81%)" },
-                          }}
-                          fullWidth
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pr-md-1" md="12">
-                      <FormGroup>
-                        {/* <label>Mobile Number</label> */}
-                        <TextField
-                          id="standard-full-width"
-                          label="Mobile Number"
-                          placeholder="Mobile number of member"
-                          type="text"
-                          name="phoneNumber"
-                          onChange={(e) => onChange(e)}
-                          value={state.phoneNumber}
-                          error={
-                            errors.phoneNumber && errors.phoneNumber.length > 0
-                          }
-                          helperText={errors.phoneNumber}
-                          InputProps={{
-                            className: classes.input,
-                          }}
-                          InputLabelProps={{
-                            style: { color: "rgb(255 255 255 / 81%)" },
-                          }}
-                          fullWidth
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="pr-md-1" md="12">
-                      <label>Departments Access</label>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={state.departments.indexOf("Search") >= 0}
-                              onChange={(e) => onChange(e)}
-                              name="departments"
-                              color="primary"
-                              value="Search"
-                            />
-                          }
-                          label="Search"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={state.departments.indexOf("Orders") >= 0}
-                              onChange={(e) => onChange(e)}
-                              name="departments"
-                              color="primary"
-                              value="Orders"
-                            />
-                          }
-                          label="Orders"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={state.departments.indexOf("List") >= 0}
-                              onChange={(e) => onChange(e)}
-                              name="departments"
-                              color="primary"
-                              value="List"
-                            />
-                          }
-                          label="List"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={
-                                state.departments.indexOf("Support") >= 0
-                              }
-                              onChange={(e) => onChange(e)}
-                              name="departments"
-                              color="primary"
-                              value="Support"
-                            />
-                          }
-                          label="Support"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Form>
-                </CardBody>
-              )}
-              {openForm && (
-                <CardFooter>
-                  <Button
-                    className="btn-fill"
-                    color="primary"
-                    onClick={() => {
-                      onSave();
-                    }}
-                  >
-                    Save
-                  </Button>
-                </CardFooter>
-              )}
-            </Card>
-          </Col>
-        </Row>
-        <AccountsContent />
-        <AlertMessages state={notify} />
-      </div>
+      {show ? (
+        <div className="content">
+          <Row>
+            <Col md="8">
+              <Card>
+                <CardHeader
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    if (openForm) {
+                      resetErrors();
+                    }
+                    setopenForm(!openForm);
+                  }}
+                >
+                  <h3 className="title">Add Member</h3>
+                  <h3>{!openForm ? <ExpandMore /> : <ExpandLess />} </h3>
+                </CardHeader>
+                {openForm && (
+                  <CardBody>
+                    <Form>
+                      <Col className="pr-md-1" md="12">
+                        <FormGroup>
+                          {/* <label>Name</label> */}
+                          <TextField
+                            id="standard-full-width"
+                            label="Name"
+                            placeholder="Name of member"
+                            type="text"
+                            name="name"
+                            onChange={(e) => onChange(e)}
+                            value={state.name}
+                            error={errors.name && errors.name.length > 0}
+                            helperText={errors.name}
+                            // classes={{ root: classes.input }}
+                            InputProps={{
+                              className: classes.input,
+                            }}
+                            InputLabelProps={{
+                              style: { color: "rgb(255 255 255 / 81%)" },
+                            }}
+                            fullWidth
+                          />
+                        </FormGroup>
+                        <FormGroup>
+                          {/* <label>Email</label> */}
+                          <TextField
+                            id="standard-full-width"
+                            label="Email"
+                            placeholder="Email of member"
+                            type="text"
+                            onChange={(e) => onChange(e)}
+                            name="email"
+                            value={state.email}
+                            error={errors.email && errors.email.length > 0}
+                            helperText={errors.email}
+                            InputProps={{
+                              className: classes.input,
+                            }}
+                            InputLabelProps={{
+                              style: { color: "rgb(255 255 255 / 81%)" },
+                            }}
+                            fullWidth
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="pr-md-1" md="12">
+                        <FormGroup>
+                          {/* <label>Mobile Number</label> */}
+                          <TextField
+                            id="standard-full-width"
+                            label="Mobile Number"
+                            placeholder="Mobile number of member"
+                            type="text"
+                            name="phoneNumber"
+                            onChange={(e) => onChange(e)}
+                            value={state.phoneNumber}
+                            error={
+                              errors.phoneNumber &&
+                              errors.phoneNumber.length > 0
+                            }
+                            helperText={errors.phoneNumber}
+                            InputProps={{
+                              className: classes.input,
+                            }}
+                            InputLabelProps={{
+                              style: { color: "rgb(255 255 255 / 81%)" },
+                            }}
+                            fullWidth
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="pr-md-1" md="12">
+                        <label>Departments Access</label>
+                        <FormGroup>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  state.departments.indexOf("Search") >= 0
+                                }
+                                onChange={(e) => onChange(e)}
+                                name="departments"
+                                color="primary"
+                                value="Search"
+                              />
+                            }
+                            label="Search"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  state.departments.indexOf("Orders") >= 0
+                                }
+                                onChange={(e) => onChange(e)}
+                                name="departments"
+                                color="primary"
+                                value="Orders"
+                              />
+                            }
+                            label="Orders"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={state.departments.indexOf("List") >= 0}
+                                onChange={(e) => onChange(e)}
+                                name="departments"
+                                color="primary"
+                                value="List"
+                              />
+                            }
+                            label="List"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  state.departments.indexOf("Support") >= 0
+                                }
+                                onChange={(e) => onChange(e)}
+                                name="departments"
+                                color="primary"
+                                value="Support"
+                              />
+                            }
+                            label="Support"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Form>
+                  </CardBody>
+                )}
+                {openForm && (
+                  <CardFooter>
+                    <Button
+                      className="btn-fill"
+                      color="primary"
+                      onClick={() => {
+                        onSave();
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </CardFooter>
+                )}
+              </Card>
+            </Col>
+          </Row>
+          <AccountsContent
+            access={(status) => {
+              setshow(false);
+            }}
+          />
+          <AlertMessages state={notify} />
+        </div>
+      ) : (
+        <div className="content">Unauthorized access</div>
+      )}
     </>
   );
 }

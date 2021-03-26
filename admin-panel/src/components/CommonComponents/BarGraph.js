@@ -46,7 +46,7 @@ export default function BarGraph({ data, xAxisDataKey = "", barDataKey = "" }) {
             {/* <YAxis /> */}
             <Tooltip />
             {/* <Legend /> */}
-            <Bar dataKey={barDataKey} fill="#8884d8" />
+            <Bar dataKey={barDataKey} fill="#8884d8" barSize={30} />
           </BarChart>
         </ResponsiveContainer>
       )}

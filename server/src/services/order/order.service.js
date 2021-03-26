@@ -77,6 +77,59 @@ class OrderService {
         }
         return await Order.findByIdAndUpdate(id, ord)
     })
+    getDetailsByPhone = expressAsyncHandler(async businessPhoneNumber => {
+        var d = new Date()
+        d.setHours(0, 0, 0, 0)
+        let filter = {
+            businessPhoneNumber,
+            status: "delivered",
+        }
+        let data = await Order.aggregate([
+            {
+                $match: filter,
+            },
+            {
+                $project: {
+                    grandTotal: 1,
+                    _id: 0,
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    sum: {
+                        $sum: "$grandTotal",
+                    },
+                },
+            },
+        ])
+        let totalSales = data && data[0] ? data[0].sum : 0
+        filter.createdAt = {
+            $gte: d,
+        }
+        let dataReq = await Order.aggregate([
+            {
+                $match: filter,
+            },
+            {
+                $project: {
+                    grandTotal: 1,
+                    _id: 0,
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    sum: {
+                        $sum: "$grandTotal",
+                    },
+                },
+            },
+        ])
+        let todaysSales = dataReq && dataReq[0] ? dataReq[0].sum : 0
+
+        return { todaysSales, totalSales }
+    })
 }
 
 module.exports = OrderService

@@ -36,6 +36,7 @@ const useStyles = makeStyles({
     borderRadius: "10px",
     fontSize: "0.8rem",
     margin: "5px 5px 5px 0px",
+    color: "white",
   },
   filterContainer: {
     backgroundColor: "#2772f630",
@@ -56,7 +57,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AccountsContent() {
+export default function AccountsContent({ access = null }) {
   const classes = useStyles();
   const [rows, setrows] = useState([]);
   const [page, setpage] = useState(1);
@@ -120,10 +121,15 @@ export default function AccountsContent() {
     body = removeEmptyFromObject(body);
     let reqBody = convertBodyToQueryParams(body);
     let reqData = await fetchCall("get_admins", undefined, reqBody);
-    if (reqData && reqData.success) {
-      console.log(reqData);
-      setrows(reqData.data.data);
-      setTotalCount(reqData.data.totalCount);
+    if (reqData) {
+      if (reqData.success) {
+        console.log(reqData);
+        setrows(reqData.data.data);
+        setTotalCount(reqData.data.totalCount);
+      } else if (reqData.errCode === 401) {
+        if (access) access(false);
+        return;
+      }
     } else {
       // console.log("Something went wrong", reqData);
       setnotify((state) => ({

@@ -1,7 +1,6 @@
 import { baseUrl } from "variables/constants";
 import { endPointsArray } from "variables/constants";
 import { testurl } from "variables/constants";
-import AlertMessages from "../components/CommonComponents/AlertMessages";
 export const fetchCall = async (type, body = null, queryParams = null) => {
   let data;
   const jwt = JSON.parse(localStorage.getItem("userData"));
@@ -20,9 +19,13 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
         body: body ? JSON.stringify(body) : undefined,
       }
     );
-
+    console.log(response, "response");
     if (!response.ok) {
-      data = { success: false, data: await response.json() };
+      data = {
+        success: false,
+        data: await response.json(),
+        errCode: response.status,
+      };
     } else {
       data = { success: true, data: await response.json() };
     }
@@ -50,11 +53,8 @@ export const removeEmptyFromObject = (obj) => {
   return obj;
 };
 export const convertBodyToQueryParams = (body) => {
-  // console.log(body);
   const searchParams = new URLSearchParams();
   Object.keys(body).forEach((key) => searchParams.append(key, body[key]));
-  console.log(searchParams.toString());
-  // return new URLSearchParams(body).toString();
   return searchParams.toString();
 };
 

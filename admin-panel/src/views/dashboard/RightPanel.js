@@ -2,6 +2,7 @@ import { Grid, makeStyles } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import BarGraph from "components/CommonComponents/BarGraph";
 import LineGraph from "components/CommonComponents/LineGraph";
+import PieGraph from "components/CommonComponents/PieGraph";
 
 import React, { useEffect, useState } from "react";
 import { readableDate } from "services/services";
@@ -11,32 +12,43 @@ import { fetchCall } from "services/services";
 export default function RightPanel() {
   const [monthlyOrders, setmonthlyOrders] = useState(null);
   const [weeklyAppoinments, setweeklyAppoinments] = useState(null);
+  const [relativeAmount, setrelativeAmount] = useState(null);
+
   const [currentDate, setcurrentDate] = useState(new Date());
   const [state, setstate] = useState("monthly");
+  const [total, settotal] = useState(0);
 
   const handleState = (event, value) => {
-    if (value) setstate(value);
+    if (value) {
+      setstate(value);
+      getOrderTrend(value);
+    }
   };
-  async function getOrderTrend() {
-    let d = new Date();
-    let year = d.getFullYear();
+  async function getOrderTrend(type = "monthly") {
+    let date = new Date();
     let body = {
-      year,
+      date,
+      type,
     };
     body = convertBodyToQueryParams(body);
     const data = await fetchCall("order_trend", undefined, body);
-    // console.log(data);
     try {
-      if (data.success) {
+      if (data && data.success) {
         let reqData = [];
-        for (let i = 0; i < 12; i++) {
+        let length = type === "monthly" ? 12 : date.getDay();
+        for (let i = 0; i < length; i++) {
+          if (type === "weekly")
+            console.log(incrementDate(date, -1 * i).getDay(), "day of week");
+          let a = type === "weekly" ? incrementDate(date, -6 + i).getDay() : "";
           reqData.push({
             month: i + 1,
-            grandTotal: 0,
+            Sales: 0,
           });
           data.data.data.forEach((each) => {
             if (each._id.month === reqData[i].month) {
-              reqData[i].grandTotal = each.grandTotal;
+              reqData[i].Sales = each.grandTotal;
+            } else if (type === "weekly" && each._id.day === a) {
+              reqData[i].Sales = each.grandTotal;
             }
           });
         }
@@ -50,7 +62,6 @@ export default function RightPanel() {
   function incrementDate(date, value) {
     let d = new Date(date);
     d.setDate(d.getDate() + value);
-    console.log(d);
     return d;
   }
   async function getWeeklyAppointmentTrend() {
@@ -60,14 +71,15 @@ export default function RightPanel() {
     };
     const data = await fetchCall("weekly_appointment_trend", body);
     try {
-      if (data.success) {
+      if (data && data.success) {
         let reqData = [];
-        for (let i = 0; i < 7; i++) {
-          let date = incrementDate(currentDate, -6 + i);
-          date = readableDate(date);
+        let length = date.getDay();
+        for (let i = 0; i < length; i++) {
+          let dateR = incrementDate(currentDate, -length + i + 1);
+          dateR = readableDate(dateR);
           reqData.push({
-            date: date,
-            count: 0,
+            date: dateR,
+            Count: 0,
             day: i + 1,
           });
           data.data.data.map((eachReq) => {
@@ -75,20 +87,47 @@ export default function RightPanel() {
               reqData[i].date ===
               `${eachReq._id.day}/${eachReq._id.month}/${eachReq._id.year}`
             ) {
-              reqData[i].count = eachReq.count;
+              reqData[i].Count = eachReq.count;
             }
           });
         }
-        console.log(reqData);
         setweeklyAppoinments(reqData);
       }
     } catch (e) {
       console.log(e);
     }
   }
+
+  async function getRelativeAmounts() {
+    try {
+      let data = await fetchCall("get_relative_amount");
+      let req = [];
+      if (data && data.success) {
+        Object.keys(data.data).forEach((each) => {
+          req.push({
+            name:
+              each === "pathologySales"
+                ? "Pathology"
+                : each === "hospitalSales"
+                ? "Hospital"
+                : each === "pharmacySales"
+                ? "Pharmacy"
+                : each === "doctorSales"
+                ? "Doctor"
+                : "",
+            sales: data.data[each].sales,
+          });
+        });
+        setrelativeAmount(req);
+
+        req.forEach((each) => settotal((state) => state + each.sales));
+      }
+    } catch (e) {}
+  }
   useEffect(() => {
     getOrderTrend();
     getWeeklyAppointmentTrend();
+    getRelativeAmounts();
   }, []);
 
   const useStyles = makeStyles((theme) => ({
@@ -150,16 +189,21 @@ export default function RightPanel() {
         <BarGraph
           data={monthlyOrders}
           xAxisDataKey="month"
-          barDataKey="grandTotal"
+          barDataKey="Sales"
         />
       )}
-      <div className={classes.title}>Appointment Trend</div>
+      <div className={classes.title}>Appointment Trend(Weekly)</div>
       {weeklyAppoinments && (
         <LineGraph
           data={weeklyAppoinments}
           xAxisDataKey={"day"}
-          barDataKey={"count"}
+          barDataKey={"Count"}
         />
+      )}
+
+      <div className={classes.title}>Total amount: {total}</div>
+      {relativeAmount && (
+        <PieGraph data={relativeAmount} nameKey={"name"} dataKey={"sales"} />
       )}
     </div>
   );
