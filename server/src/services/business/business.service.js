@@ -46,7 +46,7 @@ class BusinessService {
     })
     getAllBusiness = expressAsyncHandler(
         async (limit, skip, city, category, specialist, area, search, admin = false) => {
-            let filter = {}
+            let filter = { isActive: true }
             if (city) {
                 filter.area = getRegex(city)
             }
