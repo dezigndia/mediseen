@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -9,6 +9,9 @@ import { VALIDATE } from './validator/validator';
 
 //importing custom components
 import AddDayAndTime from '../addDayAndTime/addDayAndTime.component';
+
+//importing reusable components
+import InfoCard from '../../../reusableComponent/infoCard/infoCard.component.';
 
 //importing actions
 import {
@@ -25,17 +28,41 @@ import {
 } from '../../../../actions/action';
 
 //importing services
-import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN } from '../../../../services/services';
+import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN, GET_MATCHING_DOCTORS_LIST, GET_MATCHING_HOSPITAL_LISTS } from '../../../../services/services';
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const DoctorAndHospitalRegistrationForm = (props) => {
 
     const [errorFields, setErrorFields] = useState({});
+    const [suggestionList, setSuggestionList] = useState([]);
+    const [selectedSuggestionId,setSelectedSuggestionId]=useState('');
 
     const goBack = (e) => {
         e.preventDefault();
         props.history.goBack();
+    }
+
+    useEffect(() => {
+        let link = props.currentVendor.businessType === 'doctor' ? GET_MATCHING_HOSPITAL_LISTS : GET_MATCHING_DOCTORS_LIST;
+        axios
+            .get(link(props.name))
+            .then(res => {
+                setSuggestionList(res.data.payload);
+            })
+            .catch(err => {
+                alert('cant fetch suggestion list');
+                console.log(err);
+            })
+    }, [props.name]);
+
+    const selectFromSuggestion = (data) => {
+        props.setName(data.businessName);
+        props.setAddress(`${data.area} ${data.city} ${data.state}, ${data.pincode}`);
+        props.setDegree(data.degree);
+        props.setPhoneNumber(parseInt(data.phone));
+        setSelectedSuggestionId(data._id);
+        setSuggestionList([]);
     }
 
     const save = (e) => {
@@ -123,7 +150,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
     return (
         <form className="doctorAndHospitalRegistrationForm">
             <h3>Add {props.currentVendor.businessType === 'doctor' ? 'Hospital/Clinic' : 'Doctor'}</h3>
-            <div className="name">
+            <div className="name" style={{ position: 'relative', backgroundColor: 'white' }}>
                 <input
                     type='text'
                     placeholder={`Enter name of the ${props.currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor'}`}
@@ -131,6 +158,15 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     onChange={(e) => { props.setName(e.target.value) }}
                     className={`${errorFields.name ? 'erroredInput' : null}`}
                 />
+                {
+                    suggestionList.length > 0 && props.name !== ''
+                        ? <div style={{ position: 'absolute', width: '100%', zIndex: 1, padding: '5px', backgroundColor: 'white', border: '1px solid #ccc', boxShadow: '0 0 5px @ccc', maxHeight: '500px', top: '90%', overflowY: 'scroll', overflowX: 'auto' }}>
+                            {
+                                suggestionList.map(item => <div className='suggestionInfoCard' onClick={(e) => { e.stopPropagation(); e.cancelable = true; selectFromSuggestion(item); }}><InfoCard data={item} cancelTouch /></div>)
+                            }
+                        </div>
+                        : null
+                }
             </div>
             {   //in adding hospitals
                 props.currentVendor.businessType === 'doctor'

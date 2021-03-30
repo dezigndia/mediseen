@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './ordersAndCollections.styles.scss';
 import { Switch } from '@material-ui/core';
 
@@ -17,10 +17,10 @@ import { green } from '../../../../assets/globalJSS';
 import Icon from '../../../reusableComponent/icon/icon.component';
 
 //importing services
-import { GET_ORDERS_BY_BUSINESS, UPDATE_ORDER_BY_ID, UPDATE_REGISTERED_USER } from '../../../../services/services';
+import { GET_ORDERS_BY_BUSINESS, UPDATE_ORDER_BY_ID, UPDATE_REGISTERED_USER, GET_SALES_DETAILS } from '../../../../services/services';
 
 //importing actions
-import {setCurrentVendor} from '../../../../actions/action';
+import { setCurrentVendor } from '../../../../actions/action';
 
 //importing icons
 import { FaChartBar } from 'react-icons/fa';
@@ -38,8 +38,9 @@ const Orders = () => {
     const businessType = useSelector(state => state.currentVendor.businessType);
     const currentVendor = useSelector(state => state.currentVendor);
     const [switchStatus, setSwitchStatus] = useState(currentVendor.isActive); //toggle switch
+    const [salesDetails, setSalesDetails] = useState({ todays: 0, total: 0 });
     const auth_token = useSelector(state => state.token);
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
 
     const updateActiveItem = (updateObject) => {
         axios
@@ -76,12 +77,12 @@ const Orders = () => {
                     'Authorization': `Bearer ${auth_token.accessToken}`
                 }
             })
-            .then(res=>{
+            .then(res => {
                 console.log(res.data);
-                dispatch(setCurrentVendor({isActive:!currentVendor.isActive}));
+                dispatch(setCurrentVendor({ isActive: !currentVendor.isActive }));
                 setSwitchStatus(prevState => !prevState);
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err);
                 alert('cant set status');
             })
@@ -110,6 +111,19 @@ const Orders = () => {
                 console.log(err);
                 alert(`unable to fetch orders`);
             });
+        axios
+            .get(GET_SALES_DETAILS(`%2B${currentVendor.phoneNumber.substring(1)}`), {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                setSalesDetails({ todays: res.data.payload.todaysSales, total: res.data.payload.totalSales });
+            })
+            .catch(err => {
+                console.log(err);
+                alert('cant fetch salse details');
+            })
     }, []);
 
     return (
@@ -123,11 +137,11 @@ const Orders = () => {
                     </div>
                     <div className="todaySale">
                         <p>Today's Sale</p>
-                        <p>300</p>
+                        <p>{salesDetails.todays}</p>
                     </div>
                     <div className="totalSale">
                         <p>Total Sale</p>
-                        <p>300</p>
+                        <p>{salesDetails.total}</p>
                     </div>
                 </div>
             </div>

@@ -128,4 +128,15 @@ $padding:1% 4%;
             }
         }
     }
+
+    & .suggestionInfoCard{
+        transform:scale(.9);
+        opacity:.8;
+        transition: .5s ease-in-out;
+        &:hover{
+            transform:scale(1);
+            opacity:1;
+            transition: .5s ease-in-out;
+        }
+    }
 }
