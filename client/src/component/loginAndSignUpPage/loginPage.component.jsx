@@ -1,20 +1,20 @@
-import React, { useEffect } from "react"
-import axios from "axios"
-import "./loginPage.styles.scss"
-import { connect, useDispatch } from "react-redux"
+import React, { useEffect } from "react";
+import axios from "axios";
+import "./loginPage.styles.scss";
+import { connect, useDispatch } from "react-redux";
 
 //importing icons
-import { Button } from "@material-ui/core"
-import AccountCircleIcon from "@material-ui/icons/AccountCircle"
-import PhoneIcon from "@material-ui/icons/Phone"
-import StorefrontIcon from "@material-ui/icons/Storefront"
+import { Button } from "@material-ui/core";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import PhoneIcon from "@material-ui/icons/Phone";
+import StorefrontIcon from "@material-ui/icons/Storefront";
 
 //custom components
-import OtpInput from "./otpInput/otpInput.component"
-import Input from "./input/input.component"
+import OtpInput from "./otpInput/otpInput.component";
+import Input from "./input/input.component";
 
 //reusableComponent
-import SecondaryIconButton from "../reusableComponent/secondaryIconButton.component"
+import SecondaryIconButton from "../reusableComponent/secondaryIconButton.component";
 
 //importing actions
 import {
@@ -30,17 +30,8 @@ import {
 //importing services
 import { USER_VERIFY_OTP } from "../../services/services"
 
-const LoginPage = ({
-	history,
-	userName,
-	phoneNo,
-	otp,
-	setUserName,
-	setPhoneNo,
-	setOtpEnabledTrue,
-	setOtpSendingTrue,
-	setOtpWrongTrue,
-}) => {
+const LoginPage = ({ history, userName, phoneNo, otp, setUserName, setPhoneNo, setOtpEnabledTrue, setOtpSendingTrue, setOtpWrongTrue, }) => {
+	
 	useEffect(() => {
 		if (phoneNo.length === 10 && !otp.enabled) {
 			setOtpEnabledTrue()
@@ -48,7 +39,7 @@ const LoginPage = ({
 		}
 	}, [phoneNo, otp.enabled, setOtpEnabledTrue, setOtpSendingTrue])
 
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 
 	const signIn = (e) => {
 		const reqBody = {
@@ -110,11 +101,11 @@ const LoginPage = ({
 			</div>
 
 			<div className="signUpPageFooter">
-				<SecondaryIconButton label="Store Login">
-					<StorefrontIcon />
+				<SecondaryIconButton label="Store Login" onClick={e=>history.push('./vendor')}>
+					<StorefrontIcon/>
 				</SecondaryIconButton>
 				<h4>Or</h4>
-				<h4>Set up your store here </h4>
+				<h4 onClick={e=>history.push('./vendor')}>Set up your store here </h4>
 			</div>
 		</div>
 	)

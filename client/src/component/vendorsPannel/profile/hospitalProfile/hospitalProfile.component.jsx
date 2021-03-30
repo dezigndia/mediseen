@@ -17,7 +17,7 @@ const HospitalProfile = ({ match }) => {
                 <Route path={`${match.url}/appointments`} component={Appointment} />
                 <Route path={`${match.url}/setting`} component={Setting} />
                 <Route path={`${match.url}/promotions`} component={Promotions} />
-                <Redirect to='/404' />
+                <Redirect to={`${match.url}/home`} />
             </Switch>
         </div>
     );

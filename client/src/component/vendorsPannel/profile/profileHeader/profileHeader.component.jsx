@@ -26,7 +26,7 @@ const Button = withRouter(({ icon, label, history, match, location }) => {
             setIsActive(true);
         }
         else {
-            setIsActive(false)
+            setIsActive(false);
         }
     }, [location.pathname]);
 

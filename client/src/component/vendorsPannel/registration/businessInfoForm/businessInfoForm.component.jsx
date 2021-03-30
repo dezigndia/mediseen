@@ -102,8 +102,11 @@ class BusinessInfoForm extends React.Component {
         axios
             .post(`${REGISTER_LINK}?category=${this.props.currentVendor.businessType}`, this.state)
             .then(res => {
-                this.props.setCurrentVendor({ isRegistered: true, ...res.data.payload });
-                this.props.updateAccessToken(res.data.token)
+                let currentVendor={ isRegistered: true, ...res.data.payload };
+                this.props.setCurrentVendor(currentVendor);
+                localStorage.setItem('currentVendor',JSON.stringify(currentVendor));
+                this.props.updateAccessToken(res.data.token);
+                localStorage.setItem('token',res.data.token);
             })
             .then(() => {
                 let link = this.props.match.url.split('/');

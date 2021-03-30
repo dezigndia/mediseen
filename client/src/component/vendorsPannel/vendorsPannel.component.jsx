@@ -1,5 +1,6 @@
-import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import React,{useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import { Route, Switch, Redirect,useHistory } from 'react-router-dom';
 import './vendorsPannel.styles.scss';
 
 //importing background imge 
@@ -12,6 +13,9 @@ import Vendorsprofile from './profile/vendorsProfile.component';
 import Header from './header/header.component';
 import Footer from './footer/footer.component';
 
+//importing actions
+import {setCurrentVendor,updateAccessToken} from '../../actions/action';
+
 const style = {
     backgroundImage: `url(${background})`,
     backgroundSize: 'contain',
@@ -19,6 +23,21 @@ const style = {
 }
 
 const VendorsPannel = ({ match }) => {
+
+    const dispatch=useDispatch();
+    const history=useHistory();
+
+    useEffect(()=>{
+        //checks if user is already logged in
+        let currentVendor=localStorage.getItem('currentVendor');
+        let token=localStorage.getItem('token');
+        if(currentVendor){
+            dispatch(setCurrentVendor(JSON.parse(currentVendor)));
+            dispatch(updateAccessToken(token));
+            history.push('vendor/profile/home');
+        }
+    },[]);
+
     return (
         <div className="vendorsPannel" style={style}>
             <Header />

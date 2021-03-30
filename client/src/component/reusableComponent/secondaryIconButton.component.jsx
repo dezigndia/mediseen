@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const SecondaryIconButton = ({ label, children }) => {
+const SecondaryIconButton = ({ label, children,onClick }) => {
     const classes = useStyles();
     return (
         <Button
@@ -20,6 +20,7 @@ const SecondaryIconButton = ({ label, children }) => {
             color='primary'
             startIcon={children}
             className={classes.seconaryIconButton}
+            onClick={onClick}
         >
             <Typography variant='body1' component='h1'>
                 {label}

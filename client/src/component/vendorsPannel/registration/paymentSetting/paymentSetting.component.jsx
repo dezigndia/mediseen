@@ -94,7 +94,7 @@ const PaymentSetting = (props) => {
     return (
         <div className="paymentSettingContainer">
             <div className="skipButton">
-                <button className='whiteButton'>Skip For Now</button>
+                <button className='whiteButton' onCLick={back}>Skip For Now</button>
             </div>
             <div className="paymentSettingLabel">
                 <div className='labelIconContainer'>

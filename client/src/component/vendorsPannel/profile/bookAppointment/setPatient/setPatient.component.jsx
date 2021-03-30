@@ -77,8 +77,6 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
             notes: bookAppointment.notes,
             userPhoneNumber: currentVendor.phone,
             businessPhoneNumber: currentVendor.phoneNumber,
-            doctorId: currentVendor.businessType === 'hospital' ? bookAppointment.businessName.id : '',
-            clinicId: currentVendor.businessType === 'doctor' ? bookAppointment.businessName.id : '',
             mobileNumber: bookAppointment.refMobileNumber,
             date: createTimeStamp(bookAppointment.date),
             patient: {
@@ -93,7 +91,12 @@ const SetPatient = ({ changeTab, goToSetHospitalOrDoctor, bookAppointment, dispa
             }
         };
 
-        //console.log(data);
+        if (currentVendor.businessType === 'hospital') {
+            data['doctorId'] = bookAppointment.businessName.id;
+        }
+        else {
+            data['clinicId'] = bookAppointment.businessName.id;
+        }
 
         if (ifTimeSlotPresentInAppointmentSlots(appointmentSlots, data.timings)) {
             axios

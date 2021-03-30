@@ -99,7 +99,7 @@ const AddTimings = (props) => {
     return (
         <div className="addTimings">
             <div className="skipForNowButton">
-                <button className='whiteButton'>Skip For Now</button>
+                <button className='whiteButton' onClick={back} >Skip For Now</button>
             </div>
             <div className="addTimingsLabelContainer">
                 <div className="addTimingsLabelIconContainer">
