@@ -104,7 +104,7 @@ class OrderService {
             },
         ])
         let totalSales = data && data[0] ? data[0].sum : 0
-        filter.createdAt = {
+        filter.updatedAt = {
             $gte: d,
         }
         let dataReq = await Order.aggregate([
