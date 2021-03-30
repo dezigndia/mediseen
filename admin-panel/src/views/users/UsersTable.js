@@ -13,6 +13,7 @@ import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
 import PaginationTiles from "components/CommonComponents/PaginationTiles";
 import { Grid, Input } from "@material-ui/core";
+import { useHistory } from "react-router";
 
 export default function UsersTable() {
   const useStyles = makeStyles({
@@ -65,7 +66,7 @@ export default function UsersTable() {
   });
 
   const [filterOpen, setfilterOpen] = useState(false);
-
+  let history = useHistory();
   async function getData(page = 1) {
     let body = filter;
     body.skip = body.limit * (page - 1);
@@ -75,6 +76,10 @@ export default function UsersTable() {
     if (reqData && reqData.success) {
       setrows(reqData.data.data);
       setTotalCount(reqData.data.totalCount);
+    } else if (reqData && reqData.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
     } else {
       // console.log("Something went wrong", reqData);
     }

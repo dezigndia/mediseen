@@ -57,10 +57,12 @@ import TopCard from "./dashboard-card";
 import DashboardContent from "./DashboardContent";
 import { fetchCall } from "services/services";
 import RightPanel from "./RightPanel";
+import { useHistory } from "react-router";
 
 function Dashboard({}) {
   const [cardsData, setcardsData] = useState([]);
   const [show, setshow] = useState(true);
+  let history = useHistory();
   async function totalBusinesses() {
     try {
       let data = await fetchCall("get_total_businesses");
@@ -70,6 +72,10 @@ function Dashboard({}) {
           setcardsData((state) => [...state, cards]);
         } else if (data.errCode === 401) {
           setshow(false);
+          return;
+        } else if (data.errCode === 408) {
+          localStorage.clear();
+          history.push("/signin");
           return;
         }
       } else {
@@ -92,6 +98,10 @@ function Dashboard({}) {
         increase: data.data.currentMonthCount > data.data.prevMonthCount,
       };
       setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
     } else {
       setcardsData((state) => [
         ...state,
@@ -112,6 +122,10 @@ function Dashboard({}) {
         increase: null,
       };
       setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
     } else {
       setcardsData((state) => [
         ...state,
@@ -132,6 +146,10 @@ function Dashboard({}) {
         increase: null,
       };
       setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
     } else {
       setcardsData((state) => [
         ...state,

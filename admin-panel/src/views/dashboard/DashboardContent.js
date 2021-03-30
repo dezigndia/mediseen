@@ -37,9 +37,10 @@ export default function DashboardContent() {
     if (reqData && reqData.success) {
       setdata(_.sortBy(reqData.data.payload.reqData, "businessName"));
       setTotalCount(reqData.data.payload.totalCount / filter.limit + 1);
-    } else {
-      // localStorage.clear();
-      // history.push("/signin");
+    } else if (reqData && reqData.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
     }
   }
 

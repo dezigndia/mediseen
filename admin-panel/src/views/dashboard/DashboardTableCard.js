@@ -2,6 +2,7 @@ import { Card, Grid, makeStyles } from "@material-ui/core";
 import { ArrowDownward, ExpandMore, RoomOutlined } from "@material-ui/icons";
 import AlertMessages from "components/CommonComponents/AlertMessages";
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import { fetchCall } from "services/services";
 import { readableDate } from "services/services";
 import { alertMessages } from "variables/constants";
@@ -14,6 +15,7 @@ export default function DashboardTableCard({ data = {} }) {
     type: null,
     change: false,
   });
+  let history = useHistory();
   const useStyles = makeStyles((theme) => ({
     location: {
       fontWeight: "500",
@@ -65,6 +67,10 @@ export default function DashboardTableCard({ data = {} }) {
           type: alert.success,
           change: !state.change,
         }));
+      } else if (reqData && reqData.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       } else {
         // alert("Something went wrong");
         setnotify((state) => ({

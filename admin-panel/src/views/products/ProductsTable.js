@@ -18,6 +18,7 @@ import AlertMessages from "components/CommonComponents/AlertMessages";
 import { MoreVert } from "@material-ui/icons";
 import { alertMessages } from "variables/constants";
 import { alert } from "variables/constants";
+import { useHistory } from "react-router";
 
 export default function ProductsTable({
   type = "get_products",
@@ -80,6 +81,8 @@ export default function ProductsTable({
     type: null,
     change: false,
   });
+  let history = useHistory();
+
   const [currentRow, setcurrentRow] = useState(-1);
   const handleClick = (event, i) => {
     setAnchorEl(event.currentTarget);
@@ -110,6 +113,10 @@ export default function ProductsTable({
 
         if (data.success) {
           getData(page);
+        } else if (data.errCode === 408) {
+          localStorage.clear();
+          history.push("/signin");
+          return;
         }
       } else
         setnotify((state) => ({
@@ -137,6 +144,10 @@ export default function ProductsTable({
           access(false);
           return;
         }
+      } else if (reqData.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       }
     } else {
       // console.log("Something went wrong", reqData);
