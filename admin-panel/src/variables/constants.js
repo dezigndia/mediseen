@@ -81,6 +81,34 @@ export const endPointsArray = {
     endpoint: "admin/update-business-status",
     method: "PUT",
   },
+  send_otp: {
+    endpoint: "admin/send-otp",
+    method: "POST",
+  },
+  login_by_otp: {
+    endpoint: "admin/verify-otp",
+    method: "POST",
+  },
+  set_password: {
+    endpoint: "admin/set-password",
+    method: "POST",
+  },
+  total_active_business: {
+    endpoint: "admin/get-active-business",
+    method: "GET",
+  },
+  new_oa_month: {
+    endpoint: "admin/new-oa-month",
+    method: "GET",
+  },
+  successful_oa: {
+    endpoint: "admin/successful-oa",
+    method: "GET",
+  },
+  active_business_month: {
+    endpoint: "admin/get-active-business",
+    method: "GET",
+  },
 };
 export const alert = {
   success: "success",

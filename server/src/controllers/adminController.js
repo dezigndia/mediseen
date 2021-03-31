@@ -23,6 +23,7 @@ const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../uti
 const Order = require("../models/OrderModel")
 const Test = require("../models/TestModel")
 const Appointment = require("../models/AppointmentModel")
+const AuthService = require("../services/auth/auth.service")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -94,7 +95,8 @@ const removeProduct = expressAsyncHandler(async (req, res) => {
 })
 
 const getTotalUsers = expressAsyncHandler(async (req, res) => {
-    return await User.countDocuments({})
+    let data = await User.countDocuments({})
+    res.status(StatusCodes.OK).json({ count: data })
 })
 
 const getTotalBusinesses = expressAsyncHandler(async (req, res) => {
@@ -313,7 +315,7 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
 })
 
 const bs = new BusinessService()
-
+const as = new AuthService()
 const getBusinessList = expressAsyncHandler(async (req, res) => {
     const { limit, skip } = req.query
     let conditions = await getConditions(req)
@@ -490,6 +492,174 @@ const updateBusinessStatus = expressAsyncHandler(async (req, res) => {
 
     return res.status(200).json({ message: "Updated successfully" })
 })
+const sendAdminOTP = expressAsyncHandler(async (req, res) => {
+    let { phoneNumber } = req.body
+    let user = await Admin.findOne({ phoneNumber: phoneNumber })
+
+    if (!user) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: "User with this phone number does not exist",
+        })
+    } else if (user.password) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Login using password" })
+    } else {
+        let data = as.sendOTP(phoneNumber, "admin")
+        res.status(StatusCodes.OK).json({ message: "Otp sent", data: data })
+    }
+})
+const verifyOTP = expressAsyncHandler(async (req, res) => {
+    let { phoneNumber, otp } = req.body
+    // let user = Admin.findOne({phoneNumber: phoneNumber})
+
+    let data = await as.verifyOtp(phoneNumber, otp, "admin")
+    console.log(data)
+    if (data.isRegistered) {
+        var token = jwt.sign(
+            {
+                id: data.admin._id,
+            },
+            config.has("jwt.secret") ? config.get("jwt.secret") : null,
+            {
+                expiresIn: "24h",
+            }
+        )
+        const payload = {
+            token,
+            isAdmin: data.admin.isSuperAdmin,
+            email: data.admin.email,
+            name: data.admin.name,
+        }
+        res.status(StatusCodes.OK).send({ status: "success", payload })
+    } else {
+        res.status(StatusCodes.NOT_ACCEPTABLE).json({
+            message: "Auth failed",
+        })
+    }
+})
+
+const setPassword = expressAsyncHandler(async (req, res) => {
+    let { confirmPassword, email, password } = req.body
+
+    if (confirmPassword !== password) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Confirm password and password don't match",
+        })
+    } else {
+        Admin.findOne({ email: email })
+            .then(admin => {
+                if (admin) {
+                    bcrypt.hash(password, saltRounds).then(hashedPassword => {
+                        // const adminNew = new Admin({
+                        //     password: hashedPassword,
+                        // })
+                        admin.password = hashedPassword
+                        admin
+                            .save()
+                            .then(admin => {
+                                res.status(StatusCodes.OK).json({ message: "saved successfully" })
+                            })
+                            .catch(e => {
+                                return res
+                                    .status(StatusCodes.BAD_REQUEST)
+                                    .json({ message: errorMessage })
+                            })
+                    })
+                } else {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+                }
+            })
+            .catch(e => {
+                return res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+            })
+    }
+})
+
+const totalActiveBusiness = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let count = await Order.countDocuments({
+        createdAt: {
+            $gte: date,
+        },
+    }).distinct("businessPhoneNumber")
+
+    res.status(StatusCodes.OK).json({ count: count.length })
+})
+
+const newOAMonth = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+
+    let filter = {}
+    filter.createdAt = {
+        $gte: date,
+    }
+    let data = await User.aggregate([
+        {
+            $lookup: {
+                from: "orders",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+
+    let data2 = await User.aggregate([
+        {
+            $lookup: {
+                from: "appointments",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+    let count = 0
+
+    data.forEach(each => {
+        count += each.order_details.length
+    })
+    data2.forEach(each => {
+        count += each.order_details.length
+    })
+
+    res.status(StatusCodes.OK).json({ count: count })
+})
+const successOA = expressAsyncHandler(async (req, res) => {
+    let count1 = await Order.countDocuments({
+        status: "accepted",
+    })
+    let count2 = await Appointment.countDocuments({
+        status: "confirmed",
+    })
+    res.status(200).json({ count: count1 + count2 })
+})
+
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -510,4 +680,10 @@ module.exports = {
     totalOAMonth,
     totalRelativeAmount,
     updateBusinessStatus,
+    sendAdminOTP,
+    verifyOTP,
+    setPassword,
+    totalActiveBusiness,
+    newOAMonth,
+    successOA,
 }

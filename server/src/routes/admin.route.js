@@ -18,6 +18,12 @@ const {
     totalRelativeAmount,
     getOrderTrend,
     updateBusinessStatus,
+    sendAdminOTP,
+    verifyOTP,
+    setPassword,
+    totalActiveBusiness,
+    newOAMonth,
+    successOA,
 } = require("../controllers/adminController")
 const { isSuperAdmin, isAdmin } = require("../utils/adminHelper")
 const BusinessController = require("../controllers/businessController")
@@ -48,10 +54,18 @@ router.post(
     getWeeklyAppointmentTrend
 )
 
-// router.get("/active-business-month", isAdmin(), ) can't be done right now!
 router.get("/new-business-this-month", isAdmin(adminDepartments.search), getNewBusinessCount)
-router.get("/get-total-patients", isAdmin(adminDepartments.search), patientCount) // not tested properly as server is down right now!
+router.get("/get-total-patients", isAdmin(adminDepartments.search), getTotalUsers) // not tested properly as server is down right now!
 router.get("/get-total-oa-month", isAdmin(adminDepartments.search), totalOAMonth)
 router.get("/get-relative-amounts", isAdmin(adminDepartments.search), totalRelativeAmount)
-router.put("/update-business-status", isAdmin(adminDepartments.search), updateBusinessStatus)
+router.get("/get-active-business", isAdmin(adminDepartments.search), totalActiveBusiness)
+// router.get("/get-successful-signups", isAdmin(adminDepartments.search), totalSuccessfulSignups)
+router.get("/new-oa-month", newOAMonth)
+// router.get("/returning-patients")
+router.get("/successful-oa", successOA)
+// router.get("/returning-business", returningBusiness)
+
+router.post("/send-otp", sendAdminOTP)
+router.post("/verify-otp", verifyOTP)
+router.post("/set-password", setPassword)
 module.exports = router

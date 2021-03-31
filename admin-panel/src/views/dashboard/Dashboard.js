@@ -156,6 +156,30 @@ function Dashboard({}) {
         { title: "Total O/A Month", content: "Error" },
       ]);
     }
+
+    getNewOAMonth();
+  }
+
+  async function getNewOAMonth() {
+    let data = await fetchCall("new_oa_month");
+
+    if (data && data.success) {
+      let cards = {
+        title: "New patients O/A this Month",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "New patients O/A this Month", content: "Error" },
+      ]);
+    }
   }
 
   const useStyles = makeStyles((theme) => ({
