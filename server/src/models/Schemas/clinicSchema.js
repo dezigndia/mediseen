@@ -6,6 +6,10 @@ const clinicSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    isActive: {
+        type: Boolean,
+        default: false,
+    },
     address: {
         type: String,
     },

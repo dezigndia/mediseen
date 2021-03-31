@@ -18,6 +18,7 @@ const doctorSchema = new mongoose.Schema(
         clinic: {
             type: [clinicSchema],
             default: [],
+            _id: false,
         },
         payment: {
             type: paymentSchema,
