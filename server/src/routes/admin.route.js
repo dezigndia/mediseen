@@ -56,7 +56,7 @@ router.post(
     getWeeklyAppointmentTrend
 )
 
-router.get("/new-business-this-month", isAdmin(adminDepartments.search), getNewBusinessCount) //yes
+router.get("/new-business-this-month", isAdmin(adminDepartments.search), getNewBusinessCount) //yes -done
 router.get("/get-total-patients", isAdmin(adminDepartments.search), getTotalUsers)
 router.get("/get-total-oa-month", isAdmin(adminDepartments.search), totalOAMonth)
 router.get("/get-relative-amounts", isAdmin(adminDepartments.search), totalRelativeAmount)

@@ -639,7 +639,53 @@ const newOAMonth = expressAsyncHandler(async (req, res) => {
             },
         },
     ])
-    let count = 0
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+    filter.createdAt = {
+        $lt: date,
+        $gte: newDate,
+    }
+
+    let data3 = await User.aggregate([
+        {
+            $lookup: {
+                from: "orders",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+
+    let data4 = await User.aggregate([
+        {
+            $lookup: {
+                from: "appointments",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+    let count = 0,
+        countPrev = 0
 
     data.forEach(each => {
         count += each.order_details.length
@@ -648,16 +694,57 @@ const newOAMonth = expressAsyncHandler(async (req, res) => {
         count += each.order_details.length
     })
 
-    res.status(StatusCodes.OK).json({ count: count })
+    data3.forEach(each => {
+        countPrev += each.order_details.length
+    })
+    data4.forEach(each => {
+        countPrev += each.order_details.length
+    })
+    res.status(StatusCodes.OK).json({ count, countPrev })
 })
 const successOA = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+
+    let reqDate = new Date(newDate)
+    reqDate.setDate(0)
+    reqDate.setDate(1)
+
+    let filter = {
+        createdAt: {
+            $gte: date,
+        },
+    }
     let count1 = await Order.countDocuments({
         status: "accepted",
+        ...filter,
     })
     let count2 = await Appointment.countDocuments({
         status: "confirmed",
+        ...filter,
     })
-    res.status(StatusCodes.OK).json({ count: count1 + count2 })
+    filter.createdAt = {
+        $gte: reqDate,
+        $lt: newDate,
+    }
+    let count1Prev = await Order.countDocuments({
+        status: "accepted",
+        ...filter,
+    })
+
+    let count2Prev = await Order.countDocuments({
+        status: "accepted",
+        ...filter,
+    })
+    res.status(StatusCodes.OK).json({ count: count1 + count2, countPrev: count1Prev + count2Prev })
 })
 
 const returningBusiness = expressAsyncHandler(async (req, res) => {
@@ -683,17 +770,36 @@ const returningBusiness = expressAsyncHandler(async (req, res) => {
         },
     }).select({ businessPhoneNumber: 1, _id: 0 })
 
-    console.log(dataCurrentMonth, dataPrevMonth)
-    let count = 0
-    let array1 = []
+    let reqDate = new Date(newDate)
+    reqDate.setDate(0)
+    reqDate.setDate(1)
+
+    let dataPrev2 = await Order.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ businessPhoneNumber: 1, _id: 0 })
+
+    let count = 0,
+        countPrev = 0
+    let array1 = [],
+        array2 = []
+
+    dataPrev2.forEach(each => {
+        array2.push(each.businessPhoneNumber)
+    })
+
     dataPrevMonth.forEach(each => {
         array1.push(each.businessPhoneNumber)
+
+        if (array2.indexOf(each.businessPhoneNumber) == -1) countPrev++
     })
 
     dataCurrentMonth.forEach(each => {
-        if (array1.indexOf(each.businessPhoneNumber) >= 0) count++
+        if (array1.indexOf(each.businessPhoneNumber) == -1) count++
     })
-    res.status(StatusCodes.OK).json({ count })
+    res.status(StatusCodes.OK).json({ count, countPrev })
 })
 
 const returningPatients = expressAsyncHandler(async (req, res) => {
@@ -728,28 +834,54 @@ const returningPatients = expressAsyncHandler(async (req, res) => {
             $lt: date,
         },
     }).select({ userPhoneNumber: 1, _id: 0 })
-    let count = 0
-    let array1 = []
+    let reqDate = new Date(newDate)
+    reqDate.setDate(0)
+    reqDate.setDate(1)
+
+    let orderDataPrev2 = await Order.find({
+        createdAt: {
+            $gte: reqDate,
+            $lt: newDate,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let appointmentDataPrev2 = await Appointment.find({
+        createdAt: {
+            $gte: reqDate,
+            $lt: newDate,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+
+    let count = 0,
+        countPrev = 0
+    let array1 = [],
+        array2 = []
+    orderDataPrev2.forEach(each => {
+        array2.push(each.userPhoneNumber)
+    })
+    appointmentDataPrev2.forEach(each => {
+        array2.push(each.userPhoneNumber)
+    })
     orderDataPrevMonth.forEach(each => {
         array1.push(each.userPhoneNumber)
+
+        if (array2.indexOf(each.userPhoneNumber) == -1) countPrev++
     })
     appointmentDataPrevMonth.forEach(each => {
         array1.push(each.userPhoneNumber)
+
+        if (array2.indexOf(each.userPhoneNumber) == -1) countPrev++
     })
 
     orderDataCurrentMonth.forEach(each => {
-        if (array1.indexOf(each.userPhoneNumber) >= 0) count++
+        if (array1.indexOf(each.userPhoneNumber) == -1) count++
     })
     appointmentDataCurrentMonth.forEach(each => {
-        if (array1.indexOf(each.userPhoneNumber) >= 0) count++
+        if (array1.indexOf(each.userPhoneNumber) == -1) count++
     })
 
     res.status(StatusCodes.OK).json({
         count,
-        orderDataPrevMonth,
-        orderDataCurrentMonth,
-        appointmentDataCurrentMonth,
-        appointmentDataPrevMonth,
+        countPrev,
     })
 })
 module.exports = {

@@ -145,7 +145,7 @@ function Dashboard({}) {
       let cards = {
         title: "Returning Business",
         content: data.data.count,
-        increase: null,
+        increase: data.data.count > data.data.prevCount,
       };
       setcardsData((state) => [...state, cards]);
     } else if (data && data.errCode === 408) {
@@ -217,7 +217,7 @@ function Dashboard({}) {
       let cards = {
         title: "New patients O/A this Month",
         content: data.data.count,
-        increase: null,
+        increase: data.data.count > data.data.prevCount,
       };
       setcardsData((state) => [...state, cards]);
     } else if (data && data.errCode === 408) {
@@ -240,7 +240,7 @@ function Dashboard({}) {
       let cards = {
         title: "Returning Patients",
         content: data.data.count,
-        increase: null,
+        increase: data.data.count > data.data.prevCount,
       };
       setcardsData((state) => [...state, cards]);
     } else if (data && data.errCode === 408) {
@@ -264,7 +264,7 @@ function Dashboard({}) {
       let cards = {
         title: "Successful O/A",
         content: data.data.count,
-        increase: null,
+        increase: data.data.count > data.data.prevCount,
       };
       setcardsData((state) => [...state, cards]);
     } else if (data && data.errCode === 408) {
@@ -288,6 +288,11 @@ function Dashboard({}) {
       fontSize: "1.7rem",
       fontWeight: "700",
     },
+    gridItem: {
+      width: "20%",
+      flexBasis: "auto",
+      maxWidth: "20%",
+    },
   }));
   const classes = useStyles();
 
@@ -302,7 +307,7 @@ function Dashboard({}) {
           <span style={{ margin: "1rem 0" }}>Quick Stats</span>
           <Grid container spacing={2}>
             {cardsData.map((each, i) => (
-              <Grid item xs={2} key={i}>
+              <Grid item xs={2} key={i} classes={{ root: classes.gridItem }}>
                 <TopCard title={each.title} increase={each.increase}>
                   <Grid container>
                     <Grid item classes={{ root: classes.content }}>
