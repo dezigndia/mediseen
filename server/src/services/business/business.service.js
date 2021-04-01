@@ -163,17 +163,29 @@ class BusinessService {
     deleteBusiness = expressAsyncHandler(async phoneNumber => {
         await Doctor.deleteOne({ phone: phoneNumber })
     })
-    acceptDoctor = expressAsyncHandler(async (phoneNumber, docId) => {
-        await Hospital.updateOne(
-            { phone: phoneNumber, "doctors._id": docId },
-            { $set: { "doctors.$.isActive": true } }
-        )
+    acceptDoctor = expressAsyncHandler(async (phoneNumber, docId, status) => {
+        if (status == "accept")
+            await Hospital.updateOne(
+                { phone: phoneNumber, "doctors._id": docId },
+                { $set: { "doctors.$.status": "accepted" } }
+            )
+        else
+            await Hospital.updateOne(
+                { phone: phoneNumber, "doctors._id": docId },
+                { $set: { "doctors.$.status": "rejected" } }
+            )
     })
-    acceptHospital = expressAsyncHandler(async (phoneNumber, clinicId) => {
-        await Doctor.updateOne(
-            { phone: phoneNumber, "clinic._id": clinicId },
-            { $set: { "clinic.$.isActive": true } }
-        )
+    acceptHospital = expressAsyncHandler(async (phoneNumber, clinicId, status) => {
+        if (status == "accept")
+            await Doctor.updateOne(
+                { phone: phoneNumber, "clinic._id": clinicId },
+                { $set: { "clinic.$.status": "accepted" } }
+            )
+        else
+            await Doctor.updateOne(
+                { phone: phoneNumber, "clinic._id": clinicId },
+                { $set: { "clinic.$.status": "rejected" } }
+            )
     })
 }
 module.exports = BusinessService

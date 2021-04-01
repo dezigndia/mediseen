@@ -95,26 +95,20 @@ class BusinessController {
         }
     })
     acceptDoctor = expressAsyncHandler(async (req, res) => {
-        try {
-            const { hosPh, docId } = req.params
-            await businessService.acceptDoctor(hosPh, docId)
-            return res
-                .status(StatusCodes.OK)
-                .json({ status: true, payload: "Accepeted Invitation" })
-        } catch (err) {
-            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
+        const { hosPh, docId, status } = req.params
+        if (status != "accepted" || status != "rejected") {
+            throw new AppError(StatusCodes.BAD_REQUEST, "Status must be of type accept/reject")
         }
+        await businessService.acceptDoctor(hosPh, docId, status)
+        return res.status(StatusCodes.OK).json({ status: true, payload: "Updated Invitation" })
     })
     acceptHospital = expressAsyncHandler(async (req, res) => {
-        try {
-            const { docPh, clinicId } = req.params
-            await businessService.acceptHospital(docPh, clinicId)
-            return res
-                .status(StatusCodes.OK)
-                .json({ status: true, payload: "Accepeted Invitation" })
-        } catch (err) {
-            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
+        const { docPh, clinicId, status } = req.params
+        if (status != "accepted" || status != "rejected") {
+            throw new AppError(StatusCodes.BAD_REQUEST, "Status must be of type accept/reject")
         }
+        await businessService.acceptHospital(docPh, clinicId, status)
+        return res.status(StatusCodes.OK).json({ status: true, payload: "Updated Invitation" })
     })
 }
 

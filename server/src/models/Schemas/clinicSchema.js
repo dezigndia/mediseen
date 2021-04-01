@@ -10,9 +10,10 @@ const clinicSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    isActive: {
-        type: Boolean,
-        default: false,
+    status: {
+        type: String,
+        enum: ["pending", "accepted", "rejected"],
+        default: "pending",
     },
     address: {
         type: String,
