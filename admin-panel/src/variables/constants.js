@@ -109,6 +109,14 @@ export const endPointsArray = {
     endpoint: "admin/get-active-business",
     method: "GET",
   },
+  returning_business: {
+    endpoint: "admin/returning-business",
+    method: "GET",
+  },
+  returning_patients: {
+    endpoint: "admin/returning-patients",
+    method: "GET",
+  },
 };
 export const alert = {
   success: "success",

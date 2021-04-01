@@ -85,6 +85,33 @@ function Dashboard({}) {
         ]);
       }
     } catch (e) {}
+    activeBusinessMonth();
+  }
+  async function activeBusinessMonth() {
+    try {
+      let data = await fetchCall("total_active_business");
+      if (data) {
+        if (data.success) {
+          let cards = {
+            title: "Active Business Month",
+            content: data.data.count,
+          };
+          setcardsData((state) => [...state, cards]);
+        } else if (data.errCode === 401) {
+          setshow(false);
+          return;
+        } else if (data.errCode === 408) {
+          localStorage.clear();
+          history.push("/signin");
+          return;
+        }
+      } else {
+        setcardsData([
+          ...cardsData,
+          { title: "Active Business Month", content: "Error" },
+        ]);
+      }
+    } catch (e) {}
     newBusinessThisMonth();
   }
 
@@ -106,6 +133,29 @@ function Dashboard({}) {
       setcardsData((state) => [
         ...state,
         { title: "New Business This Month", content: "Error" },
+      ]);
+    }
+
+    returningBusiness();
+  }
+  async function returningBusiness() {
+    let data = await fetchCall("returning_business");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Returning Business",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Returning Business", content: "Error" },
       ]);
     }
 
@@ -180,8 +230,54 @@ function Dashboard({}) {
         { title: "New patients O/A this Month", content: "Error" },
       ]);
     }
+    returningPatients();
   }
 
+  async function returningPatients() {
+    let data = await fetchCall("returning_patients");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Returning Patients",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Returning Patients", content: "Error" },
+      ]);
+    }
+
+    successfulOA();
+  }
+
+  async function successfulOA() {
+    let data = await fetchCall("successful_oa");
+
+    if (data && data.success) {
+      let cards = {
+        title: "Successful O/A",
+        content: data.data.count,
+        increase: null,
+      };
+      setcardsData((state) => [...state, cards]);
+    } else if (data && data.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
+    } else {
+      setcardsData((state) => [
+        ...state,
+        { title: "Successful O/A", content: "Error" },
+      ]);
+    }
+  }
   const useStyles = makeStyles((theme) => ({
     content: {
       fontSize: "1.5em",

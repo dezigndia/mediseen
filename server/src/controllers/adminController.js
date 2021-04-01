@@ -657,9 +657,101 @@ const successOA = expressAsyncHandler(async (req, res) => {
     let count2 = await Appointment.countDocuments({
         status: "confirmed",
     })
-    res.status(200).json({ count: count1 + count2 })
+    res.status(StatusCodes.OK).json({ count: count1 + count2 })
 })
 
+const returningBusiness = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let dataCurrentMonth = await Order.find({
+        createdAt: {
+            $gte: date,
+        },
+    }).select({ businessPhoneNumber: 1, _id: 0 })
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+
+    let dataPrevMonth = await Order.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ businessPhoneNumber: 1, _id: 0 })
+
+    console.log(dataCurrentMonth, dataPrevMonth)
+    let count = 0
+    let array1 = []
+    dataPrevMonth.forEach(each => {
+        array1.push(each.businessPhoneNumber)
+    })
+
+    dataCurrentMonth.forEach(each => {
+        if (array1.indexOf(each.businessPhoneNumber) >= 0) count++
+    })
+    res.status(StatusCodes.OK).json({ count })
+})
+
+const returningPatients = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let orderDataCurrentMonth = await Order.find({
+        createdAt: {
+            $gte: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let appointmentDataCurrentMonth = await Appointment.find({
+        createdAt: {
+            $gte: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+    let orderDataPrevMonth = await Order.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let appointmentDataPrevMonth = await Appointment.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let count = 0
+    let array1 = []
+    orderDataPrevMonth.forEach(each => {
+        array1.push(each.userPhoneNumber)
+    })
+    appointmentDataPrevMonth.forEach(each => {
+        array1.push(each.userPhoneNumber)
+    })
+
+    orderDataCurrentMonth.forEach(each => {
+        if (array1.indexOf(each.userPhoneNumber) >= 0) count++
+    })
+    appointmentDataCurrentMonth.forEach(each => {
+        if (array1.indexOf(each.userPhoneNumber) >= 0) count++
+    })
+
+    res.status(StatusCodes.OK).json({
+        count,
+        orderDataPrevMonth,
+        orderDataCurrentMonth,
+        appointmentDataCurrentMonth,
+        appointmentDataPrevMonth,
+    })
+})
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -686,4 +778,6 @@ module.exports = {
     totalActiveBusiness,
     newOAMonth,
     successOA,
+    returningBusiness,
+    returningPatients,
 }

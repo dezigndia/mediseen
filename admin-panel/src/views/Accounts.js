@@ -338,7 +338,7 @@ function Accounts() {
                             }
                             label="List"
                           />
-                          <FormControlLabel
+                          {/* <FormControlLabel
                             control={
                               <Checkbox
                                 checked={
@@ -351,7 +351,7 @@ function Accounts() {
                               />
                             }
                             label="Support"
-                          />
+                          /> */}
                         </FormGroup>
                       </Col>
                     </Form>

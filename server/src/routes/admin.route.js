@@ -24,6 +24,8 @@ const {
     totalActiveBusiness,
     newOAMonth,
     successOA,
+    returningBusiness,
+    returningPatients,
 } = require("../controllers/adminController")
 const { isSuperAdmin, isAdmin } = require("../utils/adminHelper")
 const BusinessController = require("../controllers/businessController")
@@ -54,16 +56,16 @@ router.post(
     getWeeklyAppointmentTrend
 )
 
-router.get("/new-business-this-month", isAdmin(adminDepartments.search), getNewBusinessCount)
-router.get("/get-total-patients", isAdmin(adminDepartments.search), getTotalUsers) // not tested properly as server is down right now!
+router.get("/new-business-this-month", isAdmin(adminDepartments.search), getNewBusinessCount) //yes
+router.get("/get-total-patients", isAdmin(adminDepartments.search), getTotalUsers)
 router.get("/get-total-oa-month", isAdmin(adminDepartments.search), totalOAMonth)
 router.get("/get-relative-amounts", isAdmin(adminDepartments.search), totalRelativeAmount)
 router.get("/get-active-business", isAdmin(adminDepartments.search), totalActiveBusiness)
 // router.get("/get-successful-signups", isAdmin(adminDepartments.search), totalSuccessfulSignups)
-router.get("/new-oa-month", newOAMonth)
-// router.get("/returning-patients")
-router.get("/successful-oa", successOA)
-// router.get("/returning-business", returningBusiness)
+router.get("/new-oa-month", isAdmin(adminDepartments.search), newOAMonth) //yes
+router.get("/returning-patients", isAdmin(adminDepartments.search), returningPatients) //yes
+router.get("/successful-oa", isAdmin(adminDepartments.search), successOA) //yes
+router.get("/returning-business", isAdmin(adminDepartments.search), returningBusiness) //yes
 
 router.post("/send-otp", sendAdminOTP)
 router.post("/verify-otp", verifyOTP)
