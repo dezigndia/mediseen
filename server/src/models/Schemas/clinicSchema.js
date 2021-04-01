@@ -2,6 +2,10 @@ const mongoose = require("mongoose")
 const workSchema = require("./workTimings")
 
 const clinicSchema = new mongoose.Schema({
+    clinicId: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
