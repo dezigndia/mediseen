@@ -30,6 +30,7 @@ import {
 } from "@material-ui/icons";
 import AlertMessages from "components/CommonComponents/AlertMessages";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
 // reactstrap components
 import {
@@ -72,6 +73,7 @@ function Accounts() {
     confirmPassword: null,
   });
   const [show, setshow] = useState(true);
+  let history = useHistory();
   function onChange(e) {
     resetErrors();
     if (e.target.name === "departments") {
@@ -118,6 +120,10 @@ function Accounts() {
           change: !state.change,
         }));
         resetForm();
+      } else if (data && data.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       } else {
         setnotify((state) => ({
           ...state,
@@ -332,7 +338,7 @@ function Accounts() {
                             }
                             label="List"
                           />
-                          <FormControlLabel
+                          {/* <FormControlLabel
                             control={
                               <Checkbox
                                 checked={
@@ -345,7 +351,7 @@ function Accounts() {
                               />
                             }
                             label="Support"
-                          />
+                          /> */}
                         </FormGroup>
                       </Col>
                     </Form>

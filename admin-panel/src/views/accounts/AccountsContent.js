@@ -17,6 +17,7 @@ import { Button, Grid, Input, Menu, MenuItem } from "@material-ui/core";
 import { alert } from "variables/constants";
 import AlertMessages from "components/CommonComponents/AlertMessages";
 import { alertMessages } from "variables/constants";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles({
   table: {
@@ -75,6 +76,8 @@ export default function AccountsContent({ access = null }) {
     type: null,
     change: false,
   });
+  let history = useHistory();
+
   const [currentRow, setcurrentRow] = useState(-1);
   const handleClick = (event, i) => {
     setAnchorEl(event.currentTarget);
@@ -90,9 +93,7 @@ export default function AccountsContent({ access = null }) {
       let body = {
         emails: [rows[currentRow].email],
       };
-      console.log(body);
       let data = await fetchCall("remove_admin", body);
-      console.log(data);
       if (data) {
         setnotify((state) => ({
           ...state,
@@ -103,6 +104,10 @@ export default function AccountsContent({ access = null }) {
 
         if (data.success) {
           getData(page);
+        } else if (data.errCode === 408) {
+          localStorage.clear();
+          history.push("/signin");
+          return;
         }
       } else
         setnotify((state) => ({
@@ -123,11 +128,14 @@ export default function AccountsContent({ access = null }) {
     let reqData = await fetchCall("get_admins", undefined, reqBody);
     if (reqData) {
       if (reqData.success) {
-        console.log(reqData);
         setrows(reqData.data.data);
         setTotalCount(reqData.data.totalCount);
       } else if (reqData.errCode === 401) {
         if (access) access(false);
+        return;
+      } else if (reqData.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
         return;
       }
     } else {

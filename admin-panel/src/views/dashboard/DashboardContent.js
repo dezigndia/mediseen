@@ -37,10 +37,10 @@ export default function DashboardContent() {
     if (reqData && reqData.success) {
       setdata(_.sortBy(reqData.data.payload.reqData, "businessName"));
       setTotalCount(reqData.data.payload.totalCount / filter.limit + 1);
-    } else {
-      console.log("Something went wrong", reqData);
-      // localStorage.clear();
-      // history.push("/signin");
+    } else if (reqData && reqData.errCode === 408) {
+      localStorage.clear();
+      history.push("/signin");
+      return;
     }
   }
 
@@ -50,11 +50,11 @@ export default function DashboardContent() {
       padding: "8px",
       marginTop: "10px",
       borderRadius: "10px",
+      marginRight: "10px",
     },
   }));
   const classes = useStyles();
   useEffect(() => {
-    console.log("calling");
     getData(page);
   }, [filter]);
   return (
@@ -68,18 +68,6 @@ export default function DashboardContent() {
               setfilter((state) => ({
                 ...state,
                 type: e === "All Lists" ? "" : e,
-              }));
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <MenuForFilter
-            title="City"
-            data={["All Lists", "Delhi", "Mumbai", "Kharar"]}
-            selected={(e) => {
-              setfilter((state) => ({
-                ...state,
-                area: e === "All Lists" ? "" : e,
               }));
             }}
           />
@@ -119,6 +107,20 @@ export default function DashboardContent() {
                   e === "Active" ? true : e === "InActive" ? false : null,
               }));
             }}
+          />
+        </Grid>
+        <Grid item>
+          <Input
+            onChange={(e) => {
+              setfilter((state) => ({
+                ...state,
+                area: e.target.value,
+              }));
+            }}
+            placeholder="Search by area"
+            value={filter.area}
+            disableUnderline
+            classes={{ root: classes.input }}
           />
         </Grid>
         <Grid item>

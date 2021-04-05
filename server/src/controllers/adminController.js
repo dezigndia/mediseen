@@ -23,6 +23,7 @@ const { getTotalSalesByBusiness, getTodaysOrderByPhoneNumber } = require("../uti
 const Order = require("../models/OrderModel")
 const Test = require("../models/TestModel")
 const Appointment = require("../models/AppointmentModel")
+const AuthService = require("../services/auth/auth.service")
 // const getConditions = require("../utils/adminHelper")
 const addAdmin = expressAsyncHandler(async (req, res) => {
     const name = req.body.name
@@ -71,21 +72,22 @@ const removeAdmin = expressAsyncHandler(async (req, res) => {
 })
 
 const removeProduct = expressAsyncHandler(async (req, res) => {
-    const { prodId, testId } = req.body
-    // console.log(req.body)
+    let { prodId, testId, status } = req.body
+    status = status || false
+    console.log(prodId, testId, status)
     if (prodId) {
-        let resReq = await Product.deleteOne({ _id: prodId })
-        if (!resReq.ok) {
-            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        let resReq = await Product.findOneAndUpdate({ _id: prodId }, { isActive: status })
+        if (resReq) {
+            res.status(StatusCodes.OK).json({ message: "Product status updated successfully!" })
         } else {
-            res.status(StatusCodes.OK).json({ message: "Product deleted successfully!" })
+            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
         }
     } else if (testId) {
-        let resReq = await Test.deleteOne({ _id: testId })
-        if (!resReq.ok) {
-            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+        let resReq = await Test.findOneAndUpdate({ _id: testId }, { isActive: status })
+        if (resReq) {
+            res.status(StatusCodes.OK).json({ message: "Test status updated successfully!" })
         } else {
-            res.status(StatusCodes.OK).json({ message: "Test deleted successfully!" })
+            res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
         }
     } else {
         res.status(StatusCodes.BAD_REQUEST).json({ message: "Id not sent!" })
@@ -93,7 +95,8 @@ const removeProduct = expressAsyncHandler(async (req, res) => {
 })
 
 const getTotalUsers = expressAsyncHandler(async (req, res) => {
-    return await User.countDocuments({})
+    let data = await User.countDocuments({})
+    res.status(StatusCodes.OK).json({ count: data })
 })
 
 const getTotalBusinesses = expressAsyncHandler(async (req, res) => {
@@ -270,34 +273,40 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
     // console.log(email, password, req.body)
     const admin = await Admin.findOne({ email: email })
     if (admin) {
-        bcrypt.compare(password, admin.password, function (err, result) {
-            if (result) {
-                // Passwords match
-                var token = jwt.sign(
-                    {
-                        id: admin._id,
-                    },
-                    config.has("jwt.secret") ? config.get("jwt.secret") : null,
-                    {
-                        expiresIn: "24h",
+        if (admin.password) {
+            bcrypt.compare(password, admin.password, function (err, result) {
+                if (result) {
+                    // Passwords match
+                    var token = jwt.sign(
+                        {
+                            id: admin._id,
+                        },
+                        config.has("jwt.secret") ? config.get("jwt.secret") : null,
+                        {
+                            expiresIn: "24h",
+                        }
+                    )
+
+                    const payload = {
+                        token,
+                        isAdmin: admin.isSuperAdmin,
+                        email: admin.email,
+                        name: admin.name,
                     }
-                )
 
-                const payload = {
-                    token,
-                    isAdmin: admin.isSuperAdmin,
-                    email: admin.email,
-                    name: admin.name,
+                    res.status(StatusCodes.OK).send({ status: "success", payload })
+                } else {
+                    // Passwords don't match
+                    res.status(StatusCodes.UNAUTHORIZED).json({
+                        message: "Password don't match",
+                    })
                 }
-
-                res.status(StatusCodes.OK).send({ status: "success", payload })
-            } else {
-                // Passwords don't match
-                res.status(StatusCodes.UNAUTHORIZED).json({
-                    message: "Password don't match",
-                })
-            }
-        })
+            })
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({
+                message: "Password for this email does not exist, contact admin",
+            })
+        }
     } else {
         res.status(StatusCodes.NOT_ACCEPTABLE).json({
             message: "Auth Failed",
@@ -306,7 +315,7 @@ const loginAdmin = expressAsyncHandler(async (req, res) => {
 })
 
 const bs = new BusinessService()
-
+const as = new AuthService()
 const getBusinessList = expressAsyncHandler(async (req, res) => {
     const { limit, skip } = req.query
     let conditions = await getConditions(req)
@@ -483,6 +492,398 @@ const updateBusinessStatus = expressAsyncHandler(async (req, res) => {
 
     return res.status(200).json({ message: "Updated successfully" })
 })
+const sendAdminOTP = expressAsyncHandler(async (req, res) => {
+    let { phoneNumber } = req.body
+    let user = await Admin.findOne({ phoneNumber: phoneNumber })
+
+    if (!user) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: "User with this phone number does not exist",
+        })
+    } else if (user.password) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Login using password" })
+    } else {
+        let data = as.sendOTP(phoneNumber, "admin")
+        res.status(StatusCodes.OK).json({ message: "Otp sent", data: data })
+    }
+})
+const verifyOTP = expressAsyncHandler(async (req, res) => {
+    let { phoneNumber, otp } = req.body
+    // let user = Admin.findOne({phoneNumber: phoneNumber})
+
+    let data = await as.verifyOtp(phoneNumber, otp, "admin")
+    console.log(data)
+    if (data.isRegistered) {
+        var token = jwt.sign(
+            {
+                id: data.admin._id,
+            },
+            config.has("jwt.secret") ? config.get("jwt.secret") : null,
+            {
+                expiresIn: "24h",
+            }
+        )
+        const payload = {
+            token,
+            isAdmin: data.admin.isSuperAdmin,
+            email: data.admin.email,
+            name: data.admin.name,
+        }
+        res.status(StatusCodes.OK).send({ status: "success", payload })
+    } else {
+        res.status(StatusCodes.NOT_ACCEPTABLE).json({
+            message: "Auth failed",
+        })
+    }
+})
+
+const setPassword = expressAsyncHandler(async (req, res) => {
+    let { confirmPassword, email, password } = req.body
+
+    if (confirmPassword !== password) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Confirm password and password don't match",
+        })
+    } else {
+        Admin.findOne({ email: email })
+            .then(admin => {
+                if (admin) {
+                    bcrypt.hash(password, saltRounds).then(hashedPassword => {
+                        // const adminNew = new Admin({
+                        //     password: hashedPassword,
+                        // })
+                        admin.password = hashedPassword
+                        admin
+                            .save()
+                            .then(admin => {
+                                res.status(StatusCodes.OK).json({ message: "saved successfully" })
+                            })
+                            .catch(e => {
+                                return res
+                                    .status(StatusCodes.BAD_REQUEST)
+                                    .json({ message: errorMessage })
+                            })
+                    })
+                } else {
+                    return res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+                }
+            })
+            .catch(e => {
+                return res.status(StatusCodes.BAD_REQUEST).json({ message: errorMessage })
+            })
+    }
+})
+
+const totalActiveBusiness = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let count = await Order.countDocuments({
+        createdAt: {
+            $gte: date,
+        },
+    }).distinct("businessPhoneNumber")
+
+    res.status(StatusCodes.OK).json({ count: count.length })
+})
+
+const newOAMonth = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+
+    let filter = {}
+    filter.createdAt = {
+        $gte: date,
+    }
+    let data = await User.aggregate([
+        {
+            $lookup: {
+                from: "orders",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+
+    let data2 = await User.aggregate([
+        {
+            $lookup: {
+                from: "appointments",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+    filter.createdAt = {
+        $lt: date,
+        $gte: newDate,
+    }
+
+    let data3 = await User.aggregate([
+        {
+            $lookup: {
+                from: "orders",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+
+    let data4 = await User.aggregate([
+        {
+            $lookup: {
+                from: "appointments",
+                localField: "phone",
+                foreignField: "userPhoneNumber",
+                as: "order_details",
+            },
+        },
+        {
+            $match: filter,
+        },
+        {
+            $project: {
+                order_details: 1,
+            },
+        },
+    ])
+    let count = 0,
+        countPrev = 0
+
+    data.forEach(each => {
+        count += each.order_details.length
+    })
+    data2.forEach(each => {
+        count += each.order_details.length
+    })
+
+    data3.forEach(each => {
+        countPrev += each.order_details.length
+    })
+    data4.forEach(each => {
+        countPrev += each.order_details.length
+    })
+    res.status(StatusCodes.OK).json({ count, countPrev })
+})
+const successOA = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+
+    let reqDate = new Date(newDate)
+    reqDate.setDate(0)
+    reqDate.setDate(1)
+
+    let filter = {
+        createdAt: {
+            $gte: date,
+        },
+    }
+    let count1 = await Order.countDocuments({
+        status: "accepted",
+        ...filter,
+    })
+    let count2 = await Appointment.countDocuments({
+        status: "confirmed",
+        ...filter,
+    })
+    filter.createdAt = {
+        $gte: reqDate,
+        $lt: newDate,
+    }
+    let count1Prev = await Order.countDocuments({
+        status: "accepted",
+        ...filter,
+    })
+
+    let count2Prev = await Order.countDocuments({
+        status: "accepted",
+        ...filter,
+    })
+    res.status(StatusCodes.OK).json({ count: count1 + count2, countPrev: count1Prev + count2Prev })
+})
+
+const returningBusiness = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let dataCurrentMonth = await Order.find({
+        createdAt: {
+            $gte: date,
+        },
+    }).select({ businessPhoneNumber: 1, _id: 0 })
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+
+    let dataPrevMonth = await Order.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ businessPhoneNumber: 1, _id: 0 })
+
+    let reqDate = new Date(newDate)
+    reqDate.setDate(0)
+    reqDate.setDate(1)
+
+    let dataPrev2 = await Order.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ businessPhoneNumber: 1, _id: 0 })
+
+    let count = 0,
+        countPrev = 0
+    let array1 = [],
+        array2 = []
+
+    dataPrev2.forEach(each => {
+        array2.push(each.businessPhoneNumber)
+    })
+
+    dataPrevMonth.forEach(each => {
+        array1.push(each.businessPhoneNumber)
+
+        if (array2.indexOf(each.businessPhoneNumber) == -1) countPrev++
+    })
+
+    dataCurrentMonth.forEach(each => {
+        if (array1.indexOf(each.businessPhoneNumber) == -1) count++
+    })
+    res.status(StatusCodes.OK).json({ count, countPrev })
+})
+
+const returningPatients = expressAsyncHandler(async (req, res) => {
+    let date = new Date()
+    date.setDate(1)
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    let orderDataCurrentMonth = await Order.find({
+        createdAt: {
+            $gte: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let appointmentDataCurrentMonth = await Appointment.find({
+        createdAt: {
+            $gte: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let newDate = new Date(date)
+    newDate.setDate(0)
+    newDate.setDate(1)
+    let orderDataPrevMonth = await Order.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let appointmentDataPrevMonth = await Appointment.find({
+        createdAt: {
+            $gte: newDate,
+            $lt: date,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let reqDate = new Date(newDate)
+    reqDate.setDate(0)
+    reqDate.setDate(1)
+
+    let orderDataPrev2 = await Order.find({
+        createdAt: {
+            $gte: reqDate,
+            $lt: newDate,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+    let appointmentDataPrev2 = await Appointment.find({
+        createdAt: {
+            $gte: reqDate,
+            $lt: newDate,
+        },
+    }).select({ userPhoneNumber: 1, _id: 0 })
+
+    let count = 0,
+        countPrev = 0
+    let array1 = [],
+        array2 = []
+    orderDataPrev2.forEach(each => {
+        array2.push(each.userPhoneNumber)
+    })
+    appointmentDataPrev2.forEach(each => {
+        array2.push(each.userPhoneNumber)
+    })
+    orderDataPrevMonth.forEach(each => {
+        array1.push(each.userPhoneNumber)
+
+        if (array2.indexOf(each.userPhoneNumber) == -1) countPrev++
+    })
+    appointmentDataPrevMonth.forEach(each => {
+        array1.push(each.userPhoneNumber)
+
+        if (array2.indexOf(each.userPhoneNumber) == -1) countPrev++
+    })
+
+    orderDataCurrentMonth.forEach(each => {
+        if (array1.indexOf(each.userPhoneNumber) == -1) count++
+    })
+    appointmentDataCurrentMonth.forEach(each => {
+        if (array1.indexOf(each.userPhoneNumber) == -1) count++
+    })
+
+    res.status(StatusCodes.OK).json({
+        count,
+        countPrev,
+    })
+})
 module.exports = {
     addAdmin,
     loginAdmin,
@@ -503,4 +904,12 @@ module.exports = {
     totalOAMonth,
     totalRelativeAmount,
     updateBusinessStatus,
+    sendAdminOTP,
+    verifyOTP,
+    setPassword,
+    totalActiveBusiness,
+    newOAMonth,
+    successOA,
+    returningBusiness,
+    returningPatients,
 }

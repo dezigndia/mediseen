@@ -19,7 +19,6 @@ export const fetchCall = async (type, body = null, queryParams = null) => {
         body: body ? JSON.stringify(body) : undefined,
       }
     );
-    console.log(response, "response");
     if (!response.ok) {
       data = {
         success: false,

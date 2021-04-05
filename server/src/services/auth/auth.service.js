@@ -6,8 +6,9 @@ const AppError = require("../../utils/errorHandler")
 const jwt = require("jsonwebtoken")
 const { default: axios } = require("axios")
 const config = require("config")
+const Admin = require("../../models/AdminModel")
 class AuthService {
-    verifyOtp = expressAsyncHandler(async (phoneNumber, otp) => {
+    verifyOtp = expressAsyncHandler(async (phoneNumber, otp, type = null) => {
         const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
         const { data } = await axios(
             `https://api.msg91.com/api/v5/otp/verify?mobile=${phoneNumber}&otp=${otp}&authkey=${authKey}`,
@@ -16,10 +17,22 @@ class AuthService {
             }
         )
         if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
-        const user = await Doctor.findOne({ phone: phoneNumber })
+
+        const user =
+            type === "admin"
+                ? await Admin.findOne({ phoneNumber: phoneNumber })
+                : await Doctor.findOne({ phone: phoneNumber })
+
         if (user) {
-            const token = await jwt.sign(user.toObject(), config.has("jwt.secret") ? config.get("jwt.secret") : null)
-            return { auth_token: token, isRegistered: user ? true : false }
+            const token = await jwt.sign(
+                user.toObject(),
+                config.has("jwt.secret") ? config.get("jwt.secret") : null
+            )
+            return {
+                auth_token: token,
+                isRegistered: user ? true : false,
+                admin: type === "admin" ? user : undefined,
+            }
         } else return { isRegistered: false }
     })
     sendOTP = expressAsyncHandler(async mobileNumber => {

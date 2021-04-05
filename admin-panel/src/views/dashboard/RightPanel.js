@@ -5,6 +5,7 @@ import LineGraph from "components/CommonComponents/LineGraph";
 import PieGraph from "components/CommonComponents/PieGraph";
 
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { readableDate } from "services/services";
 import { convertBodyToQueryParams } from "services/services";
 import { fetchCall } from "services/services";
@@ -17,7 +18,7 @@ export default function RightPanel() {
   const [currentDate, setcurrentDate] = useState(new Date());
   const [state, setstate] = useState("monthly");
   const [total, settotal] = useState(0);
-
+  let history = useHistory();
   const handleState = (event, value) => {
     if (value) {
       setstate(value);
@@ -37,8 +38,6 @@ export default function RightPanel() {
         let reqData = [];
         let length = type === "monthly" ? 12 : date.getDay();
         for (let i = 0; i < length; i++) {
-          if (type === "weekly")
-            console.log(incrementDate(date, -1 * i).getDay(), "day of week");
           let a = type === "weekly" ? incrementDate(date, -6 + i).getDay() : "";
           reqData.push({
             month: i + 1,
@@ -54,6 +53,10 @@ export default function RightPanel() {
         }
 
         setmonthlyOrders(reqData);
+      } else if (data && data.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       }
     } catch (e) {
       console.log(e);
@@ -92,6 +95,10 @@ export default function RightPanel() {
           });
         }
         setweeklyAppoinments(reqData);
+      } else if (data && data.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       }
     } catch (e) {
       console.log(e);
@@ -121,6 +128,10 @@ export default function RightPanel() {
         setrelativeAmount(req);
 
         req.forEach((each) => settotal((state) => state + each.sales));
+      } else if (data && data.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       }
     } catch (e) {}
   }
@@ -201,7 +212,7 @@ export default function RightPanel() {
         />
       )}
 
-      <div className={classes.title}>Total amount: {total}</div>
+      <div className={classes.title}>Total amount: Rs. {total}</div>
       {relativeAmount && (
         <PieGraph data={relativeAmount} nameKey={"name"} dataKey={"sales"} />
       )}

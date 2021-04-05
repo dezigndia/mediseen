@@ -18,6 +18,7 @@ import AlertMessages from "components/CommonComponents/AlertMessages";
 import { MoreVert } from "@material-ui/icons";
 import { alertMessages } from "variables/constants";
 import { alert } from "variables/constants";
+import { useHistory } from "react-router";
 
 export default function ProductsTable({
   type = "get_products",
@@ -80,6 +81,8 @@ export default function ProductsTable({
     type: null,
     change: false,
   });
+  let history = useHistory();
+
   const [currentRow, setcurrentRow] = useState(-1);
   const handleClick = (event, i) => {
     setAnchorEl(event.currentTarget);
@@ -96,10 +99,10 @@ export default function ProductsTable({
       let body = {
         prodId: type.indexOf("product") >= 0 ? rows[currentRow]._id : undefined,
         testId: type.indexOf("test") >= 0 ? rows[currentRow]._id : undefined,
+        status: !rows[currentRow].isActive,
       };
       // console.log(body);
       let data = await fetchCall("remove_product", body);
-      console.log(data);
       if (data) {
         setnotify((state) => ({
           ...state,
@@ -110,6 +113,10 @@ export default function ProductsTable({
 
         if (data.success) {
           getData(page);
+        } else if (data.errCode === 408) {
+          localStorage.clear();
+          history.push("/signin");
+          return;
         }
       } else
         setnotify((state) => ({
@@ -130,7 +137,6 @@ export default function ProductsTable({
     let reqData = await fetchCall(type, undefined, reqBody);
     if (reqData) {
       if (reqData.success) {
-        console.log(reqData);
         setrows(reqData.data.data);
         setTotalCount(reqData.data.totalCount / filter.limit + 1);
       } else if (reqData.errCode === 401) {
@@ -138,9 +144,13 @@ export default function ProductsTable({
           access(false);
           return;
         }
+      } else if (reqData.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       }
     } else {
-      console.log("Something went wrong", reqData);
+      // console.log("Something went wrong", reqData);
     }
   }
 
@@ -291,6 +301,9 @@ export default function ProductsTable({
             <TableCell align="right" classes={{ root: classes.head }}>
               Selling Price
             </TableCell>
+            <TableCell align="center" classes={{ root: classes.head }}>
+              Status
+            </TableCell>
             <TableCell align="right" classes={{ root: classes.head }}>
               &nbsp;
             </TableCell>
@@ -304,6 +317,10 @@ export default function ProductsTable({
               <TableCell align="left">{readableDate(row.updatedAt)}</TableCell>
               <TableCell align="center">Rs. {row.mrp}</TableCell>
               <TableCell align="right">Rs. {row.sellingPrice}</TableCell>
+              <TableCell align="center">
+                {row.isActive ? "Active" : "Inactive"}
+              </TableCell>
+
               <TableCell align="right">
                 <Button
                   aria-controls="simple-menu"
@@ -325,7 +342,7 @@ export default function ProductsTable({
         onClose={handleClose}
       >
         {/* <MenuItem onClick={handleClose}>Edit Account</MenuItem> */}
-        <MenuItem onClick={() => removeAccount()}>Remove</MenuItem>
+        <MenuItem onClick={() => removeAccount()}>Toggle status</MenuItem>
       </Menu>
       <AlertMessages state={notify} />
     </TableContainer>

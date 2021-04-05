@@ -6,6 +6,7 @@ module.exports = uri => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
+            useFindAndModify: false,
         })
         .then(conn => {
             autoIncrement.initialize(conn)

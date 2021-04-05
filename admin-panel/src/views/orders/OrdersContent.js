@@ -21,6 +21,7 @@ import {
 } from "@material-ui/icons";
 import { Grid, Input } from "@material-ui/core";
 import MenuForFilter from "views/dashboard/MenuForFilter";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles({
   table: {
@@ -75,6 +76,8 @@ export default function OrdersContent() {
   });
   const [filterOpen, setfilterOpen] = useState(false);
   const [show, setshow] = useState(true);
+  let history = useHistory();
+
   async function getData(page = 1) {
     let body = filter;
     body.skip = body.limit * (page - 1);
@@ -83,15 +86,18 @@ export default function OrdersContent() {
     let reqData = await fetchCall("get_orders", undefined, reqBody);
     if (reqData) {
       if (reqData.success) {
-        console.log(reqData);
         setrows(reqData.data.data);
         setTotalCount(reqData.data.totalCount);
       } else if (reqData.errCode === 401) {
         setshow(false);
         return;
+      } else if (reqData.errCode === 408) {
+        localStorage.clear();
+        history.push("/signin");
+        return;
       }
     } else {
-      console.log("Something went wrong", reqData);
+      // console.log("Something went wrong", reqData);
     }
   }
   useEffect(() => {
@@ -222,7 +228,7 @@ export default function OrdersContent() {
                     classes={{ root: classes.input }}
                   />
                 </Grid>
-                <Grid item>
+                <Grid item style={{ marginTop: "-10px" }}>
                   <MenuForFilter
                     title="status"
                     data={["All", "Cancelled", "Delivered", "Pending"]}
