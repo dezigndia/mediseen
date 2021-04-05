@@ -1,5 +1,6 @@
 const expressAsyncHandler = require("express-async-handler")
 const { StatusCodes } = require("http-status-codes")
+const AppError = require("../utils/errorHandler")
 
 const BusinessService = require("../services/business/business.service")
 const businessService = new BusinessService()
