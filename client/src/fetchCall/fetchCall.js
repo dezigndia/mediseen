@@ -1,27 +1,31 @@
 const fetchCall = async (endpoint, method, jwt, body, type) => {
-	let data
-	const response = await fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, {
-		method: `${method}`,
-		headers: {
-			Accept: "application/json",
-			"Content-Type":
-				type === "file"
-					? "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
-					: "application/json",
-			Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
-		},
-		body: body && type === "file" ? body : JSON.stringify(body),
-	})
+  let data;
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, {
+    method: `${method}`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type":
+        type === "file"
+          ? "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+          : "application/json",
+      Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
+    },
+    body: body && type === "file" ? body : JSON.stringify(body),
+  });
 
-	console.log(response)
+  console.log(response);
 
-	if (!response.ok) {
-		data = { sucess: false, errCode: response.status }
-	} else {
-		data = { sucess: true, data: await response.json() }
-	}
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.clear();
+      window.location.assign("/");
+    }
+    data = { sucess: false, errCode: response.status };
+  } else {
+    data = { sucess: true, data: await response.json() };
+  }
 
-	return data
-}
+  return data;
+};
 
-export default fetchCall
+export default fetchCall;
