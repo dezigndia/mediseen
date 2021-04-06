@@ -25,6 +25,7 @@ const initialState = {
 const currentVendorReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_CURRENT_VENDOR:
+            localStorage.setItem('currentVendor',JSON.stringify({ ...state, ...action.payload }));
             return { ...state, ...action.payload }
         default:
             return state;

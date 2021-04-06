@@ -201,6 +201,8 @@ $maxCardWidth:100%; //50px;
             font-size: .9em;
             @include dispFlex(flex-end, flex-end);
             overflow: hidden;
+            color:black;
+            font-size:1.02em;
         }
     }
 

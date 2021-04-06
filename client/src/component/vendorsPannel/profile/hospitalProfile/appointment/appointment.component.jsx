@@ -70,7 +70,7 @@ var isPresent = (arr, item) => {
             &&
             ((new Date(arr[i].timings.to).toString()) === (new Date(item.timeStampTo)).toString())
         ) {
-            return_data = { present: true, index: i, isCancelled: arr[i].status==='cancelled' }
+            return_data = { present: true, index: i, isCancelled: arr[i].status === 'cancelled' }
         }
     }
 
@@ -184,7 +184,7 @@ const Appointments = () => {
                 return { ...state, date: action.payload }
             case 'clear':
                 return {
-                    businessName:{ name: '', id: '' },
+                    businessName: { name: '', id: '' },
                     refMobileNumber: '',
                     timings: '',
                     timeStampTimings: '',
@@ -227,23 +227,23 @@ const Appointments = () => {
 
 
     //effect to set business name for appointbooking reducer
-    useEffect(()=>{
-        dispatch({type:'setBusinessName',payload:selectedDoctor})
-    },[selectedDoctor]);
+    useEffect(() => {
+        dispatch({ type: 'setBusinessName', payload: selectedDoctor })
+    }, [selectedDoctor]);
 
     useEffect(() => {
         //effect for making all appointment timeslot array
 
         if (doctorsList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            let time = doctorsList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            let time = doctorsList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
 
             let morningShift = [], eveningShift = [];
 
             time && time.forEach(item => {
-                if(item.workingHours !== undefined){
-                makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient);
-                makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient);
+                if (item.workingHours !== undefined) {
+                    makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient);
+                    makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient);
                 }
             });
 
@@ -275,7 +275,7 @@ const Appointments = () => {
                                     customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
                                     _id: res.data.payload[isDataPresent.index]._id,
-                                    accepted: res.data.payload[isDataPresent.index].status==='confirmed'
+                                    accepted: res.data.payload[isDataPresent.index].status === 'confirmed'
                                 }
                             }
                             else {
@@ -323,7 +323,7 @@ const Appointments = () => {
                                 <select>
                                     <option value='All'>All</option>
                                     {
-                                        doctorsList.map((item, index) => <option key={index} value={item.name}>{item.name}</option>)
+                                        doctorsList.filter(item => item.status === "accepted").map((item, index) => <option key={index} value={item.name}>{item.name}</option>)
                                     }
                                 </select>
                             </div>

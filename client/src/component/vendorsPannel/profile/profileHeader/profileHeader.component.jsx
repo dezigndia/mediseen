@@ -45,19 +45,27 @@ const Button = withRouter(({ icon, label, history, match, location }) => {
 });
 
 const ProfileHeader = ({ location }) => {
-    const businessType = useSelector(state => state.currentVendor.businessType);
+    const currentVendor = useSelector(state => state.currentVendor);
+    const [buttonName,setButtonName]=useState('');
+    
     const buttonLabel = () => {
-        console.log(businessType);
-        if (businessType === 'doctor' || businessType === 'hospital') {
+        console.log(currentVendor.businessType);
+        if (currentVendor.businessType === 'doctor' || currentVendor.businessType === 'hospital') {
             return 'appointments';
         }
-        else if (businessType === 'pharmacy') {
+        else if (currentVendor.businessType === 'pharmacy') {
             return 'orders';
         }
-        else if (businessType === 'pathology') {
+        else if (currentVendor.businessType === 'pathology') {
             return 'collection';
         }
     }
+
+    useEffect(()=>{
+        setButtonName(buttonLabel());
+    },[currentVendor]);
+
+
     return (
         <div className="vendorProfileHeader">
             <Button
@@ -66,7 +74,7 @@ const ProfileHeader = ({ location }) => {
             />
             <Button
                 icon={<GiHamburgerMenu />}
-                label={buttonLabel()}
+                label={buttonName}
             />
             <Button
                 icon={<AiTwotoneSetting />}

@@ -142,8 +142,8 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
             <div className="bio">
                 {specialist}
             </div>
-            <div className="location">
-                pune
+            <div className="location" style={{textTransform:'capitalize'}}>
+                <p>{state}</p>
             </div>
             <div className="previewPersonalWebsite">
                 <p>Preview Of Personal Website</p>

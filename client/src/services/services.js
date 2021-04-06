@@ -29,6 +29,7 @@ export const SEARCH_BUSINESS = (category, query, filter) => {
 export const REGISTER_LINK = `${server}api/business`
 export const UPDATE_REGISTERED_USER = `${server}api/business/update`
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`
+export const GET_VENDOR_DETAILS_BY_ID=(businessType,id)=>`${server}api/${businessType}/${id}`;
 
 //adding products and tests
 
@@ -67,6 +68,10 @@ export const updateAppointmentByID = (id) => `${server}api/appointment/update/${
 export const GET_ALL_PATIENTS=(patient_name)=>`${server}api/appointment/business/patients?patient_name=${patient_name}`;
 export const GET_MATCHING_HOSPITAL_LISTS=(search)=>`${server}api/business?search=${search}&category=hospital`;
 export const GET_MATCHING_DOCTORS_LIST=(search)=>`${server}api/business?search=${search}&category=doctor`;
+export const ACCCEPT_BEING_ADDED_AS_DOCTOR=(hospitalPhone,doctorId)=>`${server}api/business/accept/doctor/${hospitalPhone}/doctor/${doctorId}`;
+export const ACCEPT_BEING_ADDED_AS_HOSPITAL=(doctorPhone,hospitalId)=>`${server}api/business/accept/hospital/${doctorPhone}/doctor/${hospitalId}`;
+export const REJECT_BEING_ADDED_AS_DOCTOR=(hospitalPhone,doctorId)=>`${server}api/business/reject/doctor/${hospitalPhone}/doctor/${doctorId}`;
+export const REJECT_BEING_ADED_AS_HOSPITAL=(doctorPhone,hospitalId)=>`${server}api/business/reject/hospital/${doctorPhone}/doctor/${hospitalId}`;
 
 //uploading files
 export const UPLOAD_FILE = `${server}api/blob/upload`;

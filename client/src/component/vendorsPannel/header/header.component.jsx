@@ -7,8 +7,12 @@ import './header.styles.scss';
 //importing icon
 import { AiOutlineCamera } from 'react-icons/ai';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-//customComponents
+
+//reusable Components
 import Icon from '../../reusableComponent/icon/icon.component';
+
+//importing custom components
+import Notification from './notification/notification.component';
 
 //importing services
 import { UPLOAD_FILE, UPDATE_REGISTERED_USER } from '../../../services/services';
@@ -92,9 +96,7 @@ const Header = ({ location }) => {
             <div className="vendorsName">
                 {currentVendor.businessName}
             </div>
-            <div className="vendorsNotification">
-                <Icon size='30px' iconColor='white'><IoMdNotificationsOutline /></Icon>
-            </div>
+            <Notification />
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import './vendorsPannel.styles.scss';
 
 //importing routes
@@ -25,6 +26,9 @@ import Footer from './footer/footer.component';
 //importing actions
 import { setCurrentVendor, updateAccessToken } from '../../actions/action';
 
+//importing services
+import { GET_USER_DEETAIL_BY_TOKEN } from '../../services/services';
+
 const style = {
     backgroundImage: `url(${background})`,
     backgroundSize: 'contain',
@@ -39,12 +43,25 @@ const VendorsPannel = ({ match }) => {
     useEffect(() => {
         //checks if user is already logged in
         let currentVendor = localStorage.getItem('currentVendor');
-        currentVendor=JSON.parse(currentVendor);
+        currentVendor = JSON.parse(currentVendor);
         let token = localStorage.getItem('token');
         if (currentVendor) {
             dispatch(setCurrentVendor(currentVendor));
-            dispatch(updateAccessToken(token));
-            //history.push('vendor/profile/home');
+            axios
+                .get(GET_USER_DEETAIL_BY_TOKEN, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(res => {
+                    dispatch(setCurrentVendor({ ...res.data.payload, businessType: currentVendor.businessType }));
+                    localStorage.setItem('currentVendor', JSON.stringify({ ...res.data.payload, businessType: currentVendor.businessType }));
+                    dispatch(updateAccessToken(token));
+                })
+                .catch(err => {
+                    console.log(err);
+                    alert("unable to fetch user info");
+                });
 
             //deciding page to go on if user is verified
             let page = null;
@@ -73,7 +90,6 @@ const VendorsPannel = ({ match }) => {
                 <Route exact path={`${match.url}/`} component={VendorsPannelHome} />
                 <Route path={`${match.url}/registration`} component={Registration} />
                 <Route path={`${match.url}/profile`} component={Vendorsprofile} />
-                <Redirect to='/404' />
             </Switch>
             <Footer />
         </div>

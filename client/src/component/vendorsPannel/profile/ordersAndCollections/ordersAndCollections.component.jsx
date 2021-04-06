@@ -111,8 +111,11 @@ const Orders = () => {
                 console.log(err);
                 alert(`unable to fetch orders`);
             });
+        let phoneNumber = currentVendor.phoneNumber !== '' ? currentVendor.phoneNumber : currentVendor.phone;
+        console.log(currentVendor.phoneNumber);
+        console.log(currentVendor.phone);
         axios
-            .get(GET_SALES_DETAILS(`%2B${currentVendor.phoneNumber.substring(1)}`), {
+            .get(GET_SALES_DETAILS(`%2B${phoneNumber.substring(1)}`), {
                 headers: {
                     'Authorization': `Bearer ${auth_token.accessToken}`
                 }

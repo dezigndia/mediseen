@@ -243,14 +243,14 @@ const Appointments = () => {
     }, [selectedDate]);
 
     // //effect to set business name for appointbooking reducer
-    useEffect(()=>{
-        dispatch({type:'setBusinessName',payload:selectedHospital})
-    },[selectedHospital]);
+    useEffect(() => {
+        dispatch({ type: 'setBusinessName', payload: selectedHospital })
+    }, [selectedHospital]);
 
     useEffect(() => {
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            let time = hospitalList.map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            let time = hospitalList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
 
             let morningShift = [], eveningShift = [];
 
@@ -338,7 +338,7 @@ const Appointments = () => {
                                 <select value={selectedHospital.name} onChange={(e) => setSelectedHospital({ name: e.target.value, id: hospitalList[e.target.selectedIndex - 1]?._id })}>
                                     <option value='All'>All</option>
                                     {
-                                        hospitalList.map((item, index) => <option key={index} id={item._id} value={item.name}>{item.name}</option>)
+                                        hospitalList.filter(item => item.status === "accepted").map((item, index) => <option key={index} id={item._id} value={item.name}>{item.name}</option>)
                                     }
                                 </select>
                             </div>

@@ -81,6 +81,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
             data = {
                 doctors: [
                     {
+                        doctorId:selectedSuggestionId,
                         name: props.name,
                         degree: props.degree,
                         mobileNumber: props.phoneNumber,
@@ -98,6 +99,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
             data = {
                 clinic: [
                     {
+                        clinicId:selectedSuggestionId,
                         name: props.name,
                         contact: props.phoneNumber,
                         address: props.address,

@@ -1,0 +1,27 @@
+@import '../../../registration/registration.sharableStyles.scss';
+
+.vendorHeaderNotification{
+    
+    &:not(:first-child){
+        margin-top: 20px;
+    }
+
+    .vencorNotificationButtons{
+        margin-top:5px;
+        display:flex;
+        align-items: center;
+        justify-content: space-around;
+
+        .vendorNotificationAcceptButton{
+            @include greenButton();
+        }
+        .vendorNotificationDeclineButton{
+            @include whiteButton();
+        }
+
+        &>button{
+            width: 40% !important;
+            height:25px !important;
+        }
+    }
+}
