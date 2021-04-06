@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './ordersAndCollections.styles.scss';
-import { Switch, FormControl, InputLabel, Select, makeStyles, MenuItem } from '@material-ui/core';
+import { Switch } from '@material-ui/core';
 
 //importing custom components
 import Accepted from './accepted/accepted.component';
@@ -17,43 +17,30 @@ import { green } from '../../../../assets/globalJSS';
 import Icon from '../../../reusableComponent/icon/icon.component';
 
 //importing services
-import { GET_ORDERS_BY_BUSINESS, UPDATE_ORDER_BY_ID } from '../../../../services/services';
+import { GET_ORDERS_BY_BUSINESS, UPDATE_ORDER_BY_ID, UPDATE_REGISTERED_USER, GET_SALES_DETAILS } from '../../../../services/services';
+
+//importing actions
+import { setCurrentVendor } from '../../../../actions/action';
 
 //importing icons
 import { FaChartBar } from 'react-icons/fa';
 import { BiRupee } from 'react-icons/bi';
 import { MdChevronRight } from 'react-icons/md';
 
-/*const useStyles = makeStyles((theme) => ({
-    formControl: {
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-}));*/
-
-const data = [
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'COD', status: 'shipped' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'ONLINE', status: 'delivered' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'ONLINE', status: 'accepted' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'COD', status: 'shipped' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'ONLINE', status: 'delivered' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'ONLINE', status: 'cancelled' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'COD', status: 'pending' },
-    { orderNo: 2047, orderDate: '02/07/21', orderTime: '02:47 AM', totalItems: 10, cost: 200, paymentMethod: 'COD', status: 'collected' }
-]
 
 const Orders = () => {
     //const classes = useStyles();
     const [orderList, setOrderList] = useState([]);
     const [status, setStatus] = useState('All');
-    const [switchStatus, setSwitchStatus] = useState(false); //toggle switch
     const [showOrderStats, setShowOrderStats] = useState(false);// todays and total sale popup
     const [activeTab, setActiveTab] = useState(null);  //shipped accepted pending collected
     const [activeItem, setActiveItem] = useState(null); // details of the oreders card which is clicked
     const businessType = useSelector(state => state.currentVendor.businessType);
+    const currentVendor = useSelector(state => state.currentVendor);
+    const [switchStatus, setSwitchStatus] = useState(currentVendor.isActive); //toggle switch
+    const [salesDetails, setSalesDetails] = useState({ todays: 0, total: 0 });
     const auth_token = useSelector(state => state.token);
+    const dispatch = useDispatch();
 
     const updateActiveItem = (updateObject) => {
         axios
@@ -84,7 +71,21 @@ const Orders = () => {
     };
 
     const toggleSwitch = (e) => {
-        setSwitchStatus(prevState => !prevState);
+        axios
+            .put(UPDATE_REGISTERED_USER, { isActive: !switchStatus }, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                console.log(res.data);
+                dispatch(setCurrentVendor({ isActive: !currentVendor.isActive }));
+                setSwitchStatus(prevState => !prevState);
+            })
+            .catch(err => {
+                console.log(err);
+                alert('cant set status');
+            })
     }
 
     const toggleOrderStats = useCallback((e) => {
@@ -110,6 +111,19 @@ const Orders = () => {
                 console.log(err);
                 alert(`unable to fetch orders`);
             });
+        axios
+            .get(GET_SALES_DETAILS(`%2B${currentVendor.phoneNumber.substring(1)}`), {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                setSalesDetails({ todays: res.data.payload.todaysSales, total: res.data.payload.totalSales });
+            })
+            .catch(err => {
+                console.log(err);
+                alert('cant fetch salse details');
+            })
     }, []);
 
     return (
@@ -123,11 +137,11 @@ const Orders = () => {
                     </div>
                     <div className="todaySale">
                         <p>Today's Sale</p>
-                        <p>300</p>
+                        <p>{salesDetails.todays}</p>
                     </div>
                     <div className="totalSale">
                         <p>Total Sale</p>
-                        <p>300</p>
+                        <p>{salesDetails.total}</p>
                     </div>
                 </div>
             </div>

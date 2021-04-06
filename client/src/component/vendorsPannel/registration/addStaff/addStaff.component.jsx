@@ -117,7 +117,7 @@ const AddStaff = (props) => {
     return (
         <div className="addStaff">
             <div className="skipForNow">
-                <button className='whiteButton'>Skip For Now</button>
+                <button className='whiteButton' onClick={back} >Skip For Now</button>
             </div>
             <div className='addStaffLabelContainer'>
                 <div className='addStaffLabelIcon'>

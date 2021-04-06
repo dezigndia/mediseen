@@ -62,7 +62,9 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
                 {
                     businessType === 'pharmacy' && (
                         <div className="vendorTestAndProductListItemHeaderCount">
-                            {qty}KG
+                            {
+                                qty>0 && qty+'KG'
+                            }
                         </div>
                     )
                 }
@@ -91,7 +93,7 @@ const ProductAndTestListing = ({ _id, category, company, details, fastingRequire
                         : null
                 })()*/
 
-                hasDiscount && discount && (
+                hasDiscount && (
                     <div className="productsOffer">
                         <Icon size='65px' iconColor={blue}>
                             <MdLocalOffer />

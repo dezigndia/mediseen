@@ -1,0 +1,58 @@
+@import '../../../registration.sharableStyles.scss';
+.addCategoriesContainer{
+    height:100%;
+    width:100%;
+    position:fixed;
+    top:0;
+    left:0;
+    background-color:rgba(0,0,0,.9);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1;
+
+    .addCategories{
+        height:50%;
+        background-color:white;
+        margin:0 2px;
+        border-radius:5px;
+        width:Max(100%,500px);
+        position:relative;
+        display:flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+
+            .closeAddCategories{
+                position:absolute;
+                top:0;
+                right:0;
+                margin:10px;
+            }
+
+            .categoryName{
+                width:Max(80%,300px);
+
+                &>label{
+                    display:inline-block;
+                    width:100%;
+                    text-align: left;
+                    margin-left:2px;
+                    color:black;
+                }
+
+                &>input{
+                    @include input();
+                }
+            }
+
+            .addCategoryButton{
+                margin:10px;
+                width: 100%;
+                .greenButton{
+                    @include greenButton();
+                }
+            }
+    }
+}

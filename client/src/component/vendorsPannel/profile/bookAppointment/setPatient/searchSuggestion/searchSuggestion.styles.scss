@@ -1,0 +1,27 @@
+.searchSuggestionContainer{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+    height: auto;
+    max-height:500px;
+    background-color: white;
+    z-index:2;
+    overflow-y:scroll;
+    overflow-x:auto;
+
+    .searchSuggestion{
+        text-transform: capitalize;
+        border:1px solid #ccc;
+        margin:2px 0;
+        display:flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-around;
+        padding:4px 0;
+        &:hover{
+            cursor:pointer;
+            background-color: #ccc;
+        }
+    }
+}

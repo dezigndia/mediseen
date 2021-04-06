@@ -90,7 +90,9 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
                                 }
                             })
                             .then(response => {
-                                setCurrentVendor(response.data.payload);
+                                setCurrentVendor({businessType:currentVendor.businessType,...response.data.payload});
+                                localStorage.setItem('currentVendor',JSON.stringify({businessType:currentVendor.businessType,...response.data.payload}));
+                                localStorage.setItem('token',res.data.payload.auth_token);
                                 link.push(page);
                                 link = link.join('/');
                                 history.push(link);

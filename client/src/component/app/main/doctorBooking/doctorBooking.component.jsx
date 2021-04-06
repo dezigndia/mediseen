@@ -83,11 +83,14 @@ const DoctorBooking = () => {
 
 	useEffect(() => {
 		const fetchDoc = async () => {
-			const data = await fetchCall(`doctor/${id}`, "GET").then(
-				(res) => res.data.payload
+			const res = await fetchCall(`doctor/${id}`, "GET").catch(
+				(err) => res.err
 			)
-			setDoc(data)
-			dispatch(addCurrentStore(data))
+			if(res.data){
+				setDoc(res.data.payload)
+				dispatch(addCurrentStore(res.data.payload))
+			}
+			console.log(res)
 		}
 		fetchDoc()
 	}, [])

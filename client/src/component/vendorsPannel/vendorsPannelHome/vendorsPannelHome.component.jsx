@@ -71,7 +71,7 @@ const VendorsPannelHome = ({ history, match }) => {
                             <BiLocationPlus />
                         </Icon>
                     </div>
-                    <button>SignUp</button>
+                    <button  onClick={(e) => history.push(`${match.url}/registration`)}>SignUp</button>
                 </div>
             </div>
         </div>

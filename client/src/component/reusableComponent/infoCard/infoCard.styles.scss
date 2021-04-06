@@ -14,6 +14,10 @@ $maxCardWidth:100%; //50px;
 
 .searchResultCard {
 
+    &.cancelTouch{
+        pointer-events: none;
+    }
+
     &:hover {
         cursor: pointer;
     }
@@ -53,7 +57,7 @@ $maxCardWidth:100%; //50px;
 
     .avatar {
         grid-area: avatar;
-        @include dispFlex(flex-start, flex-start);
+        @include dispFlex(flex-start, center);
 
         .avatarImage {
             max-height: 100%;

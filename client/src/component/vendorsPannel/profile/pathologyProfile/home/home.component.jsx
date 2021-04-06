@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import './home.styles.scss';
-import { toast } from 'react-toastify';
 
 import xlsx from 'xlsx';
 
@@ -135,7 +134,7 @@ const Home = () => {
                 />
                 <input
                     type='file'
-                    //accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                     style={{ display: 'none' }}
                     ref={excelUploadInputRef}
                     onChange={changeHandler}

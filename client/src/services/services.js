@@ -1,4 +1,5 @@
 const server = "http://13.126.205.131:5001/";
+
 export const GET_OTP = `${server}api/auth/user-get-otp`;
 
 // @reqBody={phoneNo,otp}
@@ -45,6 +46,10 @@ export const GET_BULK_TESTS = `${server}api/test/find/bulk`;
 export const UPDATE_MY_PRODUCT = (productId) =>
   `${server}api/product/update/${productId}`;
 export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
+export const GET_CATEGORIES = (type) => `${server}api/category/type/${type}`;
+export const ADD_CATEGORIES = `${server}api/category`;
+export const GET_SALES_DETAILS = (phoneNo) =>
+  `${server}api/order/get-details?businessPhoneNumber=${phoneNo}`;
 
 //getting products or test categories
 export const GET_PRODUCTS_CATEGORY = `${server}api/pharmacy/product/categories`;
@@ -62,6 +67,12 @@ export const getAppointmentByCustomer = `${server}api/appointment/user`;
 export const getAppointmentById = (id) => `${server}api/appointment/id/${id}`;
 export const updateAppointmentByID = (id) =>
   `${server}api/appointment/update/${id}`;
+export const GET_ALL_PATIENTS = (patient_name) =>
+  `${server}api/appointment/business/patients?patient_name=${patient_name}`;
+export const GET_MATCHING_HOSPITAL_LISTS = (search) =>
+  `${server}api/business?search=${search}&category=hospital`;
+export const GET_MATCHING_DOCTORS_LIST = (search) =>
+  `${server}api/business?search=${search}&category=doctor`;
 
 //uploading files
 export const UPLOAD_FILE = `${server}api/blob/upload`;

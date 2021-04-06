@@ -23,7 +23,7 @@ import Icon from "../icon/icon.component"
 //importing jss
 import { green } from "../../../assets/globalJSS"
 
-const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large }) => {
+const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large }) => {
     const {
         _id,
         firstName,
@@ -40,18 +40,18 @@ const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, 
         specialist
     } = data;
 
-	const gotoPage = (e) => {
-		selectData(data)
-		if (type === "doctor") {
-			history.push(`/home/doctorBooking/${_id}`)
-		} else if (type === "hospital") {
-			history.push(`/home/hospitalBooking/${_id}`)
-		} else if (type === "pharmacy") {
-			history.push(`/home/pharmacyOrder/${_id}`)
-		} else if (type === "pathology") {
-			history.push(`/home/labOrder/${_id}`)
-		}
-	}
+    const gotoPage = (e) => {
+        selectData(data)
+        if (type === "doctor") {
+            history.push(`/home/doctorBooking/${_id}`)
+        } else if (type === "hospital") {
+            history.push(`/home/hospitalBooking/${_id}`)
+        } else if (type === "pharmacy") {
+            history.push(`/home/pharmacyOrder/${_id}`)
+        } else if (type === "pathology") {
+            history.push(`/home/labOrder/${_id}`)
+        }
+    }
 
     const share = (e) => {
         e.stopPropagation();
@@ -74,7 +74,7 @@ const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, 
     }
 
     return (
-        <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null}`} id={_id} onClick={gotoPage}>
+        <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} id={_id} onClick={gotoPage}>
             <div className="name">
                 <p>
                     {businessName}
@@ -160,7 +160,7 @@ const InfoCard = ({ data, history, stars = 5, closeBy = '10pm', distance = 3.3, 
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	selectData: (data) => dispatch(selectData(data)),
+    selectData: (data) => dispatch(selectData(data)),
 })
 
 export default connect(null, mapDispatchToProps)(withRouter(InfoCard))

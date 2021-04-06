@@ -1,28 +1,32 @@
 import React, { useRef, useState, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios'
+import xlsx from 'xlsx';
 import './addTest.styles.scss';
 
 //importing reusable components
 import Icon from '../../../../reusableComponent/icon/icon.component';
+import RegistrationFormButton from '../../../../reusableComponent/registrationFormButton/registrationFormButton.component';
 
 //importing icons
 import { IoMdBarcode } from 'react-icons/io';
 import { BiSearch } from 'react-icons/bi';
 import { AiOutlineCamera } from 'react-icons/ai';
 import { BiRupee } from 'react-icons/bi';
+import { FaUpload } from 'react-icons/fa';
 
 //importing jss
 import { lightBlue } from '../../../../../assets/globalJSS';
 
 //importing services
-import { ADD_TESTS, UPLOAD_FILE } from '../../../../../services/services';
+import { ADD_TESTS, UPLOAD_FILE, GET_CATEGORIES, ADD_BULK_TEST } from '../../../../../services/services';
 
 //importing actions
 import { setCurrentVendor, setProductsAndTestList } from '../../../../../actions/action';
 
 //importing custom components
 import UploadedImagesPreview from '../../uploadedImagePreview/uploadedImagesPreview.component';
+import AddCategories from './addCategories/addCategories.component';
 
 //setShowAddtests is sent as prop from pathology profile
 
@@ -31,6 +35,23 @@ const AddTests = (props) => {
     const [category, setCategory] = useState(['Cytopathology', 'Dermapathology', 'Forensic Pathology', 'Histopathology', 'NeuroPathology']);
     const [type, setType] = useState(['x-ray', 'ct-scan', 'blood-test', 'urine-test', 'mri-scan']);
     const [uploading, setUploading] = useState(false);
+    const [showAddCategories, setShowAddCategories] = useState(false);
+
+    useEffect(() => {
+        axios
+            .get(GET_CATEGORIES('product-categories'), {
+                headers: {
+                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
+                    'Content-type': 'multipart/form-data'
+                }
+            })
+            .then(res => {
+                setCategory(res.data.payload.values);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [setCategory, setType, props.auth_token.accessToken, showAddCategories]);
 
     const initialState = {
         image: [],
@@ -286,12 +307,31 @@ const AddTests = (props) => {
                     }
                     <button className='greenButton' onClick={addButtonhandler}>Add Test</button>
                 </div>
+                {/*<div className="vendorHomeUploadExcel">
+                    <RegistrationFormButton
+                        icon1={<FaUpload />}
+                        label={[<p>Or upload test list excel to Mediseen Whatsaap</p>]}
+                    //onClick={(e) => { excelUploadInputRef.current.click(); }}
+                    />
+                    <input
+                        type='file'
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        style={{ display: 'none' }}
+                    //ref={excelUploadInputRef}
+                    //onChange={changeHandler}
+                    />
+                </div>*/}
             </div>
             {
                 uploading
                     ? <div className="uploadingSpinner">
                         <div />
                     </div>
+                    : null
+            }
+            {
+                showAddCategories
+                    ? <AddCategories {...{ setShowAddCategories }} />
                     : null
             }
         </div >
