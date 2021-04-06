@@ -96,7 +96,8 @@ class BusinessController {
     })
     acceptDoctor = expressAsyncHandler(async (req, res) => {
         const { hosPh, docId, status } = req.params
-        if (status != "accepted" || status != "rejected") {
+        console.log(status)
+        if (status != "accept" && status != "reject") {
             throw new AppError(StatusCodes.BAD_REQUEST, "Status must be of type accept/reject")
         }
         await businessService.acceptDoctor(hosPh, docId, status)
@@ -104,7 +105,7 @@ class BusinessController {
     })
     acceptHospital = expressAsyncHandler(async (req, res) => {
         const { docPh, clinicId, status } = req.params
-        if (status != "accepted" || status != "rejected") {
+        if (status != "accept" && status != "reject") {
             throw new AppError(StatusCodes.BAD_REQUEST, "Status must be of type accept/reject")
         }
         await businessService.acceptHospital(docPh, clinicId, status)
