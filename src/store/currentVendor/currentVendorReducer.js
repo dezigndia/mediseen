@@ -1,0 +1,35 @@
+import { SET_CURRENT_VENDOR } from './currentvendorActionTypes';
+
+const initialState = {
+    isRegistered: false,
+    businessType: '',
+    businessName: '',
+    address: '',
+    area: '',
+    pincode: '',
+    street: '',
+    city: '',
+    state: '',
+    title: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    password: '',
+    degree: '',
+    specialist: '',
+    documents: null,
+    country: null,
+    phoneNumber:''
+}
+
+const currentVendorReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case SET_CURRENT_VENDOR:
+            localStorage.setItem('currentVendor',JSON.stringify({ ...state, ...action.payload }));
+            return { ...state, ...action.payload }
+        default:
+            return state;
+    }
+}
+
+export default currentVendorReducer;

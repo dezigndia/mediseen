@@ -1,0 +1,60 @@
+@import '../registration.sharableStyles.scss';
+
+.timingInput {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    margin-top: 15px;
+    text-align: left;
+    position: relative;
+
+    .timeSelect {
+        width: 60%;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: stretch;
+
+        & input[type=text],
+        & input [type=number] {
+            @include input();
+        }
+
+        .morningShift,
+        .eveningShift {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
+
+            &>input {
+                width: Min(42%, 100px);
+                text-align: center;
+            }
+        }
+
+        .morningShift {
+            margin-bottom: 10px;
+        }
+    }
+
+    .daySelect {
+        width: 40%;
+        position: relative;
+        left: -10px;
+        top: 10px;
+        @include radio();
+    }
+
+    .reactTimeKeeper {
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, .9);
+        z-index:2;
+    }
+}

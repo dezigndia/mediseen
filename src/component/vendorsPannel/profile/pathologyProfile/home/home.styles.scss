@@ -1,0 +1,79 @@
+@import "../../../../../../assets/globalStyles.scss";
+@import "../../profile.sharableStyles.scss";
+
+$padding: 0 2%;
+$margin-top: 15px;
+
+.vendorHome {
+	position: relative;
+	padding: $padding;
+
+	.testsAddedPopupContainer {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.9);
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.testsAdded {
+			height: 50%;
+			width: 50%;
+			background-color: white;
+			box-shadow: 0 0 5px white;
+			display: flex;
+			flex-flow: column wrap;
+			align-items: center;
+			justify-content: space-evenly;
+			padding: 10px;
+			border-radius: 10px;
+
+			& > .greenButton {
+				@include greenButton();
+			}
+		}
+	}
+
+	.infoContainer {
+		& > .searchResultCard {
+			padding: 4% 0;
+		}
+
+		margin-top: 5px;
+	}
+
+	.vendorTestListContainer {
+		margin-top: 20px;
+		margin-bottom: 5px;
+
+		.vendorTestListHeader {
+			display: flex;
+			align-items: center;
+			color: $blue;
+			font-weight: bold;
+			font-size: 1.1em;
+		}
+
+		.vendorTestList {
+			display: flex;
+			flex-flow: row nowrap;
+			align-items: center;
+			overflow-y: auto;
+			overflow-x: scroll;
+			width: 100%;
+		}
+	}
+
+	.VendorHomePageButton {
+		margin-top: 20px;
+		margin-bottom: 10px;
+
+		& > .greenButton {
+			@include greenButton();
+		}
+	}
+}

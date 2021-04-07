@@ -1,0 +1,25 @@
+@import '../../../../../assets/globalStyles.scss';
+
+.vendorAppointments {
+    width: Min(100%, 500px);
+    margin:auto;
+
+    .appointmentsContainer {
+        &>.hospitalList {
+            &>select {
+                padding: 2%;
+                margin: 2%;
+                font-weight: bold;
+                border: none;
+                background-color: white;
+                font-size: 1.1em;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        padding: 0 2%;
+    }
+}

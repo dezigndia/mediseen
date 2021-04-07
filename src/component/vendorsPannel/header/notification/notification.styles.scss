@@ -1,0 +1,17 @@
+.vendorsNotification{
+    position:relative;
+
+    .notifications{
+        position:absolute;
+        top:100%;
+        right:0;
+        background-color:darken(white,5%);
+        z-index:2;
+        width:300px;
+        max-height:300px;
+        padding:4px;
+        border:1px solid #ccc;
+        overflow-x: auto;
+        overflow-y: scroll;
+    }
+}

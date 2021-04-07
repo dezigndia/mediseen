@@ -1,0 +1,142 @@
+@import '../../../../../assets/globalStyles.scss';
+@import '../registration.sharableStyles.scss';
+
+$padding:1% 4%;
+
+@mixin labelInput {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    border: 1px solid red;
+}
+
+.doctorAndHospitalRegistrationForm {
+
+    height: 100%;
+    width: Min(100%, 500px);
+    overflow-y: scroll;
+    overflow-x: auto;
+    padding: 3% 0;
+    margin: auto;
+
+    &>h3 {
+        text-align: left;
+        padding: $padding
+    }
+
+    & .labelInput {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        @include radio();
+    }
+
+    .feeCollectionBy,
+    .teleConsulting {
+
+        &>div:nth-child(1) {
+            min-width: 100%;
+        }
+    }
+
+    .feeCollectionBy {
+        padding-top: 10px;
+    }
+
+    &>div {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: center;
+        padding: $padding;
+    }
+
+    & input[type=text],
+    & input[type=number] {
+        @include input();
+    }
+
+    .timeSlotAndFees {
+        .fees {
+            text-align: left;
+        }
+
+        .timeSlotPerPatient {
+            text-align: right;
+        }
+
+        & input {
+            width: 80%;
+        }
+    }
+
+    .feeCollectionBy,
+    .teleConsulting {
+        height: 80px;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: space-evenly;
+
+        & label:nth-child(1) {
+            font-size: .95em;
+        }
+
+        &>div:nth-child(1) {
+            width: 60%;
+            text-align: left;
+        }
+
+        &>div:nth-child(2) {
+            width: 20%;
+        }
+
+        &>div:nth-child(3) {
+            width: 20%;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    }
+
+    .setTimings {
+        padding: $padding;
+        display: block;
+
+        &>h3 {
+            text-align: left;
+            margin-top: 10px;
+        }
+    }
+
+    .formButtons {
+        display: flex;
+        flex-flow: row nowrap;
+        height: 50px;
+        align-items: stretch;
+        margin-top: 10px;
+
+        button {
+
+            &:nth-child(1) {
+                @include whiteButton();
+            }
+
+            &:nth-child(2) {
+                @include greenButton();
+            }
+        }
+    }
+
+    & .suggestionInfoCard{
+        transform:scale(.9);
+        opacity:.8;
+        transition: .5s ease-in-out;
+        &:hover{
+            transform:scale(1);
+            opacity:1;
+            transition: .5s ease-in-out;
+        }
+    }
+}

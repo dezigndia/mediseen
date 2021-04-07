@@ -1,0 +1,259 @@
+@import '../../../../../../assets/globalStyles.scss';
+@import '../../registration.sharableStyles.scss';
+
+$imageInputSize:70px;
+$iconCircleSize:55px;
+$inputHeight:30px;
+$inputBorder:1px solid #ccc;
+$headerHeight:10%;
+$inputImageHeight:20%;
+$formHeight:70%;
+
+.addProductsAndTest {
+    padding: $padding;
+    height: 100%;
+    width: 100%;
+    position: relative;
+
+    .uploadingSpinner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, .9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+
+        &>div {
+            height: 50px;
+            width: 50px;
+            border: 10px solid $blue;
+            border-radius: 50%;
+            border-top-color: white;
+            animation-name: loadngSpinner;
+            animation-iteration-count: infinite;
+            animation-duration: .5s;
+        }
+    }
+
+    .Button {
+        //margin-top: 20px;
+        //padding-top: 20px;
+
+        &>.whiteButton {
+            @include whiteButton();
+        }
+
+        &>.greenButton {
+            @include greenButton();
+        }
+
+        margin:15px 0;
+    }
+
+    & .selectInputContainer {
+        height: $inputHeight;
+        display: flex;
+        flex-flow: row norwap;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $inputBorder;
+        margin-top: 10px;
+        color: darken(#ccc, 10%);
+        font-size: .9em;
+
+        .selectInput {
+            position: relative;
+
+            &>select {
+                border: none;
+                outline: none;
+                background-color: white;
+            }
+        }
+    }
+
+    .addProductsAndTestHeader {
+        height: $headerHeight;
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+
+        .addProductsAndTestSearch {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            margin-right: 2%;
+            box-shadow: 0 0 5px #ccc;
+
+            &.focused {
+                box-shadow: 0 0 5px #ccc, 0 0 5px #ccc inset;
+            }
+
+            &>input[type=text] {
+                flex-grow: 1;
+                border: none;
+                font-size: 1.1em;
+                padding: 0 2%;
+                height: 35px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        .addProductsAndTestBarCode {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: stretch;
+
+            &>p {
+                font-size: .5em;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .addImagesContainer {
+        display: flex;
+        align-items: baseline;
+        justify-content: flex-start;
+        flex-flow: row nowrap;
+
+        .addImages {
+            height: $inputImageHeight;
+            min-height: $imageInputSize;
+            width: $imageInputSize;
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: stretch;
+            margin-top: 10px;
+
+            .addImagesIconContainer {
+                height: $imageInputSize;
+                width: $imageInputSize;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+
+            .addImagesCaption {
+                font-weight: bold;
+                font-size: .6em;
+            }
+        }
+    }
+
+    .addProductsAndTestInputContainer {
+        min-height: $formHeight;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: stretch;
+        justify-content: space-between;
+
+        .addProductsAndTestInput {
+            margin: 10px 0;
+        }
+
+        .flexInputContainer {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
+
+            &>div:nth-child(1) {
+                width: 40%;
+                text-align: left;
+            }
+
+            &>div:nth-child(2) {
+                width: 40%;
+                text-align: right;
+            }
+
+            .mrp,
+            .sellingPrice {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                justify-content: flex-start;
+                border-bottom: 1px solid #ccc;
+
+                &>input {
+                    border: none;
+                }
+
+                &>div {
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        .fastingRequired {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: .9em;
+            margin-top: 15px;
+
+            &>div:nth-child(1) {
+                text-align: left;
+            }
+
+            &>div:nth-child(2) {
+                margin-left: 3%;
+                height: 20px;
+                width: 20px;
+
+                & input[type=checkbox] {
+                    height: 20px;
+                    margin-top: 0px;
+                }
+            }
+        }
+
+
+        & input[type=text],
+        & input[type=number],
+        & option {
+            border: none;
+            border-bottom: $inputBorder;
+            transition: .5s ease-in-out;
+            width: 100%;
+            height: $inputHeight;
+            margin-top: 10px;
+
+            &:focus {
+                outline: none;
+                border-bottom: 2px solid #ccc;
+                transition: .5s ease-in-out;
+            }
+        }
+
+        & input[type=text]:nth-child(1) {
+            margin-top: 0;
+        }
+    }
+}
+
+@keyframes loadngSpinner {
+    from {
+        transform: rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateZ(360deg);
+    }
+}
