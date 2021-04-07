@@ -1,5 +1,11 @@
+import { getItem } from "../services/storage";
+
 const fetchCall = async (endpoint, method, jwt, body, type) => {
   let data;
+  let jwtReq = getItem("auth_token");
+  //   jwtReq.splice(0, 3);
+  console.log(jwtReq, "jwt token");
+
   const response = await fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, {
     method: `${method}`,
     headers: {
@@ -8,7 +14,9 @@ const fetchCall = async (endpoint, method, jwt, body, type) => {
         type === "file"
           ? "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
           : "application/json",
-      Authorization: jwt ? `Bearer ${jwt}` : "Bearer",
+      Authorization: jwtReq
+        ? `Bearer ${jwtReq.substring(1, jwtReq.length - 1)}`
+        : "Bearer",
     },
     body: body && type === "file" ? body : JSON.stringify(body),
   });
