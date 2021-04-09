@@ -111,6 +111,18 @@ class BusinessController {
         await businessService.acceptHospital(docPh, clinicId, status)
         return res.status(StatusCodes.OK).json({ status: true, payload: "Updated Invitation" })
     })
+    getPendingRequests = expressAsyncHandler(async (req, res) => {
+        const { type, _id } = res.locals.user
+        if (type != "doctor" && type != "hospital") {
+            throw new AppError(StatusCodes.BAD_REQUEST, "Unauthorized access. Invalid Role")
+        }
+        const data = await businessService.getPendingRequests(_id, type)
+        if (data) {
+            return res.status(StatusCodes.OK).json({ status: true, payload: data })
+        } else {
+            throw new AppError(StatusCodes.NOT_FOUND, "Businesss not found with given phone.")
+        }
+    })
 }
 
 module.exports = BusinessController

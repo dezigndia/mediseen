@@ -187,5 +187,15 @@ class BusinessService {
                 { $set: { "clinic.$.status": "rejected" } }
             )
     })
+    getPendingRequests = expressAsyncHandler(async (bId, type) => {
+        console.log(type, bId)
+        if (type == "doctor") {
+            let result = await Hospital.find({ type: "hospital", "doctors.doctorId": bId })
+            return result
+        } else {
+            let result = await Doctor.find({ type: "doctor", "clinic.clinicId": bId })
+            return result
+        }
+    })
 }
 module.exports = BusinessService
