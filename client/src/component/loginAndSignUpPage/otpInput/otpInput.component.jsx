@@ -66,14 +66,30 @@ const OtpInput = ({ otp, setOtp, setOtpSendingTrue, setOtpSentTrue, setOtpErrorT
         }
     }, [isTimerStatrted, timer]);
 
-    const setOtpByIndex = (value, index) => {
+    const setOtpByIndex = (e, index) => {
+        console.log(e.key);
         let newOtpArray = otp.value;
-        newOtpArray[index] = value;
-        setOtp(newOtpArray);
-        if (index < 5 && otpInputRef[index + 1].current.value === '' && otpInputRef[index].current.value !== '') {
-            otpInputRef[index + 1].current.focus();
+        if (/[0-9]{1}/.test(e.key) && newOtpArray[index] === '') {
+            newOtpArray[index] = e.key;
+            setOtp(newOtpArray);
+            //goTo next after fill current box
+            if (index < 5 && otpInputRef[index + 1].current.value === '') {
+                otpInputRef[index + 1].current.focus();
+            }
+        }
+        else if (e.key === 'Backspace') {
+            if (e.target.value === '') {
+                if (index > 0) {
+                    otpInputRef[index - 1].current.focus();
+                }
+            }
+            else {
+                newOtpArray[index] = '';
+                setOtp(newOtpArray);
+            }
         }
     }
+
 
     const RresendHandler = (e) => {
         setOtpSendingTrue();
@@ -94,12 +110,12 @@ const OtpInput = ({ otp, setOtp, setOtpSendingTrue, setOtpSentTrue, setOtpErrorT
         <div className={`otpInputContainer ${otp.enabled ? 'endabled' : 'disabled'}`}>
             <p>Enter sms code/otp</p>
             <div className="otpInput">
-                <input type='number' value={otp.value[0]} onChange={(e) => { setOtpByIndex(e.target.value, 0) }} maxLength={1} ref={otpInputRef[0]} />
-                <input type='number' value={otp.value[1]} onChange={(e) => { setOtpByIndex(e.target.value, 1) }} maxLength={1} ref={otpInputRef[1]} />
-                <input type='number' value={otp.value[2]} onChange={(e) => { setOtpByIndex(e.target.value, 2) }} maxLength={1} ref={otpInputRef[2]} />
-                <input type='number' value={otp.value[3]} onChange={(e) => { setOtpByIndex(e.target.value, 3) }} maxLength={1} ref={otpInputRef[3]} />
-                <input type='number' value={otp.value[4]} onChange={(e) => { setOtpByIndex(e.target.value, 4) }} maxLength={1} ref={otpInputRef[4]} />
-                <input type='number' value={otp.value[5]} onChange={(e) => { setOtpByIndex(e.target.value, 5) }} maxLength={1} ref={otpInputRef[5]} />
+                <input type='number' value={otp.value[0]} onKeyUp={(e) => { e.persist(); setOtpByIndex(e, 0); }} maxLength={1} ref={otpInputRef[0]} />
+                <input type='number' value={otp.value[1]} onKeyUp={(e) => { e.persist(); setOtpByIndex(e, 1) }} maxLength={1} ref={otpInputRef[1]} />
+                <input type='number' value={otp.value[2]} onKeyUp={(e) => { e.persist(); setOtpByIndex(e, 2) }} maxLength={1} ref={otpInputRef[2]} />
+                <input type='number' value={otp.value[3]} onKeyUp={(e) => { e.persist(); setOtpByIndex(e, 3) }} maxLength={1} ref={otpInputRef[3]} />
+                <input type='number' value={otp.value[4]} onKeyUp={(e) => { e.persist(); setOtpByIndex(e, 4) }} maxLength={1} ref={otpInputRef[4]} />
+                <input type='number' value={otp.value[5]} onKeyUp={(e) => { e.persist(); setOtpByIndex(e, 5) }} maxLength={1} ref={otpInputRef[5]} />
             </div>
             <div className="rightAlignedText">
                 {
