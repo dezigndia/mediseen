@@ -1,0 +1,23 @@
+{
+    "database": {
+        "URL": "mongodb+srv://yxsh:Qwerty12345@portfolio-apps.zrui0.mongodb.net/Mediseen?retryWrites=true&w=majority"
+    },
+    "jwt": {
+        "secret": "talhaAnjum"
+    },
+    "msg91": {
+        "authkey": "168622Aae0763T5ff83434P1",
+        "templateid": "6015795dcbc4d65db74dd3ef"
+    },
+    "app": {
+        "port": 5001
+    },
+    "aws": {
+        "region": "ap-south-1",
+        "bucket": "mediseen",
+        "sizelimit": 300000000,
+        "accessKeyId": "AKIASVUQZW255KBRIZXA",
+        "secretAccessKey": "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"
+    },
+    "mode": "PRODUCTION"
+}

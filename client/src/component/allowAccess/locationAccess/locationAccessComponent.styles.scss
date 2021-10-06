@@ -1,0 +1,126 @@
+@import '../../../../assets/globalStyles.scss';
+
+$cardHeight:50%;
+$cardWidth:Min(85%, 350px);
+$cardMarginTop:Min(20%, 100px);
+$inputPadding:8px;
+$boxShadow:0 0 15px #ccc;
+
+.locationAccessContainer {
+    height: 100%;
+    width: 100%;
+
+    .locationAccess {
+        height: $cardHeight;
+        width: $cardWidth;
+        margin: auto;
+        margin-top: $cardMarginTop;
+        box-shadow: $boxShadow;
+        border-bottom: 2px solid #ccc;
+        border-radius: 10px;
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: stretch;
+        justify-content: space-evenly;
+        padding: 0 1%;
+        position: relative;
+
+        .locationAccessHeader {
+            display: flex;
+            flex-flow: column nowrap;
+            height: 10%;
+            position: relative;
+            bottom: 5%;
+
+            .searchContainer,
+            .setCurrentLocationContainer {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                align-items: center;
+            }
+
+            .searchContainer {
+                .searchLabel {
+                    flex-grow: 1;
+                    font-weight: 400;
+                }
+
+                .searchIcon:hover {
+                    cursor: pointer;
+                    color: lighten(black, 20%);
+                }
+            }
+
+            .setCurrentLocationContainer {
+                padding-left: 2%;
+
+                .setCurrentLocationLabel {
+                    flex-grow: 1;
+                    color: lighten(black, 30%);
+                    text-align: left;
+                    padding-left: 5%;
+                }
+
+            }
+        }
+
+        .enterCityPincode {
+            box-shadow: $boxShadow;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1% 1%;
+            position: relative;
+
+            &:focus {
+                border: 1px solid #ccc;
+            }
+
+            .inputCityPincodeIcon {
+                color: grey;
+                align-self: flex-end;
+            }
+
+            #cityPincodeInput {
+                border: none;
+                flex-grow: 1;
+                max-width: 90%;
+                color: grey;
+                font-size: 1.1em;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            .cityPincodeInputError {
+                color: lighten(#ff0000, 15%);
+                //color:#ff0000;
+                position: absolute;
+                bottom: -20px;
+                right: 18px;
+                font-size: .7em;
+                text-shadow: 0 0 3px #ccc;
+            }
+        }
+
+        .cityPincodeSearchResult {
+            &>input {
+                width: 100%;
+                padding: $inputPadding;
+                padding-left: 23px;
+                opacity: .8;
+                font-size: 1.1em;
+            }
+
+        }
+
+        .setCityPinCodeSearchOk {
+            padding: 0 1%;
+        }
+    }
+}
