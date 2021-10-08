@@ -1,1 +1,0 @@
-export const SET_TEST_AND_PRODUCT_LIST = 'setTestAndProductList';
