@@ -1,6 +1,6 @@
 {
     "database": {
-        "URL": "mongodb+srv://yxsh:Qwerty12345@portfolio-apps.zrui0.mongodb.net/Mediseen?retryWrites=true&w=majority"
+        "URL": "mongodb+srv://dezdb:dezigndia@cluster0.smtpy.mongodb.net/test"
     },
     "jwt": {
         "secret": "talhaAnjum"

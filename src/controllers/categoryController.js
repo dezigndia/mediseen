@@ -9,10 +9,9 @@ class CategoryController {
     createCategory = expressAsyncHandler(async (req, res) => {
         const { phone } = res.locals.user
         const { type, data } = req.body
-        const result = await categoryService.createCategory(phone, type, data)
-
+        const result= await categoryService.createCategory(phone, type, data)
         if (result) {
-            return res.status(StatusCodes.CREATED).json({ status: true, payload: data })
+            return res.status(StatusCodes.CREATED).json({ status: true,payload: result })
         } else {
             throw new AppError(StatusCodes.BAD_GATEWAY, "Something went wrong.")
         }
