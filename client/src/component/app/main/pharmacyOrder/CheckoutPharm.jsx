@@ -35,7 +35,8 @@ const CheckoutPharm = () => {
 
 	const cart = useSelector((state) => state.cart)
 	const user = useSelector((state) => state.user)
-
+alert(user)
+alert(cart)
 	let totalItem = 0
 
 	let totalCost = 0
@@ -148,6 +149,7 @@ const CheckoutPharm = () => {
 					xs={6}
 				>
 					{user.name ? user.name : "Yash Sharma"}
+					{/* {user.name} */}
 				</Grid>
 				<Grid
 					className={classes.bold}

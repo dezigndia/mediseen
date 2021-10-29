@@ -153,12 +153,15 @@ const PharmacyOrder = () => {
 					classes={{
 						paper: classes.swipe,
 					}}
-				>
-					<UploadPres
+				> 
+				
+				{store!==undefined ?
+				<UploadPres
 						name={store.businessName}
 						setUpload={(value) => setUpload(value)}
 						setFile={(files) => setFile(files)}
 					/>
+				 :null}
 				</SwipeableDrawer>
 			</Grid>
 			<Grid container justify="center" spacing={2}>

@@ -105,7 +105,7 @@ const PaymentPharm = () => {
 		}
 	})
 	const user = useSelector((state) => state.user)
-
+alert(JSON.stringify(user))
 	console.log(products)
 
 	const dispatch = useDispatch()
