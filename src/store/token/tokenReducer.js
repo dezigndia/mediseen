@@ -1,4 +1,4 @@
-const tokenReducer = (state = {}, action) => {
+const tokenReducer = (state = { token: localStorage.getItem("token")}, action) => {
 	switch (action.type) {
 		case "UPDATE_ACCESS_TOKEN":
 			console.log(action.payload)

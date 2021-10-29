@@ -63,7 +63,7 @@ const PharmacyRegistrationHome = ({ history, match, currentVendor, products, aut
                 />
                 <RegistrationFormButton
                     icon1={<BsFillPeopleFill />}
-                    label={[<p>Dilevery & Payment Setting</p>]}
+                    label={[<p>Delivery & Payment Setting</p>]}
                     icon2={
                         currentVendor.payment && currentVendor.deliveryDetails
                             ? <MdCheckCircle />

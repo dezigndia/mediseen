@@ -79,20 +79,20 @@ const Home = () => {
 
 
     useEffect(() => {
-        axios
-            .get(GET_PRODUCTS, {
-                headers: {
-                    'Authorization': `Bearer ${auth_token.accessToken}`
-                }
-            })
-            .then(res => {
-                setProductCategories(res.data.payload);
-            })
-            .catch(err => {
-                alert("can't fetch products categories");
-                console.log(err);
-            })
-    }, [setProductCategories]);
+		axios
+			.get(GET_PRODUCTS, {
+				headers: {
+					Authorization: `Bearer ${auth_token.accessToken}`,
+				},
+			})
+			.then((res) => {
+				setProductCategories(res.data.payload);
+			})
+			.catch((err) => {
+				alert("can't fetch products categories");
+				console.log(err);
+			});
+	}, [auth_token]);
 
     return (
         <div className="vendorHome">

@@ -53,21 +53,21 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
         }
     }
 
-    const share = (e) => {
+    const share = (e, name) => {
         e.stopPropagation();
         e.cancellable = true;
         if (navigator.share) {
             navigator
-                .share({
-                    title: 'WebShare API Demo',
-                    url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
-                })
-                .then(() => {
-                    console.log('Thanks for sharing!');
-                })
-                .catch(() => {
-                    alert('something went wrong')
-                });
+				.share({
+					title: `Mediseen - ${name}`,
+					url: `www.mediseen.in/${name}`,
+				})
+				.then(() => {
+					console.log('Thanks for sharing!');
+				})
+				.catch(() => {
+					alert('something went wrong');
+				});
         } else {
             alert('share permission not granted');
         }
@@ -150,7 +150,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
                 <p>www.mediseen.in/{businessName}</p>
             </div>
             <div className="share">
-                <Icon iconColor={green} size='40px' onClick={share}>
+                <Icon iconColor={green} size='40px' onClick={(e) => share(e, businessName)}>
                     <IoLogoWhatsapp />
                 </Icon>
             </div>

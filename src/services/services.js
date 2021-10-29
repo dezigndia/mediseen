@@ -1,4 +1,4 @@
-const server = "http://13.126.205.131:5001/"
+const server = 'http://13.235.95.152:5001/';
 
 export const GET_OTP = `${server}api/auth/user-get-otp`
 
@@ -46,7 +46,7 @@ export const GET_BULK_PRODUCTS = `${server}api/product/find/bulk`;
 export const GET_BULK_TESTS = `${server}api/test/find/bulk`;
 export const UPDATE_MY_PRODUCT = (productId) => `${server}api/product/update/${productId}`;
 export const UPDATE_MY_TEST = (testId) => `${server}/api/test/update/${testId}`;
-export const GET_CATEGORIES=(type)=>`${server}api/category/type/${type}`;
+export const GET_CATEGORIES=(type)=>`${server}api/category`;
 export const ADD_CATEGORIES=`${server}api/category`;
 export const GET_SALES_DETAILS=(phoneNo)=>`${server}api/order/get-details?businessPhoneNumber=${phoneNo}`;
 

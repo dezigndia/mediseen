@@ -35,22 +35,24 @@ const AddProducts = (props) => {
     const [showAddCategories, setShowAddCategories] = useState(false);
 
     useEffect(() => {
-        axios
-            .get(GET_CATEGORIES('product-categories'), {
-                headers: {
-                    'Authorization': `Bearer ${props.auth_token.accessToken}`,
-                    'Content-type': 'multipart/form-data'
-                }
-            })
-            .then(res => {
-                setCategory(res.data.payload.values);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        //setCategory(['anti-biotic', 'anti-inflammatory', 'enzyme', 'tonic', 'anti-septic']);
-        setType(['liquid', 'tablet', 'injection', 'inhaler', 'cream']);
-    }, [setCategory, setType, props.auth_token.accessToken, showAddCategories]);
+		if (props.auth_token.accessToken) {
+			axios
+				.get(GET_CATEGORIES(''), {
+					headers: {
+						Authorization: `Bearer ${props.auth_token.accessToken}`,
+						'Content-type': 'multipart/form-data',
+					},
+				})
+				.then((res) => {
+					setCategory(res.data.payload[0].values);
+				})
+				.catch((err) => {
+					console.log(err.response);
+				});
+			//setCategory(['anti-biotic', 'anti-inflammatory', 'enzyme', 'tonic', 'anti-septic']);
+			setType(['liquid', 'tablet', 'injection', 'inhaler', 'cream']);
+		}
+	}, [props.auth_token.accessToken]);
 
     const initialState = {
         images: [],
