@@ -39,6 +39,6 @@ const pharmacySchema = new mongoose.Schema(
 pharmacySchema.pre("save", function () {
     this.type = "pharmacy"
 })
-const Pharmarcy = mongoose.model("Pharmarcy", pharmacySchema, "business")
+const Pharmarcy = mongoose.model("Pharmarcy", pharmacySchema)
 
 module.exports = Pharmarcy

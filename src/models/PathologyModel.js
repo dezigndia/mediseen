@@ -101,6 +101,6 @@ const pathologySchema = new mongoose.Schema(
 pathologySchema.pre("save", function () {
     this.type = "pathology"
 })
-const Pathology = mongoose.model("Pathology", pathologySchema, "business")
+const Pathology = mongoose.model("Pathology", pathologySchema)
 
 module.exports = Pathology

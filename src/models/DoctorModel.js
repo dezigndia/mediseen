@@ -41,6 +41,6 @@ doctorSchema.methods.toJSON = function () {
 doctorSchema.pre("save", function () {
     this.type = "doctor"
 })
-const Doctor = mongoose.model("Doctor", doctorSchema, "business")
+const Doctor = mongoose.model("Doctor", doctorSchema)
 
 module.exports = Doctor

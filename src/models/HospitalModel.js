@@ -75,6 +75,6 @@ const hospitalSchema = new mongoose.Schema(
 hospitalSchema.pre("save", function () {
     this.type = "hospital"
 })
-const Hospital = mongoose.model("Hospital", hospitalSchema, "business")
+const Hospital = mongoose.model("Hospital", hospitalSchema)
 
 module.exports = Hospital

@@ -42,8 +42,20 @@ class BusinessService {
     })
     getBusinessById = expressAsyncHandler(async id => {
         //FIXME fix type
+        return await Pharmacy.findById(id)
+    })
+
+    getDoctorById = expressAsyncHandler(async id => {
+        //FIXME fix type
         return await Doctor.findById(id)
     })
+
+
+    getHospitalById = expressAsyncHandler(async id => {
+        //FIXME fix type
+        return await Hospital.findById(id)
+    })
+
     getAllBusiness = expressAsyncHandler(
         async (limit, skip, city, category, specialist, area, search, admin = false) => {
             let filter = { isActive: true }
@@ -60,21 +72,39 @@ class BusinessService {
                 filter.type = getRegex(category)
             }
             if (search) {
-                console.log("herer", search)
                 const op = splitStringRegex(search)
                 const searchfirstName = op[0]
                 //FIXME fix type
-                return Doctor.find({
+
+                console.log(search)
+                return Hospital.find({
                     $or: [
                         { businessName: getRegex(search) },
                         { firstName: getRegex(searchfirstName) },
                     ],
                     $and: [filter],
                 })
+                
             } else {
                 //FIXME fix type
-                return await Doctor.find(filter).limit(parseInt(limit)).skip(parseInt(skip))
-            }
+                //  return await Pharmarcy.find().limit(parseInt(limit)).skip(parseInt(skip))
+                switch (category) {
+                    case "doctor": {
+                        return await Doctor.find({type: category })
+                    }
+                    case "pharmacy": {
+                        return await Pharmacy.find({type: category })
+                    }
+                    case "hospital": {
+                        return await Hospital.find({type: category })
+                    }
+                    case "pathology": {
+                        return await Pathology.find({type: category })
+                    }
+                    default: {
+                        return await Doctor.find();
+                    }
+                }}
         }
     )
 

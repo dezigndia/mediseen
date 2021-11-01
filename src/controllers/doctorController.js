@@ -34,7 +34,7 @@ class DoctorController {
     getDoctorByID = expressAsyncHandler(async (req, res) => {
         const { docId } = req.params
 
-        const data = await businessService.getBusinessById(docId)
+        const data = await businessService.getDoctorById(docId)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
