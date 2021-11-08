@@ -1,2 +1,0 @@
-# mediseen
-Mediseen App repository
