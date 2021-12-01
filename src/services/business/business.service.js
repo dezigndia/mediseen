@@ -75,11 +75,9 @@ class BusinessService {
                 const op = splitStringRegex(search)
                 const searchfirstName = op[0]
                 //FIXME fix type
-
-                console.log(search)
                 return Hospital.find({
                     $or: [
-                        { businessName: getRegex(search) },
+                        { businessName: getRegex(searchfirstName) },
                         { firstName: getRegex(searchfirstName) },
                     ],
                     $and: [filter],
