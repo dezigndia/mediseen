@@ -209,14 +209,14 @@ const Home = ({ history, match }) => {
         />
       </div>
 
-      <div className="signInTab">
+      {/* <div className="signInTab">
         <div className="signInButtonContainer">
           <IconContext.Provider value={{ className: "signInButtonIcon" }}>
             <MdLocationOn />
           </IconContext.Provider>
           <Button type="button">Sign IN</Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="buttonTab">
         <ButtonContainer label="Book Appointment / Order" />

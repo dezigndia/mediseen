@@ -81,7 +81,7 @@ const Filter = ({ match, setSearchCategory, category, query }) => {
 
 	return (
 		<div className="filter">
-			<FilterItem label={"All"} {...{ category, setSearchCategory }} />
+			{/* <FilterItem label={"All"} {...{ category, setSearchCategory }} /> */}
 			<FilterItem
 				label={HOSPITAL}
 				highlight={count.hospital}

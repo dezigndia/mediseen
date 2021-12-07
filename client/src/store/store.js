@@ -24,6 +24,7 @@ import patient from "./patient/patientReducer"
 
 const rootReducer = combineReducers({
 	location: locationReducer,
+	user:user,
 	token: tokenReducer,
 	login: loginReducer,
 	search: searchReducer,
