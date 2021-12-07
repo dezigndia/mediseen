@@ -1,7 +1,7 @@
 const fetchCallFile = async (endpoint, method, jwt, body) => {
 	let data
 	//const response = await fetch(`http://13.235.95.152:5001/api/${endpoint}`, {
-		const response = await fetch(`http://localhost:5001${endpoint}`, {
+		const response = await fetch(`http://13.235.95.152:5001${endpoint}`, {
 		method: `${method}`,
 		headers: {
 			Accept: "application/json",
