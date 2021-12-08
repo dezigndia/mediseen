@@ -75,13 +75,40 @@ class BusinessService {
                 const op = splitStringRegex(search)
                 const searchfirstName = op[0]
                 //FIXME fix type
-                return Hospital.find({
-                    $or: [
-                        { businessName: getRegex(searchfirstName) },
-                        { firstName: getRegex(searchfirstName) },
-                    ],
-                    $and: [filter],
-                })
+                    switch (category) {
+                        case "doctor": {
+                            return await Doctor.find({
+                                $or: [
+                                    { businessName: getRegex(searchfirstName) },
+                                    { firstName: getRegex(searchfirstName) },
+                                ]
+                            })
+                        }
+                        case "pharmacy": {
+                            return await Pharmacy.find({
+                                $or: [
+                                    { businessName: getRegex(searchfirstName) },
+                                    { firstName: getRegex(searchfirstName) },
+                                ]
+                            })
+                        }
+                        case "hospital": {
+                            return await Hospital.find({
+                                $or: [
+                                    { businessName: getRegex(searchfirstName) },
+                                    { firstName: getRegex(searchfirstName) },
+                                ]
+                            })
+                        }
+                        case "pathology": {
+                            return await Pathology.find({
+                                $or: [
+                                    { businessName: getRegex(searchfirstName) },
+                                    { firstName: getRegex(searchfirstName) },
+                                ]
+                            })
+                        }
+                    }
                 
             } else {
                 //FIXME fix type
@@ -120,20 +147,36 @@ class BusinessService {
         if (category) {
             filter.type = getRegex(category)
         }
-        if (search) {
-            const op = splitStringRegex(search)
-            const searchfirstName = op[0]
-            //FIXME fix type
-            const result = Doctor.find({
-                $or: [{ businessName: getRegex(search) }, { firstName: getRegex(searchfirstName) }],
-                $and: [filter],
-            })
-            return buisnessHelper.getBusinessCountByType(result)
-        } else {
-            //FIXME fix type
-            const data = await Doctor.find(filter)
-            return buisnessHelper.getBusinessCountByType(data)
+        if (filter) {
+            const doctor = await Doctor.find(filter).count()
+            const pharmacy = await Pharmacy.find(filter).count()
+            const hospital = await Hospital.find(filter).count()
+            const pathology = await Pathology.find(filter).count()
+          //  return buisnessHelper.getBusinessCountByType(data)
+          let count = {
+            doctor: doctor,
+            hospital: pharmacy,
+            pharmacy: hospital,
+            pathology: pathology,
         }
+          return  count;
+        }
+        else {
+            //FIXME fix type
+            const doctor = await Doctor.find().count()
+            const pharmacy = await Pharmacy.find().count()
+            const hospital = await Hospital.find().count()
+            const pathology = await Pathology.find().count()
+          //  return buisnessHelper.getBusinessCountByType(data)
+          let count = {
+            doctor: doctor,
+            hospital: pharmacy,
+            pharmacy: hospital,
+            pathology: pathology,
+        }
+          return  count;
+        }
+
     })
 
     getBusinessByPhoneNumber = expressAsyncHandler(async (phoneNumber, category) => {
