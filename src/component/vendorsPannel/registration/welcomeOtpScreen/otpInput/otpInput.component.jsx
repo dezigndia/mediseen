@@ -9,7 +9,7 @@ const Input = React.forwardRef((props, ref) => {
 
 const OtpInput = ({ otp, setOtp }) => {
 
-    const refArray = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
+    const refArray = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
     const changeHandler = useCallback((e) => {
         let index = parseInt(e.target.getAttribute('index'));

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory , withRouter} from 'react-router-dom';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import {Badge, Tooltip} from "@material-ui/core";
 import './header.styles.scss';
 
 //importing icon
@@ -20,13 +22,15 @@ import { UPLOAD_FILE, UPDATE_REGISTERED_USER } from '../../../services/services'
 //importing actions
 import { setCurrentVendor } from '../../../actions/action';
 
-const Header = ({ location }) => {
+const Header = ({ location, props }) => {
     const [isHidden, setIsHidden] = useState(true);
     const currentVendor = useSelector(state => state.currentVendor);
     const photo = useSelector(state => state.currentVendor.photo);
     const auth_token = useSelector(state => state.token);
     const addSignBoardref = useRef(null);
     const dispatch = useDispatch();
+
+    const history = useHistory();
 
     useEffect(() => {
         if (location.pathname.includes('/profile') || (location.pathname.includes('registerAs') && location.pathname !== '/vendor/registerAs')) {
@@ -74,6 +78,13 @@ const Header = ({ location }) => {
             });
     }
 
+    const logout = () => {
+            localStorage.removeItem('currentVendor');
+            localStorage.removeItem('token');
+            history.push('/');
+    }
+      
+    
     return (
         <div className={`vendorsPannelHeader ${isHidden ? 'hidden' : null}`}>
             <div className="addSignBoard" onClick={(e) => addSignBoardref.current.click()}>
@@ -96,7 +107,18 @@ const Header = ({ location }) => {
             <div className="vendorsName">
                 {currentVendor.businessName}
             </div>
-            <Notification />
+
+            <Tooltip title="Notifications">
+                <Badge badgeContent={1} color="primary">
+                    <Notification color="action" />
+                </Badge>
+            </Tooltip>
+            
+            <Tooltip title="Logout">
+                <div onClick={() => logout()} style={{marginRight:"10px", marginLeft:"35px", display: "flex", cursor: "pointer"}}>
+                    <LogoutOutlinedIcon />
+                </div>
+            </Tooltip>
         </div>
     );
 }

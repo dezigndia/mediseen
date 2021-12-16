@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { withRouter } from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import './paymentSetting.styles.scss';
 import Radio from '@material-ui/core/Radio';
@@ -30,6 +30,7 @@ const PaymentSetting = (props) => {
 
     const [reEnteredAccountNumber, setReEnteredAccountNumber] = useState('');
     const [errorsField, setErrorsField] = useState('');
+
 
     const back = (e) => {
         e.preventDefault();
@@ -94,7 +95,7 @@ const PaymentSetting = (props) => {
     return (
         <div className="paymentSettingContainer">
             <div className="skipButton">
-                <button className='whiteButton' onCLick={back}>Skip For Now</button>
+                <button className='whiteButton' onClick={back}>Skip For Now</button>
             </div>
             <div className="paymentSettingLabel">
                 <div className='labelIconContainer'>
