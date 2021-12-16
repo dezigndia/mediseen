@@ -87,23 +87,26 @@ const Header = ({ location, props }) => {
     
     return (
         <div className={`vendorsPannelHeader ${isHidden ? 'hidden' : null}`}>
-            <div className="addSignBoard" onClick={(e) => addSignBoardref.current.click()}>
-                <div className="addSignBoardIcon">
-                    {
-                        photo
-                            ? <img src={photo} />
-                            : <Icon size='30px' iconColor='white'><AiOutlineCamera /></Icon>
-                    }
+            <Tooltip title="Profile">
+                <div className="addSignBoard" onClick={(e) => addSignBoardref.current.click()}>
+                    <div className="addSignBoardIcon">
+                        {
+                            photo
+                                ? <img src={photo} />
+                                : <Icon size='30px' iconColor='white'><AiOutlineCamera /></Icon>
+                        }
+                    </div>
+                    {!photo && <p>Add sign board</p>}
+                    <input
+                        type='file'
+                        accept='image/x-png,image/gif,image/jpeg'
+                        style={{ display: 'none' }}
+                        ref={addSignBoardref}
+                        onChange={addSignBoardHandler}
+                    />
                 </div>
-                {!photo && <p>Add sign board</p>}
-                <input
-                    type='file'
-                    accept='image/x-png,image/gif,image/jpeg'
-                    style={{ display: 'none' }}
-                    ref={addSignBoardref}
-                    onChange={addSignBoardHandler}
-                />
-            </div>
+            </Tooltip>
+
             <div className="vendorsName">
                 {currentVendor.businessName}
             </div>
