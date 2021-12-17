@@ -11,7 +11,7 @@ const App = ({ match }) => {
 		<div className="APP">
 			<Header />
 			<Main />
-			{/* <Footer /> */}
+			<Footer/>
 		</div>
 	)
 }

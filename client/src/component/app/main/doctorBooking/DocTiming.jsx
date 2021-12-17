@@ -14,9 +14,9 @@ const DocTiming = () => {
 
 	return (
 		<Grid container item style={{ padding: "1rem 0.5rem" }} spacing={4}>
-			{/* <Grid item>
+			<Grid item>
 				<BusinessHeader />
-			</Grid> */}
+			</Grid>
 			<Grid item xs={12}>
 				<Available />
 			</Grid>

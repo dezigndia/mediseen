@@ -70,7 +70,7 @@ const OtpInput = ({ otp, setOtp, setOtpSendingTrue, setOtpSentTrue, setOtpErrorT
         let newOtpArray = otp.value;
         newOtpArray[index] = value;
         setOtp(newOtpArray);
-        if (index < 5 && otpInputRef[index + 1].current.value === '' && otpInputRef[index].current.value !== '') {
+        if (index < 3 && otpInputRef[index + 1].current.value === '' && otpInputRef[index].current.value !== '') {
             otpInputRef[index + 1].current.focus();
         }
     }
@@ -98,8 +98,8 @@ const OtpInput = ({ otp, setOtp, setOtpSendingTrue, setOtpSentTrue, setOtpErrorT
                 <input type='number' value={otp.value[1]} onChange={(e) => { setOtpByIndex(e.target.value, 1) }} maxLength={1} ref={otpInputRef[1]} />
                 <input type='number' value={otp.value[2]} onChange={(e) => { setOtpByIndex(e.target.value, 2) }} maxLength={1} ref={otpInputRef[2]} />
                 <input type='number' value={otp.value[3]} onChange={(e) => { setOtpByIndex(e.target.value, 3) }} maxLength={1} ref={otpInputRef[3]} />
-                <input type='number' value={otp.value[4]} onChange={(e) => { setOtpByIndex(e.target.value, 4) }} maxLength={1} ref={otpInputRef[4]} />
-                <input type='number' value={otp.value[5]} onChange={(e) => { setOtpByIndex(e.target.value, 5) }} maxLength={1} ref={otpInputRef[5]} />
+                {/* <input type='number' value={otp.value[4]} onChange={(e) => { setOtpByIndex(e.target.value, 4) }} maxLength={1} ref={otpInputRef[4]} />
+                <input type='number' value={otp.value[5]} onChange={(e) => { setOtpByIndex(e.target.value, 5) }} maxLength={1} ref={otpInputRef[5]} /> */}
             </div>
             <div className="rightAlignedText">
                 {

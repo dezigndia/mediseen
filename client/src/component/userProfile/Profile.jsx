@@ -140,7 +140,20 @@ const Profile = ({ history }) => {
 				<Grid item>
 					<ContactManager address={user && user.address} />
 				</Grid>
-				<Grid item xs={12}>
+				{/* <Grid item xs={12}>
+					<Paper elevation={3} className={classes.paper}>
+						<Grid container alignItems="center" xs={12}>
+							<Grid item xs={2}>
+								<ExitToAppIcon className={classes.fontGreen} />
+							</Grid>
+							<Grid item xs={10}>
+								<h3 className={classes.fontGreen}>Sign Out</h3>
+							</Grid>
+						</Grid>
+					</Paper>
+				</Grid> */}
+					{/* modified by -  rakesh kumar pradhan */}
+				<Grid item>
 					<Paper elevation={3} className={classes.paper}>
 						<Grid container alignItems="center" xs={12}>
 							<Grid item xs={2}>
@@ -152,7 +165,9 @@ const Profile = ({ history }) => {
 						</Grid>
 					</Paper>
 				</Grid>
-				<Grid item xs={12}>
+
+			{/* modified by -  rakesh kumar pradhan */}
+				<Grid item>
 					<Paper elevation={3} className={classes.paper}>
 						<Grid container alignItems="center" xs={12}>
 							<Grid item xs={6}>
