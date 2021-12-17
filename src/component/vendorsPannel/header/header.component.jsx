@@ -41,8 +41,6 @@ const Header = ({ location, props }) => {
         }
     }, [location.pathname]);
 
-
-
     const addSignBoardHandler = (e) => {
         let formData = new FormData();
         formData.append('file', e.target.files[0]);

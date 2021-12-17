@@ -102,6 +102,7 @@ class BusinessInfoForm extends React.Component {
         axios
             .post(`${REGISTER_LINK}?category=${this.props.currentVendor.businessType}`, this.state)
             .then(res => {
+                console.log(`${REGISTER_LINK}?category=${this.props.currentVendor.businessType}`);
                 let currentVendor={ isRegistered: true, ...res.data.payload };
                 this.props.setCurrentVendor(currentVendor);
                 localStorage.setItem('currentVendor',JSON.stringify(currentVendor));
@@ -119,8 +120,6 @@ class BusinessInfoForm extends React.Component {
                 console.log(err);
                 alert('something wnet wrong');
             })
-
-
     }
 
     render() {

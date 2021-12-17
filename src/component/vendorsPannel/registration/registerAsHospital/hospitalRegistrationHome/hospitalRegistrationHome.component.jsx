@@ -27,13 +27,13 @@ const HospitalRegistrationHome = ({ history, match, currentVendor }) => {
                     icon1={<AiOutlineClockCircle />}
                     label={[<p>Add Pannel & Timing</p>]}
                     icon2={
-                        currentVendor.doctors && currentVendor.doctors.length ?
+                        currentVendor && currentVendor.doctors && currentVendor.doctors.length ?
                             <MdCheckCircle /> :
                             <GoPlus />
                     }
                     onClick={(e) => { history.push(`${match.url}/${ADD_DOCTORS}`) }}
                     translucent={
-                        currentVendor.doctors && currentVendor.doctors.length
+                        currentVendor && currentVendor.doctors && currentVendor.doctors.length
                             ? false
                             : true
                     }
@@ -48,22 +48,18 @@ const HospitalRegistrationHome = ({ history, match, currentVendor }) => {
                     }
                     onClick={(e) => { history.push(`${match.url}/${PAYMENT_SETTING}`) }}
                     translucent={
-                        currentVendor.payment
-                            ? false
-                            : true
+                        currentVendor && currentVendor.payment ? false : true
                     }
                 />
                 <RegistrationFormButton
                     icon1={<BsFillPeopleFill />}
                     label={[<p>Add Support Staff</p>]}
                     icon2={
-                        currentVendor.staffs.length
-                            ? <MdCheckCircle />
-                            : <GoPlus />
+                        currentVendor && currentVendor.staffs  ? <MdCheckCircle /> : <GoPlus />
                     }
                     onClick={(e) => { history.push(`${match.url}/${ADD_STAFF}`) }}
                     translucent={
-                        currentVendor.staffs.length
+                        currentVendor && currentVendor.staffs
                             ? false
                             : true
                     }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import {Button} from "@material-ui/core";
+import {Button, Snackbar } from "@material-ui/core";
+import MuiAlert from '@mui/material/Alert';
 import './welcomeOtpScreen.styles.scss';
 
 //importing custom components
@@ -23,41 +24,30 @@ import { GET_OTP, VERIFY_OTP, GET_USER_DEETAIL_BY_TOKEN } from '../../../../serv
 //importing actions
 import { setCurrentVendor, updateAccessToken } from '../../../../actions/action';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, updateAccessToken }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [phoneNo, setPhoneNo] = useState(['', '', '', '', '', '', '', '', '', '']);
     const [countryCode, setCountryCode] = useState({ code: '+91', country: 'IND' });
+    const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        // const getOtp = () => {
-        //     setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') })
-        //     axios              //{mobileNumber:+91123456}
-        //         .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join('') })
-        //         .then(res => {
-        //             if (res.data.payload.isRegistered) {
-        //                 //setCurrentVendor(res.data.payload);
-        //                 console.log('otp sent');
-        //             }
-        //         }).catch(err => {
-        //             alert('something went wrong');
-        //         })
-        // }
-
-        //action when phone no is input
-        // let check = () => {
-        //     for (let i = 0; i < phoneNo.length; i++) {
-        //         if (phoneNo[i] === '') {
-        //             return false;
-        //         }
-        //     }
-        //     return true;
-        // }
-        // if (check()) {
-        //     getOtp();
-        // }
-    }, [phoneNo, countryCode.code, setCurrentVendor])
+    const handleClick = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
 
     const sendOtp = () => {
+        handleClick();
         setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') })
         axios              //{mobileNumber:+91123456}
             .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join('') })
@@ -65,6 +55,7 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
                 if (res.data.payload.isRegistered) {
                     //setCurrentVendor(res.data.payload);
                     console.log('otp sent');
+                
                 }
             }).catch(err => {
                 alert('something went wrong');
@@ -85,12 +76,12 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
             sendOtp();
         }
     }
-/////////////////////////////////////////////////////////////
 
 const verifyOtp = () => {
     axios
         .post(VERIFY_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), otp: otp.join('') })
         .then(res => {
+            console.log("res :-=- --- fullData  ", res.data.payload.isRegistered);
             // updating access token
             updateAccessToken(res.data.payload.auth_token);
             let link = match.url.split('/');
@@ -122,6 +113,7 @@ const verifyOtp = () => {
                         localStorage.setItem('token',res.data.payload.auth_token);
                         link.push(page);
                         link = link.join('/');
+                        console.log("Link := - ", link);
                         history.push(link);
                     })
                     .catch(error => {
@@ -130,6 +122,7 @@ const verifyOtp = () => {
                     });
             }
             else {
+                console.log("No Account Found");
                 //user is not already registered , then fill the business registration from
                 link.push(ADD_BUSINESS_INFO);
                 link = link.join('/');
@@ -186,6 +179,13 @@ const verifyOtp = () => {
             <div className="submissionButton" >
                 <Button onClick={() => checkForOtpSend()} variant="contained" style={{backgroundColor: "green"}} className='greenButton'>Send</Button>
             </div>
+            
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{vertical: "bottom", horizontal: "left"}}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                        OTP sent to your mobile number!
+                    </Alert>
+            </Snackbar>
+
             <div className="welcomeScreenOtpInput">
                 <OtpInput {...{ otp, setOtp }} />
             </div>
