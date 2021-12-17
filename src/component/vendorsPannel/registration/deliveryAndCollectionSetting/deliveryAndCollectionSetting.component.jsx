@@ -36,9 +36,10 @@ const DeliveryAndCollectionSetting = (props) => {
 
     const save = (e) => {
         e.preventDefault();
+        console.log("Saving the Data of the boy");
+        console.log(props.currentVendor);
 
         let data;
-
         if (props.currentVendor.businessType === 'pharmacy') {
             data = {
                 deliveryDetails: {
@@ -62,7 +63,7 @@ const DeliveryAndCollectionSetting = (props) => {
                 }
             }
         }
-
+   
         let error = props.currentVendor.businessType === 'pharmacy' ? deliveryValidator(data) : collectionValidator(data);
 
         if (Object.keys(error).length === 0) {

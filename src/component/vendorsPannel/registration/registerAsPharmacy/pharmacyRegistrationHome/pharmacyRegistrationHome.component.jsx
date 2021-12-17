@@ -50,12 +50,12 @@ const PharmacyRegistrationHome = ({ history, match, currentVendor, products, aut
                     icon1={<AiOutlineClockCircle />}
                     label={[<p>Add Timing And Staff</p>]}
                     icon2={
-                        currentVendor.staffs.length && currentVendor.workingHours
+                        currentVendor.staffs && currentVendor.workingHours
                             ? <MdCheckCircle />
                             : < GoPlus />
                     }
                     translucent={
-                        currentVendor.staffs.length && currentVendor.workingHours
+                        currentVendor.staffs && currentVendor.workingHours
                             ? false
                             : true
                     }
@@ -85,7 +85,7 @@ const PharmacyRegistrationHome = ({ history, match, currentVendor, products, aut
                             : <GoPlus />
                     }
                     translucent={
-                        products.length
+                        products
                             ? false
                             : true
                     }
@@ -99,7 +99,7 @@ const PharmacyRegistrationHome = ({ history, match, currentVendor, products, aut
                 />
             </div>
             {
-                (currentVendor.staffs.length && currentVendor.workingHours) && (currentVendor.payment && currentVendor.deliveryDetails) && (products.length)
+                (currentVendor.staffs && currentVendor.workingHours) && (currentVendor.payment && currentVendor.deliveryDetails) && (products)
                     ? <Redirect to='/vendor/profile' />
                     : null
             }

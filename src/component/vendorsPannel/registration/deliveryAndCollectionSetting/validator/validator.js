@@ -53,17 +53,17 @@ export function collectionValidator(data) {
     if (collectionChargesPerVisit === '') {
         addToErrorsField('chargesPerOrder', 'field is empty');
     }
-    if (!/^\d+$/.test(collectionDistance)) {
-        addToErrorsField('chargesPerOrder', 'field contains letters');
-    }
+    // if (!/^\d+$/.test(collectionDistance)) {
+    //     addToErrorsField('chargesPerOrder', 'field contains letters');
+    // }
 
     //validating minCollectionAmmount *
     if (minCollectionAmmount === '') {
         addToErrorsField('minOrderAmmount', 'field is empty');
     }
-    if (!/^\d+$/.test(minCollectionAmmount)) {
-        addToErrorsField('minOrderAmmount', 'contains letters');
-    }
+    // if (!/^\d+$/.test(minCollectionAmmount)) {
+    //     addToErrorsField('minOrderAmmount', 'contains letters');
+    // }
     //validating hardCopyReportDeliveryCharges
 
     //codAvailable
