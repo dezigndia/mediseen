@@ -181,7 +181,7 @@ const Home = ({ history, match }) => {
           }}
           count={count && count.pathology}
         />
-        <IconButtonContainer
+        {/* <IconButtonContainer
           icon={
             <Battery20Icon
               fontSize="large"
@@ -206,7 +206,7 @@ const Home = ({ history, match }) => {
             gotoPage("search/pathology");
           }}
           hideInSmallScreen
-        />
+        /> */}
       </div>
 
       {/* <div className="signInTab">
