@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios'
-import xlsx from 'xlsx';
 import './addTest.styles.scss';
 
 //importing reusable components
@@ -46,7 +45,8 @@ const AddTests = (props) => {
                 }
             })
             .then(res => {
-                setCategory(res.data.payload.values);
+                console.log("RESPONSE :=-=-= ", res);
+                setCategory(res.data.payload);
             })
             .catch(err => {
                 console.log(err);
@@ -102,7 +102,6 @@ const AddTests = (props) => {
 
         let formData = new FormData();
         formData.append('file', imagesArray[0]);
-
         axios
             .post(UPLOAD_FILE, formData, {
                 headers: {
@@ -132,13 +131,16 @@ const AddTests = (props) => {
                         setUploading(false);
 
                         props.setProductsAndTestList(res.data.payload);
-
+                        console.log("props are present or not : -- " , props.setShowAddTests);
                         if (props.setShowAddTests) {
+                        console.log("Inside If Condition : -- PAuse ");
+
                             //ie rendered in pathology profile
                             props.setTestCategories(prevState => [...prevState, res.data.payload]); //test categories is list of test
                             props.setShowAddTests(false);
                         }
                         else {
+                        console.log("Inside else Condition : -- goBack ");
                             //ie rendering in pathology registration
                             props.history.goBack();
                         }

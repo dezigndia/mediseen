@@ -46,7 +46,7 @@ const AcceptTab = ({ setShowAcceptTab, setActiveTabNull, updateActiveItem, produ
             })
             .catch(err => {
                 console.log(err);
-                alert('unable to fetch products list');
+                // alert('unable to fetch products list');
             });
     }, [products])
 

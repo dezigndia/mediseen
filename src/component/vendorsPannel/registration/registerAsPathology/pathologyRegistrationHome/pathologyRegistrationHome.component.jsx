@@ -37,7 +37,7 @@ const PathologyRegistrationHome = ({ history, match, currentVendor, auth_token, 
             })
             .catch(err => {
                 console.log(err);
-                alert(`can't fetch products details`);
+                // alert(`can't fetch products details`);
             })
     }, [auth_token.accessToken, setProductsAndTestList]);
     return (

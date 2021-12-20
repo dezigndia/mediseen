@@ -38,7 +38,7 @@ const PharmacyRegistrationHome = ({ history, match, currentVendor, products, aut
             })
             .catch(err => {
                 console.log(err);
-                alert("can't fetch product Details");
+                // alert("can't fetch product Details");
             })
     }, [auth_token.accessToken, setProductsAndTestList]);
 

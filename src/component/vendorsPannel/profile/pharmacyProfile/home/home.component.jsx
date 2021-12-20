@@ -89,7 +89,7 @@ const Home = () => {
 				setProductCategories(res.data.payload);
 			})
 			.catch((err) => {
-				alert("can't fetch products categories");
+				// alert("can't fetch products categories");
 				console.log(err);
 			});
 	}, [auth_token]);

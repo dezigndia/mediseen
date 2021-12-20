@@ -46,7 +46,7 @@ const Accepted = ({ setActiveTabNull, orderNo, orderDate, orderTime, paymentMeth
             })
             .catch(err => {
                 console.log(err);
-                alert('unable to fetch product lists');
+                // alert('unable to fetch product lists');
             })
     }, [products]);
 
