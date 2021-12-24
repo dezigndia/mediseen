@@ -508,10 +508,10 @@ const sendAdminOTP = expressAsyncHandler(async (req, res) => {
     }
 })
 const verifyOTP = expressAsyncHandler(async (req, res) => {
-    let { phoneNumber, otp } = req.body
+    let { phoneNumber, otp,businessType } = req.body
     // let user = Admin.findOne({phoneNumber: phoneNumber})
 
-    let data = await as.verifyOtp(phoneNumber, otp, "admin")
+    let data = await as.verifyOtp(phoneNumber, otp, businessType,"admin")
     console.log(data)
     if (data.isRegistered) {
         var token = jwt.sign(

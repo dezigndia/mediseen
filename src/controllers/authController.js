@@ -7,11 +7,11 @@ const authService = new AuthService()
 
 class AuthController {
     verifyOtp = expressAsyncHandler(async (req, res) => {
-        const { phoneNumber, otp } = req.body
+        const { phoneNumber, otp , businessType} = req.body
         if (!phoneNumber) {
             throw new AppError(StatusCodes.BAD_REQUEST, "phoneNumber Missing")
         }
-        const data = await authService.verifyOtp(phoneNumber, otp)
+        const data = await authService.verifyOtp(phoneNumber, otp, businessType)
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })
         } else {
@@ -19,11 +19,11 @@ class AuthController {
         }
     })
     sendOTP = expressAsyncHandler(async (req, res) => {
-        const { phoneNumber } = req.body
+        const { phoneNumber ,businessType} = req.body
         if (!phoneNumber) {
             throw new AppError(StatusCodes.BAD_REQUEST, "Phone Number Missing")
         }
-        const data = await authService.sendOTP(phoneNumber)
+        const data = await authService.sendOTP(phoneNumber,businessType)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })

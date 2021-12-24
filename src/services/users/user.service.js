@@ -25,7 +25,7 @@ class UserService {
             )
             return { auth_token: token, isRegistered: user ? true : false }
         } else {
-            console.log("heloo");
+            
             const user = await User.create({ phone: phoneNumber, name: name });
             console.log(user);
             const token = await jwt.sign(
