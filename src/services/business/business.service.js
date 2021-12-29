@@ -11,11 +11,11 @@ const buisnessHelper = require("../../utils/buisnessHelper")
 class BusinessService {
     createNewBusiness = expressAsyncHandler(async (category, data) => {
         if (data && data.phone) {
-            const found = await Doctor.findOne({ phone: data.phone })
-            if (found) {
-                console.log(found)
-                throw new AppError(StatusCodes.CONFLICT, "The phone number is already registered")
-            }
+            // const found = await Doctor.findOne({ phone: data.phone })
+            // // if (found) {
+            //     console.log(found)
+            //     throw new AppError(StatusCodes.CONFLICT, "The phone number is already registered")
+            // }
             switch (category) {
                 case "doctor": {
                     return await Doctor.create(data)

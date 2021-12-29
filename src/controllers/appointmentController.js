@@ -17,11 +17,11 @@ class AppointmentController {
             : (bodydata.businessPhoneNumber = user.phone)
 
         bodydata.createdBy = user.phone
-        bodydata.createdByType = user.type
+        bodydata.createdByType = user.type    
         switch (bodydata.businessType) {
             case "doctor": {
                 const doctor = await Doctor.findOne({ phone: bodydata.userPhoneNumber })
-                console.log(doctor)
+
                 const clinic = doctor.clinic.find(c => c._id == bodydata.clinicId)
                 if (!clinic) {
                     throw new AppError(StatusCodes.BAD_GATEWAY, "No clinic found")
@@ -32,8 +32,9 @@ class AppointmentController {
             }
             case "hospital": {
                 const hospital = await Hospital.findOne({ phone: bodydata.userPhoneNumber })
-                console.log(hospital)
-                const doctor = hospital.doctors.find(c => c.doctorId == bodydata.doctorId)
+                console.log(bodydata.userPhoneNumber)
+                // console.log(hospital)
+                const doctor = hospital.doctors.find(c => c.Id == bodydata.doctorId)
                 if (!doctor) {
                     throw new AppError(StatusCodes.BAD_GATEWAY, "No doctor found")
                 } else {

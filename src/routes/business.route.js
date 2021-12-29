@@ -15,7 +15,7 @@ router.put("/update/", authenticate(), bc.updateBusiness) // update my business 
 router.delete("/delete/", authenticate(), bc.deleteBusiness) // delete business with token
 
 router.put("/:status/doctor/:hosPh/doctor/:docId", authenticate(), bc.acceptDoctor)
-router.put("/:status/doctor/:hosPh/doctor/:docId", authenticate(), bc.acceptDoctor)
+router.put("/:status/hospital/:hosPh/doctor/:docId", authenticate(), bc.acceptDoctor)
 router.get("/pending/requests", authenticate(), bc.getPendingRequests)
 
 module.exports = router
