@@ -65,9 +65,8 @@ import { addCurrentStore } from "../../../../store/currentStore/currentStoreActi
 const currentDate = new Date()
 
 // const day = moment().format("dddd")
-
-const day = "Monday"
-
+const day = moment(new Date()).format("dddd")
+// const day = "Monday"
 const time = currentDate.getHours()
 
 const DoctorBooking = () => {

@@ -23,7 +23,7 @@ import { MdLocationOn } from "react-icons/md";
 import { IconContext } from "react-icons";
 
 //images
-//import BackgroundImage from '../../../../assets/images/background.png';
+import BackgroundImage from '../../../../assets/images/background.webp';
 
 const useStyles = makeStyles((theme) => ({
   colorWhite: {
@@ -125,9 +125,7 @@ const Home = ({ history, match }) => {
   console.log(count);
 
   return (
-    <div
-      className="home" /*style={{ background: `transparent url(${BackgroundImage}) 0% 0% repeat padding-box`, backgroundSize: 'contain' }}*/
-    >
+    <div  className="home" style={{ background: `transparent url(${BackgroundImage}) 0% 0% repeat padding-box`, backgroundSize: 'contain' }}>
       <div className="iconTab">
         <IconButtonContainer
           icon={
@@ -219,7 +217,11 @@ const Home = ({ history, match }) => {
       </div> */}
 
       <div className="buttonTab">
-        <ButtonContainer label="Book Appointment / Order" />
+        <ButtonContainer label="Book Appointment / Order" 
+            onClick={() => {
+            gotoPage("search/hospital");
+          }}
+        />
         <ButtonContainer
           label="Upload Prescription"
           onClick={() => {

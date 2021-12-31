@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState,useCallback } from "react"
 import clsx from "clsx"
 import Header from "./Header"
 import { Grid, Paper } from "@material-ui/core"
@@ -104,10 +104,15 @@ const Profile = ({ history }) => {
 		fetchPres()
 	}, [])
 
+	const logout=useCallback(()=>{
+        // localStorage.removeItem('currentVendor');
+        localStorage.removeItem('auth_token');
+        history.push('/');
+    },[history]);
+
 	return (
 		<Grid container direction="column">
 			<Grid item>
-			{user.photo !==undefined ?
 				<Header
 					image={user.photo && user.photo}
 					name={user && user.phone}
@@ -115,8 +120,7 @@ const Profile = ({ history }) => {
 						user.address && user.address[0].pincode
 					}`}
 				/>
-			:null}
-				
+
 			</Grid>
 			<Grid
 				container
@@ -125,6 +129,10 @@ const Profile = ({ history }) => {
 				spacing={2}
 				className={classes.container}
 			>
+
+<Grid item>
+					<ContactManager address={user && user.address} />
+				</Grid>
 				<Grid item>
 					<h3 className={classes.fontGrey}>My Records</h3>
 				</Grid>
@@ -136,9 +144,6 @@ const Profile = ({ history }) => {
 				</Grid>
 				<Grid item>
 					<TypeCard orders={orders} type="Orders" />
-				</Grid>
-				<Grid item>
-					<ContactManager address={user && user.address} />
 				</Grid>
 				{/* <Grid item xs={12}>
 					<Paper elevation={3} className={classes.paper}>
@@ -160,7 +165,7 @@ const Profile = ({ history }) => {
 								<ExitToAppIcon className={classes.fontGreen} />
 							</Grid>
 							<Grid item xs={10}>
-								<h3 className={classes.fontGreen}>Sign Out</h3>
+								<h3 className={classes.fontGreen}        onClick={logout}>Sign Out</h3>
 							</Grid>
 						</Grid>
 					</Paper>

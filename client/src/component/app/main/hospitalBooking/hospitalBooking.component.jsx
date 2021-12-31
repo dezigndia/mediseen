@@ -7,6 +7,7 @@ import fetchCall from "../../../../fetchCall/fetchCall"
 import { useParams } from "react-router-dom"
 import InfoCard from "./InfoCard"
 import Available from "./Available"
+import moment from "moment"
 import { useSelector, useDispatch } from "react-redux"
 import { addCurrentStore } from "../../../../store/currentStore/currentStoreAction"
 
@@ -17,11 +18,13 @@ const HospitalBooking = () => {
 	const dispatch = useDispatch()
 	const [isAvailable, setAvailable] = useState([])
 
+	const day = moment(new Date()).format("dddd")
 	useEffect(() => {
 		if (hos.doctors) {
 			const avail = hos.doctors.map((doc) => {
-				const available = { hours: doc.workingHours[`Tuesday`], doc }
-				return available
+				// const available = { hours: doc.workingHours[`Tuesday`], doc }
+				const available = {hours:doc.workingHours[`${day}`], doc:doc }
+			 return available
 			})
 			setAvailable(avail)
 		}
@@ -55,20 +58,34 @@ const HospitalBooking = () => {
 				</Grid>
 			</Grid>
 			<Grid item container spacing={2}>
-				{isAvailable.length > 0 ? (
+				{isAvailable > 0 ? (
 					<>
 						<Grid item>
 							<h3>Available Today</h3>
 						</Grid>
 						{isAvailable.map((item) => {
-							console.log(item)
+							
 							return (
 								<Grid item xs={12}>
 									<Available
 										name={item.doc.name}
-										address={item.doc.address}
-										morning={`${item.hours.morning.from}-${item.hours.morning.to}`}
-										evening={`${item.hours.evening.from}-${item.hours.evening.to}`}
+										// doctor={doc}
+										// address={item.doc.address}
+										// morning={item}
+											// &&
+											// `${item.workingHours.morning.from}-${item.workingHours.morning.to}`}
+										// evening={
+										// 	item.workingHours &&
+										// 	`${item.workingHours.evening.from}-${item.workingHours.evening.to}`}
+
+										morning={
+											item.hours &&
+											`${item.hours.morning.from}-${item.hours.morning.to}`
+										}
+										evening={
+											item.hours &&
+											`${item.hours.evening.from}-${item.hours.evening.to}`
+										}
 									/>
 								</Grid>
 							)
