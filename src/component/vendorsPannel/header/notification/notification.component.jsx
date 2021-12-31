@@ -32,8 +32,8 @@ const Notification = () => {
                     .map(item => <AcceptTypeNotification key={item.doctorId} id={item.doctorId} />)
             );
         }
-        console.log(notifications);
-        console.log(currentVendor);
+        // console.log("Notifications available : - " , notifications);
+        // console.log(currentVendor);
     }, [currentVendor,currentVendor.clinic,currentVendor.doctors]);
 
     return (
@@ -50,7 +50,7 @@ const Notification = () => {
                 &&
                 <div className='notifications'>
                     {
-                        notifications.length>0? notifications:<p>No Notifications</p>
+                        notifications.length > 0? notifications:<p>No Notifications</p>
                     }
                 </div>
             }

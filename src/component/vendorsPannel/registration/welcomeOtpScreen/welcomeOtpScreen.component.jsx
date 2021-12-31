@@ -50,7 +50,7 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
         handleClick();
         setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') })
         axios              //{mobileNumber:+91123456}
-            .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join('') })
+            .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), businessType: currentVendor.businessType })
             .then(res => {
                 if (res.data.payload.isRegistered) {
                     //setCurrentVendor(res.data.payload);
@@ -79,9 +79,9 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
 
 const verifyOtp = () => {
     axios
-        .post(VERIFY_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), otp: otp.join('') })
+        .post(VERIFY_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), otp: otp.join(''), businessType: currentVendor.businessType })
         .then(res => {
-            console.log("res :-=- --- fullData  ", res.data.payload.isRegistered);
+            // console.log("res :-=- --- fullData  ", res.data.payload.isRegistered);
             // updating access token
             updateAccessToken(res.data.payload.auth_token);
             let link = match.url.split('/');
@@ -124,6 +124,7 @@ const verifyOtp = () => {
             else {
                 console.log("No Account Found");
                 //user is not already registered , then fill the business registration from
+                console.log("ADD_BUSINESS_INFO Link :-=-=-=- ", ADD_BUSINESS_INFO);
                 link.push(ADD_BUSINESS_INFO);
                 link = link.join('/');
                 history.push(link);

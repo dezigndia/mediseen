@@ -110,7 +110,7 @@ const Header = ({ location, props }) => {
             </div>
 
             <Tooltip title="Notifications">
-                <Badge badgeContent={1} color="primary">
+                <Badge badgeContent={currentVendor.doctors && currentVendor.doctors.length} color="primary">
                     <Notification color="action" />
                 </Badge>
             </Tooltip>

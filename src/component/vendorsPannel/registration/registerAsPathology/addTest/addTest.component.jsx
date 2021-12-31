@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios'
+import {Button} from "@material-ui/core";
 import './addTest.styles.scss';
 
 //importing reusable components
@@ -98,7 +99,7 @@ const AddTests = (props) => {
         setUploading(true);
 
         const imagesArray = data.image;
-        console.log(imagesArray);
+        // console.log(imagesArray);
 
         let formData = new FormData();
         formData.append('file', imagesArray[0]);
@@ -121,6 +122,7 @@ const AddTests = (props) => {
                     category: data.category,
                     qtyType: data.type
                 }
+                console.log("DATA :---- ", Data);
                 axios
                     .post(ADD_TESTS, Data, {
                         headers: {
@@ -129,15 +131,16 @@ const AddTests = (props) => {
                     })
                     .then(res => {
                         setUploading(false);
-
+                        console.log("Final Response came :- ", res);
                         props.setProductsAndTestList(res.data.payload);
                         console.log("props are present or not : -- " , props.setShowAddTests);
                         if (props.setShowAddTests) {
                         console.log("Inside If Condition : -- PAuse ");
-
                             //ie rendered in pathology profile
                             props.setTestCategories(prevState => [...prevState, res.data.payload]); //test categories is list of test
                             props.setShowAddTests(false);
+                            props.history.goBack();
+                            props.history.push(`/vendor/profile`)
                         }
                         else {
                         console.log("Inside else Condition : -- goBack ");
@@ -147,7 +150,6 @@ const AddTests = (props) => {
                     })
                     .catch(err => {
                         setUploading(false);
-
                         console.log(err);
                         alert('something went wrong');
                     });
@@ -186,6 +188,7 @@ const AddTests = (props) => {
                     </Icon>
                     <p>Or Scan Barcode</p>
                 </div>
+               
             </div>
             <div className="addImagesContainer">
                 <div className="addImages">
@@ -211,8 +214,12 @@ const AddTests = (props) => {
                                 </>
                         }
                     </div>
+                 
                 </div>
                 <UploadedImagesPreview imagesArray={data.image} />
+            </div>
+            <div style={{textAlign:"right"}}>
+                <Button variant="contained" style={{color:"white", backgroundColor:"#35b322", borderRadius:"10px"}} onClick={() => props.history.push(`/vendor/profile`)}>  Home </Button>
             </div>
             <div className="addProductsAndTestInputContainer">
                 <div className="testName addProductsAndTestInput">

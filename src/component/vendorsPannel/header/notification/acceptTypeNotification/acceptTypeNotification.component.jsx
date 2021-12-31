@@ -18,7 +18,6 @@ const AcceptTypeNotification = ({ id }) => {
 
     const currentVendor = useSelector(state => state.currentVendor);
     const auth_token = useSelector(state => state.token);
-
     const acceptHandler = () => {
         let link = currentVendor.businessType === 'doctor' ? ACCCEPT_BEING_ADDED_AS_DOCTOR : ACCEPT_BEING_ADDED_AS_HOSPITAL;
         axios
@@ -28,7 +27,7 @@ const AcceptTypeNotification = ({ id }) => {
                 }
             })
             .then(res => {
-                alert('accepted invitation');
+                // alert('accepted invitation');
                 if (currentVendor.businessType === 'doctor') {
                     for (let i of currentVendor.clinic) {
                         if (i.clinicId === id) {
@@ -38,14 +37,15 @@ const AcceptTypeNotification = ({ id }) => {
                     }
                 }
                 else {
-                    for (let i of currentVendor.doctors) {
-                        if (i.doctorId === id) {
-                            i.status = 'accepted';
-                            break;
+                    currentVendor && currentVendor.doctors && currentVendor.doctors.length > 0 && currentVendor.doctors.map(doc => {
+                        if(doc.doctorId === id){
+                            doc.status = "accepted";
                         }
-                    }
+                    })
                 }
+                // console.log(currentVendor);
                 setCurrentVendor(JSON.parse(JSON.stringify(currentVendor)));
+                // localStorage.setItem('currentVendor',JSON.stringify({currentVendor}));
             })
             .catch(err => {
                 console.log(err);
@@ -62,7 +62,7 @@ const AcceptTypeNotification = ({ id }) => {
                 }
             })
             .then(res => {
-                alert('accepted invitation');
+                alert('reject invitation');
                 if (currentVendor.businessType === 'doctor') {
                     for (let i of currentVendor.clinic) {
                         if (i.clinicId === id) {
@@ -80,6 +80,7 @@ const AcceptTypeNotification = ({ id }) => {
                     }
                 }
                 setCurrentVendor(JSON.parse(JSON.stringify(currentVendor)));
+                // localStorage.setItem('currentVendor',JSON.stringify({currentVendor}));
             })
             .catch(err => {
                 console.log(err);
@@ -89,9 +90,11 @@ const AcceptTypeNotification = ({ id }) => {
 
     useEffect(() => {
         let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
+        // console.log("");
         axios
             .get(GET_VENDOR_DETAILS_BY_ID(searchBusinessType, id))
             .then(res => {
+                // console.log("res.data.payload _: -=-=-= ", res.data.payload);
                 setUserInfo(res.data.payload);
             })
             .catch(err => {

@@ -60,7 +60,7 @@ const VendorsPannel = ({ match }) => {
                 })
                 .catch(err => {
                     console.log(err);
-                    alert("unable to fetch user info");
+                    // alert("unable to fetch user info");
                 });
 
             //deciding page to go on if user is verified
