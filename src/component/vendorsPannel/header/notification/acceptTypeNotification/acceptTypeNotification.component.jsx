@@ -88,9 +88,9 @@ const AcceptTypeNotification = ({ id }) => {
             });
     }
 
-    useEffect(() => {
+    useEffect((id) => {
         let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
-        // console.log("");
+        console.log("ID finding :-=-=-=-=" , id);
         axios
             .get(GET_VENDOR_DETAILS_BY_ID(searchBusinessType, id))
             .then(res => {
@@ -99,7 +99,7 @@ const AcceptTypeNotification = ({ id }) => {
             })
             .catch(err => {
                 console.log(err);
-                alert('cant fetch user info');
+                // alert('cant fetch user info');
             });
     }, [])
 
