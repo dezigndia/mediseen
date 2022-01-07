@@ -18,18 +18,19 @@ const Notification = () => {
     useEffect(() => {
         if (currentVendor.businessType === 'doctor') {
             let clinic = currentVendor.clinic;
+
+            // const data = clinic.filter(item => item.status === "pending").map(item => item.clinicId );
+            // console.log("Data :=-=-; ", data);
+
             clinic && setNotifications(
-                clinic
-                    .filter(item => item.status === "pending")
-                    .map(item => <AcceptTypeNotification key={item.clinicId} id={item.clinicId} />)
+                clinic.filter(item => item.status === "pending").map(item => <AcceptTypeNotification key={item.clinicId} id={item.clinicId} />)
             );
         }
         else if (currentVendor.businessType === 'hospital') {
             let doctors = currentVendor.doctors;
             doctors && setNotifications(
                 doctors
-                    .filter(item => item.status === "pending")
-                    .map(item => <AcceptTypeNotification key={item.doctorId} id={item.doctorId} />)
+                    .filter(item => item.status === "pending").map(item => <AcceptTypeNotification key={item.doctorId} id={item.doctorId} />)
             );
         }
         // console.log("Notifications available : - " , notifications);

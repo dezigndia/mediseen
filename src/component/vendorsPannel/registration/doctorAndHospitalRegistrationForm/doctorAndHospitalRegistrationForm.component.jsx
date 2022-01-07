@@ -116,6 +116,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
 
         let validatedData = {};//VALIDATE(data, props.currentVendor.businessType);
         if (Object.keys(validatedData).length == 0) {
+            
             axios
                 .put(UPDATE_REGISTERED_USER, data, {
                     headers: {
@@ -130,7 +131,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                             }
                         })
                         .then(response => {
-                            console.log(response.data.payload)
+                            console.log(response.data.payload , "WE are getting payload");
                             props.setCurrentVendor(response.data.payload)
                         })
                         .catch(err => {

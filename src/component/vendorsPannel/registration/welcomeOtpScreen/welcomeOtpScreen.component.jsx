@@ -48,7 +48,8 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
 
     const sendOtp = () => {
         handleClick();
-        setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') })
+        setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') });
+        console.log(" currentVendor.businessType :-=- ",  currentVendor.businessType);
         axios              //{mobileNumber:+91123456}
             .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), businessType: currentVendor.businessType })
             .then(res => {

@@ -18,6 +18,7 @@ const AcceptTypeNotification = ({ id }) => {
 
     const currentVendor = useSelector(state => state.currentVendor);
     const auth_token = useSelector(state => state.token);
+
     const acceptHandler = () => {
         let link = currentVendor.businessType === 'doctor' ? ACCCEPT_BEING_ADDED_AS_DOCTOR : ACCEPT_BEING_ADDED_AS_HOSPITAL;
         axios
@@ -62,7 +63,7 @@ const AcceptTypeNotification = ({ id }) => {
                 }
             })
             .then(res => {
-                alert('reject invitation');
+                // alert('reject invitation');
                 if (currentVendor.businessType === 'doctor') {
                     for (let i of currentVendor.clinic) {
                         if (i.clinicId === id) {
@@ -88,9 +89,8 @@ const AcceptTypeNotification = ({ id }) => {
             });
     }
 
-    useEffect((id) => {
+    useEffect(() => {
         let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
-        console.log("ID finding :-=-=-=-=" , id);
         axios
             .get(GET_VENDOR_DETAILS_BY_ID(searchBusinessType, id))
             .then(res => {
@@ -99,7 +99,7 @@ const AcceptTypeNotification = ({ id }) => {
             })
             .catch(err => {
                 console.log(err);
-                // alert('cant fetch user info');
+                alert('cant fetch user info');
             });
     }, [])
 
