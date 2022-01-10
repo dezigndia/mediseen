@@ -45,7 +45,7 @@ const address = [
 
 const useStyles = makeStyles(() => ({
 	container: {
-		padding: "2rem 0.5rem",
+		padding: "4rem 0.5rem",
 		height: "auto",
 		overflowY: "scroll",
 	},
@@ -136,7 +136,7 @@ alert(JSON.stringify(user))
 
 		console.log(res)
 
-		const link = res.data.payload
+		// const link = res.data.payload
 
 		let body
 		if (type === "pres") {
@@ -147,10 +147,11 @@ alert(JSON.stringify(user))
 				userPhoneNumber: "787989089898989",
 				date: Date.now(),
 				address: address[selected],
-				image_url: link.location,
+				image_url: "testing",
 				businessType: business.type,
 				businessName: business.businessName,
 				businessPhoneNumber: business.phone,
+				isPrescription:true
 			}
 		} else {
 			body = {
@@ -160,6 +161,7 @@ alert(JSON.stringify(user))
 				userPhoneNumber: "8910719147",
 				date: Date.now(),
 				products,
+
 				grandTotal: totalCost,
 				address: address[selected],
 				businessType: business.type,

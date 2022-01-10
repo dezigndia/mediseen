@@ -1,4 +1,4 @@
-import { Divider, Grid } from "@material-ui/core"
+import { Button, Divider, Grid } from "@material-ui/core"
 import React from "react"
 
 import { makeStyles } from "@material-ui/core/styles"
@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
 	fontPurple: {
 		color: "#5C4DB1",
 		fontWeight: "bold",
+		fontSize:"12px"
 	},
 	container: {
 		padding: "0.1rem",
@@ -41,15 +42,15 @@ const TypeRow = ({ orderType, order }) => {
 		>
 			<Grid item alignItems="center" container spacing={4}>
 				<Grid item xs={5}>
-					<h2 style={{ fontSize: "1.4rem" }}>{order.businessName}</h2>
+					<h2 style={{ fontSize: "0.9rem" }}>{order.businessName}</h2>
 				</Grid>
 				<Grid item xs={3}>
-					<h5>{date.toLocaleDateString("en-US")}</h5>
-					{/* <h5></h5> */}
+					<h5 style={{ fontSize: "0.9rem" }}>{date.toLocaleDateString("en-US")}</h5>
 				</Grid>
 				<Grid item xs={4}>
 					<Link to={`/user-profile/${returnOrder()}/${order._id}`}>
-						<h4 className={classes.fontPurple}>{orderType}</h4>
+						<Button  style={{background:"#2BBEC8",color:"white"}}	variant="outlined" size="small" className={classes.fontPurple}>{orderType}</Button>
+					
 					</Link>
 				</Grid>
 			</Grid>

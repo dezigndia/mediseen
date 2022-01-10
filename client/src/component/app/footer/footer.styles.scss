@@ -6,6 +6,11 @@
     flex-flow: row wrap;
     align-items: flex-start;
     justify-content: space-around;
+    overflow: hide;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+ 
 
     &.purpleAppFooter {
         background-color: $purple;

@@ -13,15 +13,17 @@ const HosTiming = ({ location }) => {
 
 	const [date, setDate] = useState("")
 
-	const doctor = useSelector((state) => state.currentStore.doctors[ind])
-
+	const doctor = useSelector((state) => 
+	state.currentStore.doctors[ind]
+	)
+	console.log(doctor+"fdsfdfd")
 	return (
-		<Grid container item style={{ padding: "1rem 0.5rem" }} spacing={4}>
-			{/* <Grid item>
+		<Grid container item style={{ padding: "1rem 0.5rem",marginTop:"40px" }} spacing={4} >
+			<Grid item>
 				<BusinessHeader />
-			</Grid> */}
+			</Grid>
 			<Grid item xs={12}>
-				<Available doctor={doctor} />
+				<Available doctors={doctor} />
 			</Grid>
 			<Grid xs={12} item>
 				<Date

@@ -3,6 +3,7 @@ import { Button, Grid, Paper } from "@material-ui/core"
 import { useSpring, animated } from "react-spring/web.cjs"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Modal from "@material-ui/core/Modal"
 import InputBase from "@material-ui/core/InputBase"
 import IconButton from "@material-ui/core/IconButton"
@@ -72,9 +73,9 @@ const AddContact = ({ open, setOpen, address, ind }) => {
 	const classes = useStyles()
 	let token = useSelector((state) => state.token.token)
 
-	let userAddress = useSelector((state) => state.user.address)
+	let userAddress = useSelector((state) =>state.user.address )
 
-	console.log(address)
+
 
 	const [name, setName] = useState("")
 	const [mobile, setMobile] = useState("")
@@ -95,26 +96,26 @@ const AddContact = ({ open, setOpen, address, ind }) => {
 		: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwM2YzOTg1NTFkOTQ1MzFmMTEzMzM0YSIsImRlZmF1bHQiOltdLCJwaG9uZSI6Iis5MTg5MTA3MTkxNDciLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwidXBkYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwiX192IjowLCJpYXQiOjE2MTUxMTcwODB9.gg2XoDzt9twPmWZ1esrrNaiMhdTRdLiMTuoqcrvzgGo"
 
 	const handleSubmit = async () => {
-		const addr = [
+		const addr = 
 			{
 				name,
 				number: mobile,
 				area: add,
 				pincode,
-			},
-		]
+			}
 		if (userAddress.length > 0) {
-			userAddress[ind] = addr
+			userAddress[ind]= addr
 		} else {
 			userAddress = [...addr]
+		
 		}
 
 		const body = { address: userAddress }
-
 		const data = await fetchCall("user", "PUT", token, body)
-
-		if (data.status) {
+		if (data.data.status) {
 			setOpen(false)
+			NotificationManager.success('success message', 'Updated!', 3000, () => {
+			  });
 		}
 	}
 

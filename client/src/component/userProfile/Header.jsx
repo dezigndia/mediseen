@@ -7,9 +7,9 @@ import DP from "./pexels-photo-220453.jpeg"
 
 const useStyles = makeStyles((theme) => ({
 	header: {
-		width: "100vw",
+		 width: "100vw",
 		backgroundColor: "#220555",
-		height: "10rem",
+		// height: "10rem",
 		padding: "1rem",
 	},
 	avatar: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Header = ({ image, name, address }) => {
+const Header = ({ image, name,phone, address }) => {
 	const classes = useStyles()
 
 	return (
@@ -31,13 +31,16 @@ const Header = ({ image, name, address }) => {
 				direction="column"
 				justify="space-evenly"
 				alignItems="center"
-				spacing={2}
+				spacing={1}
 			>
 				<Grid item>
 					<Avatar alt="Remy Sharp" className={classes.avatar} src={image} />
 				</Grid>
 				<Grid item>
 					<h4 className={classes.fontWhite}>{name}</h4>
+				</Grid>
+				<Grid item>
+					<h4 className={classes.fontWhite}>{phone}</h4>
 				</Grid>
 				<Grid item>
 					<h5 className={classes.fontWhite}>{address}</h5>

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux"
 
 const useStyles = makeStyles(() => ({
 	container: {
-		padding: "1rem 0.5rem",
+		padding: "4rem 0.5rem",
 		height: "auto",
 		overflowY: "scroll",
 	},

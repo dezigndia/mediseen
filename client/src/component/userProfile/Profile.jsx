@@ -105,22 +105,25 @@ const Profile = ({ history }) => {
 	}, [])
 
 	const logout=useCallback(()=>{
-        // localStorage.removeItem('currentVendor');
         localStorage.removeItem('auth_token');
-        history.push('/');
+        history.push('/home');
     },[history]);
 
 	return (
 		<Grid container direction="column">
 			<Grid item>
-				<Header
-					image={user.photo && user.photo}
-					name={user && user.phone}
-					address={`${user.address && user.address[0].area}, ${
-						user.address && user.address[0].pincode
-					}`}
-				/>
-
+				{user.address !=undefined ?
+					<Header
+						image={user.photo && user.photo}
+						name={user.name}
+						phone={user.phone}
+						address={`${user.address && user.address[0].area}, ${user.address && user.address[0].pincode
+							}`}
+					/>
+					: <Header
+						image={user.photo && user.photo}
+						name={user.name && user.phone}
+					/>}
 			</Grid>
 			<Grid
 				container
@@ -165,7 +168,7 @@ const Profile = ({ history }) => {
 								<ExitToAppIcon className={classes.fontGreen} />
 							</Grid>
 							<Grid item xs={10}>
-								<h3 className={classes.fontGreen}        onClick={logout}>Sign Out</h3>
+								<h3 className={classes.fontGreen}   onClick={logout}>Sign Out</h3>
 							</Grid>
 						</Grid>
 					</Paper>

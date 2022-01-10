@@ -27,13 +27,12 @@ const Available = ({
 	specialist = "MBBS",
 	morning,
 	evening,
-	doctor,
+	doctors,
 	ind,
 }) => {
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
-
 	return (
 		<Paper elevation={3} className={classes.paper}>
 			<Grid container alignItems="center" className={classes.container}>
@@ -42,7 +41,7 @@ const Available = ({
 				</Grid>
 				<Grid container direction="column" item xs={6}>
 					<Grid item>
-						<h4>{name ? name : doctor.name}</h4>
+						<h4>{name}</h4>
 					</Grid>
 					<Grid item>
 						<h5 style={{ color: "gray" }}>{specialist}</h5>
@@ -82,7 +81,7 @@ const Available = ({
 			{open ? (
 				<Grid container item xs={12}>
 					<Grid item xs={12}>
-						<TimeTable ind={ind} clinic={doctor.workingHours} />
+						<TimeTable ind={ind} clinic={doctors.workingHours} />
 					</Grid>
 				</Grid>
 			) : null}

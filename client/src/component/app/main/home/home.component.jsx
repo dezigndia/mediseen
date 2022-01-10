@@ -95,9 +95,10 @@ const Home = ({ history, match }) => {
       console.log(data);
     };
 
-    if (city) {
+    // if (city) {
       fetchCount();
-    }
+    // }
+    
   }, [city]);
 
   useEffect(() => {

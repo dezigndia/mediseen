@@ -49,7 +49,8 @@ const SearchInputWithSuggestion = ({ recentSearches, query, blurHandler, setSear
                     </Icon>
                 </div>
 
-                <div className="recentSearchesAndSuggestion searches">
+            
+                <div className="recentSearchesAndSuggestion searches ">
                     <p>Recent Search</p>
                     {
                         recentSearches.map((item, index) =>
@@ -62,7 +63,7 @@ const SearchInputWithSuggestion = ({ recentSearches, query, blurHandler, setSear
                     }
                 </div>
 
-                <div className="recentSearchesAndSuggestion suggestion">
+                {/* <div className="recentSearchesAndSuggestion suggestion">
                     <p>Suggestion</p>
                     {
                         recentSearches.map((item, index) =>
@@ -73,7 +74,7 @@ const SearchInputWithSuggestion = ({ recentSearches, query, blurHandler, setSear
                             </SearchesAndSuggestions>
                         )
                     }
-                </div>
+                </div> */}
 
             </div>
         </div>

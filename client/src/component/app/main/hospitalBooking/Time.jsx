@@ -26,7 +26,7 @@ const timeArray = [
 	"Evening 9:00 PM",
 ]
 
-const Time = ({ date, type, ind }) => {
+const Time = ({ date, type, ind ,doctor}) => {
 	const classes = useStyles()
 
 	const [active, setActive] = useState(null)

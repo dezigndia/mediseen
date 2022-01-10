@@ -5,7 +5,7 @@ import {
 	ThemeProvider,
 	createMuiTheme,
 } from "@material-ui/core"
-import { Switch, Route, useHistory } from "react-router-dom"
+import { Switch, Route, useHistory,Router } from "react-router-dom"
 
 // customComponents
 import LoginPage from "./loginAndSignUpPage/loginPage.component"
@@ -43,13 +43,15 @@ const Components = () => {
 	return (
 		<ThemeProvider theme={newTheme}>
 			<Grid container direction="row" justify="center" className={classes.root}>
+			<Router history={history}>
 				<Switch>
-					<Route exact path="/" component={getItem('auth_token') ? history.push('/home') : LoginPage} />
-					<Route path="/allowAccess" component={AllowAccess} />
+					<Route exact path="/" component={getItem('auth_token') && history.location.pathname==="/home"? history.push('/home')  : LoginPage} />
+					<Route path="/allowAccess" component={AllowAccess}  />
 					<Route path="/home" component={App} />
 					<Route path="/user-profile" component={UserProfile} />
 					<Route path="/vendor" component={VendorsPannel} />
 				</Switch>
+				</Router>
 			</Grid>
 		</ThemeProvider>
 	)

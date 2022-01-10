@@ -37,9 +37,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	container: {
 		height: "100%",
-		overflowY: "scroll",
+		marginTop: "50px",
 		padding: "0 0.5rem",
 		flexWrap: "nowrap",
+	    overflow: 'auto'
 	},
 	swipe: {
 		margin: "0 0.5rem",
@@ -104,7 +105,7 @@ const PharmacyOrder = () => {
 	}, [])
 
 	return (
-		<Grid
+		<div
 			container
 			direction="column"
 			className={classes.container}
@@ -113,7 +114,13 @@ const PharmacyOrder = () => {
 			{cart[0] ? (
 				<Grid item>
 					<Link to="/home/pharmacyOrder/checkout">
-						<Checkout />
+						<Checkout  	name={pharmacy && pharmacy.businessName}
+						delivery={pharmacy && pharmacy.deliveryDetails.deliveryCharges}
+						cod={pharmacy && pharmacy.deliveryDetails.codAvailable}
+						distance={pharmacy && pharmacy.deliveryDetails.deliveryDistance}
+						star={4}
+						eos={22}
+						address={pharmacy && pharmacy.area}/>
 					</Link>
 				</Grid>
 			) : (
@@ -227,7 +234,7 @@ const PharmacyOrder = () => {
 						}
 					})}
 			</Grid>
-		</Grid>
+		</div>
 	)
 }
 

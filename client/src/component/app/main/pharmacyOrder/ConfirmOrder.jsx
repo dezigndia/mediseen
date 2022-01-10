@@ -10,7 +10,7 @@ import fetchCall from "../../../../fetchCall/fetchCall"
 import { makeStyles } from "@material-ui/core/styles"
 const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: "2rem 1rem",
+		padding: "3rem 1rem",
 	},
 	name: {
 		color: "white",

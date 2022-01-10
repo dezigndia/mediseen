@@ -8,11 +8,12 @@ import { makeStyles } from "@material-ui/core/styles"
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		width: "100%",
-		height: "5rem",
-		backgroundColor: "#F9F9F9",
+		height: "6rem",
+		 backgroundColor: "#F9F9F9",
+	
 	},
 	container: {
-		padding: "1rem",
+		padding: ".2rem",
 		height: "100%",
 		width: "100%",
 	},
@@ -28,6 +29,7 @@ const Available = ({
 	morning,
 	evening,
 	clinic,
+	ind
 }) => {
 	const classes = useStyles()
 
@@ -78,6 +80,7 @@ const Available = ({
 					</Grid>
 				)}
 			</Grid>
+
 			{open ? (
 				<Grid container item xs={12}>
 					<Grid item xs={12}>

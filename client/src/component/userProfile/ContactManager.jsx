@@ -6,6 +6,10 @@ import AddContact from "./AddContact"
 import { useSelector } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 import fetchCall from "../../fetchCall/fetchCall"
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+// import EditIcon from '@mui/icons-material/Edit';
 
 const useStyles = makeStyles((theme) => ({
 	fontGrey: {
@@ -13,8 +17,10 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: "left",
 	},
 	container: {
-		padding: "1rem 0.5rem",
+		padding: "1.0rem",
 		borderRadius: "10px",
+		textAlign: "left",
+		textOverflow: "ellipsis"
 	},
 
 	header: {
@@ -25,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 	add: {
 		color: "#2BBEC8",
 		fontWeight: "bolder",
-		fontSize: "2rem",
+		 fontSize: "2rem",
 	},
 	fontPurple: {
 		color: "#5C4DB1",
@@ -40,28 +46,67 @@ const Row = ({ address, index, setActive }) => {
 	const [open, setOpen] = useState(false)
 
 	return (
-		<Grid container direction="column" spacing={2}>
-			<Grid item alignItems="center" container spacing={1} xs={12}>
-				<Grid item xs={3}>
-					<h4>{address.name}</h4>
-				</Grid>
-				<Grid style={{ fontWeight: "bold" }} item xs={3}>
-					{address.number}
-				</Grid>
-				<Grid item xs={3}>
-					<h4 onClick={() => setOpen(true)} className={classes.fontPurple}>
-						Edit
-					</h4>
-				</Grid>
-				<Grid item xs={3}>
+		// <Grid container spacing={2}>
+		// 	<Grid item  xs={12}>
+		// 		<Grid item>
+		// 			<h4>{address.name}</h4>
+		// 		</Grid>
+		// 		{/* <Grid style={{ fontWeight: "bold" }} item xs={3}>
+		// 			{address.number}
+		// 		</Grid> */}
+		// 		<Grid item>
+		// 			<h4 onClick={() => setOpen(true)} className={classes.fontPurple}>
+		// 			<EditIcon/>
+		// 			</h4>
+		// 		</Grid>
+		// 		<Grid item >
+		// 			<h4 onClick={() => setActive(index)} className={classes.fontPurple}>
+		// 			<i className="fas fa-trash-alt"></i>
+		// 			<DeleteIcon/>
+		// 			</h4>
+		// 		</Grid>
+		// 	</Grid>
+		// 	<Grid item xs={12}>
+		// 		<Divider />
+		// 	</Grid>
+		// 	<AddContact
+		// 		open={open}
+		// 		address={address}
+		// 		setOpen={(value) => setOpen(value)}
+		// 		ind={index}
+		// 	/>
+		// </Grid>
+
+		<Grid
+		container
+		// direction="column"
+		spacing={1}
+		className={classes.container}
+	>
+		<Grid item alignItems="center" container spacing={4}>
+			<Grid item xs={5} style={{
+overflow: "hidden",
+    textOverflow: "ellipsis",
+whiteSpace: "nowrap"}}>
+				<h2 style={{ fontSize: "0.9rem" }}>{address.name}</h2>
+			</Grid>
+			<Grid item xs={4}>
+				<h5 style={{ fontSize: "0.9rem" }}>{address.number}</h5>
+			</Grid>
+			<Grid item xs={1}>
+			<h4 onClick={() => setOpen(true)} className={classes.fontPurple}>
+			<EditIcon/>
+			</h4>
+			</Grid>
+			<Grid item xs={1}>
 					<h4 onClick={() => setActive(index)} className={classes.fontPurple}>
-						Delete
-					</h4>
-				</Grid>
+					<i className="fas fa-trash-alt"></i>
+		 			<DeleteIcon/>
+				</h4>
 			</Grid>
-			<Grid item xs={12}>
-				<Divider />
-			</Grid>
+		</Grid>
+		<Grid item xs={12}>
+			<Divider />
 			<AddContact
 				open={open}
 				address={address}
@@ -69,6 +114,7 @@ const Row = ({ address, index, setActive }) => {
 				ind={index}
 			/>
 		</Grid>
+	</Grid>
 	)
 }
 
@@ -96,7 +142,6 @@ const ContactManager = ({ address }) => {
 				address,
 			}
 			const data = await fetchCall("user", "PUT", token, body)
-			console.log(data)
 		}
 		if (active !== null) {
 			updateAddress()
@@ -105,6 +150,7 @@ const ContactManager = ({ address }) => {
 
 	return (
 		<Paper elevation={4} className={classes.container}>
+		<NotificationContainer/>
 			<Grid container direction="column" spacing={2}>
 				<Grid container direction="column" item spacing={1}>
 					<Grid container item direction="row" justify="space-between">
@@ -135,19 +181,10 @@ const ContactManager = ({ address }) => {
 						<Divider />
 					</Grid>
 				</Grid>
-				<Grid container item justify="center" xs={12} spacing={2}>
-					{/* <Grid item xs={12}>
-						<Row />
-					</Grid>
-					<Grid item xs={12}>
-						<Row />
-					</Grid>
-					<Grid item xs={12}>
-						<Row />
-					</Grid> */}
+				<Grid container item xs={12} spacing={2}>
+		
 					{address && address.length > 0 ? (
 						address.map((add, ind) => {
-							console.log(add)
 							return (
 								<Grid item>
 									<Row

@@ -102,14 +102,14 @@ const Filter = ({ match, setSearchCategory, category, query }) => {
 				highlight={count.pathology}
 				{...{ category, setSearchCategory }}
 			/>
-			{query !== "" ? (
+			{/* {query !== "" ? (
 				<div className="customFilterButton">
 					<Icon size="12px" onClick={toggleCustomFilterModal}>
 						<FaFilter />
 					</Icon>
 					<p>Filter</p>
 				</div>
-			) : null}
+			) : null} */}
 			{showCustomFilterModal ? (
 				<CustomFilter toggleCustomFilterModal={toggleCustomFilterModal} />
 			) : null}

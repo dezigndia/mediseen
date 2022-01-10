@@ -23,7 +23,7 @@ const HospitalBooking = () => {
 		if (hos.doctors) {
 			const avail = hos.doctors.map((doc) => {
 				// const available = { hours: doc.workingHours[`Tuesday`], doc }
-				const available = {hours:doc.workingHours[`${day}`], doc:doc }
+				const available = {hours:doc.workingHours[`${day}`],doc }
 			 return available
 			})
 			setAvailable(avail)
@@ -46,46 +46,49 @@ const HospitalBooking = () => {
 	}, [])
 
 	return (
-		<Container>
+		<Container style={{marginTop: "40px",overflowY: "auto"}}>
 			<Grid container direction="column">
 				<Grid item xs={12}>
 					<InfoCard
 						name={hos && hos.businessName}
 						area={hos && hos.area}
 						pincode={hos && hos.pincode}
-						image={hos && hos.photo}
+						image={
+							hos && hos.photo
+							? hos.photo
+							: "https://yt3.ggpht.com/ytc/AAUvwngsMYKVJenoA3m07HTBPjzMjDsuDMgzFi6L1g0Z=s900-c-k-c0x00ffffff-no-rj"
+					}
 					/>
 				</Grid>
 			</Grid>
 			<Grid item container spacing={2}>
-				{isAvailable > 0 ? (
+				{isAvailable.length > 0 ? (
 					<>
 						<Grid item>
 							<h3>Available Today</h3>
 						</Grid>
-						{isAvailable.map((item) => {
-							
+						{isAvailable.map((item,ind) => {
 							return (
 								<Grid item xs={12}>
 									<Available
 										name={item.doc.name}
-										// doctor={doc}
-										// address={item.doc.address}
-										// morning={item}
-											// &&
-											// `${item.workingHours.morning.from}-${item.workingHours.morning.to}`}
-										// evening={
-										// 	item.workingHours &&
-										// 	`${item.workingHours.evening.from}-${item.workingHours.evening.to}`}
-
-										morning={
-											item.hours &&
-											`${item.hours.morning.from}-${item.hours.morning.to}`
-										}
+										address={item.doc.address}
+										doctors={item.doc}
+										ind={ind}
+										morning={item.hours &&
+											`${item.workingHours.morning.from}-${item.workingHours.morning.to}`}
 										evening={
-											item.hours &&
-											`${item.hours.evening.from}-${item.hours.evening.to}`
-										}
+											item.workingHours &&
+											`${item.workingHours.evening.from}-${item.workingHours.evening.to}`}
+
+										// morning={
+										// 	item.hours &&
+										// 	`${item.hours.morning.from}-${item.hours.morning.to}`
+										// }
+										// evening={
+										// 	item.hours &&
+										// 	`${item.hours.evening.from}-${item.hours.evening.to}`
+										// }
 									/>
 								</Grid>
 							)
@@ -96,11 +99,12 @@ const HospitalBooking = () => {
 					<Grid item>
 						<h3>Available Tomorow Onwards</h3>
 					</Grid>
+
 					{hos.doctors &&
 						hos.doctors.map((doc, ind) => {
 							return (
 								<Grid item xs={12}>
-									<Available ind={ind} doctor={doc} />
+									<Available ind={ind} doctors={doc} />
 								</Grid>
 							)
 						})}

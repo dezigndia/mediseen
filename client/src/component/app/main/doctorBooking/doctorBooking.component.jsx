@@ -52,7 +52,7 @@
 
 // export default connect(mapStateToProps, mapDispatchToProps)(DoctorBooking);
 
-import { Grid } from "@material-ui/core"
+import { Grid,Container } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
@@ -106,15 +106,9 @@ const DoctorBooking = () => {
 	console.log(isAvailable)
 
 	return (
-		<Grid
-			container
-			justify="center"
-			alignItems="center"
-			direction="column"
-			style={{ padding: "0.5rem", height: "auto", marginBottom: "5rem" }}
-			spacing={5}
-		>
-			<Grid item>
+		<Container style={{marginTop: "40px",overflowY: "auto", height: "84%"}}>
+		<Grid container direction="column">
+			<Grid item xs={12}>
 				<InfoCard
 					name={doc && doc.businessName}
 					image={
@@ -139,6 +133,7 @@ const DoctorBooking = () => {
 									<Available
 										name={item.clinic.name}
 										address={item.clinic.address}
+										clinic={item.clinic}
 										morning={
 											item.hours &&
 											`${item.hours.morning.from}-${item.hours.morning.to}`
@@ -159,7 +154,7 @@ const DoctorBooking = () => {
 					<h3>Available Tomorow Onwards</h3>
 				</Grid>
 				{doc.clinic &&
-					doc.clinic.map((clin) => {
+					doc.clinic.map((clin, ind) => {
 						return (
 							<Grid item xs={12}>
 								<Available clinic={clin} />
@@ -168,6 +163,7 @@ const DoctorBooking = () => {
 					})}
 			</Grid>
 		</Grid>
+		</Container>
 	)
 }
 

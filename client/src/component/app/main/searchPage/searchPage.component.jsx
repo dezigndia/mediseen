@@ -10,7 +10,7 @@ const SearchPage = () => {
 
     return (
         <div className="searchPage">
-            <Search />
+            {/* <Search /> */}
             <Filter />
             <Result />
         </div>

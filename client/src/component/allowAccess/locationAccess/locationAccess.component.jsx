@@ -154,6 +154,7 @@ const LocationAccess = ({ history }) => {
 						value={cityPinCode}
 						onChange={(e) => {
 							setCityPinCode(e.target.value)
+							dispatch(setLocationFromPin(e.target.value))
 						}}
 						placeholder="Enter Pin Code Or City Name"
 					/>
@@ -170,7 +171,10 @@ const LocationAccess = ({ history }) => {
 					<input id="city" disabled value={city} placeHolder="city" />
 				</div>
 				<div className="setCityPinCodeSearchOk">
-					<PrimaryIconButton label="ok" onClick={getCityFromPin} />
+
+					<Link to="/home">
+						<PrimaryIconButton label="ok" />
+					</Link>
 				</div>
 			</div>
 			{/* <Grid
