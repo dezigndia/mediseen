@@ -127,7 +127,7 @@ class BusinessService {
                         return await Pathology.find({type: category })
                     }
                     default: {
-                        return await Doctor.find();
+                        return  await Doctor.find({type: category })
                     }
                 }}
         }
@@ -135,7 +135,8 @@ class BusinessService {
 
     getBusinessCount = expressAsyncHandler(async (city, category, specialist, area, search) => {
         let filter = {}
-        if (city) {
+
+        if (city!=="undefined") {
             filter.city = getRegex(city)
         }
         if (area) {
@@ -147,7 +148,9 @@ class BusinessService {
         if (category) {
             filter.type = getRegex(category)
         }
+        console.log(filter)
         if (filter) {
+          
             const doctor = await Doctor.find(filter).count()
             const pharmacy = await Pharmacy.find(filter).count()
             const hospital = await Hospital.find(filter).count()
@@ -164,6 +167,7 @@ class BusinessService {
         else {
             //FIXME fix type
             const doctor = await Doctor.find().count()
+            console.log("dfdfdfdf")
             const pharmacy = await Pharmacy.find().count()
             const hospital = await Hospital.find().count()
             const pathology = await Pathology.find().count()
@@ -247,17 +251,22 @@ class BusinessService {
             )
     })
     acceptHospital = expressAsyncHandler(async (phoneNumber, clinicId, status) => {
-        if (status == "accept")
-            await Doctor.updateOne(
+        if (status == "accept"){
+      const dd= await Doctor.updateOne(
                 { phone: phoneNumber, "clinic._id": clinicId },
                 { $set: { "clinic.$.status": "accepted" } }
+          
             )
-        else
+            console.log(dd)
+      }
+        else{
             await Doctor.updateOne(
                 { phone: phoneNumber, "clinic._id": clinicId },
                 { $set: { "clinic.$.status": "rejected" } }
             )
+        }
     })
+
     getPendingRequests = expressAsyncHandler(async (bId, type) => {
         console.log(type, bId)
         if (type == "doctor") {
