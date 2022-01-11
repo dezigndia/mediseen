@@ -37,7 +37,7 @@ const PharmOrderConfirm = () => {
 	const image = useSelector((state) => state.prescription.image)
 	const user = useSelector((state) => state.user)
 	const store = useSelector((state) => state.currentStore)
-
+    console.log(JSON.stringify(user))
 	return (
 		<Grid
 			container

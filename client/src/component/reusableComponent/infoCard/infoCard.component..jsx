@@ -49,7 +49,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
         } else if (type === "pharmacy") {
             history.push(`/home/pharmacyOrder/${_id}`)
         } else if (type === "pathology") {
-            history.push(`/home/labOrder/${_id}`)
+            history.push(`/home/pathologyOrder/${_id}`)
         }
     }
 

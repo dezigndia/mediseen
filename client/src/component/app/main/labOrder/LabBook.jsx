@@ -203,17 +203,19 @@ const LabBook = () => {
 					{address.area}, {address.pincode}
 				</Grid>
 			</Grid>
-			<Grid container direction="column" item spacing={3}>
-				<Grid item style={{ fontSize: "1.5rem" }}>
-					Confirm Your Booking
+			<Grid container item spacing={3}>
+			<Grid container item xs={12} justify="space-evenly" spacing={3}>
+				<Grid item   xs={12} style={{ fontSize: "1.2rem" }}>
+				Confirm Your Booking
+				</Grid>
 				</Grid>
 				<Grid container item xs={12} justify="space-evenly" spacing={3}>
-					<Grid item>
+					<Grid  item xs={6}>
 						<Link to="/home">
 							<Button className={clsx(classes.button1)}>Back</Button>
 						</Link>
 					</Grid>
-					<Grid item>
+					<Grid item  item xs={6} spacing={6}>
 						<Button onClick={handleBook} className={clsx(classes.button2)}>
 							Yes
 						</Button>

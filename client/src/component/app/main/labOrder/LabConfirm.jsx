@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 		overflowY: "scroll",
 		padding: "0 0.5rem",
 		flexWrap: "nowrap",
+		paddingBottom:"80px"
 	},
 	image: {
 		padding: "1rem",
@@ -187,7 +188,7 @@ const LabConfirm = () => {
 			className={classes.container}
 			spacing={2}
 		>
-			<Grid container item>
+			{/* <Grid container item>
 				{tests.map((test) => {
 					return (
 						<Grid item xs={12}>
@@ -200,7 +201,7 @@ const LabConfirm = () => {
 						</Grid>
 					)
 				})}
-			</Grid>
+			</Grid> */}
 			<Grid item xs={12}>
 				<h3 style={{ textAlign: "center", width: "100%" }}>Confirm Details</h3>
 			</Grid>

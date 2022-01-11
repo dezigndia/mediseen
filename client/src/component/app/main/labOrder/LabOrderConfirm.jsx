@@ -8,6 +8,7 @@ import ConfirmOrder from "./ConfirmOrder"
 const useStyles = makeStyles((theme) => ({
 	container: {
 		padding: "2rem 1rem",
+		marginTop:"20px",
 	},
 	img: {
 		height: "55vh",
@@ -92,7 +93,7 @@ const LabOrderConfirm = () => {
 				>
 					<ConfirmOrder
 						address={pathology.area + pathology.pincode}
-						distance="2.5 km"
+						// distance="2.5 km"
 						name={pathology.businessName}
 					/>
 				</SwipeableDrawer>

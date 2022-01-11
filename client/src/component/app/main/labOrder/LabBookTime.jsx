@@ -10,6 +10,7 @@ import Time from "./Time"
 const useStyles = makeStyles(() => ({
 	container: {
 		padding: "1rem 2rem",
+		marginTop:"20px"
 	},
 	image: {
 		padding: "1rem",

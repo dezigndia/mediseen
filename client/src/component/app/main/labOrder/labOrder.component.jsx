@@ -35,6 +35,8 @@ const useStyles = makeStyles(() => ({
 	},
 	container: {
 		height: "100%",
+		paddingTop:"40px",
+		paddingBottom:"100px",
 		overflowY: "scroll",
 		padding: "0 0.5rem",
 		flexWrap: "nowrap",

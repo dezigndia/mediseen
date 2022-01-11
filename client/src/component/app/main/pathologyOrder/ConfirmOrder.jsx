@@ -1,14 +1,16 @@
-import { Grid, Button } from "@material-ui/core"
-import React from "react"
+import { Grid, Divider, Button } from "@material-ui/core"
+import React, { useState } from "react"
+import { useSelector } from "react-redux"
 import clsx from "clsx"
 import ReactStars from "react-stars"
 import Avatar from "@material-ui/core/Avatar"
 import { Link } from "react-router-dom"
+import fetchCall from "../../../../fetchCall/fetchCall"
 
 import { makeStyles } from "@material-ui/core/styles"
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
-		padding: "2rem 1rem",
+		padding: "3rem 1rem",
 	},
 	name: {
 		color: "white",
@@ -29,6 +31,7 @@ const useStyles = makeStyles(() => ({
 
 const ConfirmOrder = ({ name, address, stars, distance }) => {
 	const classes = useStyles()
+
 	return (
 		<Grid
 			container
@@ -70,7 +73,7 @@ const ConfirmOrder = ({ name, address, stars, distance }) => {
 					</Link>
 				</Grid>
 				<Grid item>
-					<Link to="booking-time?order=pres">
+					<Link to="payment?order=pres">
 						<Button className={clsx(classes.button2)}>Yes</Button>
 					</Link>
 				</Grid>

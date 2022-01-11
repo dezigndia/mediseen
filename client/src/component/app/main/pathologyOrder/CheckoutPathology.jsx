@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const CheckoutPharm = () => {
+const CheckoutPathology = () => {
 	const classes = useStyles()
 
 	const cart = useSelector((state) => state.cart)
@@ -193,4 +193,4 @@ const CheckoutPharm = () => {
 	)
 }
 
-export default CheckoutPharm
+export default CheckoutPathology

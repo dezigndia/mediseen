@@ -5,20 +5,29 @@ import "./main.styles.scss"
 // importing custom components
 import Home from "./home/home.component"
 import DoctorBooking from "./doctorBooking/doctorBooking.component"
-import PharmacyOrder from "./pharmacyOrder/pharmacyOrder.component"
 import HospitalBooking from "./hospitalBooking/hospitalBooking.component"
 import LabOrder from "./labOrder/labOrder.component"
 import SearchPage from "./searchPage/searchPage.component"
 import UploadPrescription from "./uploadPrescription/uploadPrescription.component"
 import BookOrder from "./bookOrder/bookOrder.component"
 import AboutPage from "./aboutPage/aboutPage.component"
+
 import PharmOrderConfirm from "./pharmacyOrder/PharmOrderConfirm"
+import PharmacyOrder from "./pharmacyOrder/pharmacyOrder.component"
 import PharmacyAbout from "./pharmacyOrder/PharmacyAbout"
 import PharmOrderSuccess from "./pharmacyOrder/PharmOrderSuccess"
-// import Checkout from "./pharmacyOrder/CheckoutPharm"
 import PaymentPharm from "./pharmacyOrder/PaymentPharm"
 import CheckoutPharm from "./pharmacyOrder/CheckoutPharm"
 import PharmAddAddress from "./pharmacyOrder/PharmAddAddress"
+
+import PathologyOrderConfirm from "./pathologyOrder/PathologyOrderConfirm"
+import PathologyAbout from "./pathologyOrder/PathologyAbout"
+import PathologyOrderSuccess from "./pathologyOrder/PathologyOrderSuccess"
+import PaymentPathology from "./pathologyOrder/PaymentPathology"
+import CheckoutPathology from "./pathologyOrder/CheckoutPathology"
+import PathologyAddAddress from "./pathologyOrder/PathologyAddAddress"
+import PathologyOrder from "./pathologyOrder/PathologyOrder.component"
+
 import LabOrderConfirm from "./labOrder/LabOrderConfirm"
 import LabAddAddress from "./labOrder/LabAddAddress"
 import LabAbout from "./labOrder/LabAbout"
@@ -101,6 +110,45 @@ const main = ({ match }) => {
 					path={`${match.url}/pharmacyOrder/:pharmId`}
 					component={PharmacyOrder}
 				/>
+					<Route
+					exact
+					path={`${match.url}/pathologyOrder/confirm`}
+					component={PathologyOrderConfirm}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pathologyOrder/checkout`}
+					component={CheckoutPathology}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pathologyOrder/payment`}
+					component={PaymentPathology}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pathologyOrder/confirm`}
+					component={PathologyOrderConfirm}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pathologyOrder/add-address`}
+					component={PathologyAddAddress}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pathologyOrder/success`}
+					component={PathologyOrderSuccess}
+				/>
+				<Route
+					exact
+					path={`${match.url}/pathologyOrder/about`}
+					component={PathologyAbout}
+				/>
+				<Route
+					path={`${match.url}/pathologyOrder/:pharmId`}
+					component={PathologyOrder}
+				/>
 				<Route
 					path={`${match.url}/hospitalBooking/hos-timing`}
 					component={HosTiming}
@@ -127,6 +175,7 @@ const main = ({ match }) => {
 					path={`${match.url}/labOrder/confirm`}
 					component={LabOrderConfirm}
 				/>
+				CheckoutPath
 				<Route
 					confirm
 					path={`${match.url}/labOrder/about/:labId`}
