@@ -33,8 +33,7 @@ class PharmacyController {
 
     getPharmacyByID = expressAsyncHandler(async (req, res) => {
         const { pharmacyId } = req.params
-        console.log(pharmacyId)
-        const data = await businessService.getBusinessById(pharmacyId)
+        const data = await businessService.getPharmacyById(pharmacyId)
 
         if (data) {
             return res.status(StatusCodes.OK).json({ status: true, payload: data })

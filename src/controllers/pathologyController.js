@@ -37,8 +37,7 @@ class PathologyController {
 	getPathologyByID = expressAsyncHandler(async (req, res) => {
 		const { pathId } = req.params
 
-		const data = await businessService.getBusinessById(pathId);
-
+		const data = await businessService.getPathologyById(pathId);
 		if (data) {
 			return res.status(StatusCodes.OK).json({ status: true, payload: data })
 		} else {

@@ -5,6 +5,7 @@ const ProductService = require("../product/product.service")
 const productService = new ProductService()
 class OrderService {
     createOrder = expressAsyncHandler(async body => {
+        if(body.isPrescription===false){
         const sums = await Promise.all(
             body.products.map(async p => {
                 const prod = await productService.getProductById(p.productId)
@@ -16,6 +17,11 @@ class OrderService {
         }, 0)
         body.grandTotal = total
         return Order.create(body)
+    }
+        else{
+            console.log(body)
+        return Order.create(body)
+        }
     })
     getAllMyUserOrders = expressAsyncHandler(async (limit, skip, userPhoneNumber, searchQuery) => {
         delete searchQuery["limit"]

@@ -40,9 +40,14 @@ class BusinessService {
             throw new AppError(StatusCodes.BAD_REQUEST, "Validation error, phone must be specified")
         }
     })
-    getBusinessById = expressAsyncHandler(async id => {
+    getPharmacyById = expressAsyncHandler(async id => {
         //FIXME fix type
-        return await Pharmacy.findById(id)
+        return  await Pharmacy.findById(id)
+    })
+
+    getPathologyById = expressAsyncHandler(async id => {
+        //FIXME fix type
+        return  await Pathology.findById(id)
     })
 
     getDoctorById = expressAsyncHandler(async id => {

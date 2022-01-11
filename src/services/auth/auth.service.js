@@ -35,7 +35,7 @@ class AuthService {
         else if (businessType === "hospital") {
             user = await Hospital.findOne({ phone: phoneNumber })
         }
-        else if (businessType === "Pathology") {
+        else if (businessType === "pathology") {
             user = await Pathology.findOne({ phone: phoneNumber })
         }
         else{
