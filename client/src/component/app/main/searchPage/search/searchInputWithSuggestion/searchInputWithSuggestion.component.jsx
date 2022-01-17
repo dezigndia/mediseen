@@ -36,7 +36,7 @@ const SearchInputWithSuggestion = ({ recentSearches, query, blurHandler, setSear
     });
 
     return (
-        <div className="searchInputContainer">
+        <div className="searchInputContainer" >
             <div>
 
                 <div className="searchInput">
@@ -50,8 +50,8 @@ const SearchInputWithSuggestion = ({ recentSearches, query, blurHandler, setSear
                 </div>
 
             
-                <div className="recentSearchesAndSuggestion searches ">
-                    <p>Recent Search</p>
+                {/* <div className="recentSearchesAndSuggestion searches ">
+                    <p>Recent Search1</p>
                     {
                         recentSearches.map((item, index) =>
                             <SearchesAndSuggestions key={index} label={item} setSearchQuery={setSearchQuery} blurHandler={blurHandler}>
@@ -61,7 +61,7 @@ const SearchInputWithSuggestion = ({ recentSearches, query, blurHandler, setSear
                             </SearchesAndSuggestions>
                         )
                     }
-                </div>
+                </div> */}
 
                 {/* <div className="recentSearchesAndSuggestion suggestion">
                     <p>Suggestion</p>

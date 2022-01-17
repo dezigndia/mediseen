@@ -1,8 +1,8 @@
 import React, { useEffect, useState,useCallback } from "react"
 import clsx from "clsx"
 import Header from "./Header"
-import { Grid, Paper } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Grid, Paper,Button } from "@material-ui/core"
+import { makeStyles, } from "@material-ui/core/styles"
 import { useDispatch, useSelector } from "react-redux"
 import TypeCard from "./TypeCard"
 import ContactManager from "./ContactManager"
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#2CBEC8",
 		fontWeight: "bold",
 		margin: "0 0.1rem",
-		textAlign: "left",
+		textAlign: "right",
 	},
 	fb: {
 		color: "#1677E5",
@@ -164,11 +164,11 @@ const Profile = ({ history }) => {
 				<Grid item>
 					<Paper elevation={3} className={classes.paper}>
 						<Grid container alignItems="center" xs={12}>
-							<Grid item xs={2}>
-								<ExitToAppIcon className={classes.fontGreen} />
+							<Grid item xs={1}>
+							
 							</Grid>
-							<Grid item xs={10}>
-								<h3 className={classes.fontGreen}   onClick={logout}>Sign Out</h3>
+							<Grid item xs={10} className={classes.fontGreen}  >
+								<Button  style={{background:"revert"}} variant="variant"  className={classes.fontGreen} onClick={logout}><h3><ExitToAppIcon className={classes.fontGreen} /></h3>	Sign Out</Button>
 							</Grid>
 						</Grid>
 					</Paper>
@@ -179,7 +179,7 @@ const Profile = ({ history }) => {
 					<Paper elevation={3} className={classes.paper}>
 						<Grid container alignItems="center" xs={12}>
 							<Grid item xs={6}>
-								<h3 className={classes.fontGreen}>Social Media</h3>
+								<h3 className={classes.fontGreen} style={{textAlign:"left"}}>Social Media</h3>
 							</Grid>
 							<Grid item xs={2}>
 								<FacebookIcon className={classes.fb} />

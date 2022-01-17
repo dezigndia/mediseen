@@ -125,7 +125,7 @@ const PharmacyOrder = () => {
 				</Grid>
 			) : (
 				<Grid item>
-					<InfoCard
+					{/* <InfoCard
 						name={pharmacy && pharmacy.businessName}
 						delivery={pharmacy && pharmacy.deliveryDetails.deliveryCharges}
 						cod={pharmacy && pharmacy.deliveryDetails.codAvailable}
@@ -133,7 +133,7 @@ const PharmacyOrder = () => {
 						star={4}
 						eos={22}
 						address={pharmacy && pharmacy.area}
-					/>
+					/> */}
 				</Grid>
 			)}
 			<Grid

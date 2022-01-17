@@ -70,7 +70,7 @@ const TypeCard = ({ type, orders }) => {
 								<h4 className={classes.header}>{type}</h4>
 							</Grid>
 						</Grid>
-						<Grid
+						{/* <Grid
 							container
 							xs={4}
 							spacing={1}
@@ -85,7 +85,7 @@ const TypeCard = ({ type, orders }) => {
 									Filter
 								</h4>
 							</Grid>
-						</Grid>
+						</Grid> */}
 					</Grid>
 					<Grid item xs={12}>
 						<Divider />
@@ -114,7 +114,7 @@ const TypeCard = ({ type, orders }) => {
 					</Grid>
 				)}
 			</Grid>
-			<SortBy setOpen={(value) => setOpen(value)} type={type} open={open} />
+			{/* <SortBy setOpen={(value) => setOpen(value)} type={type} open={open}  order={orders}/> */}
 		</Paper>
 	)
 }

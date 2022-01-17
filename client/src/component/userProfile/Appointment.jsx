@@ -52,13 +52,13 @@ const Appointment = () => {
 				(res) => res.data.payload
 			)
 			setApp(data)
-			console.log(data)
 		}
 		fetchAppointment()
 	}, [])
 
 	return (
 		<Grid container spacing={1}>
+
 			<Grid item xs={12}>
 				<BusinessHeader name={app.businessName} />
 			</Grid>

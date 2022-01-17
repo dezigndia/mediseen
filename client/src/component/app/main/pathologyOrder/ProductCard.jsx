@@ -220,7 +220,6 @@ const ProductAndTestListing = ({
 }) => {
 	// const businessType = useSelector((state) => state.currentVendor.businessType)
 	const dispatch = useDispatch()
-
 	return (
 		<div
 			style={{ height: "17rem" }}
@@ -234,11 +233,11 @@ const ProductAndTestListing = ({
 					{qty}
 					{qtyType}
 				</div>
-				{businessType === "pathology" ? (
+				{/* {businessType === "pathology" ? (
 					<div className="vendorTestAndProductListItemHeaderLabel">
 						<p>Fasting Required</p>
 					</div>
-				) : null}
+				) : null} */}
 			</div>
 			{(() => {
 				let discount = 0

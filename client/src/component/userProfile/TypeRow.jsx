@@ -23,7 +23,7 @@ const TypeRow = ({ orderType, order }) => {
 	const returnOrder = () => {
 		switch (orderType) {
 			case "Book Again":
-				return "apointment"
+				return "appointment"
 			case "Prescription":
 				return "pres"
 			case "Re-Order":

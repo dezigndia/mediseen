@@ -134,8 +134,8 @@ const PathologyOrder = () => {
 						// delivery={pathology && pathology.deliveryDetails.deliveryCharges}
 						// cod={pathology && pathology.deliveryDetails.codAvailable}
 						// distance={pathology && pathology.deliveryDetails.deliveryDistance}
-						// star={4}
-						// eos={22}
+						star={4}
+						eos={22}
 						address={pathology && pathology.area}/>
 					</Link>
 				</Grid>
@@ -240,6 +240,9 @@ const PathologyOrder = () => {
 									image={product.image}
 									mrp={product.mrp}
 									name={product.name}
+									company={product.company}
+	                                details={product.details}
+                                    itemType={product.itemType}
 									qty={product.qty}
 									cart={cartQty[0] && cartQty[0].qty ? cartQty[0].qty : 0}
 									sellingPrice={product.sellingPrice}
