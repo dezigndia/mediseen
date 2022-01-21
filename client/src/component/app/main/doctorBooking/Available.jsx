@@ -82,7 +82,7 @@ const Available = ({
 			</Grid>
 
 			{open ? (
-				<Grid container item xs={12}>
+				<Grid container item xs={12} style={{position:"relative"}}>
 					<Grid item xs={12}>
 						<TimeTable clinic={clinic.workingHours} />
 					</Grid>

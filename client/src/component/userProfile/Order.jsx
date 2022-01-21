@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { Grid, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import ItemTable from "./ItemTable"
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
 import Business from "./Business"
 import BusinessHeader from "./BusinessHeader"
 import clsx from "clsx"
 import { useParams } from "react-router-dom"
 import fetchCall from "../../fetchCall/fetchCall"
+import moment from "moment"
+// import {
+// 	addCartProduct,
+// 	removeCartProduct,
+// } from "../../../../store/cart/cartActions"
+ import {
+	addCartProduct,
+	removeCartProduct,
+} from "../../store/cart/cartActions"
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -38,14 +47,17 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Order = () => {
+	const dispatch = useDispatch()
 	const classes = useStyles()
 	const { id } = useParams()
+
 	let token = useSelector((state) => state.token.token)
+	const cart = useSelector((state) => state.cart)
+	console.log(cart)
+	const [order, setOrder] = useState([])
 	token = token
 		? token
 		: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwM2YzOTg1NTFkOTQ1MzFmMTEzMzM0YSIsImRlZmF1bHQiOltdLCJwaG9uZSI6Iis5MTg5MTA3MTkxNDciLCJhZGRyZXNzIjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwidXBkYXRlZEF0IjoiMjAyMS0wMy0wM1QwNzoyMzo0OS42NDhaIiwiX192IjowLCJpYXQiOjE2MTUxMTcwODB9.gg2XoDzt9twPmWZ1esrrNaiMhdTRdLiMTuoqcrvzgGo"
-
-	const [order, setOrder] = useState({})
 
 	useEffect(() => {
 		const fetchOrder = async () => {
@@ -53,15 +65,25 @@ const Order = () => {
 				(res) => res.data.payload
 			)
 			setOrder(data)
-			console.log(data)
 		}
 		fetchOrder()
 	}, [])
 
+
+	let totalItem = 0
+
+	let totalCost = 0
+
+	const deliveryCharge = 0
+	order.products?.map((item) => {
+		totalCost = item.sellingPrice * item.qty + totalCost
+		totalItem = item.qty + totalItem
+	})
+
 	return (
 		<Grid container spacing={2}>
 			<Grid item>
-				<BusinessHeader />
+				<BusinessHeader businessType={order.businessType} businessName={order.businessName}/>
 			</Grid>
 			<Grid container className={classes.container} item xs={12}>
 				<Grid
@@ -70,7 +92,7 @@ const Order = () => {
 					xs={6}
 					style={{ textAlign: "left" }}
 				>
-					Order NO 23456
+				Order NO {order.orderId}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -78,7 +100,17 @@ const Order = () => {
 					item
 					xs={3}
 				>
-					26/07/20
+				
+				{moment(Date.now()).format("MMM Do YYYY")}
+				{/* </Grid>
+				<Grid
+					className={classes.bold}
+					style={{ textAlign: "right" }}
+					item
+					xs={3}
+				> */}
+				
+					
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -86,7 +118,7 @@ const Order = () => {
 					item
 					xs={3}
 				>
-					2:40 AM
+					{moment(Date.now()).format("LT")}
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -104,11 +136,12 @@ const Order = () => {
 			</Grid>
 			<div className={classes.divider}></div>
 			<Grid item>
-				<ItemTable cart={order && order.products} />
-			</Grid>
+			{order.products ?
+			<ItemTable cart={order.products} />:null}
+			</Grid> 
 			<Grid container item>
 				<Grid style={{ textAlign: "left", color: "gray" }} xs={6} item>
-					Total Items : 10
+					Total Items : {order.products?order.products.length:0}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -116,7 +149,7 @@ const Order = () => {
 					xs={6}
 					item
 				>
-					Rs. 100
+					Rs. {totalCost}
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -129,7 +162,7 @@ const Order = () => {
 					xs={6}
 					item
 				>
-					Rs. 30
+					0
 				</Grid>
 			</Grid>
 			<Grid container item>
@@ -147,7 +180,7 @@ const Order = () => {
 					xs={6}
 					item
 				>
-					Rs. 130
+					Rs. {totalCost}
 				</Grid>
 			</Grid>
 			<div className={classes.divider}></div>
@@ -161,7 +194,7 @@ const Order = () => {
 					item
 					xs={6}
 				>
-					Sunjoy Ghosh
+					{order.patientName}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -169,7 +202,7 @@ const Order = () => {
 					style={{ textAlign: "right", padding: "0.5rem 0" }}
 					xs={6}
 				>
-					+91 976976868328
+						{order.mobileNumber}
 				</Grid>
 			</Grid>
 			<Grid container spacing={3}>
@@ -184,7 +217,8 @@ const Order = () => {
 					</Button>
 				</Grid>
 				<Grid item xs={6}>
-					<Link to="/home/pharmacyOrder/payment">
+				{/* `/home/hospitalBooking/${_id}` */}
+					<Link to={`/user-profile/order-place/${id}`}>
 						<Button
 							style={{ backgroundColor: "#1FE0B9" }}
 							className={classes.btn}

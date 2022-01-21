@@ -9,8 +9,9 @@ import EditAndAddNotes from './editAndAddNotes/editAndAddNotes.component';
 const UploadPrescription = ({ match }) => {
 
     const [image, selectImage] = useState(null);
-    //const [notes, setNotes] = useState(null);
-    //const [tags, settags] = useState(null);
+    const [notes, setNotes] = useState(null);
+    const [tags, settags] = useState(null);
+   // dxfd
 
     if (image === null) {
         return (

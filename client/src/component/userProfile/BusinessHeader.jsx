@@ -19,11 +19,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const BusinessHeader = ({ name, address = "71/a, Belgachia Road", stars }) => {
+const BusinessHeader = ({ businessName,businessType, address = "71/a, Belgachia Road", stars }) => {
 	const classes = useStyles()
-
-	console.log(name)
-
+	// "businessType":"pathology",
+	// "businessName":"Pathology Test",
+	// "businessPhoneNumber":"+917979994248",
 	return (
 		<div className={classes.header}>
 			<Grid
@@ -34,7 +34,7 @@ const BusinessHeader = ({ name, address = "71/a, Belgachia Road", stars }) => {
 				spacing={2}
 			>
 				<Grid item>
-					<h4 className={classes.fontWhite}>{name}</h4>
+					<h4 className={classes.fontWhite}>{businessName}</h4>
 				</Grid>
 				<Grid item>
 					<h5 className={classes.fontWhite}>{address}</h5>

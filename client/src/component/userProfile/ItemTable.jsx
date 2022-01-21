@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
@@ -15,8 +15,9 @@ const useStyles = makeStyles({
 	},
 })
 
-const ItemTable = ({ cart }) => {
+const ItemTable = (cart) => {
 	const classes = useStyles()
+const [data,setData] =useState(cart.cart);
 
 	return (
 		<TableContainer component={Paper}>
@@ -30,15 +31,15 @@ const ItemTable = ({ cart }) => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{cart.map((row) => (
+					{data && data.map((row) => (
 						<TableRow key={row.name}>
 							<TableCell component="th" scope="row">
-								{row.item.name}
+								{row.name}
 							</TableCell>
 							<TableCell align="center">{row.qty}</TableCell>
-							<TableCell align="center">{row.item.sellingPrice}</TableCell>
+							<TableCell align="center">{row.sellingPrice}</TableCell>
 							<TableCell align="center">
-								{row.qty * row.item.sellingPrice}
+								{row.qty * row.sellingPrice}
 							</TableCell>
 						</TableRow>
 					))}

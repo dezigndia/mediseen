@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState,useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import moment from "moment"
 import {
@@ -13,9 +13,10 @@ import { useDispatch, useSelector } from "react-redux"
 import AddIcon from "@material-ui/icons/Add"
 import Address from "./Address.jsx"
 import { Link, Redirect, useLocation } from "react-router-dom"
-import fetchCall from "../../../../fetchCall/fetchCall"
-import { emptyCartProduct } from "../../../../store/cart/cartActions"
-import fetchCallFile from "../../../../fetchCall/fetchCallFile.js"
+import fetchCall from "../../fetchCall/fetchCall"
+import { emptyCartProduct } from "../../store/cart/cartActions"
+import fetchCallFile from "../../fetchCall/fetchCallFile.js"
+import { useParams } from "react-router-dom"
 
 const address = [
 	{
@@ -79,32 +80,49 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-const PaymentPharm = () => {
+const PlaceOrder = () => {
 	const classes = useStyles()
 	const query = useQuery()
 
-	const type = query.get("order")
+	 const type = query.get("order")
 
+    
+//alert(type)
 	const [flag, setFlag] = useState(false)
 
 	const image = useSelector((state) => state.prescription.image)
-
+	const { id } = useParams()
 	const [payment, setPayment] = useState(1)
 
-	const token =
+    const [order, setOrder] = useState([])
+	let token =
 		useSelector((state) => state.token.token) ||
 		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwNDg2NGVlYzEwYWU4YzI4ZWMzM2Y5MSIsInBob25lIjoiKzkxODkxMDcxOTE0NyIsImFkZHJlc3MiOltdLCJjcmVhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJ1cGRhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJfX3YiOjAsImlhdCI6MTYxNTM1NzE2Nn0.9CEx3xpRyG-J4dUtxUVBrRN8Eg7UOZ7zjaFTehhRBBw"
 
-	const business = useSelector((state) => state.currentStore)
+	// const business = useSelector((state) => state.currentStore)
+
+    useEffect(() => {
+		const fetchOrder = async () => {
+			const data = await fetchCall(`order/id/${id}`, "GET", token).then(
+				(res) => res.data.payload
+			)
+			setOrder(data)
+		}
+		fetchOrder()
+	}, [])
+
+	const businessType = order.businessType?order.businessType:null
+    const businessName = order.businessName?order.businessName:null
+    const  businessPhoneNumber = order.businessPhoneNumber?order.businessPhoneNumber:null
 
 	const cart = useSelector((state) => state.cart)
 console.log(cart)
-	const products = cart.map((prod) => {
+	const products =order.products?.map((prod) => {
 		return {
-			productId: prod.item._id,
-			name:prod.item.name,
+			productId: prod.productId,
+			name:prod.name,
 			qty: prod.qty,
-			sellingPrice:prod.item.sellingPrice,
+			sellingPrice:prod.sellingPrice,
 		}
 	})
 	const user = useSelector((state) => state.user)
@@ -114,8 +132,8 @@ console.log(cart)
 
 	let totalCost = 0
 
-	cart.map((item) => {
-		totalCost = item.item.sellingPrice * item.qty + totalCost
+	order.products?.map((item) => {
+		totalCost = item.sellingPrice * item.qty + totalCost
 	})
 
 	const [selected, setSelected] = useState(null)
@@ -150,9 +168,9 @@ console.log(cart)
 				date: Date.now(),
 				address: address[selected],
 				image_url: link,
-				businessType: business.type,
-				businessName: business.businessName,
-				businessPhoneNumber: business.phone,
+                businessType: businessType,
+				businessName: businessName,
+				businessPhoneNumber:businessPhoneNumber,
 				isPrescription:true
 			}
 		} else {
@@ -165,9 +183,9 @@ console.log(cart)
 				products,
 				grandTotal: totalCost,
 				address: address[selected],
-				businessType: business.type,
-				businessName: business.businessName,
-				businessPhoneNumber: business.phone,
+				businessType: businessType,
+				businessName: businessName,
+				businessPhoneNumber:businessPhoneNumber,
 			}
 		}
 
@@ -241,6 +259,7 @@ console.log(cart)
 				</Grid>
 			</Grid>
 			<div className={classes.divider}></div>
+            <Grid className={classes.bold} container item>
 			<Grid
 				style={{ color: "grey" }}
 				item
@@ -266,7 +285,7 @@ console.log(cart)
 				>
 					{user.phone}
 				</Grid>
-			</Grid>
+			</Grid></Grid>
 			<Grid item container alignItems="center">
 				<Grid
 					style={{ textAlign: "left" }}
@@ -281,7 +300,7 @@ console.log(cart)
 						Add New
 					</Grid>
 					<Grid item>
-						<Link to="/home/pharmacyOrder/add-address">
+						<Link to="/user-profile/add-address">
 							<AddIcon style={{ fontSize: "3rem" }} />
 						</Link>
 					</Grid>
@@ -346,4 +365,4 @@ console.log(cart)
 	)
 }
 
-export default PaymentPharm
+export default PlaceOrder
