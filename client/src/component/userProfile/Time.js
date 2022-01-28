@@ -28,7 +28,7 @@ const timeArray = [
 	"Evening 9:00 PM",
 ]
 
-const Time = ({ id, date, type, clinic }) => {
+const Time = ({  date, type, clinic }) => {
 	const classes = useStyles()
 	const { id } = useParams()
 
