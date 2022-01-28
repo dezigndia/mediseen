@@ -7,6 +7,7 @@ import Prescription from "./Prescription"
 import Profile from "./Profile"
 import AddAddress from "./AddAddress"
 import Success from "./Success"
+import Time from "./DocTiming"
 
 const UserProfile = () => {
 	return (
@@ -16,6 +17,7 @@ const UserProfile = () => {
 			<Route path="/user-profile/order/:id" component={Order} />
 			<Route path="/user-profile/order-place/:id" component={OrderPlace} />
 			<Route path="/user-profile/add-address" component={AddAddress} />
+			<Route path="/user-profile/booking-time/:id" component={Time} />
 			<Route path="/user-profile/success" component={Success} />
 			<Route path="/" component={Profile} />	
 		</Switch>

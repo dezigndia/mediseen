@@ -207,6 +207,7 @@ const Order = () => {
 			</Grid>
 			<Grid container spacing={3}>
 				<Grid item xs={6}>
+				<Link to={`/user-profile`}>
 					<Button
 						className={classes.btn}
 						style={{ backgroundColor: "grey" }}
@@ -215,6 +216,7 @@ const Order = () => {
 					>
 						Back
 					</Button>
+					</Link>
 				</Grid>
 				<Grid item xs={6}>
 				{/* `/home/hospitalBooking/${_id}` */}

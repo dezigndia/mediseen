@@ -60,13 +60,13 @@ const Appointment = () => {
 		<Grid container spacing={1}>
 
 			<Grid item xs={12}>
-				<BusinessHeader name={app.businessName} />
+				<BusinessHeader businessName={app.businessName} />
 			</Grid>
 			<Grid item xs={12}>
 				<Business
 					name={"Dr. Prakash"}
-					price={300}
-					time={"6pm-10pm"}
+					price={app.grandTotal}
+					time={app.timings}
 					desc={"Internal Medicine"}
 				/>
 			</Grid>
@@ -145,6 +145,7 @@ const Appointment = () => {
 					</Button>
 				</Grid>
 				<Grid item>
+				<Link to={`/user-profile/booking-time/${id}`}>
 					<Button
 						style={{
 							backgroundColor: "#22D8BC",
@@ -155,6 +156,7 @@ const Appointment = () => {
 					>
 						Book Again
 					</Button>
+					</Link>
 				</Grid>
 			</Grid>
 		</Grid>

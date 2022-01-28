@@ -1,10 +1,11 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { makeStyles } from "@material-ui/core/styles"
 import { Button, Grid, TextField } from "@material-ui/core"
 import { useSelector, useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
 import { addTiming } from "../../../../store/book-timing/timingActions"
+import moment from "moment"
 const useStyles = makeStyles(() => ({
 	container: {
 		width: "100%",
@@ -30,15 +31,29 @@ const Time = ({ date, type, clinic }) => {
 	const classes = useStyles()
 
 	const [active, setActive] = useState(null)
-
+	const [isAvailable, setAvailable] = useState([])
 	const dispatch = useDispatch()
 
-	// console.log(clinic)
+	// const day = moment().format("dddd")
+const day = moment(new Date()).format("dddd")
+// const day = "Monday"
+// const time = currentDate.getHours()
+
 
 	// const time = clinic.map((clin) => {
 	// 	clin.workingHours["Monday"].evening.from.split(" ")[0]
 	// })
-
+// console.log(clinic)
+// 	useEffect(() => {
+// 		if (clinic) {
+// 			const avail = clinic.map((clin) => {
+// 				return clin.workingHours[day].evening.from.split(" ")[0] 
+// 			})
+// 			alert(avail)
+// 			setAvailable(avail+"dfdfdf")
+// 		}
+// 	}, [clinic])
+// console.log(isAvailable)
 	return (
 		<Grid container direction="column">
 			{timeArray.map((time, index) => (

@@ -159,7 +159,7 @@ console.log(cart)
 		const link = res.data.payload.location
 
 		let body
-		if (type === "pres") {
+		if (order.isPrescription ===true) {
 			body = {
 				userId:user._id,
 				patientName: user.name,
@@ -167,7 +167,7 @@ console.log(cart)
 				userPhoneNumber:  user.phone,
 				date: Date.now(),
 				address: address[selected],
-				image_url: link,
+				image_url: order.image_url,
                 businessType: businessType,
 				businessName: businessName,
 				businessPhoneNumber:businessPhoneNumber,
@@ -200,7 +200,7 @@ console.log(cart)
 	}
 
 	if (placed) {
-		return <Redirect to="success" />
+		return <Redirect to="/user-profile/success" />
 	}
 
 	return (

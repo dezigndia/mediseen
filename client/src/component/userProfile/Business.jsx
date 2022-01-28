@@ -30,13 +30,13 @@ const Business = ({ name, fasting, price, desc }) => {
 		>
 			<Grid container item xs={12} alignItems="center" spacing={2}>
 				<Grid itemxs={4}>
-					<Avatar
+					{/* <Avatar
 						alt="Remy Sharp"
 						className={classes.avatar}
 						src={
 							"http://thyroid-endocrine.com/wp-content/uploads/2017/02/dr-profile-pic.png"
 						}
-					/>
+					/> */}
 				</Grid>
 				<Grid item style={{ textAlign: "left" }} xs={8}>
 					<h3>{name}</h3>

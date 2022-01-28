@@ -59,7 +59,7 @@ const Profile = ({ history }) => {
 
 	useEffect(() => {
 		const fetchOrders = async () => {
-			const data = await fetchCall("/order/all", "GET", token).then(
+			const data = await fetchCall("/order/all?isPrescription=false", "GET", token).then(
 				(res) => res.data.payload
 			)
 
