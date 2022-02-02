@@ -61,8 +61,7 @@ const Home = () => {
                 result.push(xlsx.utils.sheet_to_row_object_array(workBook.Sheets[sheet]));
             });
             //console.log(result[0]);
-            axios
-                .post(ADD_BULK_TEST, result[0], {
+            axios.post(ADD_BULK_TEST, result[0], {
                     headers: {
                         'Authorization': `Bearer ${auth_token.accessToken}`
                     }
@@ -80,20 +79,19 @@ const Home = () => {
     }
 
     useEffect(() => {
-        axios
-            .get(GET_TESTS, {
+        axios.get(GET_TESTS, {
                 headers: {
-                    'Authorization': `Bearer ${auth_token.accessToken}`
+                    'Authorization': `Bearer ${auth_token.accessToken?auth_token.accessToken:null}`
                 }
             })
             .then(res => {
                 setTestCategories(res.data.payload);
             })
             .catch(err => {
-                alert("unable to fetch test categories");
+                // alert("unable to fetch test categories");
                 console.log(err);
             });
-    }, [setTestCategories]);
+    }, [setTestCategories,auth_token]);
 
     return (
         <div className="vendorHome">

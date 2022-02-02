@@ -353,7 +353,7 @@ const AddProducts = (props) => {
                     ? <AddCategories {...{ setShowAddCategories }} />
                     : null
             }
-        </div >
+        </div>
     );
 }
 

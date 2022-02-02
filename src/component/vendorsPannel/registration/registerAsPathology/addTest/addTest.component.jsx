@@ -14,6 +14,7 @@ import { BiSearch } from 'react-icons/bi';
 import { AiOutlineCamera } from 'react-icons/ai';
 import { BiRupee } from 'react-icons/bi';
 import { FaUpload } from 'react-icons/fa';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 //importing jss
 import { lightBlue } from '../../../../../assets/globalJSS';
@@ -47,7 +48,7 @@ const AddTests = (props) => {
             })
             .then(res => {
                 console.log("RESPONSE :=-=-= ", res);
-                setCategory(res.data.payload);
+                // setCategory(res.data.payload[0].values);
             })
             .catch(err => {
                 console.log(err);
@@ -242,6 +243,25 @@ const AddTests = (props) => {
                         </select>
                     </div>
                 </div>
+                {/* <div className="selectTest addProductsAndTestInput selectInputContainer selectCategory">
+                    <div className='selectInputCaption'>
+                        <div className='selectInputCaption'>
+                        </div>
+                        <div className='selectInput'>
+                            <select onChange={(e) => dispatch({ type: 'setCategory', payload: e.target.value })}>
+                                {
+                                    category.map((item, index) => <option key={index} value={item}>{item}</option>)
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div style={{ flexGrow: 1 }} onClick={e => setShowAddCategories(true)}>
+                        <Icon>
+                            <AiOutlinePlus size='.15px' />
+                        </Icon>
+                        <p style={{ fontSize: '.8em' }}>Categories</p>
+                    </div>
+                </div> */}
                 <div className="price flexInputContainer">
                     <div className="mrp addProductsAndTestInput rupeeInout">
                         <Icon noRippleEffect size='15px' >
@@ -316,7 +336,7 @@ const AddTests = (props) => {
                     }
                     <button className='greenButton' onClick={addButtonhandler}>Add Test</button>
                 </div>
-                {/*<div className="vendorHomeUploadExcel">
+                {/* <div className="vendorHomeUploadExcel">
                     <RegistrationFormButton
                         icon1={<FaUpload />}
                         label={[<p>Or upload test list excel to Mediseen Whatsaap</p>]}
@@ -329,7 +349,7 @@ const AddTests = (props) => {
                     //ref={excelUploadInputRef}
                     //onChange={changeHandler}
                     />
-                </div>*/}
+                </div> */}
             </div>
             {
                 uploading
@@ -343,7 +363,7 @@ const AddTests = (props) => {
                     ? <AddCategories {...{ setShowAddCategories }} />
                     : null
             }
-        </div >
+        </div>
     );
 }
 
