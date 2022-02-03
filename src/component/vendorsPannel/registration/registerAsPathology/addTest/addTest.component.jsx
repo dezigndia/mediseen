@@ -7,7 +7,8 @@ import './addTest.styles.scss';
 //importing reusable components
 import Icon from '../../../../reusableComponent/icon/icon.component';
 import RegistrationFormButton from '../../../../reusableComponent/registrationFormButton/registrationFormButton.component';
-
+import { Snackbar } from "@material-ui/core";
+import MuiAlert from '@mui/material/Alert';
 //importing icons
 import { IoMdBarcode } from 'react-icons/io';
 import { BiSearch } from 'react-icons/bi';
@@ -30,13 +31,29 @@ import UploadedImagesPreview from '../../uploadedImagePreview/uploadedImagesPrev
 import AddCategories from './addCategories/addCategories.component';
 
 //setShowAddtests is sent as prop from pathology profile
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 const AddTests = (props) => {
 
     const [category, setCategory] = useState(['Cytopathology', 'Dermapathology', 'Forensic Pathology', 'Histopathology', 'NeuroPathology']);
     const [type, setType] = useState(['x-ray', 'ct-scan', 'blood-test', 'urine-test', 'mri-scan']);
     const [uploading, setUploading] = useState(false);
     const [showAddCategories, setShowAddCategories] = useState(false);
+
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
 
     useEffect(() => {
         axios
@@ -100,6 +117,10 @@ const AddTests = (props) => {
         setUploading(true);
 
         const imagesArray = data.image;
+        // alert(imagesArray)
+        if(imagesArray.length===0){
+            setOpen(true);
+        }
         // console.log(imagesArray);
 
         let formData = new FormData();
@@ -145,6 +166,7 @@ const AddTests = (props) => {
                         }
                         else {
                         console.log("Inside else Condition : -- goBack ");
+                        setOpen(true);
                             //ie rendering in pathology registration
                             props.history.goBack();
                         }
@@ -152,7 +174,7 @@ const AddTests = (props) => {
                     .catch(err => {
                         setUploading(false);
                         console.log(err);
-                        alert('something went wrong');
+                        // alert('something went wrong');
                     });
             })
             .catch(err => {
@@ -176,6 +198,11 @@ const AddTests = (props) => {
 
     return (
         <div className="addProductsAndTest">
+              <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Created data successfully !! 
+            </Alert>
+    </Snackbar>
             <div className="addProductsAndTestHeader">
                 <div className="addProductsAndTestSearch" ref={inputContainerRef}>
                     <input type="text" onFocus={onFocus} onBlur={onBlur} />
@@ -334,7 +361,7 @@ const AddTests = (props) => {
                             ? <button className='whiteButton' onClick={(e) => props.setShowAddTests(false)} >cancel</button>
                             : null
                     }
-                    <button className='greenButton' onClick={addButtonhandler}>Add Test</button>
+                    <button className={data.image.length===0 ?"whiteButton":"greenButton"}  disabled={data.image.length===0 ?"disabled":""} onClick={addButtonhandler}>Add Test</button>
                 </div>
                 {/* <div className="vendorHomeUploadExcel">
                     <RegistrationFormButton

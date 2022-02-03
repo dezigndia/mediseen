@@ -79,6 +79,7 @@ const Header = ({ location, props }) => {
     const logout = () => {
             localStorage.removeItem('currentVendor');
             localStorage.removeItem('token');
+            localStorage.removeItem('auth_token');
             history.push('/');
     }
       

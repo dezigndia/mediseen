@@ -18,21 +18,26 @@ const RegisterAs = ({ history, match, setCurrentVendor }) => {
     const GotoPage = (page) => {
         //setting business type
         let businessType = null;
+        let photo ='';
         if (page === REGISTER_AS_DOCTOR) {
             businessType = 'doctor';
+            photo='';
         }
         else if (page === REGISTER_AS_HOSPITAL) {
             businessType = 'hospital';
+            photo='';
         }
         else if (page === REGISTER_AS_PATHOLOGY) {
             businessType = 'pathology';
+            photo='';
         }
         else if (page === REGISTER_AS_PHARMACY) {
             businessType = 'pharmacy';
+            photo='';
         }
 
         if (businessType) {
-            setCurrentVendor({ businessType });
+            setCurrentVendor({ businessType, photo});
         }
 
         //going to other page
