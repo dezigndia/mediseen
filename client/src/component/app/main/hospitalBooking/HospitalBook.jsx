@@ -10,6 +10,7 @@ import fetchCallFile from "../../../../fetchCall/fetchCallFile"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
+		marginTop:"50px",
 		padding: "1rem 2rem",
 	},
 	details: {
@@ -102,7 +103,7 @@ const HospitalBook = () => {
 	}
 
 	return (
-		<Grid container className={classes.container} spacing={6}>
+		<Grid  className={classes.container} spacing={6}>
 			{/* <Grid container item>
 				{tests.map((test) => {
 					return (

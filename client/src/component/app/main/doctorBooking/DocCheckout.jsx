@@ -57,7 +57,8 @@ const address = [
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		height: "100%",
+		height: "610px",
+		marginTop:"50px",
 		overflowY: "scroll",
 		padding: "0 0.5rem",
 		flexWrap: "nowrap",
@@ -105,7 +106,8 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: "12rem",
 	},
 	paper2: {
-		minWidth: "95vw",
+		// minWidth: "95vw",
+		width:"100%",
 		padding: "1rem",
 		background: "#F9F9F9",
 	},
@@ -225,6 +227,7 @@ const DocCheckout = () => {
 						placeholder="Patient's Phone Number"
 						inputProps={{ "aria-label": "search google maps" }}
 						value={num}
+						type="number"
 						onChange={(e) => setNumber(e.target.value)}
 					/>
 				</Paper>
@@ -367,6 +370,7 @@ const DocCheckout = () => {
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>
+			{otpSuccess ? 
 				<Link to={`book?${type === "doc" ? "order=doc" : ""}`}>
 					<Button
 						onClick={() => dispatch(addLabAddress(address[selected]))}
@@ -376,7 +380,13 @@ const DocCheckout = () => {
 					>
 						BOOK
 					</Button>
-				</Link>
+				</Link>:<Button
+						className={classes.btn}
+						disabled
+						style={{ backgroundColor: otpSuccess ? "#1DE8B6" : "grey" }}
+					>
+						BOOK
+					</Button>}
 			</Grid>
 		</Grid>
 	)

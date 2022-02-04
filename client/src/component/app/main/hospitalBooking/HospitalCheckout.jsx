@@ -58,7 +58,9 @@ const address = [
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		height: "100%",
+		// height: "100%",
+		height: "610px",
+		marginTop:"50px",
 		overflowY: "scroll",
 		padding: "0 0.5rem",
 		flexWrap: "nowrap",
@@ -106,7 +108,8 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: "12rem",
 	},
 	paper2: {
-		minWidth: "95vw",
+		// minWidth: "95vw",
+		width:"100%",
 		padding: "1rem",
 		background: "#F9F9F9",
 	},
@@ -225,6 +228,7 @@ const HospitalCheckout = () => {
 					<InputBase
 						className={classes.input}
 						value={num}
+						type="number"
 						onChange={(e) => setNumber(e.target.value)}
 						placeholder="Patient's Phone Number"
 						inputProps={{ "aria-label": "search google maps" }}
@@ -272,8 +276,8 @@ const HospitalCheckout = () => {
 					xs={6}
 				>
 					Delivery Address
-				</Grid> */}
-				{/* <Grid container item xs={6} alignItems="center">
+				</Grid>
+				<Grid container item xs={6} alignItems="center">
 					<Grid item className={classes.bold} style={{ fontSize: "1.2rem" }}>
 						Add New
 					</Grid>
@@ -282,8 +286,8 @@ const HospitalCheckout = () => {
 							<AddIcon style={{ fontSize: "3rem" }} />
 						</Link>
 					</Grid>
-				</Grid> */}
-				{/* <Grid spacing={2} container item direction="column">
+				</Grid>
+				<Grid spacing={2} container item direction="column">
 					{address.map((addr, ind) => (
 						<Grid item>
 							<Address
@@ -370,6 +374,7 @@ const HospitalCheckout = () => {
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>
+			{otpSuccess ? 
 				<Link to={`book?ind=${ind}`}>
 					<Button
 						onClick={() => dispatch(addLabAddress(address[selected]))}
@@ -380,6 +385,14 @@ const HospitalCheckout = () => {
 						BOOK
 					</Button>
 				</Link>
+			:
+					<Button
+						className={classes.btn}
+						disabled
+						style={{ backgroundColor: otpSuccess ? "#1DE8B6" : "grey" }}
+					>
+						BOOK
+					</Button>}
 			</Grid>
 		</Grid>
 	)
