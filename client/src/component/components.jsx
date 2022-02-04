@@ -45,7 +45,7 @@ const Components = () => {
 			<Grid container direction="row" justify="center" className={classes.root}>
 			<Router history={history}>
 				<Switch>
-					<Route exact path="/" component={getItem('auth_token') && history.location.pathname==="/home"? history.push('/home')  : LoginPage} />
+					<Route exact path="/" component={getItem('auth_token') && (history.location.pathname==="/home" || history.location.pathname==="/") ? history.push('/home')  : LoginPage} />
 					<Route path="/allowAccess" component={AllowAccess}  />
 					<Route path="/home" component={App} />
 					<Route path="/user-profile" component={UserProfile} />
