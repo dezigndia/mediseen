@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,dispatch } from 'react';
 import './brightnessTool.styles.scss';
 import { BRIGHTNESS } from '../../tool_names';
 

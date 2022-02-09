@@ -21,17 +21,17 @@ const Tools = ({ activeTool, setActiveTool, dispatch }) => {
                 (() => {
                     switch (activeTool) {
                         case BRIGHTNESS:
-                            return <BrightnessTool />;
+                            return <BrightnessTool  dispatch={dispatch}/>;
                         case CONTRAST:
-                            return <ContrastTool />;
+                            return <ContrastTool  dispatch={dispatch}/>;
                         case CROP:
-                            return <CropTool />;
+                            return <CropTool  dispatch={dispatch}/>;
                         case ROTATE:
-                            return <RotateTool />;
+                            return <RotateTool dispatch={dispatch}/>;
                         case ADD_TAGS:
-                            return <AddTagTool />;
+                            return <AddTagTool dispatch={dispatch}/>;
                         default:
-                            return <BrightnessTool />;
+                            return <BrightnessTool  dispatch={dispatch}/>;
                     }
                 })()
             }

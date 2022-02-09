@@ -3,15 +3,15 @@ import './rotateTool.styles.scss';
 import { ROTATE } from '../../tool_names';
 
 const RotateTool = ({ dispatch, value }) => {
-
+    // alert(value)
     const rotateXRef = useRef(null);
     const rotateYRef = useRef(null);
     const rotateZRef = useRef(null);
 
     useEffect(() => {
-        rotateXRef.current.value = value.x;
-        rotateYRef.current.value = value.y;
-        rotateZRef.current.value = value.z;
+        // rotateXRef.current.value = value.x;
+        // rotateYRef.current.value = value.y;
+        // rotateZRef.current.value = value.z;
     });
 
     const changehandler = (e) => {

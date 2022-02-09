@@ -18,10 +18,10 @@ const EditAndAddNotes = ({ image, selectImage }) => {
             case ROTATE:
                 return { ...state, rotate: action.payload };
             case ADD_TAGS:
-                return state;
+                return{ ...state, tags:action.payload};
             default: return state;
         }
-    }, { brightness: 100, contrast: 0, crop: { x: 0, y: 0 }, rotate: { x: 0, y: 0, z: 0 }, tags: 0 });
+    }, { brightness: 100, contrast: 0, crop: { x: 0, y: 0 }, rotate: { x: 0, y: 0, z: 0 }, tags: "5345353" });
 
     const [activeTool, setActiveTool] = useState(null);
 
@@ -30,7 +30,11 @@ const EditAndAddNotes = ({ image, selectImage }) => {
     useEffect(() => {
         imgRef.current.src = URL.createObjectURL(image);
     }, []);
-
+    // const canvasSave = document.getElementById('imageContainer');
+    // const d = canvasSave.toDataURL('image/png');
+    // const w = window.open('about:blank', 'image from canvas');
+    // w.document.write("<img src='"+d+"' alt='from canvas'/>");
+    // console.log('Saved!');
     return (
         <div className="editAndAddNotes">
             <div className="imageSection">
@@ -42,16 +46,23 @@ const EditAndAddNotes = ({ image, selectImage }) => {
                             transform: `rotateX(${effect.rotate.x}deg) rotateY(${effect.rotate.y}deg) rotateZ(${effect.rotate.z}deg)`
                         }}
                     />
+  <img ref={imgRef}/>
                 </div>
+         
                 {
                     activeTool === null
                         ? <ToolBar setActiveTool={setActiveTool} />
                         : <Tools {...{ activeTool, setActiveTool, dispatch, effect }} />
                 }
             </div>
-            <div className="notes">
+            {/* <div className="notes">
                 notes
-            </div>
+            </div> */}
+               <div className="notes">
+               <button>
+                Confirm
+                </button>
+              </div>
         </div>
     );
 }
