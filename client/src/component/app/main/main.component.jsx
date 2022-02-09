@@ -98,7 +98,7 @@ const main = ({ match }) => {
 				/>
 				<Route
 					exact
-					path={`${match.url}/pharmacyOrder/success`}
+					path={`${match.url}/pharmacyOrder/success/:orderId`}
 					component={PharmOrderSuccess}
 				/>
 				<Route
@@ -137,7 +137,7 @@ const main = ({ match }) => {
 				/>
 				<Route
 					exact
-					path={`${match.url}/pathologyOrder/success`}
+					path={`${match.url}/pathologyOrder/success/:orderId`}
 					component={PathologyOrderSuccess}
 				/>
 				<Route

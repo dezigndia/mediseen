@@ -2,7 +2,7 @@ import { Button, Grid, Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import React from "react"
 import BeenhereIcon from "@material-ui/icons/Beenhere"
-import { Link } from "react-router-dom"
+import { Link,useParams } from "react-router-dom"
 
 const useStyles = makeStyles(() => ({
 	container: {
@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
 
 const Success = () => {
 	const classes = useStyles()
+	const {orderId} =useParams(); 
 
 	return (
 		<Grid 
@@ -81,7 +82,7 @@ const Success = () => {
 			</Grid>
 			<Grid item xs={12}>
 				<Link to="/home">
-					<Button className={classes.btn}>Continue Shopping</Button>
+					<Button className={classes.btn}>Continue</Button>
 				</Link>
 			</Grid>
 		</Grid>

@@ -57,8 +57,8 @@ const CheckoutPharm = () => {
 					xs={6}
 					style={{ textAlign: "left" }}
 				>
-					Order NO {Date.now()}
-					
+					{/* Order NO {Date.now()} */}
+					{moment(Date.now()).format("MMM Do YYYY")}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -67,7 +67,7 @@ const CheckoutPharm = () => {
 					xs={3}
 				>
 
-					{moment(Date.now()).format("MMM Do YYYY")}
+					{/* {moment(Date.now()).format("MMM Do YYYY")} */}
 				</Grid>
 				<Grid
 					className={classes.bold}

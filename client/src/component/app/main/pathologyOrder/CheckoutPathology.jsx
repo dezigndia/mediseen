@@ -57,8 +57,8 @@ const CheckoutPathology = () => {
 					xs={6}
 					style={{ textAlign: "left" }}
 				>
-					Order NO {Date.now()}
-					
+					{/* Order NO {Date.now()} */}
+					{moment(Date.now()).format("MMM Do YYYY")}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -67,7 +67,7 @@ const CheckoutPathology = () => {
 					xs={3}
 				>
 
-					{moment(Date.now()).format("MMM Do YYYY")}
+					{/* {moment(Date.now()).format("MMM Do YYYY")} */}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -177,7 +177,7 @@ const CheckoutPathology = () => {
 					</Button>
 				</Grid>
 				<Grid item xs={6}>
-					<Link to="/home/pharmacyOrder/payment">
+					<Link to="/home/pathologyOrder/payment">
 						<Button
 							style={{ backgroundColor: "#1FE0B9" }}
 							className={classes.btn}

@@ -102,7 +102,9 @@ const PaymentPharm = () => {
 	const products = cart.map((prod) => {
 		return {
 			productId: prod.item._id,
+			name:prod.item.name,
 			qty: prod.qty,
+			sellingPrice:prod.item.sellingPrice,
 		}
 	})
 	const user = useSelector((state) => state.user)
@@ -117,7 +119,7 @@ const PaymentPharm = () => {
 	})
 
 	const [selected, setSelected] = useState(null)
-
+    const [orderId ,setOrderId] =useState(null)
 	const [placed, setPlaced] = useState(false)
 
 	const placeOrder = async () => {
@@ -174,13 +176,14 @@ const PaymentPharm = () => {
 		console.log(data)
 
 		if (data.sucess === true) {
+			setOrderId(data.data.payload.orderId)
 			setPlaced(true)
 			dispatch(emptyCartProduct())
 		}
 	}
 
 	if (placed) {
-		return <Redirect to="success" />
+		 	return <Redirect to={`success/${orderId}`} />
 	}
 
 	return (
@@ -197,7 +200,8 @@ const PaymentPharm = () => {
 					item
 					xs={6}
 				>
-						Order NO {Date.now()}
+					{moment(Date.now()).format("MMM Do YYYY")}
+						{/* Order NO {Date.now()} */}
 				</Grid>
 				<Grid
 					className={classes.bold}
@@ -206,7 +210,7 @@ const PaymentPharm = () => {
 					item
 					xs={3}
 				>
-					{moment(Date.now()).format("MMM Do YYYY")}
+					{/* {moment(Date.now()).format("MMM Do YYYY")} */}
 				</Grid>
 				<Grid
 					className={classes.bold}

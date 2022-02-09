@@ -119,7 +119,7 @@ console.log(cart)
 	})
 
 	const [selected, setSelected] = useState(null)
-
+    const [orderId ,setOrderId] =useState(null)
 	const [placed, setPlaced] = useState(false)
 
 	const placeOrder = async () => {
@@ -176,13 +176,14 @@ console.log(cart)
 		console.log(data)
 
 		if (data.sucess === true) {
+			setOrderId(data.data.payload.orderId);
 			setPlaced(true)
 			dispatch(emptyCartProduct())
 		}
 	}
 
 	if (placed) {
-		return <Redirect to="success" />
+		return <Redirect to={`success/${orderId}`} />
 	}
 
 	return (

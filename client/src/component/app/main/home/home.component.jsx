@@ -141,6 +141,19 @@ const Home = ({ history, match }) => {
           }}
           count={count && count.doctor}
         />
+          <IconButtonContainer
+          icon={
+            <PersonIcon
+              fontSize="large"
+              className={clsx([classes.colorWhite, classes.large])}
+            />
+          }
+          caption="Hospital"
+          onClick={() => {
+            gotoPage(`search/${HOSPITAL}`);
+          }}
+          count={count && count.hospital}
+        />
         <IconButtonContainer
           icon={
             <ApartmentIcon
@@ -154,19 +167,7 @@ const Home = ({ history, match }) => {
           }}
           count={count && count.pharmacy}
         />
-        <IconButtonContainer
-          icon={
-            <PersonIcon
-              fontSize="large"
-              className={clsx([classes.colorWhite, classes.large])}
-            />
-          }
-          caption="Hospital"
-          onClick={() => {
-            gotoPage(`search/${HOSPITAL}`);
-          }}
-          count={count && count.hospital}
-        />
+      
         <IconButtonContainer
           icon={
             <Battery20Icon

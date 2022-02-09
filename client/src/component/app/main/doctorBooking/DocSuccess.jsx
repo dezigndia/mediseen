@@ -81,7 +81,7 @@ const DocSuccess = () => {
 			</Grid>
 			<Grid item xs={12}>
 				<Link to="/home">
-					{/* <Button className={classes.btn}>Continue Shopping</Button> */}
+					{/* <Button className={classes.btn}>Continue</Button> */}
 					<Button className={classes.btn}>Continue</Button>
 				</Link>
 			</Grid>
