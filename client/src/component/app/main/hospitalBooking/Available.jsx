@@ -9,10 +9,10 @@ const useStyles = makeStyles((theme) => ({
 	paper: {
 		width: "100%",
 		height: "5rem",
-		backgroundColor: "#F9F9F9",
+		 backgroundColor: "#F9F9F9",
 	},
 	container: {
-		padding: "1rem",
+		padding: ".2rem",
 		height: "100%",
 		width: "100%",
 	},
@@ -22,22 +22,25 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Available = ({
-	image = "https://thumbs.dreamstime.com/z/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg",
-	name,
-	specialist = "MBBS",
+	image="https://thumbs.dreamstime.com/z/smiling-female-doctor-holding-medical-records-lab-coat-her-office-clipboard-looking-camera-56673035.jpg", 
+	name ,
+	address ,
+	specialist,
 	morning,
 	evening,
+	today,
 	doctors,
-	ind,
+	ind
 }) => {
 	const classes = useStyles()
 
 	const [open, setOpen] = useState(false)
+
 	return (
 		<Paper elevation={3} className={classes.paper}>
 			<Grid container alignItems="center" className={classes.container}>
 				<Grid item>
-					<Avatar style={{ height: "3rem", width: "3rem" }} src={image} />
+					<Avatar style={{ height: "3rem", width: "3rem",position:"inherit" }} src={image} />
 				</Grid>
 				<Grid container direction="column" item xs={6}>
 					<Grid item>
@@ -47,7 +50,7 @@ const Available = ({
 						<h5 style={{ color: "gray" }}>{specialist}</h5>
 					</Grid>
 				</Grid>
-				{morning ? (
+				{/* {morning ? (
 					<Grid container item xs={4}>
 						<Grid item xs={12}>
 							<h5
@@ -76,12 +79,22 @@ const Available = ({
 							View All Timings
 						</h5>
 					</Grid>
-				)}
+				)} */}
+				<Grid item xs={4}>
+						<h5
+							style={{ width: "100%", textAlign: "right" }}
+							className={classes.time}
+							onClick={() => setOpen((prev) => !prev)}
+						>
+							View All Timings
+						</h5>
+					</Grid>
 			</Grid>
+
 			{open ? (
 				<Grid container item xs={12} style={{position:"relative"}}>
 					<Grid item xs={12}>
-						<TimeTable ind={ind} clinic={doctors.workingHours} />
+					<TimeTable  ind={ind} clinic={doctors.workingHours} today={today} />
 					</Grid>
 				</Grid>
 			) : null}

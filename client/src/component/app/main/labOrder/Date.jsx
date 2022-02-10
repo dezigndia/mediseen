@@ -71,7 +71,7 @@ const Date = ({ date, setDate }) => {
 							<h3
 								onClick={() => {
 									setActive(d)
-									setDate(`${d}th ${month} ${year}`)
+									setDate(`${d} ${month} ${year}`)
 								}}
 								className={active === d ? classes.date_active : classes.date}
 							>

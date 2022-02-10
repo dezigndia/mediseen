@@ -49,9 +49,7 @@
 //     fetchAvailableToday: () => dispatch(fetchAvailableToday()),
 //     fetchAvailableTomorrow: () => dispatch(fetchAvailableTomorrow())
 // });
-
 // export default connect(mapStateToProps, mapDispatchToProps)(DoctorBooking);
-
 import { Grid,Container } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -95,13 +93,18 @@ const DoctorBooking = () => {
 	}, [])
 
 	useEffect(() => {
-		if (doc.clinic) {
-			const avail = doc.clinic.map((clin) => {
-				return { hours: clin.workingHours[`${day}`], clinic: clin }
-			})
-			setAvailable(avail)
-		}
-	}, [doc])
+    if (doc.clinic) {
+      let avail = doc.clinic.map((clin) => {
+        return { hours: clin.workingHours[`${day}`], clinic: clin };
+      });
+      avail = avail.filter((item) => {
+        if (item.hours) {
+          return item;
+        }
+      });
+      setAvailable(avail);
+    }
+  }, [doc]);
 
 	console.log(isAvailable)
 
@@ -131,9 +134,11 @@ const DoctorBooking = () => {
 							return (
 								<Grid item xs={12}>
 									<Available
+									//  image= {item.photo}
 										name={item.clinic.name}
 										address={item.clinic.address}
 										clinic={item.clinic}
+										today={item.hours}
 										morning={
 											item.hours &&
 											`${item.hours.morning.from}-${item.hours.morning.to}`
@@ -157,7 +162,11 @@ const DoctorBooking = () => {
 					doc.clinic.map((clin, ind) => {
 						return (
 							<Grid item xs={12}>
-								<Available clinic={clin} />
+							
+                               {!clin.workingHours[`${day}`] ? 
+								<Available  image= {""} clinic={clin}  name={clin.name}
+										address={clin.address}/>
+                                   :null}
 							</Grid>
 						)
 					})}

@@ -8,18 +8,18 @@ import moment from "moment"
 import Time from "./Time"
 
 const DocTiming = () => {
-	const [date, setDate] = useState("")
+	const [date, setDate] = useState(moment())
 
 	const clinic = useSelector((state) => state.currentStore.clinic)
-
+console.log(clinic)
 	return (
 		<Grid container item style={{ padding: "1rem 0.5rem" }} spacing={4}>
 			<Grid item>
 				<BusinessHeader />
 			</Grid>
-			<Grid item xs={12}>
-				<Available />
-			</Grid>
+			{/* <Grid item xs={12}>
+				<Available clinic={clinic}/>
+			</Grid> */}
 
 			<Grid xs={12} item>
 				<Date
@@ -27,8 +27,9 @@ const DocTiming = () => {
 					setDate={(value) => setDate(value)}
 				/>
 			</Grid>
-			<Grid item xs={12}>
-				<Time clinic={clinic} />
+			<Grid item xs={12}>	
+				{/* <Time clinic={clinic} 	date={JSON.stringify(moment(date)._d)}/> */}
+				<Time clinic={clinic} date={moment(date)}/>
 			</Grid>
 		</Grid>
 	)

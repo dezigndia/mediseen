@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import { emptyCartProduct } from "../../../../store/cart/cartActions"
 import fetchCallFile from "../../../../fetchCall/fetchCallFile"
+import moment from "moment"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -78,7 +79,7 @@ const DoctorBook = () => {
 			patientName: patient.name,
 			mobileNumber: patient.num,
 			userPhoneNumber: "787989089898989",
-			timings: { from: timing.timing },
+			timings: { from: timing.timing.from , to:timing.timing.to},
 			date: Date.now(),
 			businessType: business.type,
 			businessName: business.businessName,
@@ -151,7 +152,9 @@ const DoctorBook = () => {
 					item
 					xs={6}
 				>
-					{timing.date} {timing.timing}
+
+			<div>{(moment(moment(timing.date)._d)).format("DD MMM YYYY")}</div>
+			<span>{moment(timing.timing.from).format("LT")+"-"+moment(timing.timing.to).format("LT")}</span>	
 				</Grid>
 			</Grid>
 			<Grid container item>

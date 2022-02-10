@@ -34,36 +34,91 @@ const Time = ({ date, type, clinic }) => {
 	const [isAvailable, setAvailable] = useState([])
 	const dispatch = useDispatch()
 
-	// const day = moment().format("dddd")
-const day = moment(new Date()).format("dddd")
+const day = moment(date).format("dddd");
 // const day = "Monday"
 // const time = currentDate.getHours()
 
-
 	// const time = clinic.map((clin) => {
-	// 	clin.workingHours["Monday"].evening.from.split(" ")[0]
+	// return	clin.workingHours[day].evening.from.split(" ")[0];
 	// })
-// console.log(clinic)
-// 	useEffect(() => {
-// 		if (clinic) {
-// 			const avail = clinic.map((clin) => {
-// 				return clin.workingHours[day].evening.from.split(" ")[0] 
-// 			})
-// 			alert(avail)
-// 			setAvailable(avail+"dfdfdf")
-// 		}
-// 	}, [clinic])
-// console.log(isAvailable)
+
+	useEffect(() => {
+		if (clinic) {
+			let avail = clinic && clinic.map((clin) => {
+				return clin.workingHours[`${day}`];
+			})
+			let timeq=[]
+			avail =avail.filter((clin,ind) => {
+				console.log(JSON.stringify(clin))
+				if(clin!==undefined){
+					if(clin.morning){
+					timeq.push(clin.morning)
+					}if(clin.evening){
+						timeq.push(clin.evening)
+					}
+				}
+				return timeq;
+			})
+			console.log(avail)
+			setAvailable(timeq)
+		}
+	}, [clinic,date]);
+
+
 	return (
+		// <Grid container direction="column">
+		// 	{timeArray.map((time, index) => (
+		// 		<Grid container direction="column" item>
+		// 			<Grid
+		// 				onClick={() => setActive(index)}
+		// 				className={classes.container}
+		// 				item
+		// 			>
+		// 				{time}
+		// 			</Grid>
+		// 			<Grid
+		// 				container
+		// 				item
+		// 				justify="space-between"
+		// 				alignItems="center"
+		// 				style={{ display: active !== index ? "none" : null }}
+		// 			>
+		// 				<Grid item xs={4}>
+		// 					<TextField
+		// 						variant="outlined"
+		// 						disabled={true}
+		// 						value={time.split(" ")[1]}
+		// 					/>
+		// 				</Grid>
+		// 				<Grid item xs={4}>
+		// 					<Link
+		// 						to={`/home/doctorBooking/checkout?${
+		// 							type === "doc" ? "order=doc" : ""
+		// 						}`}
+		// 					>
+		// 						<Button
+		// 							onClick={() =>
+		// 								dispatch(addTiming({ date, timing: timeArray[active] }))
+		// 							}
+		// 							variant="contained"
+		// 							color="primary"
+		// 						>
+		// 							Confirm
+		// 						</Button>
+		// 					</Link>
+		// 				</Grid>
+		// 			</Grid>
+		// 		</Grid>
 		<Grid container direction="column">
-			{timeArray.map((time, index) => (
+			{isAvailable && isAvailable.map((time, index) => (
 				<Grid container direction="column" item>
 					<Grid
 						onClick={() => setActive(index)}
 						className={classes.container}
 						item
 					>
-						{time}
+		
+						{moment(time.from).format("LT")} - {moment(time.to).format("LT")}
 					</Grid>
 					<Grid
 						container
@@ -76,9 +131,11 @@ const day = moment(new Date()).format("dddd")
 							<TextField
 								variant="outlined"
 								disabled={true}
-								value={time.split(" ")[1]}
+								// value={time.split(" ")[1]}
+								value={moment(time.from).format("LT")+"-"+moment(time.to).format("LT")}
 							/>
-						</Grid>
+						</Grid> 
+
 						<Grid item xs={4}>
 							<Link
 								to={`/home/doctorBooking/checkout?${
@@ -87,7 +144,7 @@ const day = moment(new Date()).format("dddd")
 							>
 								<Button
 									onClick={() =>
-										dispatch(addTiming({ date, timing: timeArray[active] }))
+										dispatch(addTiming({ date, timing: isAvailable[active] }))
 									}
 									variant="contained"
 									color="primary"
