@@ -41,10 +41,12 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
         let current_mins = temp_time.getMinutes();
         current_mins = current_mins <= 9 ? `0${current_mins}` : current_mins;
 
-        let next_hrs = next_temp_time.getHours();
+        let next_hrs = endTime.getHours();
+        // let next_hrs = next_temp_time.getHours();
         let next_suffix = next_hrs >= 12 ? 'pm' : 'am';
         next_hrs = next_hrs >= 12 ? next_hrs - 12 : next_hrs;
-        let next_mins = next_temp_time.getMinutes();
+        let next_mins = endTime.getMinutes();
+        // let next_mins = next_temp_time.getMinutes();
         next_mins = next_mins <= 9 ? `0${next_mins}` : next_mins;
 
         slotArr.push({
