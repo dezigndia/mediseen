@@ -2,7 +2,7 @@ import React from 'react';
 import './timeSlots.styles.scss';
 
 const TimeSlots = ({ accepted, isBooked, name, phoneNo, timings, changeTab, _id, deleteAppointment, acceptAppointment, dispatch }) => {
-
+console.log(timings)
     return (
         <div className={`appoinements ${isBooked ? 'booked' : 'vacant'} ${accepted ? 'accepted' : 'notAccepted'}`}>
             {

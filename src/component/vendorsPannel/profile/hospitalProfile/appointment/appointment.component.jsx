@@ -233,11 +233,10 @@ const Appointments = () => {
 
     useEffect(() => {
         //effect for making all appointment timeslot array
-
         if (doctorsList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            let time = doctorsList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
-
+            // let time = doctorsList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            let time = doctorsList.filter(item => item).map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
             let morningShift = [], eveningShift = [];
 
             time && time.forEach(item => {

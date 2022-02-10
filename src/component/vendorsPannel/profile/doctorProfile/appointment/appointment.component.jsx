@@ -250,7 +250,8 @@ const Appointments = () => {
     useEffect(() => {
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            let time = hospitalList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            // let time = hospitalList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            let time = hospitalList.filter(item => item).map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
 
             let morningShift = [], eveningShift = [];
 
