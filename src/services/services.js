@@ -31,6 +31,7 @@ export const REGISTER_LINK = `${server}api/business`
 export const UPDATE_REGISTERED_USER = `${server}api/business/update`
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`
 export const GET_VENDOR_DETAILS_BY_ID=(businessType,id)=>`${server}api/${businessType}/${id}`;
+export const GET_ALL_PADDING_REQUEST= `${server}api/business/pending/requests`
 
 //adding products and tests
 

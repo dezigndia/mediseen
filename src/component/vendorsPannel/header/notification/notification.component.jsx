@@ -8,34 +8,60 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 //customComponents
 import Icon from '../../../reusableComponent/icon/icon.component';
 import AcceptTypeNotification from './acceptTypeNotification/acceptTypeNotification.component';
+import axios from 'axios';
+//importing services
+import { GET_VENDOR_DETAILS_BY_ID,GET_ALL_PADDING_REQUEST, ACCEPT_BEING_ADDED_AS_HOSPITAL, ACCCEPT_BEING_ADDED_AS_DOCTOR } from '../../../../services/services';
 
 const Notification = () => {
     const [notifications, setNotifications] = useState([]);
     const [showNotification, setShowNotifications] = useState(false);
-
+    const [userInfo, setUserInfo] = useState([]);
     const currentVendor = useSelector(state => state.currentVendor);
+    const auth_token = useSelector(state => state.token);
+    var aValue = localStorage.getItem("token");
 
     useEffect(() => {
-        if (currentVendor.businessType === 'doctor') {
-            let clinic = currentVendor.clinic;
+        let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
+        axios
+            // .get(GET_ALL_PADDING_REQUEST({
+            // headers: {
+            //     'Authorization': `Bearer ${auth_token.accessToken}`
+            // })
+            .get(GET_ALL_PADDING_REQUEST, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken?auth_token.accessToken:aValue}`
+                }
+            })
+            .then(res => {
+                // console.log("res.data.payload _: -=-=-= ", res.data.payload);
+                setUserInfo(res.data.payload);
+            })
+            .catch(err => {
+                console.log(err);
+                alert('cant fetch user info');
+            });
+    }, [auth_token])
 
+
+    useEffect(() => {
+        
+        if (currentVendor.businessType === 'doctor') {
             // const data = clinic.filter(item => item.status === "pending").map(item => item.clinicId );
             // console.log("Data :=-=-; ", data);
 
-            clinic && setNotifications(
-                clinic.filter(item => item.status === "pending").map(item => <AcceptTypeNotification key={item.clinicId} id={item.clinicId} />)
+            userInfo && setNotifications(
+                userInfo.map(item => <AcceptTypeNotification key={item._id} id={item._id} />)
             );
         }
         else if (currentVendor.businessType === 'hospital') {
-            let doctors = currentVendor.doctors;
-            doctors && setNotifications(
-                doctors
-                    .filter(item => item.status === "pending").map(item => <AcceptTypeNotification key={item.doctorId} id={item.doctorId} />)
+            userInfo && setNotifications(
+                userInfo.map(item => <AcceptTypeNotification key={item._id} id={item._id} />)
             );
         }
+
         // console.log("Notifications available : - " , notifications);
         // console.log(currentVendor);
-    }, [currentVendor,currentVendor.clinic,currentVendor.doctors]);
+    }, [currentVendor]);
 
     return (
         <div className="vendorsNotification">

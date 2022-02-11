@@ -29,6 +29,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
         firstName,
         lastName,
         businessName,
+        businessType,
         type,
         photo,
         area,
@@ -76,9 +77,10 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
     return (
         <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} id={_id} onClick={gotoPage}>
             <div className="name">
-                <p>
+            {type==="hospital"  ?   <p>
                     {businessName}
-                </p>
+                </p> :null}
+            
             </div>
             <div className="avatar">
                 {photo && <img src={photo} className='avatarImage' alt={`profile pic of ${firstName + lastName}`} />}
