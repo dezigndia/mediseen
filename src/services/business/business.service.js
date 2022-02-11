@@ -244,29 +244,29 @@ class BusinessService {
         await Doctor.deleteOne({ phone: phoneNumber })
     })
     acceptDoctor = expressAsyncHandler(async (phoneNumber, docId, status) => {
-        if (status == "accept")
+        if (status === "accept")
             await Hospital.updateOne(
-                { phone: phoneNumber, "doctors._id": docId },
-                { $set: { "doctors.$.status": "accepted" } }
+            { phone: phoneNumber, "doctors.doctorId": docId },
+            { $set: { "doctors.$.status": "accepted" } }
             )
         else
             await Hospital.updateOne(
-                { phone: phoneNumber, "doctors._id": docId },
+                { phone: phoneNumber, "doctors.doctorId": docId },
                 { $set: { "doctors.$.status": "rejected" } }
             )
     })
     acceptHospital = expressAsyncHandler(async (phoneNumber, clinicId, status) => {
-        if (status == "accept"){
-      const dd= await Doctor.updateOne(
-                { phone: phoneNumber, "clinic._id": clinicId },
+        if (status ==="accept"){
+      await Doctor.updateOne(
+                { phone: phoneNumber, "clinic.clinicId": clinicId },
                 { $set: { "clinic.$.status": "accepted" } }
-          
+        
             )
-            console.log(dd)
+
       }
         else{
             await Doctor.updateOne(
-                { phone: phoneNumber, "clinic._id": clinicId },
+                { phone: phoneNumber, "clinic.clinicId": clinicId },
                 { $set: { "clinic.$.status": "rejected" } }
             )
         }
@@ -274,11 +274,11 @@ class BusinessService {
 
     getPendingRequests = expressAsyncHandler(async (bId, type) => {
         console.log(type, bId)
-        if (type == "doctor") {
-            let result = await Hospital.find({ type: "hospital", "doctors.doctorId": bId })
+        if (type ==="doctor") {
+            let result = await Hospital.find({ type: "hospital", "doctors.doctorId": bId,"doctors.status":"pending"})
             return result
         } else {
-            let result = await Doctor.find({ type: "doctor", "clinic.clinicId": bId })
+            let result = await Doctor.find({ type: "doctor", "clinic.clinicId": bId,"clinic.status":"pending" })
             return result
         }
     })
