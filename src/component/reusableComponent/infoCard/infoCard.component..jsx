@@ -77,7 +77,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
     return (
         <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} id={_id} onClick={gotoPage}>
             <div className="name">
-            {type==="hospital"  ?   <p>
+            {type  ?   <p>
                     {businessName}
                 </p> :null}
             

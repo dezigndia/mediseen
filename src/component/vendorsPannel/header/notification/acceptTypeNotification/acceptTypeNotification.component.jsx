@@ -12,7 +12,7 @@ import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.
 //importing action
 import { setCurrentVendor } from '../../../../../actions/action';
 
-const AcceptTypeNotification = ({ id }) => {
+const AcceptTypeNotification = ({ id ,getData}) => {
 
     const [userInfo, setUserInfo] = useState({});
 
@@ -45,6 +45,7 @@ const AcceptTypeNotification = ({ id }) => {
                     })
                 }
                 // console.log(currentVendor);
+                getData();
                 setCurrentVendor(JSON.parse(JSON.stringify(currentVendor)));
                 // localStorage.setItem('currentVendor',JSON.stringify({currentVendor}));
             })

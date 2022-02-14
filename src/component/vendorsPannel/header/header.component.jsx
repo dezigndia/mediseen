@@ -17,7 +17,7 @@ import Icon from '../../reusableComponent/icon/icon.component';
 import Notification from './notification/notification.component';
 
 //importing services
-import { UPLOAD_FILE, UPDATE_REGISTERED_USER } from '../../../services/services';
+import { UPLOAD_FILE, UPDATE_REGISTERED_USER,GET_ALL_PADDING_REQUEST } from '../../../services/services';
 
 //importing actions
 import { setCurrentVendor } from '../../../actions/action';
@@ -27,9 +27,10 @@ const Header = ({ location, props }) => {
     const currentVendor = useSelector(state => state.currentVendor);
     const photo = useSelector(state => state.currentVendor.photo);
     const auth_token = useSelector(state => state.token);
+    var aValue = localStorage.getItem("token");
     const addSignBoardref = useRef(null);
     const dispatch = useDispatch();
-
+    const [userInfo, setUserInfo] = useState([]);
     const history = useHistory();
 
     useEffect(() => {
@@ -40,6 +41,27 @@ const Header = ({ location, props }) => {
             setIsHidden(true);
         }
     }, [location.pathname]);
+
+    useEffect(() => {
+        let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
+        axios
+            // .get(GET_ALL_PADDING_REQUEST({
+            // headers: {
+            //     'Authorization': `Bearer ${auth_token.accessToken}`
+            // })
+            .get(GET_ALL_PADDING_REQUEST, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken?auth_token.accessToken:aValue}`
+                }
+            })
+            .then(res => {
+                setUserInfo(res.data.payload);
+            })
+            .catch(err => {
+                console.log(err);
+                alert('cant fetch user info');
+            });
+    }, [auth_token])
 
     const addSignBoardHandler = (e) => {
         let formData = new FormData();
@@ -111,7 +133,7 @@ const Header = ({ location, props }) => {
             </div>
 
             <Tooltip title="Notifications">
-                <Badge badgeContent={currentVendor.doctors && currentVendor.doctors.length} color="primary">
+                <Badge badgeContent={userInfo && userInfo.length} color="primary">
                     <Notification color="action" />
                 </Badge>
             </Tooltip>
