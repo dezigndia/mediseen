@@ -1,4 +1,5 @@
 export const ADD_HOSPITALS = 'addHospitals';
+export const LIST_HOSPITALS = 'listHospitals';
 export const PAYMENT_SETTING = 'paymentSetting';
 export const PROFILE = 'profile';
 export const ADD_DOCTORS = 'addDoctors';

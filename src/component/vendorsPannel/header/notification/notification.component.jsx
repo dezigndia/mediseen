@@ -61,7 +61,7 @@ function getData() {
 
         // console.log("Notifications available : - " , notifications);
         // console.log(currentVendor);
-    }, [currentVendor,notifications]);
+    }, [currentVendor]);
 
     return (
         <div className="vendorsNotification">

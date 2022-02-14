@@ -13,7 +13,7 @@ import VendorsProfileSettingButton from '../../../../../reusableComponent/vendor
 const SettingHome = ({ history, match }) => {
 
     const gotoAddHospital = useCallback((e) => {
-        history.push(`${match.url}/addHospital`);
+        history.push(`${match.url}/listHospital`);
     }, [history, match.url]);
 
     const gotoPaymentSetting = useCallback((e) => {

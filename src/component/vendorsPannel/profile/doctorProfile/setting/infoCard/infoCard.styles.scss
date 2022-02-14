@@ -1,0 +1,257 @@
+@import '../../../../../../../assets/globalStyles.scss';
+
+$locationIconSize:20px;
+$starIconSize:13px;
+$starIconColor:orange;
+$cardHeight:160px;
+$maxCardWidth:100%; //50px;
+
+@mixin dispFlex($alignItems, $justifyContent) {
+    display: flex;
+    align-items: $alignItems;
+    justify-content: $justifyContent;
+}
+
+.searchResultCard {
+
+    &.cancelTouch{
+        pointer-events: none;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    transition: .5s ease-in-out;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas: "name     name     name     name     isVarified  isVarified"
+    "avatar   avatar   address  address  address     stars"
+    "avatar   avatar   address  address  address     distance"
+    "type     type     type     type     type     closeBy";
+
+    @include card();
+    margin-top: 15px;
+    grid-gap: 1px;
+    padding: 2%;
+    height: $cardHeight;
+    width: Min(100%, $maxCardWidth);
+
+    .bio {
+        display: none;
+    }
+
+    .location {
+        display: none;
+    }
+
+    .name {
+        grid-area: name;
+        font-weight: bold;
+        color: lighten(#000000, 20%);
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .avatar {
+        grid-area: avatar;
+        @include dispFlex(flex-start, center);
+
+        .avatarImage {
+            max-height: 100%;
+            max-width: 100%;
+        }
+    }
+
+    .address {
+        grid-area: address;
+        font-size: .8em;
+        text-align: left;
+        overflow: hidden;
+        scrollbar-width: none;
+        font-weight: bold;
+        color: lighten(#000000, 20%);
+        @include dispFlex(stretch, center);
+        flex-flow: column nowrap;
+
+        &>p {
+            text-align: left;
+        }
+
+        padding: 0 3%;
+    }
+
+    .isVarified {
+        grid-area: isVarified;
+        overflow: hidden;
+        @include dispFlex(flex-end, flex-end);
+
+        &>img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+
+    .stars {
+        grid-area: stars;
+
+        @include dispFlex(flex-end, flex-end);
+
+        .starIcons {
+            height: $starIconSize;
+            width: $starIconSize;
+            color: $starIconColor;
+        }
+    }
+
+    .distance {
+        grid-area: distance;
+        font-weight: 400px;
+        @include dispFlex(flex-end, flex-end);
+
+        .distanceIcon {
+            color: lighten(#000000, 20%);
+            height: $locationIconSize;
+            width: $locationIconSize;
+        }
+    }
+
+    .type {
+        font-size: .7em;
+        font-weight: bold;
+        color: $brown;
+        grid-area: type;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "option1 option2 option3";
+
+        .typeOption {
+            margin-top: 3%;
+            @include dispFlex(center, space-evenly);
+            flex-flow: column nowrap;
+            text-align: left;
+        }
+
+        .option1 {
+            grid-area: option1;
+        }
+
+        .option2 {
+            grid-area: option2;
+        }
+
+        .option3 {
+            grid-area: option3;
+        }
+    }
+
+    .closeBy {
+        grid-area: closeBy;
+        font-size: .6em;
+        @include dispFlex(flex-end, flex-end);
+    }
+
+    .previewPersonalWebsite {
+        display: none;
+    }
+
+    .share {
+        display: none;
+    }
+
+    &.small {
+        transition: .5s ease-in-out;
+        grid-template-columns: 2fr 5fr 2fr;
+        grid-template-rows: repeat(3, 1fr);
+        grid-template-areas: "avatar name empty"
+            "avatar bio  empty"
+            "avatar bio  location ";
+        height: calc(#{$cardHeight} / 2);
+        grid-gap: 1%;
+
+        &>div {
+            display: none;
+        }
+
+        .avatar {
+            display: block;
+        }
+
+        .name {
+            display: block;
+            text-align: left;
+        }
+
+        .bio {
+            display: block;
+            grid-area: bio;
+            display: flex;
+            @include dispFlex(center, flex-start);
+            color: lighten(black, 40%);
+            overflow: hidden;
+        }
+
+        .location {
+            display: block;
+            grid-area: location;
+            font-size: .9em;
+            @include dispFlex(flex-end, flex-end);
+            overflow: hidden;
+            color:black;
+            font-size:1.02em;
+        }
+    }
+
+    &.large {
+        pointer-events: none;
+        margin-top: 0;
+        padding: 1% 2% !important;
+        height:calc(#{$cardHeight} + 50px);
+        width: Min(100%, $maxCardWidth);
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: .8fr repeat(3, 1.2fr) .4fr 1fr;
+        grid-template-areas:
+            "nullB     nullB     nullB    nullB     isVarified isVarified"
+            "avatar    avatar    address  address   address    stars"
+            "avatar    avatar    address  address   address    distance"
+            "type      type      type     type      type       closeBy"
+            "nullA     nullA     nullA    nullA     nullA      nullA"
+            "website   website   website  website   website    share";
+
+        .previewPersonalWebsite {
+            display: flex;
+            grid-area: website;
+            flex-flow: column nowrap;
+            align-items: stretch;
+            justify-content: center;
+            font-size: .9em;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 2%;
+
+            &>p:nth-child(1) {
+                color: lighten(#000000, 20%);
+            }
+
+            &>p:nth-child(2) {
+                color: $green;
+            }
+        }
+
+        .share {
+            display: flex;
+            grid-area: share;
+            align-items: center;
+            justify-content: center;
+            pointer-events: initial;
+        }
+
+        .name {
+            display: none;
+        }
+    }
+}
