@@ -95,20 +95,21 @@ class BusinessController {
         }
     })
     acceptDoctor = expressAsyncHandler(async (req, res) => {
-        const { hosPh, docId, status } = req.params
-        console.log(status)
+        const { docPh, docId, status } = req.params
+
         if (status != "accept" && status != "reject") {
             throw new AppError(StatusCodes.BAD_REQUEST, "Status must be of type accept/reject")
         }
-        await businessService.acceptDoctor(hosPh, docId, status)
+        await businessService.acceptDoctor(docPh, docId, status)
         return res.status(StatusCodes.OK).json({ status: true, payload: "Updated Invitation" })
     })
     acceptHospital = expressAsyncHandler(async (req, res) => {
-        const { docPh, clinicId, status } = req.params
+        const { hosPh, clinicId, status } = req.params
+ 
         if (status != "accept" && status != "reject") {
             throw new AppError(StatusCodes.BAD_REQUEST, "Status must be of type accept/reject")
         }
-        await businessService.acceptHospital(docPh, clinicId, status)
+        await businessService.acceptHospital(hosPh, clinicId, status)
         return res.status(StatusCodes.OK).json({ status: true, payload: "Updated Invitation" })
     })
     getPendingRequests = expressAsyncHandler(async (req, res) => {
