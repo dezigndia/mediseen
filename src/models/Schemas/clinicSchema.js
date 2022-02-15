@@ -5,6 +5,8 @@ const clinicSchema = new mongoose.Schema({
     clinicId: {
         type: String,
         required: true,
+        unique: true,
+        index: true
     },
     name: {
         type: String,

@@ -77,7 +77,7 @@ class BusinessController {
         const data = await businessService.updateBusiness(type, phone, updateData)
 
         if (data) {
-            return res.status(StatusCodes.OK).json({ status: true, payload: "Updated" })
+            return res.status(StatusCodes.OK).json({ status: true, payload: "Updated",message:data })
         } else {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
         }

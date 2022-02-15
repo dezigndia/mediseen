@@ -209,12 +209,21 @@ class BusinessService {
     })
 
     updateBusiness = expressAsyncHandler(async (category, phoneNumber, data) => {
+
         switch (category) {
             case "doctor": {
-                return await Doctor.updateOne(
+         
+        const dublicateData=await Doctor.findOne({ phone: phoneNumber, "clinic.clinicId": data.clinic[0].clinicId })
+        console.log(dublicateData)
+        if(dublicateData){
+            return "duplicate"
+        }else{
+ return await Doctor.updateOne(
                     { phone: phoneNumber, type: category },
                     { $set: data }
                 )
+        }
+               
             }
             case "pharmacy": {
                 return await Pharmacy.updateOne(
