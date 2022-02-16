@@ -26,7 +26,7 @@ $maxCardWidth:100%; //50px;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    grid-template-areas: "name     name     name     name     isVarified  isVarified"
+    grid-template-areas: "name     name     name     name     isVarified  edit "
     "avatar   avatar   address  address  address     stars"
     "avatar   avatar   address  address  address     distance"
     "type     type     type     type     type     closeBy";
@@ -55,6 +55,19 @@ $maxCardWidth:100%; //50px;
         justify-content: flex-start;
     }
 
+    .edit{
+        grid-area: edit;
+
+        @include dispFlex(flex-end, flex-end);
+
+        // .starIcons {
+        //     height: $starIconSize;
+        //     width: $starIconSize;
+        //     color: $starIconColor;
+        // }
+
+    }
+
     .avatar {
         grid-area: avatar;
         @include dispFlex(flex-start, center);
@@ -64,6 +77,7 @@ $maxCardWidth:100%; //50px;
             max-width: 100%;
         }
     }
+
 
     .address {
         grid-area: address;

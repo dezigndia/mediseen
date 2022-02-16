@@ -1,10 +1,11 @@
 import React from "react"
-import { connect } from "react-redux"
+import { connect, useSelector } from "react-redux"
 import "./infoCard.styles.scss"
 import { withRouter } from "react-router-dom"
 
 //importing actions
 import { selectData } from "../../../../../../actions/action"
+import EditIcon from '@mui/icons-material/Edit';
 
 //importing icons
 import { MdLocationOn } from "react-icons/md"
@@ -26,6 +27,7 @@ import { green } from "../../../../../../assets/globalJSS"
 const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large }) => {
     const {
         _id,
+        clinicId,
         firstName,
         address,
         name,
@@ -45,18 +47,27 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
         //isActive,
         specialist
     } = data;
+    const auth_token = useSelector(state =>
+        console.log(state.search.selectedData)
+        );
 
     const gotoPage = (e) => {
-        selectData(data)
-        if (type === "doctor") {
-            history.push(`/home/doctorBooking/${_id}`)
-        } else if (type === "hospital") {
-            history.push(`/home/hospitalBooking/${_id}`)
-        } else if (type === "pharmacy") {
-            history.push(`/home/pharmacyOrder/${_id}`)
-        } else if (type === "pathology") {
-            history.push(`/home/labOrder/${_id}`)
+
+   const dd= selectData(data)
+   console.log(dd)
+        if(clinicId){
+            history.push(`/vendor/profile/setting/editHospital`);
+          
         }
+        // if (type === "doctor") {
+        //     history.push(`/vendor/profile/setting/editHospital`);
+        // } else if (type === "hospital") {
+        //     history.push(`/home/hospitalBooking/${_id}`)
+        // } else if (type === "pharmacy") {
+        //     history.push(`/home/pharmacyOrder/${_id}`)
+        // } else if (type === "pathology") {
+        //     history.push(`/home/labOrder/${_id}`)
+        // }
     }
 
     const share = (e, name) => {
@@ -80,12 +91,14 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
     }
 
     return (
-        <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} id={_id} onClick={gotoPage}>
+        <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} id={clinicId} onClick={gotoPage}>
             <div className="name">
             {name  ?   <p>
                     {name}
                 </p> :null}
-            
+            </div>
+            <div className="edit">
+               <EditIcon/>
             </div>
             <div className="avatar">
                 {photo && <img src={photo} className='avatarImage' alt={`profile pic of ${firstName + lastName}`} />}
@@ -119,12 +132,12 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
                     {distance}
                 </p>
             </div>
-            <div className="closeBy">
+            {/* <div className="closeBy">
                 <p>
                     close by {closeBy}
                 </p>
-            </div>
-            <div className="type">
+            </div> */}
+            {/* <div className="type">
                 <div className="typeOption option1">
                     <p>Online Consulting</p>
                     <IconContext.Provider value={{ className: 'typeOptionIcon' }}>
@@ -143,7 +156,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
                         <RiWalletFill />
                     </IconContext.Provider>
                 </div>
-            </div>
+            </div> */}
             <div className="bio">
                 {specialist}
             </div>

@@ -4,14 +4,15 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './doctorAndHospitalRegistrationForm.styles.scss';
 import { Radio } from '@material-ui/core';
-
+import { useSelector } from "react-redux"
 import { VALIDATE } from './validator/validator';
 
 //importing custom components
-import AddDayAndTime from '../addDayAndTime/addDayAndTime.component';
+// import AddDayAndTime from '../addDayAndTime/addDayAndTime.component';
+import AddDayAndTime from '../../../../registration/addDayAndTime/addDayAndTime.component';
 
 //importing reusable components
-import InfoCard from '../../../reusableComponent/infoCard/infoCard.component.';
+import InfoCard from '../../../../../reusableComponent/infoCard/infoCard.component.';
 
 //importing actions
 import {
@@ -25,10 +26,10 @@ import {
     setFeesCollectionOnAccountOf,
     setTeleconsulting,
     setCurrentVendor
-} from '../../../../actions/action';
+} from '../../../../../../actions/action';
 
 //importing services
-import { UPDATE_REGISTERED_USER, GET_USER_DEETAIL_BY_TOKEN, GET_MATCHING_DOCTORS_LIST, GET_MATCHING_HOSPITAL_LISTS } from '../../../../services/services';
+import { UPDATE_REGISTERED_USER,GET_VENDOR_DETAILS_BY_ID, GET_USER_DEETAIL_BY_TOKEN, GET_MATCHING_DOCTORS_LIST, GET_MATCHING_HOSPITAL_LISTS } from '../../../../../../services/services';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -36,7 +37,9 @@ const DoctorAndHospitalRegistrationForm = (props) => {
 
     const [errorFields, setErrorFields] = useState({});
     const [suggestionList, setSuggestionList] = useState([]);
-    const [selectedSuggestionId,setSelectedSuggestionId]=useState('');
+    const [selectedData, setSelectedData] = useState([]);
+    const [selectedSuggestionId,setSelectedSuggestionId]=useState(props.selectData.clinicId);
+    const currentVendor = useSelector(state => state.currentVendor);
 
     const goBack = (e) => {
         e.preventDefault();
@@ -44,16 +47,26 @@ const DoctorAndHospitalRegistrationForm = (props) => {
     }
 
     useEffect(() => {
-        let link = props.currentVendor.businessType === 'doctor' ? GET_MATCHING_HOSPITAL_LISTS : GET_MATCHING_DOCTORS_LIST;
-        axios
-            .get(link(props.name))
-            .then(res => {
-                setSuggestionList(res.data.payload);
+        let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
+        axios.get(GET_VENDOR_DETAILS_BY_ID(searchBusinessType, props.selectData.clinicId))
+                .then(res => {
+               setSelectedData(res.data.payload);
             })
             .catch(err => {
                 alert('cant fetch suggestion list');
                 console.log(err);
             })
+
+            let link = props.currentVendor.businessType === 'doctor' ? GET_MATCHING_HOSPITAL_LISTS : GET_MATCHING_DOCTORS_LIST;
+            axios
+                .get(link(props.name))
+                .then(res => {
+                    setSuggestionList(res.data.payload);
+                })
+                .catch(err => {
+                    alert('cant fetch suggestion list');
+                    console.log(err);
+                })
     }, [props.name]);
 
     const selectFromSuggestion = (data) => {
@@ -66,11 +79,17 @@ const DoctorAndHospitalRegistrationForm = (props) => {
     }
 
     const save = (e) => {
+             props.setName(selectedData.businessName);
+                props.setAddress(`${selectedData.area} ${selectedData.city} ${selectedData.state}, ${selectedData.pincode}`);
+                props.setDegree(selectedData.degree);
+                props.setPhoneNumber(parseInt(selectedData.phone));
+                setSelectedSuggestionId(selectedData._id);
+                setSuggestionList([]);
         e.preventDefault();
         let data;
 
         //extracting times
-        let timing = {};
+        let timing={};
         Object.keys(props.timing).forEach(item => {
             if (props.timing[item].isSelected) {
                 timing[item.charAt(0).toUpperCase() + item.slice(1)] = { morning: props.timing[item].morning, evening: props.timing[item].evening }
@@ -103,14 +122,15 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                         name: props.name,
                         contact: props.phoneNumber,
                         address: props.address,
-                        fee: props.fees,
-                        timePerSlot: props.timeSlot,
+                        fee: props.fees ? props.fees:props.selectData.fee,
+                        timePerSlot: props.timeSlot ?props.timeSlot :props.selectData.timePerSlot,
                         feeCollect: props.feesCollectOnAccountOf.hospital ? 'hospital' : 'doctor',
-                        teleConsulting: props.teleConsulting,
-                        workingHours: timing
+                        teleConsulting: props.teleConsulting ,
+                        workingHours: JSON.stringify(timing)!="{}"? timing: props.selectData.workingHours
                     },
                     ...props.currentVendor.clinic
-                ]
+                ],
+                update:true
             }
         }
 
@@ -158,16 +178,17 @@ const DoctorAndHospitalRegistrationForm = (props) => {
         <div>
         <NotificationContainer/>
         <form className="doctorAndHospitalRegistrationForm">
-            <h3>Add {props.currentVendor.businessType === 'doctor' ? 'Hospital/Clinic' : 'Doctor'}</h3>
+            <h3>Edit {props.currentVendor.businessType === 'doctor' ? 'Hospital/Clinic' : 'Doctor'}</h3>
             <div className="name" style={{ position: 'relative', backgroundColor: 'white' }}>
                 <input
                     type='text'
+                    disabled
                     placeholder={`Enter name of the ${props.currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor'}`}
-                    value={props.name}
-                    onChange={(e) => { props.setName(e.target.value) }}
+                    value={selectedData.businessName}
+                    onchange={(e) => { props.setName(e.target.value) }}
                     className={`${errorFields.name ? 'erroredInput' : null}`}
                 />
-                {
+                {/* {
                     suggestionList.length > 0 && props.name !== ''
                         ? <div style={{ position: 'absolute', width: '100%', zIndex: 1, padding: '5px', backgroundColor: 'white', border: '1px solid #ccc', boxShadow: '0 0 5px @ccc', maxHeight: '500px', top: '90%', overflowY: 'scroll', overflowX: 'auto' }}>
                             {
@@ -175,15 +196,16 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                             }
                         </div>
                         : null
-                }
+                } */}
             </div>
             {   //in adding hospitals
                 props.currentVendor.businessType === 'doctor'
                     ? <div className="address">
                         <input
                             type='text'
+                            disabled
                             placeholder={`Enter address of hospital`}
-                            value={props.address}
+                            value={props.selectData.address}
                             onChange={(e) => { props.setAddress(e.target.value) }}
                             className={`${errorFields.address ? 'erroredInput' : null}`}
                         />
@@ -194,9 +216,10 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 props.currentVendor.businessType === 'hospital'
                     ? <div className="degree">
                         <input
+                        disabled
                             type='text'
                             placeholder={`Enter degree of doctor`}
-                            value={props.degree}
+                            value={props.selectData.degree}
                             onChange={(e) => { props.setDegree(e.target.value) }}
                             className={`${errorFields.degree ? 'erroredInput' : null}`}
                         />
@@ -204,10 +227,12 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     : null
             }
             <div className="phoneNo">
+    
                 <input
-                    type='number'
+                    type='text'
+                    disabled
                     placeholder={`Enter phone no. ${props.currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor'}`}
-                    value={props.phoneNumber}
+                    value={selectedData.phone}
                     onChange={(e) => { props.setPhoneNumber(e.target.value) }}
                     className={`${errorFields.mobileNumber || errorFields.contact ? 'erroredInput' : null}`}
                 />
@@ -217,7 +242,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <input
                         type='text'
                         placeholder='fees'
-                        value={props.fees}
+                        value={props.selectData.fee}
                         onChange={(e) => { props.setFees(e.target.value) }}
                         className={`${errorFields.fee ? 'erroredInput' : null}`}
                     />
@@ -226,7 +251,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <input
                         type='text'
                         placeholder='eg: 30 mins'
-                        value={props.timeSlot}
+                        value={props.selectData.timePerSlot}
                         onChange={(e) => { props.setTimeSlotForpatient(e.target.value) }}
                         className={`${errorFields.timePerSlot ? 'erroredInput' : null}`}
                     />
@@ -239,7 +264,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 <div className='labelInput'>
                     <Radio
                         name='feeCollcetionBy'
-                        value='hospital'
+                        value={props.selectData.feeCollect}
                         checked={props.feesCollectOnAccountOf.hospital ? true : false}
                         onChange={(e) => props.setFeesCollectionOnAccountOf({ hospital: true, doctor: false })}
                     />
@@ -248,7 +273,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 <div className='labelInput'>
                     <Radio
                         name='feeCollcetionBy'
-                        value='doctor'
+                        value={props.selectData.feeCollect}
                         checked={props.feesCollectOnAccountOf.doctor ? true : false}
                         onChange={(e) => props.setFeesCollectionOnAccountOf({ hospital: false, doctor: true })}
                     />
@@ -262,7 +287,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 <div className='labelInput'>
                     <Radio
                         name='teleConsulting'
-                        value='no'
+                        value={props.selectData.teleConsulting}
                         checked={props.teleConsulting ? false : true}
                         onChange={(e) => props.setTeleconsulting(false)}
                     />
@@ -271,7 +296,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 <div className='labelInput'>
                     <Radio
                         name='teleConsulting'
-                        value='yes'
+                        value={props.selectData.teleConsulting}
                         checked={props.teleConsulting ? true : false}
                         onChange={(e) => props.setTeleconsulting(true)}
                     />
@@ -282,18 +307,21 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 <h3>Add Timing For Hospital</h3>
                 {
                     days.map((item, index) => (
+                        <>
                         <AddDayAndTime
                             key={index}
                             day={item}
                             setTimings={props.setTimings}
+                            data={props.selectData.workingHours}
+                            // data={(!props.selectData.workingHours.filter((val) => val === item))}
                             error={errorFields[`workingHours ${item}`]}
-                        />
+                        /></>
                     ))
-                }
+                     }
             </div>
             <div className="formButtons">
                 <button onClick={goBack}>Go Back</button>
-                <button onClick={save}>Save</button>
+                <button onClick={save}>Update</button>
             </div>
         </form></div>
     );
@@ -310,7 +338,8 @@ const mapStatetoProps = state => ({
     teleConsulting: state.doctorAndHospitalRegistration.teleConsulting,
     timing: state.doctorAndHospitalRegistration.timing,
     currentVendor: state.currentVendor,
-    auth_token: state.token
+    auth_token: state.token,
+    selectData:state.search.selectedData
 });
 
 const mapDispatchToProps = dispatch => ({

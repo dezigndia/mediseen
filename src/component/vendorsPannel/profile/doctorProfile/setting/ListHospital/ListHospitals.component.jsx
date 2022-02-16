@@ -18,7 +18,8 @@ import { FaLanguage, FaAddressCard } from 'react-icons/fa';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { GiScooter } from 'react-icons/gi';
 import {BiLogOut} from 'react-icons/bi';
-
+import NotificationManager from 'react-notifications';
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 //importing actions
 import {
     setName,
@@ -79,7 +80,7 @@ let { history, match}=props;
     },[history]);
     return (
         // <DoctorAndHospitalRegistrationForm />
-        <>
+        <>    <NotificationContainer/>
             <div className="settingHome">
             <VendorsProfileSettingButton
                 icon={<AiOutlineClockCircle />}
