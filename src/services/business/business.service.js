@@ -212,18 +212,30 @@ class BusinessService {
 
         switch (category) {
             case "doctor": {
-         
-        const dublicateData=await Doctor.findOne({ phone: phoneNumber, "clinic.clinicId": data.clinic[0].clinicId })
-        console.log(dublicateData)
-        if(dublicateData){
-            return "duplicate"
-        }else{
- return await Doctor.updateOne(
-                    { phone: phoneNumber, type: category },
-                    { $set: data }
-                )
-        }
-               
+                console.log(category)
+                const dublicateData = await Doctor.findOne({phone: phoneNumber,"clinic.clinicId":data.clinic ? data.clinic[0].clinicId:null})
+           
+                if (data.update) {
+                    console.log("if")
+                    return await Doctor.updateOne(
+                        {
+                            phone: phoneNumber,
+                            type: category,
+                            "clinic.clinicId": data.clinic[0].clinicId,
+                        },
+                        { $set: { "clinic.$.workingHours": data.clinic[0].workingHours } }
+                    )
+                } else if (dublicateData) {
+
+                    console.log("duplicate")
+                    return "duplicate"
+                } else {
+                    console.log("sfsfsfsf")
+                    return await Doctor.updateOne(
+                        { phone: phoneNumber, type: category },
+                        { $set: data }
+                    )
+                }
             }
             case "pharmacy": {
                 return await Pharmacy.updateOne(
@@ -252,6 +264,18 @@ class BusinessService {
     deleteBusiness = expressAsyncHandler(async phoneNumber => {
         await Doctor.deleteOne({ phone: phoneNumber })
     })
+
+    deleteBusinessById = expressAsyncHandler(async (type,phone, id) => {
+        if (type === "doctor")
+        await  Doctor.updateOne(
+        {phone: phone,"clinic.clinicId": id},{$pull : {"clinic" : {"clinicId":id}}}
+     )
+        else
+            await Hospital.updateOne(
+                {phone: phone,"doctors.doctorId": id},{$pull : {"doctors" : {"doctorId":id}}}
+            )
+    })
+
     acceptDoctor = expressAsyncHandler(async (phoneNumber, docId, status) => {
         if (status === "accept")
             await Hospital.updateOne(

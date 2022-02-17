@@ -94,6 +94,19 @@ class BusinessController {
             throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
         }
     })
+
+    deleteBusinessById = expressAsyncHandler(async (req, res) => {
+        const {  id } = req.params
+        const { phone ,type} = res.locals.user
+        try {
+            await businessService.deleteBusinessById(type,phone, id)
+            return res.status(StatusCodes.OK).json({ status: true, payload: "deleted successfully" })
+     
+        } catch (err) {
+            throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Internal Server Error")
+        }
+    })
+    
     acceptDoctor = expressAsyncHandler(async (req, res) => {
         const { docPh, docId, status } = req.params
 
