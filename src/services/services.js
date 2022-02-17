@@ -1,5 +1,5 @@
-// const server = 'http://13.235.95.152:5001/';
-const server = 'http://localhost:5001/';
+const server = 'http://13.235.95.152:5001/';
+// const server = 'http://localhost:5001/';
 
 export const GET_OTP = `${server}api/auth/user-get-otp`
 
@@ -29,6 +29,7 @@ export const SEARCH_BUSINESS = (category, query, filter) => {
 //registring user
 export const REGISTER_LINK = `${server}api/business`
 export const UPDATE_REGISTERED_USER = `${server}api/business/update`
+export const DELETE_VENDOR_BY_ID = (id)=>`${server}api/business/delete/${id}`;
 export const GET_USER_DEETAIL_BY_TOKEN = `${server}api/business/details`
 export const GET_VENDOR_DETAILS_BY_ID=(businessType,id)=>`${server}api/${businessType}/${id}`;
 export const GET_ALL_PADDING_REQUEST= `${server}api/business/pending/requests`

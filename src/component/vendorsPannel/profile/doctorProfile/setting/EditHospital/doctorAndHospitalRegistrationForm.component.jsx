@@ -145,7 +145,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 })
                 .then(res => {
                     if(res.data.message==="duplicate"){
-                        NotificationManager.success('success message', 'Already Added this Hospital !!', 3000, () => {
+                        NotificationManager.error('success message', 'Already Added this Hospital !!', 2000, () => {
                         });
                     }
                     axios

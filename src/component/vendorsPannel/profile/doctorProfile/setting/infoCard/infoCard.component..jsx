@@ -4,9 +4,9 @@ import "./infoCard.styles.scss"
 import { withRouter } from "react-router-dom"
 
 //importing actions
-import { selectData } from "../../../../../../actions/action"
+import { selectData ,setCurrentVendor} from "../../../../../../actions/action"
 import EditIcon from '@mui/icons-material/Edit';
-
+import axios from 'axios';
 //importing icons
 import { MdLocationOn } from "react-icons/md"
 import { IconContext } from "react-icons"
@@ -14,17 +14,19 @@ import { RiStarSFill, RiWalletFill } from "react-icons/ri"
 import { GrAdd } from "react-icons/gr"
 import { BsCalendarFill } from "react-icons/bs"
 import { IoLogoWhatsapp } from "react-icons/io"
+import { DELETE_VENDOR_BY_ID,GET_VENDOR_DETAILS_BY_ID, GET_USER_DEETAIL_BY_TOKEN, GET_MATCHING_DOCTORS_LIST, GET_MATCHING_HOSPITAL_LISTS } from '../../../../../../services/services';
 
 //verified logo
 import logo from "./check.svg"
-
+import {NotificationManager} from 'react-notifications';
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 //importing reusable component
 import Icon from "../../../../../../component/reusableComponent/icon/icon.component"
-
+import DeleteIcon from '@mui/icons-material/Delete';
 //importing jss
 import { green } from "../../../../../../assets/globalJSS"
-
-const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large }) => {
+// import { setCurrentVendor, updateAccessToken } from '../../../../../../actions/action';
+const InfoCard = ({ data, reload,cancelTouch, history, stars = 5, closeBy = '10pm', distance = 3.3, small, selectData, large,setCurrentVendor }) => {
     const {
         _id,
         clinicId,
@@ -47,10 +49,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
         //isActive,
         specialist
     } = data;
-    const auth_token = useSelector(state =>
-        console.log(state.search.selectedData)
-        );
-
+    const auth_token = useSelector(state => state.token);
     const gotoPage = (e) => {
 
    const dd= selectData(data)
@@ -70,6 +69,32 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
         // }
     }
 
+    const gotoDelete = (e) => {
+      selectData(data)
+        axios.delete(DELETE_VENDOR_BY_ID(clinicId), {
+            headers: {
+                'Authorization': `Bearer ${auth_token.accessToken}`
+            }
+        }).then(res => {
+            axios.get(GET_USER_DEETAIL_BY_TOKEN, {
+                headers: {
+                    'Authorization': `Bearer ${auth_token.accessToken}`
+                }
+            })
+            .then(response => {
+                setCurrentVendor(response.data.payload)
+            }).catch(err => {console.log(err);alert('something went wrong2')});
+            
+                NotificationManager.success('success', 'Hospital Deleted !!', 3000, () => {
+                });
+            
+        }).catch(err => {
+            console.log(err);
+            NotificationManager.error('error', 'something went wrong1 !!', 3000, () => {
+            });
+        });
+}
+           
     const share = (e, name) => {
         e.stopPropagation();
         e.cancellable = true;
@@ -91,14 +116,17 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
     }
 
     return (
-        <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} id={clinicId} onClick={gotoPage}>
+        <div className={`searchResultCard ${small ? 'small' : null} ${large ? 'large' : null} ${cancelTouch ? 'cancelTouch' : null}`} >
             <div className="name">
             {name  ?   <p>
                     {name}
                 </p> :null}
             </div>
-            <div className="edit">
+            <div className="edit" id={clinicId} onClick={gotoPage}>
                <EditIcon/>
+            </div>
+            <div className="delete"  id={clinicId} onClick={gotoDelete}>
+               <DeleteIcon/>
             </div>
             <div className="avatar">
                 {photo && <img src={photo} className='avatarImage' alt={`profile pic of ${firstName + lastName}`} />}
@@ -179,6 +207,7 @@ const InfoCard = ({ data, cancelTouch, history, stars = 5, closeBy = '10pm', dis
 
 const mapDispatchToProps = (dispatch) => ({
     selectData: (data) => dispatch(selectData(data)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 })
 
 export default connect(null, mapDispatchToProps)(withRouter(InfoCard))

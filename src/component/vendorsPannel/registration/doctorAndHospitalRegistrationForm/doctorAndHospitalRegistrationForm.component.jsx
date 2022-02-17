@@ -125,7 +125,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 })
                 .then(res => {
                     if(res.data.message==="duplicate"){
-                        NotificationManager.success('success message', 'Already Added this Hospital !!', 3000, () => {
+                        NotificationManager.error('error message', 'Already Added this Hospital !!', 3000, () => {
                         });
                     }
                     axios
@@ -142,7 +142,10 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                             console.log(err);
                             alert('something went wrong');
                         });
-                    // props.history.goBack();
+                        NotificationManager.success('success message', ' Added  Hospital !!', 3000, () => {
+                 
+                        });
+                        props.history.goBack();
                 })
                 .catch(err => {
                     console.log(err);

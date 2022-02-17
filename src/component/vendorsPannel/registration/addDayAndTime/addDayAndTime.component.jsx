@@ -76,7 +76,7 @@ const AddDayAndTime = ({ day, setTimings, error ,data}) => {
     }
 let filter;
 let week=day.charAt(0).toUpperCase() + day.slice(1);
-dataSelect.map((items,index)=>(
+dataSelect[0] !=undefined && dataSelect.map((items,index)=>(
 filter=JSON.stringify([day.charAt(0).toUpperCase() + day.slice(1)].reduce((obj, key) => ({ ...obj, [key]: items[key] }), {})[week])
 ))
     return (
