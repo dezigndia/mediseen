@@ -85,12 +85,12 @@ const InfoCard = ({ data, reload,cancelTouch, history, stars = 5, closeBy = '10p
                 setCurrentVendor(response.data.payload)
             }).catch(err => {console.log(err);alert('something went wrong2')});
             
-                NotificationManager.success('success', 'Hospital Deleted !!', 3000, () => {
+                NotificationManager.success('success', 'Hospital Deleted !!', 2000, () => {
                 });
             
         }).catch(err => {
             console.log(err);
-            NotificationManager.error('error', 'something went wrong1 !!', 3000, () => {
+            NotificationManager.error('error', 'something went wrong !!', 1000, () => {
             });
         });
 }

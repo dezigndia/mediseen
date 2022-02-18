@@ -79,6 +79,16 @@ let week=day.charAt(0).toUpperCase() + day.slice(1);
 dataSelect[0] !=undefined && dataSelect.map((items,index)=>(
 filter=JSON.stringify([day.charAt(0).toUpperCase() + day.slice(1)].reduce((obj, key) => ({ ...obj, [key]: items[key] }), {})[week])
 ))
+useEffect(() => {
+setMorningFrom(filter!=undefined && JSON.parse(filter).morning.from !=null ?moment(filter!=undefined ?JSON.parse(filter).morning.from:null).format("LT").toLowerCase():'')
+setMorningTo(filter!=undefined && JSON.parse(filter).morning.to !=null ?moment(filter!=undefined ?JSON.parse(filter).morning.to:null).format("LT").toLowerCase():'')
+
+setEveningFrom(filter!=undefined && JSON.parse(filter).evening.from !=null ?moment(filter!=undefined ?JSON.parse(filter).evening.from:null).format("LT").toLowerCase():'')
+setEveningTo(filter!=undefined && JSON.parse(filter).evening.to !=null ?moment(filter!=undefined ?JSON.parse(filter).evening.to:null).format("LT").toLowerCase():'')
+if( filter!=undefined && JSON.parse(filter).morning.from!=null){
+setIsSelected(prevState => !prevState)
+}
+}, []);
     return (
         <div className={`timingInput ${day}`}>
       <div className="daySelect labelInput">
@@ -93,7 +103,7 @@ filter=JSON.stringify([day.charAt(0).toUpperCase() + day.slice(1)].reduce((obj, 
                         value={morningFrom}
                         // value={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).morning.from:null).format("LT"):morningFrom}
                         onChange={(e) => setMorningFrom(e.target.value)}
-                        placeholder={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).morning.from:null).format("LT"):'AM'}
+                        placeholder={'AM'}
                         onClick={(e) => {
                             setShowTimeKeeper('morningFrom');
                             if (e.target.value.length)
@@ -108,7 +118,7 @@ filter=JSON.stringify([day.charAt(0).toUpperCase() + day.slice(1)].reduce((obj, 
                         value={morningTo}
                         // value={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).morning.to:null).format("LT"):morningTo}
                         onChange={(e) => setMorningTo(e.target.value)}
-                        placeholder={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).morning.to:null).format("LT"):'AM'}
+                        placeholder={'AM'}
                         onClick={(e) => {
                             setShowTimeKeeper('morningTo');
                             if (e.target.value.length)
@@ -125,7 +135,7 @@ filter=JSON.stringify([day.charAt(0).toUpperCase() + day.slice(1)].reduce((obj, 
                         // value={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).evening.from:null).format("LT"):eveningFrom}
                         onChange={(e) => setEveningFrom(e.target.value)}
                         // placeholder='PM'
-                        placeholder={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).evening.from:null).format("LT"):'PM'}
+                        placeholder={'PM'}
                         onClick={(e) => {
                             setShowTimeKeeper('eveningFrom');
                             if (e.target.value.length)
@@ -140,7 +150,7 @@ filter=JSON.stringify([day.charAt(0).toUpperCase() + day.slice(1)].reduce((obj, 
                         value={eveningTo}
                         // value={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).evening.to:null).format("LT"):eveningTo}
                         onChange={(e) => setEveningTo(e.target.value)}
-                        placeholder={filter!=undefined ?moment(filter!=undefined ?JSON.parse(filter).evening.to:null).format("LT"):'PM'}
+                        placeholder={'PM'}
                         onClick={(e) => {
                             setShowTimeKeeper('eveningTo');
                             if (e.target.value.length)

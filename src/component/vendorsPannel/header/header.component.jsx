@@ -59,7 +59,7 @@ const Header = ({ location, props }) => {
             })
             .catch(err => {
                 console.log(err);
-                alert('cant fetch user info');
+                // alert('cant fetch user info');
             });
     }, [auth_token])
 
@@ -133,9 +133,7 @@ const Header = ({ location, props }) => {
             </div>
 
             <Tooltip title="Notifications">
-                <Badge badgeContent={userInfo && userInfo.length} color="primary">
                     <Notification color="action" />
-                </Badge>
             </Tooltip>
             
             <Tooltip title="Logout">

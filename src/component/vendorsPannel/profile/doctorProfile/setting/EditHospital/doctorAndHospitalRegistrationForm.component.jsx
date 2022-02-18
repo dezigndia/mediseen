@@ -30,7 +30,8 @@ import {
 
 //importing services
 import { UPDATE_REGISTERED_USER,GET_VENDOR_DETAILS_BY_ID, GET_USER_DEETAIL_BY_TOKEN, GET_MATCHING_DOCTORS_LIST, GET_MATCHING_HOSPITAL_LISTS } from '../../../../../../services/services';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const DoctorAndHospitalRegistrationForm = (props) => {
@@ -145,8 +146,14 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 })
                 .then(res => {
                     if(res.data.message==="duplicate"){
-                        NotificationManager.error('success message', 'Already Added this Hospital !!', 2000, () => {
+                        NotificationManager.error('error message', 'Already Added this Hospital !!', 2000, () => {
                         });
+                    }else{
+                        NotificationManager.success('success message', 'Hospital Updated !!', 2000, () => {
+                        });
+                        // setTimeout(() => {
+                        //     props.history.goBack();
+                        //   }, 2000);
                     }
                     axios
                         .get(GET_USER_DEETAIL_BY_TOKEN, {

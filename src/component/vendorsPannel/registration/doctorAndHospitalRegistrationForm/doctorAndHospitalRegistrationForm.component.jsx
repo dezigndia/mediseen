@@ -125,8 +125,14 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                 })
                 .then(res => {
                     if(res.data.message==="duplicate"){
-                        NotificationManager.error('error message', 'Already Added this Hospital !!', 3000, () => {
+                        NotificationManager.error('error message', 'Already Added this Hospital !!', 2000, () => {
                         });
+                    }else{
+                        NotificationManager.success('success message', ' Added  Hospital !!', 1000, () => {
+                        });
+                        setTimeout(() => {
+                            props.history.goBack();
+                          }, 2000);
                     }
                     axios
                         .get(GET_USER_DEETAIL_BY_TOKEN, {
@@ -142,10 +148,7 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                             console.log(err);
                             alert('something went wrong');
                         });
-                        NotificationManager.success('success message', ' Added  Hospital !!', 3000, () => {
-                 
-                        });
-                        props.history.goBack();
+                     
                 })
                 .catch(err => {
                     console.log(err);

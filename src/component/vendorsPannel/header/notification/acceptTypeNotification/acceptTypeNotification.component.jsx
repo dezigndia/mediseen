@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import './acceptTypeNotification.styles.scss';
+import {NotificationManager} from 'react-notifications';
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 
 //importing services
 import { GET_VENDOR_DETAILS_BY_ID, ACCEPT_BEING_ADDED_AS_HOSPITAL, ACCCEPT_BEING_ADDED_AS_DOCTOR } from '../../../../../services/services';
@@ -12,7 +14,7 @@ import InfoCard from '../../../../reusableComponent/infoCard/infoCard.component.
 //importing action
 import { setCurrentVendor } from '../../../../../actions/action';
 
-const AcceptTypeNotification = ({ id ,getData}) => {
+const AcceptTypeNotification = ({ id ,getData,setReload}) => {
 
     const [userInfo, setUserInfo] = useState({});
 
@@ -45,6 +47,8 @@ const AcceptTypeNotification = ({ id ,getData}) => {
                     })
                 }
                 // console.log(currentVendor);
+                NotificationManager.success('success', ' Accepted !!', 2000, () => {
+                });
                 getData();
                 setCurrentVendor(JSON.parse(JSON.stringify(currentVendor)));
                 // localStorage.setItem('currentVendor',JSON.stringify({currentVendor}));
@@ -81,6 +85,9 @@ const AcceptTypeNotification = ({ id ,getData}) => {
                         }
                     }
                 }
+                NotificationManager.success('success', ' Declined !!', 2000, () => {
+                });
+                getData();
                 setCurrentVendor(JSON.parse(JSON.stringify(currentVendor)));
                 // localStorage.setItem('currentVendor',JSON.stringify({currentVendor}));
             })
@@ -100,7 +107,7 @@ const AcceptTypeNotification = ({ id ,getData}) => {
             })
             .catch(err => {
                 console.log(err);
-                alert('cant fetch user info');
+                // alert('cant fetch user info');
             });
     }, [])
 
