@@ -78,9 +78,14 @@ const DoctorBook = () => {
 		let body = {
 			patientName: patient.name,
 			mobileNumber: patient.num,
+			patient: {
+				firstName: patient.name.split(" ")[0],
+				lastName: patient.name.split(" ")[1],
+				mobileNumber: patient.num,
+			},
 			userPhoneNumber: "787989089898989",
 			timings: { from: timing.timing.from , to:timing.timing.to},
-			date: Date.now(),
+			date: timing.date,
 			businessType: business.type,
 			businessName: business.businessName,
 			businessPhoneNumber: business.phone,

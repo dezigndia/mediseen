@@ -19,13 +19,13 @@ const useStyles = makeStyles({
 	}
 })
 
-const TimeTable = ({ clinic,today}) => {
+const TimeTable = ({ id,clinic,today}) => {
 	const classes = useStyles()
 
 
 
 	return (
-		<Link to="/home/doctorBooking/doc-timing">
+		<Link to={`/home/doctorBooking/doc-timing?ind=${id}`}>
 		{today ? 
 			<TableContainer component={Paper} style={{ padding: "0rem" ,margin:"0rem"}}>
 				<Table aria-label="simple table">

@@ -129,11 +129,11 @@ const DoctorBooking = () => {
 						<Grid item>
 							<h3>Available Today</h3>
 						</Grid>
-						{isAvailable.map((item) => {
-							console.log(item)
+						{isAvailable.map((item,ind) => {
 							return (
 								<Grid item xs={12}>
 									<Available
+										ind={ind}
 									//  image= {item.photo}
 										name={item.clinic.name}
 										address={item.clinic.address}
@@ -164,7 +164,7 @@ const DoctorBooking = () => {
 							<Grid item xs={12}>
 							
                                {!clin.workingHours[`${day}`] ? 
-								<Available  image= {""} clinic={clin}  name={clin.name}
+								<Available  	ind={ind} image= {""} clinic={clin}  name={clin.name}
 										address={clin.address}/>
                                    :null}
 							</Grid>

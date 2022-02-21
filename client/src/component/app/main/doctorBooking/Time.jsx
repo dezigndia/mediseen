@@ -33,7 +33,7 @@ const Time = ({ date, type, clinic }) => {
 	const [active, setActive] = useState(null)
 	const [isAvailable, setAvailable] = useState([])
 	const dispatch = useDispatch()
-
+   const [clinicData, setClinicData]=useState([clinic]);
 const day = moment(date).format("dddd");
 // const day = "Monday"
 // const time = currentDate.getHours()
@@ -43,13 +43,12 @@ const day = moment(date).format("dddd");
 	// })
 
 	useEffect(() => {
-		if (clinic) {
-			let avail = clinic && clinic.map((clin) => {
+		if (clinicData) {
+			let avail = clinicData && clinicData.map((clin) => {
 				return clin.workingHours[`${day}`];
 			})
 			let timeq=[]
 			avail =avail.filter((clin,ind) => {
-				console.log(JSON.stringify(clin))
 				if(clin!==undefined){
 					if(clin.morning){
 					timeq.push(clin.morning)
@@ -59,10 +58,9 @@ const day = moment(date).format("dddd");
 				}
 				return timeq;
 			})
-			console.log(avail)
 			setAvailable(timeq)
 		}
-	}, [clinic,date]);
+	}, [clinicData,date]);
 
 
 	return (
