@@ -14,7 +14,7 @@ import VendorsProfileSettingButton from '../../../../../reusableComponent/vendor
 const SettingHome = ({ history, match }) => {
 
     const gotoAddPannel = useCallback((e) => {
-        history.push(`${match.url}/addPannel`);
+        history.push(`${match.url}/listDoctor`);
     }, [history, match.url]);
 
     const gotoAddStaff = useCallback((e) => {
@@ -45,12 +45,12 @@ const SettingHome = ({ history, match }) => {
                 label2='Option to receive online payment through upi or bank transfer'
                 onClick={gotoPaymentSetting}
             />
-            <VendorsProfileSettingButton
+            {/* <VendorsProfileSettingButton
                 icon={<BsFillPeopleFill />}
                 label1='Add Support Staff'
                 label2='Add staff to manage App & Hospital with you and assist in Receptionist'
                 onClick={gotoAddStaff}
-            />
+            /> */}
             <VendorsProfileSettingButton
                 icon={<FaLanguage />}
                 label1='Change Language'

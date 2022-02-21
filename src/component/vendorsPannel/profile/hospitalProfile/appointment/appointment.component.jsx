@@ -55,7 +55,8 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
             hospitalName,
             timeSlotPerPatient,
             timeStampFrom: temp_time,
-            timeStampTo: next_temp_time
+           // timeStampTo: next_temp_time
+            timeStampTo: endTime
         })
 
         temp_time = next_temp_time;
@@ -237,8 +238,8 @@ const Appointments = () => {
         //effect for making all appointment timeslot array
         if (doctorsList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            // let time = doctorsList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
-            let time = doctorsList.filter(item => item).map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            let time = doctorsList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            // let time = doctorsList.filter(item => item).map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
             let morningShift = [], eveningShift = [];
 
             time && time.forEach(item => {

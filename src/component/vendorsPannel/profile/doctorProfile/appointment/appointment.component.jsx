@@ -64,7 +64,8 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
             hospitalName,
             timeSlotPerPatient,
             timeStampFrom: temp_time,
-            timeStampTo: next_temp_time
+          //  timeStampTo: next_temp_time
+            timeStampTo: endTime
         })
 
         temp_time = next_temp_time;
@@ -250,8 +251,8 @@ const Appointments = () => {
     useEffect(() => {
         if (hospitalList) {
             let dayIndex = new Date(selectedDate.year, selectedDate.month, selectedDate.date).getDay();
-            // let time = hospitalList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
-            let time = hospitalList.filter(item => item).map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+            let time = hospitalList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
+
 
             let morningShift = [], eveningShift = [];
 
@@ -288,7 +289,7 @@ const Appointments = () => {
                                 return {
                                     timeSlot: item,
                                     isBooked: !isDataPresent.isCancelled,
-                                    customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
+                                    customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName ? res.data.payload[isDataPresent.index].patient.lastName:""}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
                                     _id: res.data.payload[isDataPresent.index]._id,
                                     accepted: res.data.payload[isDataPresent.index].status === 'confirmed'
