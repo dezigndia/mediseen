@@ -57,9 +57,11 @@ class AppointmentController {
         }
     })
     getAppointmentbybusiness = expressAsyncHandler(async (req, res) => {
+      //  console.log("fssfs")
         const { user } = res.locals
         const { limit, skip } = req.query
         const searchQuery = req.query
+    //    console.log(searchQuery)
         if (!(user.type == "doctor" || user.type == "hospital")) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 success: false,
@@ -70,7 +72,8 @@ class AppointmentController {
             limit,
             skip,
             user.phone,
-            searchQuery
+            searchQuery,
+            user.type
         )
 
         if (data) {

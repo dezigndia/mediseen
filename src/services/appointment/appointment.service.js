@@ -8,7 +8,7 @@ class AppointmentService {
     })
 
     getAppointmentbybusiness = expressAsyncHandler(
-        async (limit, skip, businessPhoneNumber, searchQuery) => {
+        async (limit, skip, businessPhoneNumber, searchQuery,type) => {
             delete searchQuery["limit"]
             delete searchQuery["skip"]
             let date
@@ -18,13 +18,22 @@ class AppointmentService {
             }
             let data = await Appointment.find({
                 businessPhoneNumber: businessPhoneNumber,
+                 businessType:type,
                 ...searchQuery,
             })
                 .limit(parseInt(limit))
                 .skip(parseInt(skip))
             if (date) {
+                const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                const d = new Date();
                 return data.filter(obj => {
                     return (
+                        // new Date(obj.date).getDate() ===
+                //        console.log(new Date(1645675583275).getMonth())
+                  
+//  (weekday[new Date(obj.date).getDay()]) === (weekday[new Date(+date).getDay()])
+          //       console.log(weekday[new Date(+date).getDay()] )
+                        //&&
                         new Date(obj.date).getDate() === new Date(+date).getDate() &&
                         new Date(obj.date).getMonth() === new Date(+date).getMonth() &&
                         new Date(obj.date).getFullYear() === new Date(+date).getFullYear()
