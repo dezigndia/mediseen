@@ -212,11 +212,10 @@ class BusinessService {
 
         switch (category) {
             case "doctor": {
-                console.log(category)
+
                 const dublicateData = await Doctor.findOne({phone: phoneNumber,"clinic.clinicId":data.clinic ? data.clinic[0].clinicId:null})
            
                 if (data.update) {
-                    console.log("if")
                     return await Doctor.updateOne(
                         {
                             phone: phoneNumber,
@@ -230,7 +229,6 @@ class BusinessService {
                     console.log("duplicate")
                     return "duplicate"
                 } else {
-                    console.log("sfsfsfsf")
                     return await Doctor.updateOne(
                         { phone: phoneNumber, type: category },
                         { $set: data }
@@ -244,10 +242,29 @@ class BusinessService {
                 )
             }
             case "hospital": {
-                return await Hospital.updateOne(
-                    { phone: phoneNumber, type: category },
-                    { $set: data }
-                )
+                // return await Hospital.updateOne(
+                //     { phone: phoneNumber, type: category },
+                //     { $set: data }
+                // )
+                const dublicateData = await Hospital.findOne({phone: phoneNumber,"doctors.doctorId":data.doctors ? data.doctors[0].doctorId:null})
+           
+                if (data.update) {
+                    return await Hospital.updateOne(
+                        {
+                            phone: phoneNumber,
+                            type: category,
+                            "doctors.doctorId": data.doctors[0].doctorId,
+                        },
+                        { $set: { "doctors.$.workingHours": data.doctors[0].workingHours } }
+                    )
+                } else if (dublicateData) {
+                    return "duplicate"
+                } else {
+                    return await Hospital.updateOne(
+                        { phone: phoneNumber, type: category },
+                        { $set: data }
+                    )
+                }
             }
             case "pathology": {
                 return await Pathology.updateOne(
