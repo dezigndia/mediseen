@@ -19,6 +19,7 @@ const Button = withRouter(({ icon, label, history, match, location }) => {
 
     const clickHandler = (e) => {
         history.push(`${match.url}/${label}`);
+        localStorage.setItem("path",label)
     }
 
     useEffect(() => {
@@ -49,7 +50,7 @@ const ProfileHeader = ({ location }) => {
     const [buttonName,setButtonName]=useState('');
     
     const buttonLabel = () => {
-        console.log(currentVendor.businessType);
+        
         if (currentVendor.businessType === 'doctor' || currentVendor.businessType === 'hospital') {
             return 'appointments';
         }

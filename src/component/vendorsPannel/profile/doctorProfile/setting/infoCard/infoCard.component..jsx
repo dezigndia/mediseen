@@ -53,9 +53,10 @@ const InfoCard = ({ data, reload,cancelTouch, history, stars = 5, closeBy = '10p
     const gotoPage = (e) => {
 
    const dd= selectData(data)
-   console.log(dd)
+
         if(clinicId){
             history.push(`/vendor/profile/setting/editHospital`);
+            // localStorage.setItem("path","editHospital")
           
         }
         // if (type === "doctor") {

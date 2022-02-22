@@ -89,7 +89,7 @@ let { history, match}=props;
                 onClick={gotoAddHospital}
             />
          <div>
-         {console.log(currentVendor)}
+         
          {currentVendor && currentVendor.doctors.map(item =>
           <InfoCard data={item}/>)}
        

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory,Router } from 'react-router-dom';
 import './vendorsPannel.styles.scss';
 
 //importing routes
@@ -65,7 +65,7 @@ const VendorsPannel = ({ match }) => {
 
             //deciding page to go on if user is verified
             let page = null;
-            console.log(currentVendor.businessType);
+            // console.log(currentVendor.businessType);
             if (currentVendor.businessType === 'doctor') {
                 page = REGISTER_AS_DOCTOR;
             }
@@ -86,11 +86,13 @@ const VendorsPannel = ({ match }) => {
     return (
         <div className="vendorsPannel" style={style}>
             <Header />
+            <Router history={history}>
             <Switch>
                 <Route exact path={`${match.url}/`} component={VendorsPannelHome} />
                 <Route path={`${match.url}/registration`} component={Registration} />
                 <Route path={`${match.url}/profile`} component={Vendorsprofile} />
             </Switch>
+            </Router>
             <Footer />
         </div>
     );

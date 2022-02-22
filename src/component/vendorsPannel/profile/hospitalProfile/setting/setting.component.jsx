@@ -6,6 +6,7 @@ import './setting.styles.scss';
 import SettingHome from './settingHome/settingHome.component';
 import addDoctor from './addDoctor/addDoctor.component';
 import ListDoctor from './ListDoctor/ListDoctors.component';
+import EditDoctor from './EditDoctor/doctorAndHospitalRegistrationForm.component'
 //importing custom component from registration
 import DoctorAndHospitalRegistrationForm from '../../../registration/doctorAndHospitalRegistrationForm/doctorAndHospitalRegistrationForm.component';
 import AddStaff from '../../../registration/addStaff/addStaff.component';
@@ -16,10 +17,9 @@ const Setting = ({ match }) => {
         <div className="vendorProfileSetting">
             <Switch>
             <Route exact path={`${match.url}/`} component={SettingHome} />
-                <Route exact path={`${match.url}/addHospital`} component={addDoctor} />
+                <Route exact path={`${match.url}/addDoctor`} component={addDoctor} />
                 <Route exact path={`${match.url}/listDoctor`} component={ListDoctor} />
-                {/* <Route exact path={`${match.url}/editHospital`} component={EditHospital} /> */}
-    
+                <Route exact path={`${match.url}/EditDoctor`} component={EditDoctor} />
                 {/* <Route path={`${match.url}/addPannel`} component={DoctorAndHospitalRegistrationForm} /> */}
                 <Route path={`${match.url}/addStaff`} component={AddStaff} />
                 <Route path={`${match.url}/paymentSetting`} component={PaymentSetting} />

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import './settingHome.styles.scss';
 
 //importing icons
@@ -14,15 +14,18 @@ const SettingHome = ({ history, match }) => {
 
     const gotoAddHospital = useCallback((e) => {
         history.push(`${match.url}/listHospital`);
+        localStorage.setItem("path","listHospital");
     }, [history, match.url]);
 
     const gotoPaymentSetting = useCallback((e) => {
         history.push(`${match.url}/paymentSetting`);
+        localStorage.setItem("path","paymentSetting");
     }, [history, match.url]);
 
     const logout=useCallback(()=>{
         localStorage.removeItem('currentVendor');
         localStorage.removeItem('token');
+        localStorage.removeItem("path");
         history.push('/');
     },[history]);
 

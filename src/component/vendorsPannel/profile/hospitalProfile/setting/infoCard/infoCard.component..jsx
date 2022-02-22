@@ -30,6 +30,7 @@ const InfoCard = ({ data, reload,cancelTouch, history, stars = 5, closeBy = '10p
     const {
         _id,
         doctorId,
+        degree,
         firstName,
         address,
         name,
@@ -53,9 +54,9 @@ const InfoCard = ({ data, reload,cancelTouch, history, stars = 5, closeBy = '10p
     const gotoPage = (e) => {
 
    const dd= selectData(data)
-   console.log(dd)
+   
         if(doctorId){
-            history.push(`/vendor/profile/setting/editHospital`);
+            history.push(`/vendor/profile/setting/editDoctor`);
           
         }
         // if (type === "doctor") {
@@ -132,7 +133,7 @@ const InfoCard = ({ data, reload,cancelTouch, history, stars = 5, closeBy = '10p
                 {photo && <img src={photo} className='avatarImage' alt={`profile pic of ${firstName + lastName}`} />}
             </div>
             <div className="address">
-                <p>{address}</p>
+                <p>{degree}</p>
             </div>
             <div className="isVarified">
                 {
