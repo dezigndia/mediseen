@@ -222,7 +222,7 @@ class BusinessService {
                             type: category,
                             "clinic.clinicId": data.clinic[0].clinicId,
                         },
-                        { $set: { "clinic.$.workingHours": data.clinic[0].workingHours } }
+                        { $set: { "clinic.$.workingHours": data.clinic[0].workingHours,"clinic.$.timePerSlot":data.clinic[0].timePerSlot,"clinic.$.fee":data.clinic[0].fee} }
                     )
                 } else if (dublicateData) {
 
@@ -255,7 +255,7 @@ class BusinessService {
                             type: category,
                             "doctors.doctorId": data.doctors[0].doctorId,
                         },
-                        { $set: { "doctors.$.workingHours": data.doctors[0].workingHours } }
+                        { $set: { "doctors.$.workingHours": data.doctors[0].workingHours,"doctors.$.timePerSlot":data.doctors[0].timePerSlot,"doctors.$.fee":data.doctors[0].fee} }
                     )
                 } else if (dublicateData) {
                     return "duplicate"
