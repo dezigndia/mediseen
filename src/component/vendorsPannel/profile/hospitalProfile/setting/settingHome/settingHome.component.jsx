@@ -15,19 +15,23 @@ const SettingHome = ({ history, match }) => {
 
     const gotoAddPannel = useCallback((e) => {
         history.push(`${match.url}/listDoctor`);
+        localStorage.setItem("path","listDoctor");
     }, [history, match.url]);
 
     const gotoAddStaff = useCallback((e) => {
         history.push(`${match.url}/addStaff`);
+        localStorage.setItem("path","addStaff");
     }, [history, match.url]);
 
     const gotoPaymentSetting = useCallback((e) => {
         history.push(`${match.url}/paymentSetting`);
+        localStorage.setItem("path","paymentSetting");
     }, [history, match.url]);
 
     const logout=useCallback(()=>{
         localStorage.removeItem('currentVendor');
         localStorage.removeItem('token');
+        localStorage.removeItem('path');
         history.push('/');
     },[history]);
 

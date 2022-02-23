@@ -48,6 +48,8 @@ const DoctorAndHospitalRegistrationForm = (props) => {
     }
 
     useEffect(() => {
+        props.setTimeSlotForpatient(props.selectData.timePerSlot)
+        props.setFees(props.selectData.fee)
         let searchBusinessType = currentVendor.businessType === 'doctor' ? 'hospital' : 'doctor';
         axios.get(GET_VENDOR_DETAILS_BY_ID(searchBusinessType, props.selectData.doctorId))
                 .then(res => {
@@ -251,16 +253,16 @@ const DoctorAndHospitalRegistrationForm = (props) => {
                     <input
                         type='text'
                         placeholder='fees'
-                        value={props.selectData.fee}
+                        value={props.fees}
                         onChange={(e) => { props.setFees(e.target.value) }}
                         className={`${errorFields.fee ? 'erroredInput' : null}`}
                     />
                 </div>
                 <div className="timeSlotPerPatient">
                     <input
-                        type='text'
+                       type='number'
                         placeholder='eg: 30 mins'
-                        value={props.selectData.timePerSlot}
+                        value={parseInt(props.timeSlot)}
                         onChange={(e) => { props.setTimeSlotForpatient(e.target.value) }}
                         className={`${errorFields.timePerSlot ? 'erroredInput' : null}`}
                     />

@@ -63,9 +63,9 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
             to: `${next_hrs}:${next_mins} ${next_suffix}`,
             hospitalName,
             timeSlotPerPatient,
-            timeStampFrom: temp_time,
-          //  timeStampTo: next_temp_time
-            timeStampTo: endTime
+           timeStampFrom: temp_time,
+           timeStampTo: next_temp_time
+            // timeStampTo: endTime
         })
 
         temp_time = next_temp_time;

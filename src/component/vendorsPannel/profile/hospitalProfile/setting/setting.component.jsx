@@ -13,6 +13,7 @@ import AddStaff from '../../../registration/addStaff/addStaff.component';
 import PaymentSetting from '../../../registration/paymentSetting/paymentSetting.component';
 
 const Setting = ({ match }) => {
+    const path= localStorage.getItem("path");
     return (
         <div className="vendorProfileSetting">
             <Switch>
@@ -23,7 +24,7 @@ const Setting = ({ match }) => {
                 {/* <Route path={`${match.url}/addPannel`} component={DoctorAndHospitalRegistrationForm} /> */}
                 <Route path={`${match.url}/addStaff`} component={AddStaff} />
                 <Route path={`${match.url}/paymentSetting`} component={PaymentSetting} />
-                <Redirect to='/404' />
+                <Redirect to={`${match.url}/${path}`} />
             </Switch>
         </div>
     );

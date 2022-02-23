@@ -9,6 +9,7 @@ import Setting from './setting/setting.component';
 import Promotions from './promotions/promotions.component';
 
 const HospitalProfile = ({ match }) => {
+    const path= localStorage.getItem("path");
     return (
         <div className="hospitalProfile">
             <Switch>
@@ -17,7 +18,8 @@ const HospitalProfile = ({ match }) => {
                 <Route path={`${match.url}/appointments`} component={Appointment} />
                 <Route path={`${match.url}/setting`} component={Setting} />
                 <Route path={`${match.url}/promotions`} component={Promotions} />
-                <Redirect to={`${match.url}/home`} />
+                {/* <Redirect to={`${match.url}/home`} /> */}
+                <Redirect to={`${match.url}/${path}`} />
             </Switch>
         </div>
     );
