@@ -84,8 +84,8 @@ const DoctorBook = () => {
 				mobileNumber: patient.num,
 			},
 			userPhoneNumber: "787989089898989",
-			timings: { from: timing.timing.from , to:timing.timing.to},
-			date: timing.date,
+			timings: { from: timing.timing.timeStampFrom, to:timing.timing.timeStampTo},
+			date: (timing.date)._d,
 			businessType: business.type,
 			businessName: business.businessName,
 			businessPhoneNumber: business.phone,
@@ -159,7 +159,8 @@ const DoctorBook = () => {
 				>
 
 			<div>{(moment(moment(timing.date)._d)).format("DD MMM YYYY")}</div>
-			<span>{moment(timing.timing.from).format("LT")+"-"+moment(timing.timing.to).format("LT")}</span>	
+			{/* <span>{moment(timing.timing.from).format("LT")+"-"+moment(timing.timing.to).format("LT")}</span>	 */}
+			<span>{timing.timing.from+"-"+timing.timing.to}</span>	
 				</Grid>
 			</Grid>
 			<Grid container item>

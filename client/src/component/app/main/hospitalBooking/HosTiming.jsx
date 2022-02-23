@@ -52,12 +52,9 @@ import Time from "./Time"
 const HosTiming = ({ location }) => {
 	const params = new URLSearchParams(location.search)
 	const ind = params.get("ind")
-
 	const [date, setDate] = useState(moment())
-
 	const doctor = useSelector((state) =>
-	// state.currentStore.doctors[ind]
-	state.currentStore.doctors
+	state.currentStore.doctors[ind]
 	)
 	return (
 		<Grid container item style={{ padding: "1rem 0.5rem",marginTop:"40px" }} spacing={4} >
