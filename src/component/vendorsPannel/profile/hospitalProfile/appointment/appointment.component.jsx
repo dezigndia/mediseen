@@ -26,7 +26,7 @@ const convertToDateObject = (hrs, min) => {
     date.setSeconds(0);
     return date;
 }
-const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, timeSlotPerPatient) => {
+const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, timeSlotPerPatient,slot) => {
 
     endTime = new Date(endTime);
     var temp_time = new Date(startTime)
@@ -54,9 +54,9 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
             to: `${next_hrs}:${next_mins} ${next_suffix}`,
             hospitalName,
             timeSlotPerPatient,
+            slot,
             timeStampFrom: temp_time,
-           // timeStampTo: next_temp_time
-            timeStampTo: endTime
+           timeStampTo: next_temp_time
         })
 
         temp_time = next_temp_time;
@@ -241,11 +241,12 @@ const Appointments = () => {
             let time = doctorsList.filter(item => item.status === "accepted").map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
             // let time = doctorsList.filter(item => item).map(item => ({ workingHours: item.workingHours[days[dayIndex]], hospitalName: item.name, timeSlotPerPatient: item.timePerSlot }));
             let morningShift = [], eveningShift = [];
-
+            let Morning="Morning";
+            let Evening ="Evening";
             time && time.forEach(item => {
                 if (item.workingHours !== undefined) {
-                    makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient);
-                    makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient);
+                    makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient,Morning);
+                    makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient,Evening);
                 }
             });
 
@@ -273,6 +274,7 @@ const Appointments = () => {
                             if (isDataPresent.present) {
                                 return {
                                     timeSlot: item,
+                                    slot:item.slot,
                                     isBooked: !isDataPresent.isCancelled,
                                     customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
@@ -283,6 +285,7 @@ const Appointments = () => {
                             else {
                                 return {
                                     timeSlot: item,
+                                    slot:item.slot,
                                     isBooked: false,
                                     customerName: '',
                                     phoneNo: ''
@@ -342,6 +345,7 @@ const Appointments = () => {
                                                     phoneNo={item.phoneNo}
                                                     timings={item.timeSlot}
                                                     isBooked={item.isBooked}
+                                                    slot={item.slot}
                                                     _id={item._id}
                                                     changeTab={setTabIssueNewAppointment}
                                                     deleteAppointment={deleteAppointment}

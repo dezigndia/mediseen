@@ -37,7 +37,7 @@ const convertToDateObject = (hrs, min) => {
     return date;
 }
 
-const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, timeSlotPerPatient) => {
+const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, timeSlotPerPatient,slot) => {
 
     endTime = new Date(endTime);
     var temp_time = new Date(startTime)
@@ -64,7 +64,8 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
             hospitalName,
             timeSlotPerPatient,
            timeStampFrom: temp_time,
-           timeStampTo: next_temp_time
+           timeStampTo: next_temp_time,
+           slot,
             // timeStampTo: endTime
         })
 
@@ -255,11 +256,12 @@ const Appointments = () => {
 
 
             let morningShift = [], eveningShift = [];
-
+            let Morning="Morning";
+            let Evening ="Evening";
             time && time.forEach(item => {
                 if (item.workingHours !== undefined) {
-                    makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient);
-                    makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient);
+                    makeAppointmentSlotsArray(morningShift, item.workingHours.morning.from, item.workingHours.morning.to, item.hospitalName, item.timeSlotPerPatient,Morning);
+                    makeAppointmentSlotsArray(eveningShift, item.workingHours.evening.from, item.workingHours.evening.to, item.hospitalName, item.timeSlotPerPatient,Evening);
                 }
             });
 
@@ -292,12 +294,14 @@ const Appointments = () => {
                                     customerName: `${res.data.payload[isDataPresent.index].patient.firstName} ${res.data.payload[isDataPresent.index].patient.lastName ? res.data.payload[isDataPresent.index].patient.lastName:""}`,
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
                                     _id: res.data.payload[isDataPresent.index]._id,
+                                    slot:item.slot,
                                     accepted: res.data.payload[isDataPresent.index].status === 'confirmed'
                                 }
                             }
                             else {
                                 return {
                                     timeSlot: item,
+                                    slot:item.slot,
                                     isBooked: false,
                                     customerName: '',
                                     phoneNo: ''
@@ -362,6 +366,7 @@ const Appointments = () => {
                                                     deleteAppointment={deleteAppointment}
                                                     dispatch={dispatch}
                                                     acceptAppointment={acceptAppointment}
+                                                    slot={item.slot}
                                                     accepted={item.accepted}
 
                                                 />
