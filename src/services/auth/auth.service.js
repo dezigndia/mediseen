@@ -23,20 +23,37 @@ class AuthService {
         if (data.type == "error") throw new AppError(StatusCodes.NOT_ACCEPTABLE, data.message)
     
         let user;
+        let role;
+        let collectonBoyName;
         if (businessType === "doctor") {
             user = await Doctor.findOne({ phone: phoneNumber })
             console.log("Doctor")
         }
         else if (businessType === "pharmacy") {
-            user = await Pharmacy.findOne({ phone: phoneNumber })
-            console.log("Pharmacy")
+            let   deliveryBoy = await Pharmacy.findOne({"staffs.mobileNumber": phoneNumber })
+            if(deliveryBoy){
+                user = await Pharmacy.findOne({ phone:deliveryBoy.phone })
+                deliveryBoy=deliveryBoy.staffs.find((item)=> item.mobileNumber === phoneNumber)
+                role=deliveryBoy.role;
+                collectonBoyName=deliveryBoy.name;
+            }else{
+                user = await Pharmacy.findOne({ phone: phoneNumber })
+            }
         }
 
         else if (businessType === "hospital") {
             user = await Hospital.findOne({ phone: phoneNumber })
         }
         else if (businessType === "pathology") {
-            user = await Pathology.findOne({ phone: phoneNumber })
+        let   deliveryBoy = await Pathology.findOne({"staffs.mobileNumber": phoneNumber })
+            if(deliveryBoy){
+                user = await Pathology.findOne({ phone:deliveryBoy.phone })
+                deliveryBoy=deliveryBoy.staffs.find((item)=> item.mobileNumber === phoneNumber)
+                role=deliveryBoy.role;
+                collectonBoyName=deliveryBoy.name;
+            }else{
+                user = await Pathology.findOne({ phone: phoneNumber })
+            }
         }
         else{
         user = type === "admin"
@@ -52,29 +69,44 @@ class AuthService {
             return {
                 auth_token: token,
                 isRegistered: user ? true : false,
+                role:role, 
+                collectonBoyName:collectonBoyName,
                 admin: type === "admin" ? user : undefined,
             }
         } else return { isRegistered: false }
     })
     sendOTP = expressAsyncHandler(async (mobileNumber, businessType) => {
          let user;
-        if (businessType === "doctor") {
+         let role;
+         if (businessType === "doctor") {
             user = await Doctor.findOne({ phone: mobileNumber })
             console.log("Doctor")
         }
         else if (businessType === "pharmacy") {
-            user = await Pharmacy.findOne({ phone: mobileNumber })
-            console.log("Pharmacy")
+            user = await Pharmacy.findOne({ "staffs.mobileNumber": mobileNumber })
+            if(user){
+                user=user.staffs.find((item)=> item.mobileNumber === mobileNumber)
+                role=user.role;
+            }else{
+                user = await Pharmacy.findOne({ phone: mobileNumber })
+                role="Admin";
+            }
         }
 
         else if (businessType === "hospital") {
             user = await Hospital.findOne({ phone: mobileNumber })
         }
-        else if (businessType === "Pathology") {
-            user = await Pathology.findOne({ phone: mobileNumber })
+        else if (businessType === "pathology") {
+            user = await Pathology.findOne({ "staffs.mobileNumber": mobileNumber })
+            if(user){
+                user=user.staffs.find((item)=> item.mobileNumber === mobileNumber)
+                role=user.role;
+            }else{
+                user = await Pathology.findOne({ phone: mobileNumber })
+                role="Admin";
+            }
         }
             
-        // console.log(user)
         // const user = await Doctor.findOne({ phone: mobileNumber })
         const authKey = config.has("msg91.authkey") ? config.get("msg91.authkey") : null
         const templateid = config.has("msg91.templateid") ? config.get("msg91.templateid") : null
@@ -84,7 +116,7 @@ class AuthService {
                 method: "GET",
             }
         )
-        return { data: data, isRegistered: user ? true : false }
+        return { data: data, isRegistered: user ? true : false,businessType:businessType,role: role }
     })
     getUser = expressAsyncHandler(async token => {
         return await jwt.verify(token, config.has("jwt.secret") ? config.get("jwt.secret") : null)
