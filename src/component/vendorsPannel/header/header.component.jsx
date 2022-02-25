@@ -27,6 +27,7 @@ const Header = ({ location, props }) => {
     const currentVendor = useSelector(state => state.currentVendor);
     const photo = useSelector(state => state.currentVendor.photo);
     const auth_token = useSelector(state => state.token);
+    const collectionBoy=JSON.parse(localStorage.getItem("collectionBoy"));
     var aValue = localStorage.getItem("token");
     const addSignBoardref = useRef(null);
     const dispatch = useDispatch();
@@ -102,6 +103,8 @@ const Header = ({ location, props }) => {
             localStorage.removeItem('currentVendor');
             localStorage.removeItem('token');
             localStorage.removeItem('auth_token');
+            localStorage.removeItem('path');
+            localStorage.removeItem('collectionBoy');
             history.push('/');
     }
       
@@ -132,10 +135,13 @@ const Header = ({ location, props }) => {
                 {currentVendor.businessName}
             </div>
 
-            <Tooltip title="Notifications">
+            {collectionBoy!=null ?
+             <>
+{collectionBoy!=null && (collectionBoy.role ==="Collection Boy") || (collectionBoy.role ==="Delivery Boy") ?
+            null:<Tooltip title="Notifications">
                     <Notification color="action" />
-            </Tooltip>
-            
+            </Tooltip>}
+            </>:null}
             <Tooltip title="Logout">
                 <div onClick={() => logout()} style={{marginRight:"10px", marginLeft:"35px", display: "flex", cursor: "pointer"}}>
                     <LogoutOutlinedIcon />

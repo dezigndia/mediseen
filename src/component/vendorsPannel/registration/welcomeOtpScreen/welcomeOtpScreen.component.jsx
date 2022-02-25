@@ -90,6 +90,8 @@ const verifyOtp = () => {
             if (res.data.payload.isRegistered) {
                 //deciding page to go on if user is verified
                 let page = null;
+                let role= res.data.payload.role;
+                let collectonBoyName=res.data.payload.collectonBoyName;
                 if (currentVendor.businessType === 'doctor') {
                     page = REGISTER_AS_DOCTOR;
                 }
@@ -109,11 +111,16 @@ const verifyOtp = () => {
                         }
                     })
                     .then(response => {
-                        setCurrentVendor({businessType:currentVendor.businessType,...response.data.payload});
-                        localStorage.setItem('currentVendor',JSON.stringify({businessType:currentVendor.businessType,...response.data.payload}));
+                        setCurrentVendor({businessType:currentVendor.businessType,role:role, collectonBoyName:collectonBoyName,...response.data.payload});
+                        localStorage.setItem('currentVendor',JSON.stringify({businessType:currentVendor.businessType,role:role,collectonBoyName:collectonBoyName, ...response.data.payload}));
                         localStorage.setItem('token',res.data.payload.auth_token);
+                        localStorage.setItem('collectionBoy',JSON.stringify({role:role,collectonBoyName:collectonBoyName}));
                         link.push(page);
-                        link = link.join('/');
+                        if(collectonBoyName==="Collection Boy"){
+                            link = link.join('/collection');
+                        }else{
+                            link = link.join('/');
+                        }
                         console.log("Link := - ", link);
                         history.push(link);
                     })

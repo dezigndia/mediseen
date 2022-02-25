@@ -48,7 +48,7 @@ const Button = withRouter(({ icon, label, history, match, location }) => {
 const ProfileHeader = ({ location }) => {
     const currentVendor = useSelector(state => state.currentVendor);
     const [buttonName,setButtonName]=useState('');
-    
+    const collectionBoy=JSON.parse(localStorage.getItem("collectionBoy"));
     const buttonLabel = () => {
         
         if (currentVendor.businessType === 'doctor' || currentVendor.businessType === 'hospital') {
@@ -63,12 +63,21 @@ const ProfileHeader = ({ location }) => {
     }
 
     useEffect(()=>{
+        if(collectionBoy.role ==="Collection Boy"){
+            setButtonName("collection")
+        }
         setButtonName(buttonLabel());
     },[currentVendor]);
 
 
     return (
         <div className="vendorProfileHeader">
+                {collectionBoy.role ==="Collection Boy" || collectionBoy.role ==="Delivery Boy" ?
+                <Button
+                icon={<GiHamburgerMenu />}
+                label={buttonName}
+            />:
+               <>
             <Button
                 icon={<AiFillHome />}
                 label='home'
@@ -84,7 +93,7 @@ const ProfileHeader = ({ location }) => {
             <Button
                 icon={<BsFillPersonFill />}
                 label='promotions'
-            />
+            /></>}
         </div>
     );
 }

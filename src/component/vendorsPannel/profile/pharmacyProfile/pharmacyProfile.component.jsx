@@ -10,15 +10,21 @@ import Promotions from './promotions/promotions.component';
 import OrdersAndCollections from '../ordersAndCollections/ordersAndCollections.component';
 
 const PharmacyProfile = ({ match }) => {
+    const collectionBoy =JSON.parse(localStorage.getItem("collectionBoy"));
+    let path = localStorage.getItem("path")
+
+    if(collectionBoy.role==="Delivery Boy"){
+        path="orders";
+    }
     return (
         <div className="pharmacyProfile">
             <Switch>
-                <Route exact path={`${match.url}/`} render={({ match }) => <Redirect to={`${match.url}/home`} />} />
+                <Route exact path={`${match.url}/`} render={({ match }) => <Redirect to={`${match.url}/${path?path:"home"}`} />} />
                 <Route path={`${match.url}/home`} component={Home} />
                 <Route path={`${match.url}/orders`} component={OrdersAndCollections} />
                 <Route path={`${match.url}/setting`} component={Setting} />
                 <Route path={`${match.url}/promotions`} component={Promotions} />
-                <Redirect to={`${match.url}/home`} />
+                <Redirect to={`${match.url}/${path?path:"home"}`} />
             </Switch>
         </div>
     );

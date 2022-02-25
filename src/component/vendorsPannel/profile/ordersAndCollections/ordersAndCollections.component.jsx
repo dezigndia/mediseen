@@ -40,6 +40,8 @@ const Orders = () => {
     const [switchStatus, setSwitchStatus] = useState(currentVendor.isActive); //toggle switch
     const [salesDetails, setSalesDetails] = useState({ todays: 0, total: 0 });
     const auth_token = useSelector(state => state.token);
+    const collectionBoy=JSON.parse(localStorage.getItem("collectionBoy"));
+    const token = localStorage.getItem("token");
     const dispatch = useDispatch();
 
     const updateActiveItem = (updateObject) => {
@@ -101,23 +103,27 @@ const Orders = () => {
         axios
             .get(GET_ORDERS_BY_BUSINESS, {
                 headers: {
-                    'Authorization': `Bearer ${auth_token.accessToken}`
+                    'Authorization': `Bearer ${auth_token.accessToken ? auth_token.accessToken: token}`
                 }
             })
             .then(res => {
+              if(collectionBoy.role==="Collection Boy" || collectionBoy.role==="Delivery Boy"){
+                  console.log(res.data.payload)
+                  setOrderList(res.data.payload.filter((item)=>(item.assignedCollectionPerson===(collectionBoy.collectonBoyName && item.status==="accepted")|| (collectionBoy.collectonBoyName && item.status==="shipped"))))
+              }else{
                 setOrderList(res.data.payload);
+              }
             })
             .catch(err => {
                 console.log(err);
                 alert(`unable to fetch orders`);
             });
         let phoneNumber = currentVendor.phoneNumber !== '' ? currentVendor.phoneNumber : currentVendor.phone;
-        console.log(currentVendor.phoneNumber);
-        console.log(currentVendor.phone);
+
         axios
             .get(GET_SALES_DETAILS(`%2B${phoneNumber.substring(1)}`), {
                 headers: {
-                    'Authorization': `Bearer ${auth_token.accessToken}`
+                    'Authorization': `Bearer ${auth_token.accessToken ? auth_token.accessToken: token}`
                 }
             })
             .then(res => {
@@ -127,10 +133,12 @@ const Orders = () => {
                 console.log(err);
                 alert('cant fetch salse details');
             })
-    }, []);
+
+    }, [auth_token]);
 
     return (
         <div className="vendorsOrders">
+            {(collectionBoy.role!="Collection Boy") || (collectionBoy.role!="Delivery Boy") ?
             <div className={`orderStatsContainer ${showOrderStats ? null : 'hidden'}`} onClick={toggleOrderStats}>
                 <div className="orderStats">
                     <div className="saleIcon">
@@ -147,7 +155,7 @@ const Orders = () => {
                         <p>{salesDetails.total}</p>
                     </div>
                 </div>
-            </div>
+            </div>:null}
             {/*<div style={{ textAlign: 'left', position: 'relative', left: '-10px' }}>
                 <Switch
                     checked={switchStatus}
@@ -159,6 +167,8 @@ const Orders = () => {
                 </div>*/}
             <div className='vendorsOrderHeader' >
                 <div style={{ display: 'flex', alignItems: 'center', paddingTop: '5px' }}>
+                {collectionBoy.role==="Collection Boy" || collectionBoy.role==="Delivery Boy" ?
+                null:<>
                     <Switch
                         checked={switchStatus}
                         name="checkedA"
@@ -169,8 +179,10 @@ const Orders = () => {
                         <Icon iconColor='rgb(133, 133, 133)' onClick={toggleOrderStats}>
                             <FaChartBar />
                         </Icon>
-                    </div>
+                    </div></>}
                 </div>
+                {collectionBoy.role==="Collection Boy" || collectionBoy.role==="Delivery Boy" ?
+                null:
                 <select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -192,7 +204,7 @@ const Orders = () => {
                             : null
                     }
                     <option value={'Cancelled'}>Cancled</option>
-                </select>
+                </select>}
             </div>
             <div className="vendorsOrdersListContainer">
                 {
@@ -348,7 +360,7 @@ const Orders = () => {
                     />
                     : null
             }
-        </div >
+        </div>
     );
 }
 

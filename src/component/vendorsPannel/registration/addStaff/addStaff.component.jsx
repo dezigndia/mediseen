@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { connect } from 'react-redux';
+import { connect,useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './addStaff.styles.scss';
 
@@ -50,6 +50,7 @@ const AddStaff = (props) => {
     const [designation, setDesignation] = useState('Manager');
     const [subDesignation, setSubDesignation] = useState('');
     const [showErroredInput, setShowErroredInput] = useState(false);
+    const businessType = useSelector(state => state.currentVendor.businessType);
 
     useEffect(() => {
         //picking secondlast element in match.url
@@ -60,15 +61,19 @@ const AddStaff = (props) => {
             setSubDesignation('Delivery Boy');
         } else if (type === 'registerAsPathology') {
             setSubDesignation('Collection Boy');
+        }else if (businessType === 'pharmacy') {
+            setSubDesignation('Delivery Boy');
+        } else if (businessType === 'pathology') {
+            setSubDesignation('Collection Boy');
         }
-    }, [props.match.url]);
+    }, [props.match.url,subDesignation]);
 
     const save = (e) => {
         e.preventDefault();
         let data = {
             staffs: props.staffArray.map(item => ({
                 name: item.name,
-                mobileNumber: item.phoneNo,
+                mobileNumber:`+91${item.phoneNo}`,
                 role: item.designation
             }))
         }
