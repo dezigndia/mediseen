@@ -85,7 +85,7 @@ const DoctorBook = () => {
 			},
 			userPhoneNumber: "787989089898989",
 			timings: { from: timing.timing.timeStampFrom, to:timing.timing.timeStampTo},
-			date: (timing.date)._d,
+			date:(moment(moment(timing.date)._d)).format("DD MMM YYYY"),
 			businessType: business.type,
 			businessName: business.businessName,
 			businessPhoneNumber: business.phone,
