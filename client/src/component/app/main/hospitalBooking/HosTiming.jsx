@@ -46,6 +46,7 @@ import BusinessHeader from "../../../userProfile/BusinessHeader"
 import { useDispatch, useSelector } from "react-redux"
 import Available from "./Available"
 import Date from "../labOrder/Date"
+import DateList from "../labOrder/DateList"
 import moment from "moment"
 import Time from "./Time"
 
@@ -65,7 +66,7 @@ const HosTiming = ({ location }) => {
 				<Available doctors={doctor} />
 			</Grid> */}
 			<Grid xs={12} item>
-				<Date
+				<DateList
 					date={JSON.stringify(moment()._d)}
 					setDate={(value) => setDate(value)}
 				/>
