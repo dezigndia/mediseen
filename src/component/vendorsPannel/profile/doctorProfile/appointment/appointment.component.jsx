@@ -170,6 +170,54 @@ const Appointments = () => {
             });
     }
 
+    const startAppointment = (id, timings) => {
+        axios
+            .put(updateAppointmentByID(id), { status: 'start' }, {
+                headers: {
+                    'Authorization': `Beared ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                for (let i = 0; i < appointmentSlots.length; i++) {
+                    if (appointmentSlots[i].timeSlot.from.replace(' ', '') === timings.from.replace(' ', '') && appointmentSlots[i].timeSlot.to.replace(' ', '') === appointmentSlots[i].timeSlot.to.replace(' ', '')) {
+                        setAppointmentSlots(prevState => {
+                            let arr = prevState;
+                            arr[i].start = true;
+                            return [...arr];
+                        });
+                        break;
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+                alert('unable to accept appointment');
+            });
+    }
+
+    const endAppointment = (id, timings) => {
+        axios
+            .put(updateAppointmentByID(id), { status: 'completed' }, {
+                headers: {
+                    'Authorization': `Beared ${auth_token.accessToken}`
+                }
+            })
+            .then(res => {
+                for (let i = 0; i < appointmentSlots.length; i++) {
+                    if (appointmentSlots[i].timeSlot.from.replace(' ', '') === timings.from.replace(' ', '') && appointmentSlots[i].timeSlot.to.replace(' ', '') === appointmentSlots[i].timeSlot.to.replace(' ', '')) {
+                        setAppointmentSlots(prevState => {
+                            let arr = prevState;
+                            arr[i].completed = true;
+                            return [...arr];
+                        });
+                        break;
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
+                alert('unable to accept appointment');
+            });
+    }
+
 
     const [bookAppointment, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -295,7 +343,9 @@ const Appointments = () => {
                                     phoneNo: `${res.data.payload[isDataPresent.index].patient.mobileNumber}`,
                                     _id: res.data.payload[isDataPresent.index]._id,
                                     slot:item.slot,
-                                    accepted: res.data.payload[isDataPresent.index].status === 'confirmed'
+                                    accepted: res.data.payload[isDataPresent.index].status === 'confirmed',
+                                    start:res.data.payload[isDataPresent.index].status === 'start',
+                                    completed:res.data.payload[isDataPresent.index].status === 'completed'
                                 }
                             }
                             else {
@@ -366,8 +416,12 @@ const Appointments = () => {
                                                     deleteAppointment={deleteAppointment}
                                                     dispatch={dispatch}
                                                     acceptAppointment={acceptAppointment}
+                                                    startAppointment={startAppointment}
+                                                    endAppointment={endAppointment}
                                                     slot={item.slot}
                                                     accepted={item.accepted}
+                                                    start={item.start}
+                                                    completed={item.completed}
 
                                                 />
 
