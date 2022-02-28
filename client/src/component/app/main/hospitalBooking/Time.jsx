@@ -156,11 +156,7 @@ let Timings = morningShift.concat(eveningShift), appSlots = [];
 							/>
 						</Grid>
 						<Grid item xs={4}>
-							<Link
-								to={`/home/doctorBooking/checkout?${
-									type === "doc" ? "order=doc" : ""
-								}`}
-							>
+						<Link to={`/home/hospitalBooking/checkout?ind=${ind}`}>
 								<Button
 									onClick={() =>
 										dispatch(addTiming({ date, timing: Timings[active] }))
