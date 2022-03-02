@@ -78,7 +78,7 @@ const OtpInput = ({ otp, setOtp, setOtpSendingTrue, setOtpSentTrue, setOtpErrorT
     const RresendHandler = (e) => {
         setOtpSendingTrue();
         setTimer({ min: 2, sec: 0 });
-        axios.post(USER_GET_OTP, { mobileNumber: phoneNo.toString() })
+        axios.post(USER_GET_OTP, { phoneNumber: `+91${phoneNo.toString()}` })
             .then(res => {
                 console.log(res.data);
                 setOtpSentTrue();

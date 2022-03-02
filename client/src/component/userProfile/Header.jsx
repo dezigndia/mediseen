@@ -2,6 +2,7 @@ import React from "react"
 
 import { makeStyles } from "@material-ui/core/styles"
 import { Avatar, Grid } from "@material-ui/core"
+import HomeIcon from '@mui/icons-material/Home';
 
 import DP from "./pexels-photo-220453.jpeg"
 
@@ -26,6 +27,11 @@ const Header = ({ image, name,phone, address }) => {
 
 	return (
 		<div className={classes.header}>
+		<>
+		<Grid item style={{float:"left",color:"white"}}>
+		<a href="/home">
+		<HomeIcon/></a>
+				</Grid>
 			<Grid
 				container
 				direction="column"
@@ -46,6 +52,7 @@ const Header = ({ image, name,phone, address }) => {
 					<h5 className={classes.fontWhite}>{address}</h5>
 				</Grid>
 			</Grid>
+			</>
 		</div>
 	)
 }
