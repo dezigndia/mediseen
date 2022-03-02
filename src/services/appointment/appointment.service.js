@@ -48,6 +48,7 @@ class AppointmentService {
             return await Appointment.find({ userPhoneNumber: userPhoneNumber, ...searchQuery })
                 .limit(parseInt(limit))
                 .skip(parseInt(skip))
+                .sort({"createdAt":-1})
         }
     )
 

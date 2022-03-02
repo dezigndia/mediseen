@@ -24,6 +24,7 @@ class OrderService {
         }
     })
     getAllMyUserOrders = expressAsyncHandler(async (limit, skip, userPhoneNumber, searchQuery) => {
+
         delete searchQuery["limit"]
         delete searchQuery["skip"]
         let date
@@ -38,6 +39,7 @@ class OrderService {
         let data = Order.find({ userPhoneNumber: userPhoneNumber, ...searchQuery })
             .limit(parseInt(limit))
             .skip(parseInt(skip))
+            .sort({"createdAt":-1})
         if (date) {
             return data.filter(obj => {
                 return (

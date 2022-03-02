@@ -2,6 +2,7 @@ const Doctor = require("../../models/DoctorModel")
 const Hospital = require("../../models/HospitalModel")
 const Pathology = require("../../models/PathologyModel")
 const Pharmacy = require("../../models/PharmacyModel")
+const Order = require("../../models/OrderModel")
 const { StatusCodes } = require("http-status-codes")
 const AppError = require("../../utils/errorHandler")
 const expressAsyncHandler = require("express-async-handler")
@@ -329,6 +330,17 @@ class BusinessService {
             return result
         } else {
             let result = await Doctor.find({ type: "doctor", "clinic.clinicId": bId,"clinic.status":"pending" })
+            return result
+        }
+    })
+
+    getDeliveryNotification = expressAsyncHandler(async (bId, type) => {
+        console.log(type, bId)
+        if (type ==="doctor") {
+            let result = await Order.find({ type: "hospital", "doctors.doctorId": bId,"doctors.status":"pending"})
+            return result
+        } else {
+            let result = await Order.find({ type: "doctor", "clinic.clinicId": bId,"clinic.status":"pending" })
             return result
         }
     })
