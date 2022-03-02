@@ -4,10 +4,12 @@ import axios from 'axios';
 import {Button, Snackbar } from "@material-ui/core";
 import MuiAlert from '@mui/material/Alert';
 import './welcomeOtpScreen.styles.scss';
+import PhoneIcon from "@material-ui/icons/Phone";
 
 //importing custom components
 import OtpInput from './otpInput/otpInput.component';
 import PhoneNoInput from './phoneNoInput/phoneNoInput.component';
+import Input from "./input/input.component";
 
 //importing routes
 import {
@@ -30,7 +32,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, updateAccessToken }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
-    const [phoneNo, setPhoneNo] = useState(['', '', '', '', '', '', '', '', '', '']);
+    // const [phoneNo, setPhoneNo] = useState(['', '', '', '', '', '', '', '', '', '']);
+    const [phoneNo, setPhoneNo] = useState([""]);
     const [countryCode, setCountryCode] = useState({ code: '+91', country: 'IND' });
     const [open, setOpen] = useState(false);
 
@@ -48,10 +51,12 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
 
     const sendOtp = () => {
         handleClick();
-        setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') });
+        // setCurrentVendor({ phoneNumber: countryCode.code + phoneNo.join('') });
+        setCurrentVendor({ phoneNumber: countryCode.code + phoneNo });
         console.log(" currentVendor.businessType :-=- ",  currentVendor.businessType);
         axios              //{mobileNumber:+91123456}
-            .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), businessType: currentVendor.businessType })
+            // .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), businessType: currentVendor.businessType })
+            .post(GET_OTP, { phoneNumber: countryCode.code + phoneNo, businessType: currentVendor.businessType })
             .then(res => {
                 if (res.data.payload.isRegistered) {
                     //setCurrentVendor(res.data.payload);
@@ -80,7 +85,8 @@ const WelcomeOtpScreen = ({ history, match, currentVendor, setCurrentVendor, upd
 
 const verifyOtp = () => {
     axios
-        .post(VERIFY_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), otp: otp.join(''), businessType: currentVendor.businessType })
+        // .post(VERIFY_OTP, { phoneNumber: countryCode.code + phoneNo.join(''), otp: otp.join(''), businessType: currentVendor.businessType })
+        .post(VERIFY_OTP, { phoneNumber: countryCode.code + phoneNo, otp: otp.join(''), businessType: currentVendor.businessType })
         .then(res => {
             // console.log("res :-=- --- fullData  ", res.data.payload.isRegistered);
             // updating access token
@@ -183,7 +189,18 @@ const verifyOtp = () => {
                 </p>
             </div>
             <div className="welcomeScreenPhoneNoInput">
-                <PhoneNoInput {...{ phoneNo, setPhoneNo, countryCode, setCountryCode }} />
+                {/* <PhoneNoInput {...{ phoneNo, setPhoneNo, countryCode, setCountryCode }} /> */}
+                <Input
+					type="number"
+					value={phoneNo}
+					onChange={(e) => {
+						setPhoneNo(e.target.value)
+					}}
+					placeholder="phone no."
+				>
+					{/* <PhoneIcon /> */}
+                    {countryCode.code}
+				</Input>
             </div>
             <div className="submissionButton" >
                 <Button onClick={() => checkForOtpSend()} variant="contained" style={{backgroundColor: "green"}} className='greenButton'>Send</Button>

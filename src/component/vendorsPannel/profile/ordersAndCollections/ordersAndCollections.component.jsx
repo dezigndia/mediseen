@@ -108,10 +108,10 @@ const Orders = () => {
             })
             .then(res => {
               if(collectionBoy.role==="Collection Boy" || collectionBoy.role==="Delivery Boy"){
-                  console.log(res.data.payload)
-                  setOrderList(res.data.payload.filter((item)=>(item.assignedCollectionPerson===(collectionBoy.collectonBoyName && item.status==="accepted")|| (collectionBoy.collectonBoyName && item.status==="shipped"))))
+                  setOrderList(res.data.payload.filter((item)=>((item.assignedCollectionPerson===collectionBoy.collectonBoyName && item.status==="accepted") || (item.assignedDeliveryPerson===collectionBoy.collectonBoyName && item.status==="shipped"))))
               }else{
-                setOrderList(res.data.payload);
+               // setOrderList(res.data.payload);
+             setOrderList(res.data.payload.filter((item)=>(item.businessType===businessType)))
               }
             })
             .catch(err => {

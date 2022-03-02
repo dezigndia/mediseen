@@ -15,6 +15,7 @@ import Icon from '../../reusableComponent/icon/icon.component';
 
 //importing custom components
 import Notification from './notification/notification.component';
+// import DeliveryBoyNotification from './notification/DeliveryBoyNotification/notification.component';
 
 //importing services
 import { UPLOAD_FILE, UPDATE_REGISTERED_USER,GET_ALL_PADDING_REQUEST } from '../../../services/services';
@@ -138,7 +139,7 @@ const Header = ({ location, props }) => {
             {collectionBoy!=null ?
              <>
 {collectionBoy!=null && (collectionBoy.role ==="Collection Boy") || (collectionBoy.role ==="Delivery Boy") ?
-            null:<Tooltip title="Notifications">
+null:<Tooltip title="Notifications">
                     <Notification color="action" />
             </Tooltip>}
             </>:null}
