@@ -1,4 +1,4 @@
-import { SET_STAFF, REMOVE_STAFF } from './addStaffActionTypes';
+import { SET_STAFF, REMOVE_STAFF, DELETE_STAFF} from './addStaffActionTypes';
 
 const initialState = {
     staffArray: []
@@ -13,6 +13,8 @@ const addStaffReducer = (state = initialState, action) => {
             arr.splice(action.payload, 1);
             console.log(arr);
             return { staffArray: arr };
+            case DELETE_STAFF:
+                return { staffArray: [] };
         default:
             return state;
     }

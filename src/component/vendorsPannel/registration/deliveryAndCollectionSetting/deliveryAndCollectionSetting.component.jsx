@@ -113,8 +113,11 @@ const DeliveryAndCollectionSetting = (props) => {
     const Type = useRef(props.type === 'deliverySetting' ? 'Delivery' : 'Collection');
     return (
         <div className="deliveryAndCollectionSetting">
+        
             <div className="deliveryAndCollectionSettingLabelContainer">
+            <button className='whiteButton' onClick={back}>Back</button>
                 <div className="deliveryAndCollectionSettingIconContainer">
+                
                     <Icon iconColor='white' iconSize='20px'>
                         <GiScooter />
                     </Icon>

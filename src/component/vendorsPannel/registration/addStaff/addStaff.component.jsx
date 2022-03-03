@@ -7,7 +7,7 @@ import './addStaff.styles.scss';
 import { isName, isPhoneNo } from './validator/validator';
 
 //importing actions
-import { setStaff, removeStaff } from '../../../../actions/action';
+import { setStaff, removeStaff ,deleteStaff} from '../../../../actions/action';
 
 //importing icons
 import { BsFillPeopleFill } from 'react-icons/bs';
@@ -51,6 +51,7 @@ const AddStaff = (props) => {
     const [subDesignation, setSubDesignation] = useState('');
     const [showErroredInput, setShowErroredInput] = useState(false);
     const businessType = useSelector(state => state.currentVendor.businessType);
+    const staffs = useSelector(state => state.currentVendor.staffs);
 
     useEffect(() => {
         //picking secondlast element in match.url
@@ -66,7 +67,12 @@ const AddStaff = (props) => {
         } else if (businessType === 'pathology') {
             setSubDesignation('Collection Boy');
         }
+        //  getData();
     }, [props.match.url,subDesignation]);
+
+    useEffect(() => {
+    getData();
+    }, []);
 
     const save = (e) => {
         e.preventDefault();
@@ -113,6 +119,26 @@ const AddStaff = (props) => {
             alert('add atleast one data');
         }
     }
+ 
+    const getData = (e) => {
+  props.deleteStaff([""]);
+      axios.get(GET_USER_DEETAIL_BY_TOKEN, {
+          headers: {
+            Authorization: `Bearer ${props.auth_token.accessToken}`,
+          },
+        })
+        .then((response) => {
+            props.setCurrentVendor(response.data.payload);
+            console.log(props.staffArray)
+            response.data.payload.staffs.map((item)=>{
+                props.setStaff({ name:item.name, phoneNo:item.mobileNumber, designation:item.role });
+               })
+        console.log(props.staffArray)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     const back = (e) => {
         e.preventDefault();
@@ -122,8 +148,10 @@ const AddStaff = (props) => {
     return (
         <div className="addStaff">
             <div className="skipForNow">
+                <button className='whiteButton' onClick={back}>Back</button>
                 <button className='whiteButton' onClick={back} >Skip For Now</button>
             </div>
+          
             <div className='addStaffLabelContainer'>
                 <div className='addStaffLabelIcon'>
                     <Icon iconColor='white' size='20px'>
@@ -196,11 +224,12 @@ const AddStaff = (props) => {
                     </div>
                 </div>
                 <table>
+                {  props.staffArray ?
                     <tbody>
                         {
                             props.staffArray.map((item, index) => <AddedStaffList key={item.phoneNo} {...item} onClick={(e) => props.removeStaff(index)} />)
                         }
-                    </tbody>
+                    </tbody>:null}
                 </table>
                 <div className='addStaffButtonContainer'>
                     <button className='whiteButton' onClick={back}>Back</button>
@@ -219,6 +248,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setStaff: ({ name, phoneNo, designation }) => dispatch(setStaff({ name, phoneNo, designation })),
+    deleteStaff: (payload) => dispatch(deleteStaff(payload)),
     removeStaff: (index) => dispatch(removeStaff(index)),
     setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
 });

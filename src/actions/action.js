@@ -77,7 +77,7 @@ import {
 
 
 //staff 
-import { setStaff, removeStaff } from '../store/addStaff/addStaffActions';
+import { setStaff, removeStaff ,deleteStaff} from '../store/addStaff/addStaffActions';
 
 //current vendor
 import { setCurrentVendor } from '../store/currentVendor/currentVendorActions';
@@ -134,6 +134,7 @@ export {
     setDeliveryAndCollectionMininumAmmount,
     setStaff,
     removeStaff,
+    deleteStaff,
     setCurrentVendor,
     setProductsAndTestList
 };
