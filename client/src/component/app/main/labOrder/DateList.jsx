@@ -29,14 +29,15 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const DateList = ({ date, setDate }) => {
+const DateList = ({ date, setDate,day }) => {
 	const classes = useStyles()
 
-	const data = parseInt(date.split("-")[2])
+	 let data = parseInt(date.split("-")[2])
 	const [dateArray, setDateArray] = useState([]);
-	console.log(JSON.parse(data))
+	const [dayList, setDayList]=useState([]);
 
-	const [active, setActive] = useState(data)
+
+	const [active, setActive] = useState("5")
     useEffect(() => {
         function getDay(date) {
             // Sun Feb 28 2021 00:00:00 GMT+0530
@@ -46,11 +47,17 @@ const DateList = ({ date, setDate }) => {
         let lastDay = getDay(new Date(date1.getFullYear(), date1.getMonth() + 1, 0));
         let currentDay = getDay(new Date());
         let date_array = [];
+		let date_arrayList=[];
         for (let i = currentDay; i <= lastDay; i++) {
+			date_arrayList.push({date:new Date(`${i} ${month} ${year}`),day:moment(new Date(`${i} ${month} ${year}`)).format("dddd")});
             date_array.push(i);
         }
+		const dd=date_arrayList.filter((item)=>item.day===day)
+	    let date2 = getDay(new Date(dd[0].date));
+		setActive(date2)
+		setDayList(date_arrayList);
         setDateArray(date_array);
-    }, [setDateArray]);
+    }, [setDayList]);
 
 	const month = moment().format("dddd Do MMMM YYYY").split(" ")[2]
 	const year = moment().format("dddd Do MMMM YYYY").split(" ")[3]
@@ -65,8 +72,7 @@ const DateList = ({ date, setDate }) => {
 		data + 6,
 		data + 7,
 	]
-console.log(dateArr)
-console.log(dateArray)
+
 	return (
 		<Grid container direction="column">
 			<Grid

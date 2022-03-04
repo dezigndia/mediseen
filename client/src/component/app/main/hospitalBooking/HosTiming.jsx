@@ -53,6 +53,7 @@ import Time from "./Time"
 const HosTiming = ({ location }) => {
 	const params = new URLSearchParams(location.search)
 	const ind = params.get("ind")
+	const day = params.get("day")
 	const [date, setDate] = useState(moment())
 	const doctor = useSelector((state) =>
 	state.currentStore.doctors[ind]
@@ -69,10 +70,11 @@ const HosTiming = ({ location }) => {
 				<DateList
 					date={JSON.stringify(moment()._d)}
 					setDate={(value) => setDate(value)}
+					day={day}
 				/>
 			</Grid>
 			<Grid item xs={12}>	
-				<Time ind={ind} doctor={doctor} date={moment(date)}/>
+				<Time ind={ind} doctor={doctor} date={moment(date)} day={day}/>
 			</Grid>
 		</Grid>
 	)

@@ -14,6 +14,7 @@ const DocTiming = ({ location }) => {
 
 	const params = new URLSearchParams(location.search)
 	const ind = params.get("ind")
+	const day = params.get("day")
 	const clinic = useSelector((state) => state.currentStore.clinic[ind])
 // 	const doctor = useSelector((state) => 
 // 	state.currentStore.doctors[ind]
@@ -31,11 +32,12 @@ const DocTiming = ({ location }) => {
 				<DateList
 					date={JSON.stringify(moment()._d)}
 					setDate={(value) => setDate(value)}
+					day={day}
 				/>
 			</Grid>
 			<Grid item xs={12}>	
 				{/* <Time clinic={clinic} 	date={JSON.stringify(moment(date)._d)}/> */}
-				<Time clinic={clinic} date={moment(date)}/>
+				<Time clinic={clinic} date={moment(date)} day={day} />
 			</Grid>
 		</Grid>
 	)

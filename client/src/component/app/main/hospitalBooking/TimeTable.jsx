@@ -22,7 +22,8 @@ const TimeTable = ({ clinic, ind ,today}) => {
 
 
 	return (
-		<Link to={`hos-timing?ind=${ind}`}>
+		// <Link to={`hos-timing?ind=${ind}`}>
+		<>
 		{today ? 
 			<TableContainer component={Paper} style={{ padding: "1rem" }}>
 				<Table aria-label="simple table">
@@ -34,6 +35,7 @@ const TimeTable = ({ clinic, ind ,today}) => {
 						</TableRow>
 					</TableHead>
 					{today && (
+						<Link to={`hos-timing?ind=${ind}&day=${moment(new Date()).format("dddd")}`}  style={{display: "contents"}}>
 						<TableBody className={classes.body}>
 							{
 								<TableRow key={Math.random()}  className={classes.body}>
@@ -49,6 +51,7 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableRow>
 							}
 						</TableBody>
+						</Link>
 					)}
 				</Table>
 				</TableContainer>:
@@ -63,6 +66,7 @@ const TimeTable = ({ clinic, ind ,today}) => {
 						</TableRow>
 					</TableHead>
 					{clinic.Monday && (
+						<Link to={`hos-timing?ind=${ind}&day=Monday`}  style={{display: "contents"}}>
 						<TableBody>
 							{
 								<TableRow key={Math.random()}>
@@ -78,8 +82,10 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableRow>
 							}
 						</TableBody>
+						</Link>
 					)}
 					{clinic.Tuesday && (
+						<Link to={`hos-timing?ind=${ind}&day=Tuesday`}  style={{display: "contents"}}>
 						<TableBody>
 							<TableRow key={Math.random()}>
 								<TableCell component="th" scope="row">
@@ -94,8 +100,10 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableCell>
 							</TableRow>
 						</TableBody>
+						</Link>
 					)}
 					{clinic.Wednesday && (
+						<Link to={`hos-timing?ind=${ind}&day=Wednesday`}  style={{display: "contents"}}>
 						<TableBody>
 							<TableRow key={Math.random()}>
 								<TableCell component="th" scope="row">
@@ -111,8 +119,10 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableCell>
 							</TableRow>
 						</TableBody>
+						</Link>
 					)}
 					{clinic.Thursday && (
+						<Link to={`hos-timing?ind=${ind}&day=Thursday`}  style={{display: "contents"}}>
 						<TableBody>
 							<TableRow key={Math.random()}>
 								<TableCell component="th" scope="row">
@@ -128,8 +138,10 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableCell>
 							</TableRow>
 						</TableBody>
+						</Link>
 					)}
 					{clinic.Friday && (
+						<Link to={`hos-timing?ind=${ind}&day=Friday`}  style={{display: "contents"}}>
 						<TableBody>
 							<TableRow key={Math.random()}>
 								<TableCell component="th" scope="row">
@@ -146,8 +158,10 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableCell>
 							</TableRow>
 						</TableBody>
+						</Link>
 					)}
 					{clinic.Saturday && (
+						<Link to={`hos-timing?ind=${ind}&day=Saturday`}  style={{display: "contents"}}>
 						<TableBody>
 							<TableRow key={Math.random()}>
 								<TableCell component="th" scope="row">
@@ -163,8 +177,10 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableCell>
 							</TableRow>
 						</TableBody>
+						</Link>
 					)}
 					{clinic.Sunday && (
+						<Link to={`hos-timing?ind=${ind}&day=Sunday`}  style={{display: "contents"}}>
 						<TableBody>
 							<TableRow key={Math.random()}>
 								<TableCell component="th" scope="row">
@@ -180,10 +196,11 @@ const TimeTable = ({ clinic, ind ,today}) => {
 								</TableCell>
 							</TableRow>
 						</TableBody>
+						</Link>
 					)}
 				</Table>
 			</TableContainer>}
-		</Link>
+		</>
 	)
 }
 
