@@ -54,6 +54,8 @@ const DateList = ({ date, setDate,day }) => {
         }
 		const dd=date_arrayList.filter((item)=>item.day===day)
 	    let date2 = getDay(new Date(dd[0].date));
+		let date3 = new Date(dd[0].date);
+		setDate(date3)
 		setActive(date2)
 		setDayList(date_arrayList);
         setDateArray(date_array);

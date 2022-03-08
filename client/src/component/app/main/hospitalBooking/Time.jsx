@@ -72,7 +72,7 @@ const makeAppointmentSlotsArray = (slotArr, startTime, endTime, hospitalName, ti
     }
 }
 
-const Time = ({ date, type, ind,doctor,day }) => {
+const Time = ({ date, type, ind,doctor}) => {
 	const classes = useStyles()
 
 	const [active, setActive] = useState(null)
@@ -80,7 +80,7 @@ const Time = ({ date, type, ind,doctor,day }) => {
 	const dispatch = useDispatch()
    const [clinicData, setClinicData]=useState([doctor]);
    const [appointmentSlots, setAppointmentSlots] = useState(null);
-// const day = moment(date).format("dddd");
+   const day = moment(date).format("dddd");
 
 
 
