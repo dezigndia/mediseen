@@ -106,7 +106,8 @@ const AddContact = ({ open, setOpen, address, ind }) => {
 		if (userAddress.length > 0) {
 			userAddress[ind]= addr
 		} else {
-			userAddress = [...addr]
+			//userAddress = [...addr]
+			userAddress = addr
 		
 		}
 

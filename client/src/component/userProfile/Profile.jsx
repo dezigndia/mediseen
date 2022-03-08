@@ -112,7 +112,7 @@ const Profile = ({ history }) => {
 	return (
 		<Grid container direction="column">
 			<Grid item>
-				{user.address !=undefined ?
+				{user.address !=undefined && user.address.length >0?
 					<Header
 						image={user.photo && user.photo}
 						name={user.name}
@@ -122,6 +122,7 @@ const Profile = ({ history }) => {
 					/>
 					: <Header
 						image={user.photo && user.photo}
+						phone={user.phone}
 						name={user.name && user.phone}
 					/>}
 			</Grid>
