@@ -79,7 +79,7 @@ const AddStaff = (props) => {
         let data = {
             staffs: props.staffArray.map(item => ({
                 name: item.name,
-                mobileNumber:`+91${item.phoneNo}`,
+                mobileNumber:item.phoneNo,
                 role: item.designation
             }))
         }
