@@ -30,10 +30,11 @@ class AuthService {
             console.log("Doctor")
         }
         else if (businessType === "pharmacy") {
-            let   deliveryBoy = await Pharmacy.findOne({"staffs.mobileNumber": phoneNumber })
+          let  deliveryBoyNumber=phoneNumber.slice(3)
+            let   deliveryBoy = await Pharmacy.findOne({"staffs.mobileNumber": deliveryBoyNumber })
             if(deliveryBoy){
                 user = await Pharmacy.findOne({ phone:deliveryBoy.phone })
-                deliveryBoy=deliveryBoy.staffs.find((item)=> item.mobileNumber === phoneNumber)
+                deliveryBoy=deliveryBoy.staffs.find((item)=> item.mobileNumber === deliveryBoyNumber)
                 role=deliveryBoy.role;
                 collectonBoyName=deliveryBoy.name;
             }else{
@@ -45,10 +46,11 @@ class AuthService {
             user = await Hospital.findOne({ phone: phoneNumber })
         }
         else if (businessType === "pathology") {
-        let   deliveryBoy = await Pathology.findOne({"staffs.mobileNumber": phoneNumber })
+        let  deliveryBoyNumber=phoneNumber.slice(3)
+        let   deliveryBoy = await Pathology.findOne({"staffs.mobileNumber": deliveryBoyNumber })
             if(deliveryBoy){
                 user = await Pathology.findOne({ phone:deliveryBoy.phone })
-                deliveryBoy=deliveryBoy.staffs.find((item)=> item.mobileNumber === phoneNumber)
+                deliveryBoy=deliveryBoy.staffs.find((item)=> item.mobileNumber === deliveryBoyNumber)
                 role=deliveryBoy.role;
                 collectonBoyName=deliveryBoy.name;
             }else{
