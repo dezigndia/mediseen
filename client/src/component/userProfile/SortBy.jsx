@@ -88,7 +88,6 @@ const SortBy = ({ open = true, type, setOpen }) => {
 						container
 						spacing={2}
 						alignItems="center"
-						spacing={2}
 						direction="column"
 					>
 						<Grid item xs={12}>
