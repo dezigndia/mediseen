@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect}from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './hospitalRegistrationHome.styles.scss';
@@ -19,6 +19,21 @@ import logo from './logo.svg';
 import { PAYMENT_SETTING, ADD_DOCTORS, ADD_STAFF } from '../../routes';
 
 const HospitalRegistrationHome = ({ history, match, currentVendor }) => {
+
+    useEffect(() => {
+        if ((currentVendor.doctors && currentVendor.doctors.length) && (currentVendor.payment && currentVendor.payment.type)) {
+            // form /vendor/registration/registerADoctor
+            //to /vendor/profile
+            let link = match.url.split('/');
+            link.pop();
+            link.pop();
+            link.push('profile');
+            link = link.join('/');
+            console.log(link);
+            history.push(link);
+        }
+    }, [match.url, currentVendor.doctors, currentVendor.payment, history]);
+
     return (
         <div className="hospitalRegistrationHome">
             <div className="businessInformation">
