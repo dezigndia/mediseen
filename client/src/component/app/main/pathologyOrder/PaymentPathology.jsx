@@ -148,6 +148,7 @@ const PaymentPharm = () => {
 				mobileNumber: user.phone,
 				userPhoneNumber:  user.phone,
 				date: Date.now(),
+				grandTotal: totalCost,
 				address: address[selected],
 				image_url: link,
 				businessType: business.type,
@@ -206,18 +207,14 @@ const PaymentPharm = () => {
 				<Grid
 					className={classes.bold}
 					style={{ textAlign: "right" }}
-					item
-					item
-					xs={3}
+					item xs={3}
 				>
 					{/* {moment(Date.now()).format("MMM Do YYYY")} */}
 				</Grid>
 				<Grid
 					className={classes.bold}
 					style={{ textAlign: "right" }}
-					item
-					item
-					xs={3}
+					item xs={3}
 				>
 					{moment(Date.now()).format("LT")}
 				</Grid>
@@ -243,10 +240,8 @@ const PaymentPharm = () => {
 			</Grid>
 			<div className={classes.divider}></div>
 			<Grid
-				style={{ color: "grey" }}
-				item
-				xs={12}
-				style={{ textAlign: "left" }}
+				style={{ color: "grey",textAlign: "left" }}
+				item xs={12}
 			>
 				Details
 			</Grid>

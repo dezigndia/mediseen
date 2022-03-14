@@ -148,6 +148,7 @@ console.log(cart)
 				mobileNumber: user.phone,
 				userPhoneNumber:  user.phone,
 				date: Date.now(),
+				grandTotal: totalCost,
 				address: address[selected],
 				image_url: link,
 				businessType: business.type,
@@ -206,16 +207,13 @@ console.log(cart)
 				<Grid
 					className={classes.bold}
 					style={{ textAlign: "right" }}
-					item
-					item
-					xs={3}
+					item xs={3}
 				>
 					{/* {moment(Date.now()).format("MMM Do YYYY")} */}
 				</Grid>
 				<Grid
 					className={classes.bold}
 					style={{ textAlign: "right" }}
-					item
 					item
 					xs={3}
 				>
@@ -243,10 +241,10 @@ console.log(cart)
 			</Grid>
 			<div className={classes.divider}></div>
 			<Grid
-				style={{ color: "grey" }}
+				style={{ color: "grey", textAlign: "left" }}
 				item
 				xs={12}
-				style={{ textAlign: "left" }}
+
 			>
 				Details
 			</Grid>
