@@ -302,7 +302,7 @@ const HospitalBook = () => {
 			// timings: { from: timing.timing.from , to:timing.timing.to},
 			// date: Date.now(),
 			timings: { from: timing.timing.timeStampFrom, to:timing.timing.timeStampTo},
-			date: (timing.date)._d,
+			date:(moment(moment(timing.date)._d)).format("DD MMM YYYY"),
 			businessType: business.type,
 			businessName: business.businessName,
 			businessPhoneNumber: business.phone,
