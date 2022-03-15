@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "mediseen api",
+            "script": "npm",
+            "args": "run start:dev"
+        }
+           ]
+}

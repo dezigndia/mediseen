@@ -16,8 +16,8 @@
         "region": "ap-south-1",
         "bucket": "mediseen",
         "sizelimit": 300000000,
-        "accessKeyId": "AKIASVUQZW255KBRIZXA",
-        "secretAccessKey": "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"
+        "accessKeyId": "AKIASVUQZW25XISDUBSQ",
+        "secretAccessKey": "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"
     },
     "mode": "DEVELOPMENT"
 }
