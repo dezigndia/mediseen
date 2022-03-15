@@ -66,7 +66,7 @@ class BusinessService {
         async (limit, skip, city, category, specialist, area, search, admin = false) => {
             let filter = { isActive: true }
             if (city) {
-                filter.area = getRegex(city)
+                filter.city = getRegex(city)
             }
             if (area) {
                 filter.area = getRegex(area)
@@ -121,19 +121,19 @@ class BusinessService {
                 //  return await Pharmarcy.find().limit(parseInt(limit)).skip(parseInt(skip))
                 switch (category) {
                     case "doctor": {
-                        return await Doctor.find({type: category })
+                        return await Doctor.find(filter)
                     }
                     case "pharmacy": {
-                        return await Pharmacy.find({type: category })
+                        return await Pharmacy.find(filter)
                     }
                     case "hospital": {
-                        return await Hospital.find({type: category })
+                        return await Hospital.find(filter)
                     }
                     case "pathology": {
-                        return await Pathology.find({type: category })
+                        return await Pathology.find(filter)
                     }
                     default: {
-                        return  await Doctor.find({type: category })
+                        return  await Doctor.find(filter)
                     }
                 }}
         }

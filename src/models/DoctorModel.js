@@ -26,6 +26,10 @@ const doctorSchema = new mongoose.Schema(
         workingHours: {
             type: workSchema,
         },
+        isActive: {
+            type: Boolean,
+            default: true,
+        },
     },
     { timestamps: true }
 )
