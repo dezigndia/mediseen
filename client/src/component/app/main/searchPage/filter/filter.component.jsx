@@ -126,7 +126,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	setSearchCategory: (val) => dispatch(setSearchCategory(val)),
-	setSearchFilterLocation: location => dispatch(setSearchFilterLocation(dd)),
+	setSearchFilterLocation: location => dispatch(setSearchFilterLocation(location)),
 	setSearchFilterSpeciality: speciality=> dispatch(setSearchFilterSpeciality(speciality))
 })
 
