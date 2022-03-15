@@ -419,7 +419,7 @@ const HospitalBook = () => {
 							<Button className={clsx(classes.button1)}>Back</Button>
 						</Link>
 					</Grid>
-					<Grid item  item xs={6} spacing={6}>
+					<Grid item xs={6} spacing={6}>
 						<Button onClick={handleBook} className={clsx(classes.button2)}>
 							Yes
 						</Button>

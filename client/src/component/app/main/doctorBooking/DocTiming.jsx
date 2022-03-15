@@ -20,9 +20,9 @@ const DocTiming = ({ location }) => {
 // 	state.currentStore.doctors[ind]
 // 	)
 	return (
-		<Grid container item style={{ padding: "1rem 0.5rem" }} spacing={4}>
+		<Grid container item style={{ padding: "1rem 0.5rem",marginTop:"0px" }} spacing={4}>
 			<Grid item>
-				<BusinessHeader />
+				<BusinessHeader  businessName={clinic.name} businessType={clinic.businessType} address={clinic.address}/>
 			</Grid>
 			{/* <Grid item xs={12}>
 				<Available clinic={clinic}/>
@@ -35,7 +35,7 @@ const DocTiming = ({ location }) => {
 					day={day}
 				/>
 			</Grid>
-			<Grid item xs={12}>	
+			<Grid item xs={12} style={{overflow: "scroll",height: "440px"}}>	
 				{/* <Time clinic={clinic} 	date={JSON.stringify(moment(date)._d)}/> */}
 				<Time clinic={clinic} date={moment(date)} day={day} />
 			</Grid>

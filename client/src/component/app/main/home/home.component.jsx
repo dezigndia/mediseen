@@ -105,9 +105,6 @@ const Home = ({ history, match }) => {
     const getUserInfo = async () => {
       try {
         const res = await fetchCall("user/get/info", "GET", token);
-
-        console.log(res, "user");
-
         dispatch(addUser(res.data.payload));
       } catch (e) {
         console.log(e);
@@ -120,10 +117,8 @@ const Home = ({ history, match }) => {
   const classes = useStyles();
 
   const gotoPage = (page) => {
-    history.push(`${match.url}/${page}/`);
+    history.push(`${match.url}/${page}`);
   };
-
-  console.log(count);
 
   return (
     <div  className="home" style={{ background: `transparent url(${BackgroundImage}) 0% 0% repeat padding-box`, backgroundSize: 'contain' }}>

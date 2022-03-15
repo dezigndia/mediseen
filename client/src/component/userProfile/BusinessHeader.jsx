@@ -19,11 +19,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const BusinessHeader = ({ businessName,businessType, address = "71/a, Belgachia Road", stars }) => {
+const BusinessHeader = ({ businessName,businessType, address ,stars }) => {
 	const classes = useStyles()
-	// "businessType":"pathology",
-	// "businessName":"Pathology Test",
-	// "businessPhoneNumber":"+917979994248",
+
 	return (
 		<div className={classes.header}>
 			<Grid
@@ -33,9 +31,12 @@ const BusinessHeader = ({ businessName,businessType, address = "71/a, Belgachia 
 				alignItems="flex-start"
 				spacing={2}
 			>
-				<Grid item>
+			<Grid item>
 					<h4 className={classes.fontWhite}>{businessName}</h4>
 				</Grid>
+				{/* <Grid item>
+					<h4 className={classes.fontWhite}>{businessType}</h4>
+				</Grid> */}
 				<Grid item>
 					<h5 className={classes.fontWhite}>{address}</h5>
 				</Grid>

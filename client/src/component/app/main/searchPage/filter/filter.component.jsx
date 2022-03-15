@@ -121,10 +121,13 @@ const Filter = ({ match, setSearchCategory, category, query }) => {
 const mapStateToProps = (state) => ({
 	category: state.search.category,
 	query: state.search.query,
+	filter: state.search.filter //{location:bool,speciality:bool,value:any}
 })
 
 const mapDispatchToProps = (dispatch) => ({
 	setSearchCategory: (val) => dispatch(setSearchCategory(val)),
+	setSearchFilterLocation: location => dispatch(setSearchFilterLocation(dd)),
+	setSearchFilterSpeciality: speciality=> dispatch(setSearchFilterSpeciality(speciality))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Filter))
