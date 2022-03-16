@@ -76,6 +76,9 @@ const appointmentSchema = new mongoose.Schema(
         grandTotal: {
             type: Number,
         },
+        paymentMode: {
+            type: Object,
+        },
         patient: {
             firstName: {
                 type: String,

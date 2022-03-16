@@ -23,6 +23,9 @@ const orderSchema = new mongoose.Schema(
             type: String,
             default: "",
         },
+        paymentMode: {
+            type: Object,
+        },
         businessName: {
             type: String,
             required: true,
