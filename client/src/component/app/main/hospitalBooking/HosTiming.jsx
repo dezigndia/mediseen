@@ -16,7 +16,7 @@
 // 	const doctor = useSelector((state) => 
 // 	state.currentStore.doctors[ind]
 // 	)
-// 	console.log(doctor+"fdsfdfd")
+
 // 	return (
 // 		<Grid container item style={{ padding: "1rem 0.5rem",marginTop:"40px" }} spacing={4} >
 // 			<Grid item>
@@ -58,10 +58,11 @@ const HosTiming = ({ location }) => {
 	const doctor = useSelector((state) =>
 	state.currentStore.doctors[ind]
 	)
+
 	return (
-		<Grid container item style={{ padding: "1rem 0.5rem",marginTop:"40px" }} spacing={4} >
+		<Grid container item style={{ padding: "1rem 0.5rem",marginTop:"0px" }} spacing={4} >
 			<Grid item>
-				<BusinessHeader />
+			<BusinessHeader  businessName={doctor.name} businessType={doctor.businessType} address={doctor.address} degree={doctor.degree}/>
 			</Grid>
 			{/* <Grid item xs={12}>
 				<Available doctors={doctor} />
@@ -73,7 +74,7 @@ const HosTiming = ({ location }) => {
 					day={day}
 				/>
 			</Grid>
-			<Grid item xs={12}>	
+			<Grid item xs={12}  style={{overflow: "scroll",height: "380px"}}>	
 				<Time ind={ind} doctor={doctor} date={moment(date)} day={day}/>
 			</Grid>
 		</Grid>

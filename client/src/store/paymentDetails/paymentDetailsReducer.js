@@ -8,7 +8,7 @@ import {
 
 const initialState = {
     onlinePaymentAvailable: true,
-    mode: { upi: true, bankTransfer: false },
+    mode: { cod :true, upi: false, bankTransfer: false },
     upiID: '',
     IFSC: '',
     accountNumber: ''

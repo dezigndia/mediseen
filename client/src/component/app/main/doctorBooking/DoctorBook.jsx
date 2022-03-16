@@ -9,6 +9,20 @@ import { emptyCartProduct } from "../../../../store/cart/cartActions"
 import fetchCallFile from "../../../../fetchCall/fetchCallFile"
 import moment from "moment"
 
+//importing actions
+import {
+    setOnlinePayment,
+    setPaymentOption,
+    setUpiID,
+    setBankIFSC,
+    setBankAccountNumber,
+    setCurrentVendor
+} from '../../../../actions/action';
+
+
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 const useStyles = makeStyles((theme) => ({
 	container: {
 		marginTop:"50px",
@@ -41,7 +55,7 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-const DoctorBook = () => {
+const DoctorBook = (props) => {
 	const tests = useSelector((state) => state.lab.tests)
 	const classes = useStyles()
 
@@ -89,6 +103,7 @@ const DoctorBook = () => {
 			businessType: business.type,
 			businessName: business.businessName,
 			businessPhoneNumber: business.phone,
+			paymentMode:props.paymentOption
 		}
 		const data = await fetchCall("appointment", "POST", token, body)
 		console.log(data)
@@ -101,7 +116,7 @@ const DoctorBook = () => {
 	if (placed) {
 		return <Redirect to="success" />
 	}
-
+console.log(props.paymentOption)
 	return (
 		<Grid  className={classes.container} spacing={6}>
 			{/* <Grid container item>
@@ -188,7 +203,7 @@ const DoctorBook = () => {
 							<Button className={clsx(classes.button1)}>Back</Button>
 						</Link>
 					</Grid>
-					<Grid item  item xs={6} spacing={6}>
+					<Grid item  xs={6} spacing={6}>
 						<Button onClick={handleBook} className={clsx(classes.button2)}>
 							Yes
 						</Button>
@@ -199,4 +214,25 @@ const DoctorBook = () => {
 	)
 }
 
-export default DoctorBook
+const mapStatetoProps = state => ({
+    onlinePayment: state.paymentDetails.onlinePaymentAvailable,
+    paymentOption: state.paymentDetails.mode,
+    upiID: state.paymentDetails.upiID,
+    IFSC: state.paymentDetails.IFSC,
+    accountNumber: state.paymentDetails.accountNumber,
+    currentVendor: state.currentVendor,
+    auth_token: state.token
+});
+
+
+const mapDispatchToProps = dispatch => ({
+    setPaymentOption: ({cod= false, upi = false, bankTransfer = false }) => dispatch(setPaymentOption({cod , upi, bankTransfer })),
+    setOnlinePayment: (option) => dispatch(setOnlinePayment(option)),
+    setUpiID: (upi) => dispatch(setUpiID(upi)),
+    setBankIFSC: (ifsc) => dispatch(setBankIFSC(ifsc)),
+    setBankAccountNumber: (accountNo) => dispatch(setBankAccountNumber(accountNo)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(mapStatetoProps, mapDispatchToProps)(withRouter(DoctorBook));
+

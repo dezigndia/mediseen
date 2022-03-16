@@ -6,7 +6,7 @@ import BusinessHeader from "./BusinessHeader"
 import fetchCall from "../../fetchCall/fetchCall"
 import { useSelector } from "react-redux"
 
-const Prescription = () => {
+const Prescription = (props) => {
 	const { id } = useParams()
 	let token = useSelector((state) => state.token.token)
 	const cart = useSelector((state) => state.cart)
@@ -25,6 +25,10 @@ const Prescription = () => {
 		fetchOrder()
 	}, [])
 
+	const back = (e) => {
+        e.preventDefault();
+        props.history.goBack();
+    }
 	return (
 		<Grid container spacing={1}>
 			<Grid item xs={12}>
@@ -47,8 +51,7 @@ const Prescription = () => {
 			</Grid>
 			<Grid container direction="row" xs={12} justify="center" spacing={1}>
 				<Grid item>
-				<Link to={`/user-profile`}>
-					<Button
+					<Button onClick={back}
 						style={{
 							backgroundColor: "#C8C8C8",
 							color: "white",
@@ -58,7 +61,6 @@ const Prescription = () => {
 					>
 						Back
 					</Button>
-					</Link>
 				</Grid>
 				<Grid item>
 				<Link to={`/user-profile/order-place/${id}`}>

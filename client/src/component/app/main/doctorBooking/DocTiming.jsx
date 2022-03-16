@@ -35,7 +35,7 @@ const DocTiming = ({ location }) => {
 					day={day}
 				/>
 			</Grid>
-			<Grid item xs={12} style={{overflow: "scroll",height: "440px"}}>	
+			<Grid item xs={12} style={{overflow: "scroll",height: "380px"}}>	
 				{/* <Time clinic={clinic} 	date={JSON.stringify(moment(date)._d)}/> */}
 				<Time clinic={clinic} date={moment(date)} day={day} />
 			</Grid>

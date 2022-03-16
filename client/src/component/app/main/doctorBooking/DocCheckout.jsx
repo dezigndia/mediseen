@@ -19,6 +19,20 @@ import AddIcon from "@material-ui/icons/Add"
 import { addLabAddress } from "../../../../store/lab/labActions"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import { addPatient } from "../../../../store/patient/patientAction"
+
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+//importing actions
+import {
+    setOnlinePayment,
+    setPaymentOption,
+    setUpiID,
+    setBankIFSC,
+    setBankAccountNumber,
+    setCurrentVendor
+} from '../../../../actions/action';
+
 // const tests = [
 // 	{
 // 		name: "Full body Test",
@@ -57,7 +71,7 @@ const address = [
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		height: "610px",
+		height: "550px",
 		marginTop:"50px",
 		overflowY: "scroll",
 		padding: "0 0.5rem",
@@ -117,7 +131,7 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-const DocCheckout = () => {
+const DocCheckout = (props) => {
 	const classes = useStyles()
 
 	const query = useQuery()
@@ -132,9 +146,9 @@ const DocCheckout = () => {
 	const [name, setName] = useState("")
 	const [num, setNumber] = useState("")
 
-	const [payment, setPayment] = useState(1)
+	const [payment, setPayment] = useState("COD")
 
-	console.log(otpSuccess)
+
 
 	const doc = useSelector((state) => state.currentStore)
 	const [selected, setSelected] = useState(null)
@@ -160,7 +174,6 @@ const DocCheckout = () => {
 			)
 
 			if (data.sucess) {
-				console.log("entered")
 				setOtpSuccess(true)
 				dispatch(addPatient(patient))
 			}
@@ -178,7 +191,6 @@ const DocCheckout = () => {
 
 		const data = await fetchCall("user/general/otp/get", "POST", null, body)
 
-		console.log(data.sucess)
 
 		if (data.success === true) {
 			setOtp(true)
@@ -256,7 +268,7 @@ const DocCheckout = () => {
 								maxlength={4}
 								onChange={(e) => setCode(e.target.value)}
 								className={clsx(classes.input, classes.otp)}
-								placeholder="00000"
+								placeholder="0000"
 								inputProps={{
 									maxLength: 4,
 								}}
@@ -360,11 +372,17 @@ const DocCheckout = () => {
 							labelId="demo-simple-select-label"
 							id="demo-simple-select"
 							value={payment}
-							onChange={(e) => setPayment(e.target.value)}
+						    onChange={(e) =>{
+								setPayment(e.target.value)
+								if(e.target.value==="COD")
+
+							    props.setPaymentOption({cod:true, upi: false, bankTransfer: false })
+								else
+								props.setPaymentOption({cod:false, upi: true, bankTransfer: false })
+								}}
 						>
-							<MenuItem value={1}>COD/UPI</MenuItem>
-							<MenuItem value={2}>Twenty</MenuItem>
-							<MenuItem value={3}>Thirty</MenuItem>
+							<MenuItem value={"COD"}>COD</MenuItem>
+							<MenuItem value={"UPI"}>UPI</MenuItem>
 						</Select>
 					</FormControl>
 				</Grid>
@@ -392,4 +410,24 @@ const DocCheckout = () => {
 	)
 }
 
-export default DocCheckout
+
+const mapStatetoProps = state => ({
+    onlinePayment: state.paymentDetails.onlinePaymentAvailable,
+    paymentOption: state.paymentDetails.mode,
+    upiID: state.paymentDetails.upiID,
+    IFSC: state.paymentDetails.IFSC,
+    accountNumber: state.paymentDetails.accountNumber,
+    currentVendor: state.currentVendor,
+    auth_token: state.token
+});
+
+const mapDispatchToProps = dispatch => ({
+    setPaymentOption: ({cod= false, upi = false, bankTransfer = false }) => dispatch(setPaymentOption({cod , upi, bankTransfer })),
+    setOnlinePayment: (option) => dispatch(setOnlinePayment(option)),
+    setUpiID: (upi) => dispatch(setUpiID(upi)),
+    setBankIFSC: (ifsc) => dispatch(setBankIFSC(ifsc)),
+    setBankAccountNumber: (accountNo) => dispatch(setBankAccountNumber(accountNo)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(mapStatetoProps, mapDispatchToProps)(withRouter(DocCheckout));

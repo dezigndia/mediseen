@@ -16,6 +16,19 @@ import { Link, Redirect, useLocation } from "react-router-dom"
 import fetchCall from "../../../../fetchCall/fetchCall"
 import { emptyCartProduct } from "../../../../store/cart/cartActions"
 import fetchCallFile from "../../../../fetchCall/fetchCallFile.js"
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+//importing actions
+import {
+    setOnlinePayment,
+    setPaymentOption,
+    setUpiID,
+    setBankIFSC,
+    setBankAccountNumber,
+    setCurrentVendor
+} from '../../../../actions/action';
+
 
 const address = [
 	{
@@ -79,7 +92,7 @@ function useQuery() {
 	return new URLSearchParams(useLocation().search)
 }
 
-const PaymentPharm = () => {
+const PaymentPharm = (props) => {
 	const classes = useStyles()
 	const query = useQuery()
 
@@ -89,7 +102,7 @@ const PaymentPharm = () => {
 
 	const image = useSelector((state) => state.prescription.image)
 
-	const [payment, setPayment] = useState(1)
+	const [payment, setPayment] = useState("COD")
 
 	const token =
 		useSelector((state) => state.token.token) ||
@@ -98,7 +111,7 @@ const PaymentPharm = () => {
 	const business = useSelector((state) => state.currentStore)
 
 	const cart = useSelector((state) => state.cart)
-console.log(cart)
+
 	const products = cart.map((prod) => {
 		return {
 			productId: prod.item._id,
@@ -108,7 +121,7 @@ console.log(cart)
 		}
 	})
 	const user = useSelector((state) => state.user)
-	console.log(products)
+
 
 	const dispatch = useDispatch()
 
@@ -136,7 +149,7 @@ console.log(cart)
 
 		const res = await fetchCallFile("blob/upload", "POST", token, form, "file")
 
-		console.log(res)
+
 
 		const link = res.data.payload.location
 
@@ -149,6 +162,7 @@ console.log(cart)
 				userPhoneNumber:  user.phone,
 				date: Date.now(),
 				grandTotal: totalCost,
+				paymentMode:props.paymentOption,
 				address: address[selected],
 				image_url: link,
 				businessType: business.type,
@@ -165,6 +179,7 @@ console.log(cart)
 				date: Date.now(),
 				products,
 				grandTotal: totalCost,
+				paymentMode:props.paymentOption,
 				address: address[selected],
 				businessType: business.type,
 				businessName: business.businessName,
@@ -174,12 +189,13 @@ console.log(cart)
 
 		const data = await fetchCall("order", "POST", token, body)
 
-		console.log(data)
+
 
 		if (data.sucess === true) {
 			setOrderId(data.data.payload.orderId);
 			setPlaced(true)
 			dispatch(emptyCartProduct())
+			props.setPaymentOption({cod:true, upi: false, bankTransfer: false })
 		}
 	}
 
@@ -321,16 +337,22 @@ console.log(cart)
 								labelId="demo-simple-select-label"
 								id="demo-simple-select"
 								value={payment}
-								onChange={(e) => setPayment(e.target.value)}
-							>
-								<MenuItem value={1}>COD/UPI</MenuItem>
-								<MenuItem value={2}>Twenty</MenuItem>
-								<MenuItem value={3}>Thirty</MenuItem>
+								onChange={(e) =>{
+								setPayment(e.target.value)
+								if(e.target.value==="COD")
+							    props.setPaymentOption({cod:true, upi: false, bankTransfer: false })
+								else
+								props.setPaymentOption({cod:false, upi: true, bankTransfer: false })
+								}}
+						>
+							<MenuItem value={"COD"}>COD</MenuItem>
+							<MenuItem value={"UPI"}>UPI</MenuItem>
 							</Select>
 						</FormControl>
 					</Grid>
 				</Grid>
 				<Grid item xs={12}>
+				{selected!=null ? 
 					<Button
 						onClick={placeOrder}
 						className={classes.btn}
@@ -338,11 +360,37 @@ console.log(cart)
 						color="primary"
 					>
 						Place Order
-					</Button>
+					</Button>:	<Button
+						className={classes.btn}
+						disabled
+						variant="contained"
+						color="primary"
+					>
+						Place Order
+					</Button>}
 				</Grid>
 			</Grid>
 		</Grid>
 	)
 }
 
-export default PaymentPharm
+const mapStatetoProps = state => ({
+    onlinePayment: state.paymentDetails.onlinePaymentAvailable,
+    paymentOption: state.paymentDetails.mode,
+    upiID: state.paymentDetails.upiID,
+    IFSC: state.paymentDetails.IFSC,
+    accountNumber: state.paymentDetails.accountNumber,
+    currentVendor: state.currentVendor,
+    auth_token: state.token
+});
+
+const mapDispatchToProps = dispatch => ({
+    setPaymentOption: ({cod= false, upi = false, bankTransfer = false }) => dispatch(setPaymentOption({cod , upi, bankTransfer })),
+    setOnlinePayment: (option) => dispatch(setOnlinePayment(option)),
+    setUpiID: (upi) => dispatch(setUpiID(upi)),
+    setBankIFSC: (ifsc) => dispatch(setBankIFSC(ifsc)),
+    setBankAccountNumber: (accountNo) => dispatch(setBankAccountNumber(accountNo)),
+    setCurrentVendor: (payload) => dispatch(setCurrentVendor(payload))
+});
+
+export default connect(mapStatetoProps, mapDispatchToProps)(withRouter(PaymentPharm));

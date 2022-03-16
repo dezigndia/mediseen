@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const BusinessHeader = ({ businessName,businessType, address ,stars }) => {
+const BusinessHeader = ({ businessName,businessType, address ,degree,stars }) => {
 	const classes = useStyles()
 
 	return (
@@ -38,7 +38,7 @@ const BusinessHeader = ({ businessName,businessType, address ,stars }) => {
 					<h4 className={classes.fontWhite}>{businessType}</h4>
 				</Grid> */}
 				<Grid item>
-					<h5 className={classes.fontWhite}>{address}</h5>
+					<h5 className={classes.fontWhite}>{degree ? degree :address}</h5>
 				</Grid>
 			</Grid>
 		</div>

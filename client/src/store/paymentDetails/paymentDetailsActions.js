@@ -10,8 +10,8 @@ export const setOnlinePayment = (option = false) => {
     return { type: SET_ONLINE_PAYMENT, payload: option };
 }
 
-export const setPaymentOption = ({ upi = false, bankTransfer = false }) => {
-    return { type: SET_PAYMENT_OPTION, payload: { upi, bankTransfer } }
+export const setPaymentOption = ({ cod = false, upi = false, bankTransfer = false }) => {
+    return { type: SET_PAYMENT_OPTION, payload: {cod, upi, bankTransfer } }
 }
 
 export const setUpiID = (upi) => {

@@ -204,11 +204,9 @@ const PharmacyOrder = () => {
 				{products &&
 					products.map((product) => {
 						if (product.category === active) {
-							console.log(product)
 							const cartQty = cart.filter(
 								(prod) => prod.item._id === product._id
 							)
-							console.log(cartQty, "cartQty")
 							return (
 								// <ProductCard
 								// 	ogPrice={product.mrp}

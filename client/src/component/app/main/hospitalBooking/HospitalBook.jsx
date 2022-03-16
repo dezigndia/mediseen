@@ -267,6 +267,7 @@ const HospitalBook = () => {
 	const image = useSelector((state) => state.prescription.image)
 	const patient = useSelector((state) => state.patient)
 	const timing = useSelector((state) => state.timing)
+	const paymentMode = useSelector((state) =>state.paymentDetails.mode)
 	const dispatch = useDispatch()
 	const [payment, setPayment] = useState(1)
 	const cart = useSelector((state) => state.cart)
@@ -299,6 +300,7 @@ const HospitalBook = () => {
 				mobileNumber: patient.num,
 			},
 			userPhoneNumber: "787989089898989",
+			paymentMode:paymentMode,
 			// timings: { from: timing.timing.from , to:timing.timing.to},
 			// date: Date.now(),
 			timings: { from: timing.timing.timeStampFrom, to:timing.timing.timeStampTo},

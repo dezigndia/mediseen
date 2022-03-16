@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const CheckoutPathology = () => {
+const CheckoutPathology = (props) => {
 	const classes = useStyles()
 
 	const cart = useSelector((state) => state.cart)
@@ -48,6 +48,10 @@ const CheckoutPathology = () => {
 		totalItem = item.qty + totalItem
 	})
 
+	const back = (e) => {
+        e.preventDefault();
+        props.history.goBack();
+    }
 	return (
 		<Grid container className={classes.container} spacing={2}>
 			<Grid container item xs={12}>
@@ -167,7 +171,7 @@ const CheckoutPathology = () => {
 					Confirm your Order
 				</Grid>
 				<Grid item xs={6}>
-					<Button
+					<Button onClick={back}
 						className={classes.btn}
 						style={{ backgroundColor: "grey" }}
 						variant="contained"

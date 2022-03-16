@@ -108,7 +108,7 @@ const PharmAddAddress = () => {
 					className={classes.bold}
 					style={{ textAlign: "right" }}
 					item
-					item
+
 					xs={3}
 				>
 					26/07/20
@@ -116,7 +116,6 @@ const PharmAddAddress = () => {
 				<Grid
 					className={classes.bold}
 					style={{ textAlign: "right" }}
-					item
 					item
 					xs={3}
 				>
