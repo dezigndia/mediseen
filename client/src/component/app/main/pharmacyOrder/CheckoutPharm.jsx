@@ -33,15 +33,14 @@ const useStyles = makeStyles(() => ({
 
 const CheckoutPharm = (props) => {
 	const classes = useStyles()
+	let totalItem = 0
+	let totalCost = 0
+	let deliveryCharge = 0
 
 	const cart = useSelector((state) => state.cart)
 	const user = useSelector((state) => state.user)
-
-	let totalItem = 0
-
-	let totalCost = 0
-
-	const deliveryCharge = 0
+	const currentStore = useSelector((state) => state.currentStore.deliveryDetails)
+   deliveryCharge = currentStore.deliveryCharges;
 
 	cart.map((item) => {
 		console.log(item)

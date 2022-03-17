@@ -41,7 +41,9 @@ const CheckoutPathology = (props) => {
 
 	let totalCost = 0
 
-	const deliveryCharge = 0
+	let deliveryCharge = 0
+	const currentStore = useSelector((state) => state.currentStore.collections)
+	deliveryCharge = currentStore.collectionChargesPerVisit;
 
 	cart.map((item) => {
 		totalCost = item.item.sellingPrice * item.qty + totalCost

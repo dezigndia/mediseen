@@ -80,3 +80,12 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
 	-moz-appearance: textfield;
 }
+
+.ShowMore_ButtonDiv__9prgf {
+    z-index: 1 !important;
+    opacity: 1 !important;
+}
+
+.ShowMore_Shadow__1ig50 {
+    display: block !important;
+}

@@ -104,6 +104,9 @@ const PaymentPharm = (props) => {
 
 	const [payment, setPayment] = useState("COD")
 
+	const currentStore = useSelector((state) => state.currentStore.deliveryDetails)
+let	deliveryCharge = currentStore.deliveryCharges;
+
 	const token =
 		useSelector((state) => state.token.token) ||
 		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsInBob3RvcyI6W10sIl9pZCI6IjYwNDg2NGVlYzEwYWU4YzI4ZWMzM2Y5MSIsInBob25lIjoiKzkxODkxMDcxOTE0NyIsImFkZHJlc3MiOltdLCJjcmVhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJ1cGRhdGVkQXQiOiIyMDIxLTAzLTEwVDA2OjE5OjI2LjY5MloiLCJfX3YiOjAsImlhdCI6MTYxNTM1NzE2Nn0.9CEx3xpRyG-J4dUtxUVBrRN8Eg7UOZ7zjaFTehhRBBw"
@@ -252,7 +255,7 @@ const PaymentPharm = (props) => {
 					style={{ textAlign: "right" }}
 					xs={6}
 				>
-					Rs. {totalCost}
+					Rs. {totalCost+deliveryCharge}
 				</Grid>
 			</Grid>
 			<div className={classes.divider}></div>

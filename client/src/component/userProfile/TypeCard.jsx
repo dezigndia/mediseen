@@ -5,7 +5,8 @@ import FilterListIcon from "@material-ui/icons/FilterList"
 import TypeRow from "./TypeRow"
 import ReceiptIcon from "@material-ui/icons/Receipt"
 import LocalMallIcon from "@material-ui/icons/LocalMall"
-
+// import ShowMore from 'react-show-more-button';
+import ShowMore from 'react-show-more-button/dist/module';
 import { makeStyles } from "@material-ui/core/styles"
 import SortBy from "./SortBy"
 
@@ -58,19 +59,19 @@ const TypeCard = ({ type, orders }) => {
 	}
 
 	return (
-		<Paper elevation={4} className={classes.container}>
-			<Grid container direction="column" spacing={2}>
-				<Grid container direction="column" item spacing={1}>
-					<Grid container item direction="row" justify="space-between">
-						<Grid container xs={8} item alignItems="center">
-							<Grid item xs={2}>
-								{returnIcon()}
-							</Grid>
-							<Grid item xs={10}>
-								<h4 className={classes.header}>{type}</h4>
-							</Grid>
-						</Grid>
-						{/* <Grid
+      <Paper elevation={4} className={classes.container}>
+        <Grid container direction="column" spacing={2}>
+          <Grid container direction="column" item spacing={1}>
+            <Grid container item direction="row" justify="space-between">
+              <Grid container xs={8} item alignItems="center">
+                <Grid item xs={2}>
+                  {returnIcon()}
+                </Grid>
+                <Grid item xs={10}>
+                  <h4 className={classes.header}>{type}</h4>
+                </Grid>
+              </Grid>
+              {/* <Grid
 							container
 							xs={4}
 							spacing={1}
@@ -86,12 +87,12 @@ const TypeCard = ({ type, orders }) => {
 								</h4>
 							</Grid>
 						</Grid> */}
-					</Grid>
-					<Grid item xs={12}>
-						<Divider />
-					</Grid>
-				</Grid>
-				{/* <Grid container item xs={12} spacing={2}>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+          </Grid>
+          {/* <Grid container item xs={12} spacing={2}>
 					<Grid item xs={12}>
 						<TypeRow order={returnOrder()} />
 					</Grid>
@@ -102,21 +103,26 @@ const TypeCard = ({ type, orders }) => {
 						<TypeRow order={returnOrder()} />
 					</Grid>
 				</Grid> */}
-				{orders && orders.length > 0 ? (
-					orders.map((order) => (
-						<Grid item xs={12}>
-							<TypeRow order={order} orderType={returnOrder()} />
-						</Grid>
-					))
-				) : (
-					<Grid item>
-						<h4>No record.</h4>
-					</Grid>
-				)}
-			</Grid>
-			{/* <SortBy setOpen={(value) => setOpen(value)} type={type} open={open}  order={orders}/> */}
-		</Paper>
-	)
+				<ShowMore
+      maxHeight={360}
+    //   styleButton={{ border: "1px solid red", zIndex: 1 }}
+    >
+          {orders && orders.length > 0 ? (
+            orders.map((order) => (
+              <Grid item xs={12}>
+                <TypeRow order={order} orderType={returnOrder()} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item>
+              <h4>No record.</h4>
+            </Grid>
+          )}   </ShowMore>
+        </Grid>
+        {/* <SortBy setOpen={(value) => setOpen(value)} type={type} open={open}  order={orders}/> */}
+      </Paper>
+ 
+  );
 }
 
 export default TypeCard

@@ -103,6 +103,8 @@ const PaymentPharm = (props) => {
   const image = useSelector((state) => state.prescription.image);
 
   const [payment, setPayment] = useState("COD");
+	const currentStore = useSelector((state) => state.currentStore.collections)
+	let deliveryCharge = currentStore.collectionChargesPerVisit;
 
   const token =
     useSelector((state) => state.token.token) ||
@@ -248,7 +250,7 @@ const PaymentPharm = (props) => {
           style={{ textAlign: "right" }}
           xs={6}
         >
-          Rs. {totalCost}
+          Rs. {totalCost+deliveryCharge}
         </Grid>
       </Grid>
       <div className={classes.divider}></div>
