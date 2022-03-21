@@ -221,7 +221,7 @@ const Orders = () => {
                                         <div className="orderDateTime">
                                             <div className="orderDate">
                                                 {date.getDate()}/
-                                        {date.getMonth()}/
+                                        {date.getMonth()+1}/
                                         {date.getFullYear() % 100}
                                             </div>
                                             <div className="orderTime">
