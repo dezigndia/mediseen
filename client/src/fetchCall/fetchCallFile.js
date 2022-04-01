@@ -3,7 +3,7 @@ const fetchCallFile = async (endpoint, method, jwt, body) => {
 	let data;
 	let jwtReq = getItem("auth_token");
 	console.log(jwtReq, "jwt token");
-	 const response = await fetch(`http://13.235.95.152:5001/api/${endpoint}`, {
+	 const response = await fetch(`http://43.204.17.144:5001/api/${endpoint}`, {
 		// const response = await fetch(`http://localhost:5001/api/${endpoint}`, {
 		method: `${method}`,
 		headers: {
