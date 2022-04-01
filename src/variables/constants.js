@@ -1,4 +1,4 @@
-export const baseUrl = "http://13.235.95.152:5001/api/";
+export const baseUrl = "http://43.204.17.144/:5001/api/";
 export const testurl = "http://localhost:5001/api/";
 export const endPointsArray = {
   get_businesses: {
