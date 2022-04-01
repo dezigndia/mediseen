@@ -1,4 +1,4 @@
-const server = 'http://13.235.95.152:5001/';
+const server = 'http://43.204.17.144/:5001/';
 // const server = 'http://localhost:5001/';
 
 export const GET_OTP = `${server}api/auth/user-get-otp`
